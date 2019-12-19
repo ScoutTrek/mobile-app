@@ -2,7 +2,6 @@
   "expo": {
     "name": "ScoutTrek",
     "slug": "ScoutTrekNative",
-    "displayName": "ScoutTrek",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": [
