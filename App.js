@@ -1,67 +1,129 @@
-import {AppLoading} from 'expo'
-import {Asset} from 'expo-asset'
-import * as Font from 'expo-font'
-import React, {useState} from 'react'
-import {Provider} from 'react-redux'
-import {Platform, StatusBar, StyleSheet, View} from 'react-native'
-import {Ionicons} from '@expo/vector-icons'
+import React, {useState, useEffect} from 'react';
+import {ActivityIndicator, View, AsyncStorage} from 'react-native';
 
-import {store} from './src/redux/store'
+import {NavigationContainer} from '@react-navigation/native';
+import {createStackNavigator} from '@react-navigation/stack';
+import {AppLoading} from 'expo';
+import {Asset} from 'expo-asset';
+import * as Font from 'expo-font';
+import {Provider, useDispatch, useSelector} from 'react-redux';
+import {Ionicons} from '@expo/vector-icons';
+import {firestore} from './src/firebase/firebase.utils';
 
-import AppNavigator from './src/modules/navigation/AppNavigator'
+import {loadEventsFromServer} from './src/redux/events/events.actions';
+import {store} from './src/redux/store';
 
-export default function App(props) {
-  const [isLoadingComplete, setLoadingComplete] = useState(false)
+import AuthNavigator from './src/modules/auth/AuthNavigator';
+import MainTabNavigator from './src/modules/navigation/MainTabNavigator';
 
-  if (!isLoadingComplete && !props.skipLoadingScreen) {
+import * as AuthActions from './src/redux/auth/auth.actions';
+
+const AppLoadingContainer = () => {
+  const dispatch = useDispatch();
+  const isSignOut = useSelector(state => state.auth.isSignOut);
+  const userToken = useSelector(state => state.auth.userToken);
+
+  const [reduxLoading, setReduxLoading] = useState(true);
+
+  React.useEffect(() => {
+    // Fetch the token from storage then navigate to our appropriate place
+    const checkForToken = async () => {
+      let userToken;
+
+      try {
+        userToken = await AsyncStorage.getItem('userToken');
+      } catch (e) {
+        console.log(e);
+      }
+      // After restoring token, we may need to validate it in production apps
+      dispatch(AuthActions.getTokenFromMemory(userToken));
+      setReduxLoading(false);
+    };
+
+    checkForToken();
+  }, []);
+
+  useEffect(() => {
+    const eventsRef = firestore.collection('events');
+    // eventsRef.onSnapshot(querySnapshot => {
+    //   const data = querySnapshot.docs.map(doc => {
+    //     const id = doc.id;
+    //     const otherData = doc.data();
+    //     return {id, ...otherData};
+    //   });
+    //   dispatch(loadEventsFromServer(data));
+    // });
+  }, []);
+
+  if (reduxLoading)
     return (
-      <AppLoading
-        startAsync={loadResourcesAsync}
-        onError={handleLoadingError}
-        onFinish={() => handleFinishLoading(setLoadingComplete)}
-      />
-    )
-  } else {
-    return (
-      <Provider store={store}>
-        <View style={styles.container}>
-          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <AppNavigator />
-        </View>
-      </Provider>
-    )
-  }
-}
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator />
+      </View>
+    );
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={() => ({
+          headerShown: false,
+        })}>
+        {/*{userToken !== null ? (*/}
+        {/*  <Stack.Screen*/}
+        {/*    name="SignIn"*/}
+        {/*    component={AuthNavigator}*/}
+        {/*    options={{*/}
+        {/*      // When logging out, a pop animation feels intuitive*/}
+        {/*      // You can remove this if you want the default 'push' animation*/}
+        {/*      animationTypeForReplace: isSignOut ? 'pop' : 'push',*/}
+        {/*    }}*/}
+        {/*  />*/}
+        {/*) : (*/}
+        <Stack.Screen name="Home" component={MainTabNavigator} />
+        {/*)}*/}
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
 
 async function loadResourcesAsync() {
   await Promise.all([
-    Asset.loadAsync([
-      require('./assets/images/robot-dev.png'),
-      require('./assets/images/robot-prod.png'),
-    ]),
     Font.loadAsync({
       ...Ionicons.font,
 
       oxygen: require('./assets/fonts/Oxygen-Regular.ttf'),
       'oxygen-light': require('./assets/fonts/Oxygen-Light.ttf'),
       'oxygen-bold': require('./assets/fonts/Oxygen-Bold.ttf'),
+      'raleway-bold': require('./assets/fonts/Raleway/Raleway-Bold.ttf'),
+      'raleway-black': require('./assets/fonts/Raleway/Raleway-Black.ttf'),
     }),
-  ])
+  ]);
 }
 
 function handleLoadingError(error) {
   // In this case, you might want to report the error to your error reporting
   // service, for example Sentry
-  console.warn(error)
+  console.warn(error);
 }
 
-function handleFinishLoading(setLoadingComplete) {
-  setLoadingComplete(true)
-}
+const Stack = createStackNavigator();
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
-})
+export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  if (isLoading) {
+    return (
+      <AppLoading
+        startAsync={loadResourcesAsync}
+        onError={handleLoadingError}
+        onFinish={setIsLoading}
+      />
+    );
+  } else {
+    return (
+      <Provider store={store}>
+        <AppLoadingContainer />
+      </Provider>
+    );
+  }
+}

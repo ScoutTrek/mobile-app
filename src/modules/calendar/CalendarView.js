@@ -1,28 +1,30 @@
-import React from 'react'
-import {StyleSheet, View, Text} from 'react-native'
-import {Agenda} from 'react-native-calendars'
+import React from 'react';
+import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import {Agenda} from 'react-native-calendars';
+import Constants from 'expo-constants';
 
-import colors from '../../styles/colors'
-import fonts from '../../styles/fonts'
+import colors from '../../styles/colors';
+import fonts from '../../styles/fonts';
 
-import {useSelector} from 'react-redux'
-import useItems from '../../hooks/useItems'
+import {useSelector} from 'react-redux';
+import useReduxEvents from '../../hooks/useReduxEvents';
 
-const CalendarScreen = () => {
-  const items = useSelector(state => state.calendar.items)
-  const loadItems = useItems()
+const CalendarView = ({navigation}) => {
+  const items = useSelector(state => state.calendar.items);
+  let dates = useSelector(state => state.events.events);
+  const loadEvents = useReduxEvents(dates);
 
   const rowHasChanged = (r1, r2) => {
-    return r1.name !== r2.name
-  }
+    return r1.name !== r2.name;
+  };
 
   const renderEmptyDate = () => {
     return (
       <View style={styles.emptyDate}>
-        <Text>This is empty date!</Text>
+        <Text style={{fontSize: 12}}>No events on this day.</Text>
       </View>
-    )
-  }
+    );
+  };
 
   const renderItem = item => {
     const labels =
@@ -31,17 +33,21 @@ const CalendarScreen = () => {
         <View
           key={`label-${label}`}
           style={{
-            padding: 5,
+            padding: 3,
+            margin: 2,
+            fontSize: 10,
             backgroundColor:
-              label === 'My Troop' ? colors.primary : colors.secondary,
+              label === 'hike' ? colors.primary : colors.secondary,
             borderRadius: 3,
           }}>
           <Text style={{color: 'white'}}>{label}</Text>
         </View>
-      ))
+      ));
 
     return (
-      <View style={styles.item}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('Event', {currItem: item.id})}
+        style={styles.item}>
         <View>
           <Text
             style={{
@@ -57,14 +63,15 @@ const CalendarScreen = () => {
         </View>
 
         <View styleName="horizontal h-start">{labels}</View>
-      </View>
-    )
-  }
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <Agenda
+      style={styles.container}
       items={items}
-      loadItemsForMonth={loadItems}
+      loadItemsForMonth={month => loadEvents(month)}
       renderItem={renderItem}
       renderEmptyDate={renderEmptyDate}
       rowHasChanged={rowHasChanged}
@@ -77,15 +84,13 @@ const CalendarScreen = () => {
         backgroundColor: '#F1F1F8',
       }}
     />
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.whiteTwo,
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: Constants.statusBarHeight,
   },
   item: {
     flexDirection: 'row',
@@ -101,6 +106,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 30,
   },
-})
+});
 
-export default CalendarScreen
+export default CalendarView;

@@ -11,12 +11,7 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
-    "splash": {
-      "image": "./assets/images/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
+    "icon": "./assets/images/Icon.png",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -25,6 +20,22 @@
     ],
     "ios": {
       "supportsTablet": true
+    },
+    "android": {
+      "googleServicesFile": "./google-services.json"
+    },
+    "splash": {
+      "backgroundColor": "#2C3148",
+      "resizeMode": "cover",
+      "image": "./assets/images/loadingImage.png"
+    },
+    "description": "",
+    "notification": {
+      "icon": "./assets/images/Icon.png",
+      "color": "#F29959",
+      "iosDisplayInForeground": true,
+      "androidMode": "collapse",
+      "androidCollapsedTitle": "ScoutTrek Reminders"
     }
   }
 }
