@@ -8,10 +8,31 @@ import {Asset} from 'expo-asset';
 import * as Font from 'expo-font';
 import {Provider, useDispatch, useSelector} from 'react-redux';
 import {Ionicons} from '@expo/vector-icons';
-import {firestore} from './src/firebase/firebase.utils';
-
-import {loadEventsFromServer} from './src/redux/events/events.actions';
 import {store} from './src/redux/store';
+
+import {setContext} from 'apollo-link-context';
+import {ApolloClient, HttpLink, InMemoryCache, gql} from '@apollo/client';
+
+const authLink = setContext((_, {headers}) => {
+  // get the authentication token from local storage if it exists
+  const token = localStorage.getItem('userToken');
+  // return the headers to the context so httpLink can read them
+  return {
+    headers: {
+      ...headers,
+      authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOThjZTc5NTQ0OWM0MTkwYWY2YTUwNiIsInJvbGUiOiJTQ09VVF9NQVNURVIiLCJpYXQiOjE1ODcwNzI2MzQsImV4cCI6MTU5MTgyNDYzNH0.xaEvK-7I168-6Opu9avjNdUqANgS2PbIv30kyC5tG30`,
+    },
+  };
+});
+
+const client = new ApolloClient({
+  cache: new InMemoryCache(),
+  link: authLink.concat(
+    new HttpLink({
+      uri: 'http://localhost:4000',
+    })
+  ),
+});
 
 import AuthNavigator from './src/modules/auth/AuthNavigator';
 import MainTabNavigator from './src/modules/navigation/MainTabNavigator';
@@ -23,13 +44,12 @@ const AppLoadingContainer = () => {
   const isSignOut = useSelector(state => state.auth.isSignOut);
   const userToken = useSelector(state => state.auth.userToken);
 
-  const [reduxLoading, setReduxLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const checkForToken = async () => {
       let userToken;
-
       try {
         userToken = await AsyncStorage.getItem('userToken');
       } catch (e) {
@@ -37,25 +57,15 @@ const AppLoadingContainer = () => {
       }
       // After restoring token, we may need to validate it in production apps
       dispatch(AuthActions.getTokenFromMemory(userToken));
-      setReduxLoading(false);
+      setLoading(false);
     };
 
     checkForToken();
   }, []);
 
-  useEffect(() => {
-    const eventsRef = firestore.collection('events');
-    // eventsRef.onSnapshot(querySnapshot => {
-    //   const data = querySnapshot.docs.map(doc => {
-    //     const id = doc.id;
-    //     const otherData = doc.data();
-    //     return {id, ...otherData};
-    //   });
-    //   dispatch(loadEventsFromServer(data));
-    // });
-  }, []);
+  useEffect(() => {}, []);
 
-  if (reduxLoading)
+  if (loading)
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <ActivityIndicator />

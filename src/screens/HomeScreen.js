@@ -72,7 +72,7 @@ export default function HomeScreen() {
         onPress={() => dispatch(AuthActions.signOut())}
       />
       <Text>Welcome to ScoutTrek</Text>
-      <Text>{console.log(notifications)}</Text>
+      {/*<Text>{console.log(notifications)}</Text>*/}
     </View>
   );
 }

@@ -18,7 +18,9 @@ import {
 
 import Hike from '../../../../data-models/Hike';
 
-import {createHikeEventDocument} from '../../../firebase/firebase.utils';
+import RTE from '../../../components/RichTextEditor';
+
+// import {createHikeEventDocument} from '../../../firebase/firebase.utils';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -27,16 +29,14 @@ import Constants from 'expo-constants';
 import {useSelector} from 'react-redux';
 
 const HikeDetails = ({navigation, route}) => {
-  const expoToken = useSelector(state => state.auth.expoToken);
+  const expoToken = useSelector((state) => state.auth.expoToken);
 
   const [date, setDate] = useState(new Date(Date.now()));
   const [mode, setMode] = useState('date');
   const [visible, setVisible] = useState(false);
 
   // description
-  const [description, setDescription] = useState(
-    '<h1>We are going to the moon</h1><p>And you should bring some oxygen.</p>'
-  );
+  const [description, setDescription] = useState([]);
   const [title, setTitle] = useState('');
   // display contact
   const [distance, setDistance] = useState(1);
@@ -50,14 +50,14 @@ const HikeDetails = ({navigation, route}) => {
     });
   };
 
-  const show = mode => {
+  const show = (mode) => {
     setMode(() => {
       setVisible(true);
       return mode;
     });
   };
 
-  const sendPushNotification = async body => {
+  const sendPushNotification = async (body) => {
     const message = {
       to: expoToken,
       sound: 'default',
@@ -96,81 +96,74 @@ const HikeDetails = ({navigation, route}) => {
   };
 
   return (
-    <View style={{flex: 1}}>
-      <KeyboardAvoidingView
-        behavior="padding"
-        keyboardVerticalOffset={0}
-        style={{flex: 1}}
-        enabled>
-        <ScrollView
-          contentContainerStyle={{
-            // flexGrow: 1,
-            paddingBottom: 40,
-            width: '100%',
-          }}>
-          <View style={styles.inputContainer}>
-            <Text style={styles.formHeading}>
-              What will the event be called?
-            </Text>
-            <TextInput
-              style={styles.input}
-              onChangeText={setTitle}
-              value={title}
-              placeholder="Event Name"
-              placeholderTextColor={Colors.placeholderTextColor}
-            />
-          </View>
-          <View style={styles.dateTime}>
-            <View style={styles.btns}>
-              <Button title="Choose Date" onPress={() => show('date')} />
-              <Button title="Meet Time" onPress={() => show('time')} />
-            </View>
-            <View style={styles.btns}>
-              <Text>{date.toDateString()}</Text>
-              <Text>{date.toTimeString().substr(0, 5)}</Text>
-            </View>
-          </View>
-          {visible && (
-            <DateTimePicker
-              value={date}
-              mode={mode}
-              is24Hour={false}
-              display="default"
-              onChange={setState}
-            />
-          )}
+    <KeyboardAvoidingView
+      behavior="padding"
+      keyboardVerticalOffset={0}
+      style={{flex: 1}}
+      enabled>
+      <ScrollView contentContainerStyles={{flexGrow: 1}}>
+        {/*<View style={styles.inputContainer}>*/}
+        {/*  <Text style={styles.formHeading}>*/}
+        {/*    What will the event be called?*/}
+        {/*  </Text>*/}
+        {/*  <TextInput*/}
+        {/*    style={styles.input}*/}
+        {/*    onChangeText={setTitle}*/}
+        {/*    value={title}*/}
+        {/*    placeholder="Event Name"*/}
+        {/*    placeholderTextColor={Colors.placeholderTextColor}*/}
+        {/*  />*/}
+        {/*</View>*/}
+        {/*<View style={styles.dateTime}>*/}
+        {/*  <View style={styles.btns}>*/}
+        {/*    <Button title="Choose Date" onPress={() => show('date')} />*/}
+        {/*    <Button title="Meet Time" onPress={() => show('time')} />*/}
+        {/*  </View>*/}
+        {/*  <View style={styles.btns}>*/}
+        {/*    <Text>{date.toDateString()}</Text>*/}
+        {/*    <Text>{date.toTimeString().substr(0, 5)}</Text>*/}
+        {/*  </View>*/}
+        {/*</View>*/}
+        {/*{visible && (*/}
+        {/*  <DateTimePicker*/}
+        {/*    value={date}*/}
+        {/*    mode={mode}*/}
+        {/*    is24Hour={false}*/}
+        {/*    display="default"*/}
+        {/*    onChange={setState}*/}
+        {/*  />*/}
+        {/*)}*/}
 
-          <Text style={styles.formHeading}>
-            What do you want people to know about the event?
-          </Text>
-          <View style={styles.displayContactContainer}>
-            <Text style={styles.formHeading}>Hike Distance (in miles)?</Text>
-            <View style={styles.sliderContainer}>
-              <Slider
-                minimumValue={1}
-                maximumValue={20}
-                step={1}
-                style={styles.slider}
-                value={distance}
-                onValueChange={setDistance}
-              />
-              <Text style={styles.sliderText}>{distance}</Text>
-            </View>
+        <View style={styles.distanceContainer}>
+          <Text style={styles.formHeading}>Hike Distance (in miles)?</Text>
+          <View style={styles.sliderContainer}>
+            <Slider
+              minimumValue={1}
+              maximumValue={20}
+              step={1}
+              style={styles.slider}
+              value={distance}
+              onValueChange={setDistance}
+            />
+            <Text style={styles.sliderText}>{distance}</Text>
           </View>
+        </View>
 
-          <TouchableOpacity onPress={submit} style={styles.submitBtn}>
-            <Text style={styles.text}>Complete</Text>
-          </TouchableOpacity>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </View>
+        <Text style={styles.formHeading}>
+          What do you want people to know about the event?
+        </Text>
+
+        <RTE description={description} setDescription={setDescription} />
+
+        <TouchableOpacity onPress={submit} style={styles.submitBtn}>
+          <Text style={styles.text}>Complete</Text>
+        </TouchableOpacity>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-  },
   inputContainer: {
     width: '100%',
     marginTop: 10 + Constants.statusBarHeight,
@@ -211,7 +204,7 @@ const styles = StyleSheet.create({
     fontFamily: 'oxygen-bold',
     margin: 18,
   },
-  displayContactContainer: {
+  distanceContainer: {
     width: '100%',
     alignItems: 'flex-start',
     paddingHorizontal: 20,
@@ -243,39 +236,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 52,
-    marginTop: 30,
   },
   text: {
     color: '#ffffff',
     fontSize: 18,
     fontFamily: 'oxygen-bold',
   },
-  main: {
-    flex: 1,
-    height: '30%',
-    marginTop: 10,
-    paddingLeft: 30,
-    paddingRight: 30,
-    paddingBottom: 1,
-    alignItems: 'stretch',
-  },
   toolbarButton: {
     fontSize: 20,
     width: 28,
     height: 28,
     textAlign: 'center',
-  },
-  italicButton: {
-    fontStyle: 'italic',
-  },
-  boldButton: {
-    fontWeight: 'bold',
-  },
-  underlineButton: {
-    textDecorationLine: 'underline',
-  },
-  lineThroughButton: {
-    textDecorationLine: 'line-through',
   },
 });
 

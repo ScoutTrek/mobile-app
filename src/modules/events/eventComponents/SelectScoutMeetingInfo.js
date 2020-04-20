@@ -22,7 +22,7 @@ import CNRichTextEditor, {
 
 // const defaultStyles = getDefaultStyles()
 
-import {createScoutMeetingEventDocument} from '../../../firebase/firebase.utils';
+// import {createScoutMeetingEventDocument} from '../../../firebase/firebase.utils';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
 

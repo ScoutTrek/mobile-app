@@ -5,33 +5,33 @@ import ChooseLocationView from '../eventComponents/ChooseLocation';
 import ChooseMeetPoint from '../eventComponents/ChooseMeetPoint';
 import HikeDetails from '../eventComponents/HikeDetails';
 
-const HikeStack = createStackNavigator();
+const CampoutStack = createStackNavigator();
 
-const HikeStackNavigator = () => {
+const CampoutStackNavigator = () => {
   return (
-    <HikeStack.Navigator
+    <CampoutStack.Navigator
       screenOptions={() => ({
         headerShown: false,
       })}>
-      <HikeStack.Screen name="HikeDetails" component={HikeDetails} />
-      <HikeStack.Screen
+      <CampoutStack.Screen
         name="ChooseLocation"
         component={ChooseLocationView}
         initialParams={{
-          placeholder: 'Where do you want to hike?',
+          placeholder: 'Where will your campout begin?',
           nextView: 'ChooseMeetPoint',
         }}
       />
-      <HikeStack.Screen
+      <CampoutStack.Screen
         name="ChooseMeetPoint"
         component={ChooseLocationView}
         initialParams={{
           placeholder: 'Where should everyone meet?',
-          nextView: 'HikeDetails',
+          nextView: 'EventDetails',
         }}
       />
-    </HikeStack.Navigator>
+      <CampoutStack.Screen name="EventDetails" component={HikeDetails} />
+    </CampoutStack.Navigator>
   );
 };
 
-export default HikeStackNavigator;
+export default CampoutStackNavigator;

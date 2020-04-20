@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 
 import Hike from '../../../data-models/Hike';
-import {editHikeEventDocument} from '../../firebase/firebase.utils';
+// import {editHikeEventDocument} from '../../firebase/firebase.utils';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
 import NextButton from '../../components/buttons/NextButton';
@@ -26,11 +26,11 @@ import {Ionicons} from '@expo/vector-icons';
 import {useSelector} from 'react-redux';
 
 const EditHikeDetails = ({navigation, route}) => {
-  let dates = useSelector(state => state.events.events);
+  let dates = useSelector((state) => state.events.events);
   const {currItem} = route.params;
-  const event = dates.find(event => event.id === currItem);
+  const event = dates.find((event) => event.id === currItem);
 
-  const expoToken = useSelector(state => state.auth.expoToken);
+  const expoToken = useSelector((state) => state.auth.expoToken);
 
   const [date, setDate] = useState(event.date);
   const [mode, setMode] = useState('date');
@@ -49,14 +49,14 @@ const EditHikeDetails = ({navigation, route}) => {
     });
   };
 
-  const show = mode => {
+  const show = (mode) => {
     setMode(() => {
       setVisible(true);
       return mode;
     });
   };
 
-  const sendPushNotification = async body => {
+  const sendPushNotification = async (body) => {
     console.log(expoToken);
     const message = {
       to: expoToken,
