@@ -2,8 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import ChooseLocationView from '../eventComponents/ChooseLocation';
-import ChooseMeetPoint from '../eventComponents/ChooseMeetPoint';
-import HikeDetails from '../eventComponents/HikeDetails';
+import CampoutDetails from './CampoutDetails';
 
 const CampoutStack = createStackNavigator();
 
@@ -29,7 +28,7 @@ const CampoutStackNavigator = () => {
           nextView: 'EventDetails',
         }}
       />
-      <CampoutStack.Screen name="EventDetails" component={HikeDetails} />
+      <CampoutStack.Screen name="EventDetails" component={CampoutDetails} />
     </CampoutStack.Navigator>
   );
 };

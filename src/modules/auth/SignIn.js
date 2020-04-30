@@ -1,4 +1,4 @@
-import React, {useReducer, useState} from 'react';
+import React, {useReducer, useEffect, useState} from 'react';
 import {
   Button,
   Image,
@@ -10,6 +10,7 @@ import {
   Dimensions,
   ScrollView,
   ActivityIndicator,
+  AsyncStorage,
 } from 'react-native';
 import Constants from 'expo-constants';
 import {FontAwesome} from '@expo/vector-icons';
@@ -20,6 +21,9 @@ import AuthInput from './components/Input';
 
 import {useDispatch} from 'react-redux';
 import * as AuthActions from '../../redux/auth/auth.actions';
+import {gql} from '@apollo/client';
+import {useApolloClient, useMutation} from '@apollo/react-hooks';
+import {GET_TOKEN} from './JoinPatrol';
 
 const formReducer = (state, action) => {
   if (action.type === 'UPDATE_INPUT_FIELD') {
@@ -33,10 +37,18 @@ const formReducer = (state, action) => {
   }
 };
 
+const LOG_IN = gql`
+  mutation Login($userInfo: LoginInput!) {
+    login(input: $userInfo) {
+      token
+    }
+  }
+`;
+
 const SignIn = ({navigation}) => {
-  const [isLoading, setIsLoading] = useState(false);
   const [secure, setSecure] = useState(false);
-  const dispatch = useDispatch();
+  const [logIn, {data, loading}] = useMutation(LOG_IN);
+  const client = useApolloClient();
 
   const [formState, dispatchFormChange] = useReducer(formReducer, {
     inputValues: {
@@ -45,19 +57,15 @@ const SignIn = ({navigation}) => {
     },
   });
 
-  const handleSignIn = async () => {
-    setIsLoading(true);
-    try {
-      await dispatch(
-        AuthActions.signIn(
-          formState.inputValues.email,
-          formState.inputValues.password
-        )
-      );
-    } catch (err) {
-      console.log(err);
-    }
-    setIsLoading(false);
+  const handleSignIn = () => {
+    logIn({
+      variables: {
+        userInfo: {
+          email: formState.inputValues.email,
+          password: formState.inputValues.password,
+        },
+      },
+    }).catch(error => console.log('An error', error));
   };
 
   const handleInputChange = (inputIdentifier, value) =>
@@ -66,6 +74,23 @@ const SignIn = ({navigation}) => {
       value: value,
       input: inputIdentifier,
     });
+
+  useEffect(() => {
+    const setToken = async () => {
+      try {
+        await AsyncStorage.setItem('userToken', data.login.token);
+        await client.writeQuery({
+          query: GET_TOKEN,
+          data: {userToken: data.login.token},
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    if (data) {
+      setToken();
+    }
+  });
 
   return (
     <View style={styles.screen}>
@@ -111,7 +136,7 @@ const SignIn = ({navigation}) => {
             />
 
             <GradientButton
-              title={isLoading ? `Loading...` : `Log In`}
+              title={loading ? `Loading...` : `Log In`}
               onPress={handleSignIn}
             />
           </View>

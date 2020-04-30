@@ -8,7 +8,9 @@ import Colors from '../../../../constants/Colors';
 
 const EventHeader = ({navigation, image_path, title}) => {
   return (
-    <ImageBackground style={styles.container} source={{uri: image_path}}>
+    <ImageBackground
+      style={styles.container}
+      source={image_path && {uri: image_path}}>
       <LinearGradient
         style={styles.overlay}
         colors={['transparent', 'rgba(229, 252, 255, 0.2)', Colors.offWhite]}

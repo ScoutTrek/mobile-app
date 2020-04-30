@@ -1,18 +1,36 @@
-import React from 'react';
-import {StyleSheet, View, Text, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
 import {Agenda} from 'react-native-calendars';
 import Constants from 'expo-constants';
 
 import colors from '../../styles/colors';
+import Colors from '../../../constants/Colors';
 import fonts from '../../styles/fonts';
 
-import {useSelector} from 'react-redux';
 import useReduxEvents from '../../hooks/useReduxEvents';
 
+const getColor = label => {
+  switch (label) {
+    case 'Hike':
+      return colors.secondary;
+    case 'ScoutMeeting':
+      return Colors.orange;
+    case 'Campout':
+      return colors.yellow;
+    default:
+      return colors.primary;
+  }
+};
+
 const CalendarView = ({navigation}) => {
-  const items = useSelector(state => state.calendar.items);
-  let dates = useSelector(state => state.events.events);
-  const loadEvents = useReduxEvents(dates);
+  const {getItems, loading, error} = useReduxEvents();
+  const [items, setItems] = useState({});
 
   const rowHasChanged = (r1, r2) => {
     return r1.name !== r2.name;
@@ -36,8 +54,7 @@ const CalendarView = ({navigation}) => {
             padding: 3,
             margin: 2,
             fontSize: 10,
-            backgroundColor:
-              label === 'hike' ? colors.primary : colors.secondary,
+            backgroundColor: getColor(label),
             borderRadius: 3,
           }}>
           <Text style={{color: 'white'}}>{label}</Text>
@@ -46,7 +63,15 @@ const CalendarView = ({navigation}) => {
 
     return (
       <TouchableOpacity
-        onPress={() => navigation.navigate('Event', {currItem: item.id})}
+        onPress={() => {
+          if (item.type === 'Hike') {
+            navigation.navigate('Hike', {currItem: item.id});
+          } else if (item.type === 'ScoutMeeting') {
+            navigation.navigate('ScoutMeeting', {currItem: item.id});
+          } else if (item.type === 'Campout') {
+            navigation.navigate('Campout', {currItem: item.id});
+          }
+        }}
         style={styles.item}>
         <View>
           <Text
@@ -67,11 +92,18 @@ const CalendarView = ({navigation}) => {
     );
   };
 
+  if (error) return console.log(error);
+  if (loading) return <Text>Loading...</Text>;
   return (
     <Agenda
       style={styles.container}
+      current={new Date()}
       items={items}
-      loadItemsForMonth={month => loadEvents(month)}
+      onVisibleMonthsChange={() => {}}
+      loadItemsForMonth={calData => {
+        const newItems = getItems(calData);
+        setItems(newItems);
+      }}
       renderItem={renderItem}
       renderEmptyDate={renderEmptyDate}
       rowHasChanged={rowHasChanged}

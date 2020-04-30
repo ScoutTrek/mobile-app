@@ -1,4 +1,4 @@
-import React, {useReducer, useState} from 'react';
+import React, {useEffect, useReducer, useState} from 'react';
 import {
   StyleSheet,
   Text,
@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Image,
   Dimensions,
+  AsyncStorage,
 } from 'react-native';
 import Constants from 'expo-constants';
 import {Ionicons} from '@expo/vector-icons';
@@ -13,9 +14,6 @@ import AuthInput from './components/Input';
 import GradientButton from '../../components/buttons/GradientButton';
 import {LinearGradient} from 'expo-linear-gradient';
 import InlineButton from '../../components/buttons/InlineButton';
-
-import {useDispatch} from 'react-redux';
-import * as AuthActions from '../../redux/auth/auth.actions';
 
 const formReducer = (state, action) => {
   if (action.type === 'UPDATE_INPUT_FIELD') {
@@ -29,10 +27,7 @@ const formReducer = (state, action) => {
   }
 };
 
-const SignUp = ({navigation}) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const dispatch = useDispatch();
-
+const SignUp = ({navigation, route}) => {
   const [formState, dispatchFormChange] = useReducer(formReducer, {
     inputValues: {
       name: '',
@@ -42,21 +37,14 @@ const SignUp = ({navigation}) => {
     },
   });
 
-  const handleSignUp = async () => {
-    setIsLoading(true);
-    try {
-      await dispatch(
-        AuthActions.signUp(
-          formState.inputValues.name,
-          formState.inputValues.email,
-          formState.inputValues.password,
-          formState.inputValues.confirmPassword
-        )
-      );
-    } catch (err) {
-      console.log(err);
-    }
-    setIsLoading(false);
+  const handleNext = () => {
+    const signUpData = {
+      name: formState.inputValues.name,
+      email: formState.inputValues.email,
+      password: formState.inputValues.password,
+      passwordConfirm: formState.inputValues.confirmPassword,
+    };
+    navigation.navigate(route.params.nextView, signUpData);
   };
 
   const handleInputChange = (inputIdentifier, value) =>
@@ -123,20 +111,14 @@ const SignUp = ({navigation}) => {
               textContentType="newPassword"
               secureTextEntry={true}
             />
-            <GradientButton
-              title={isLoading ? `Loading...` : `Sign Up`}
-              onPress={handleSignUp}
-            />
+            <GradientButton title="Sign Up" onPress={handleNext} />
           </View>
         </KeyboardAvoidingView>
       </View>
 
       <View style={styles.footer}>
         <Text style={styles.footerText}>Already have an account?</Text>
-        <InlineButton
-          title="Sign In"
-          onPress={() => navigation.navigate('SignIn')}
-        />
+        <InlineButton title="Sign In" onPress={() => navigation.pop()} />
       </View>
     </View>
   );

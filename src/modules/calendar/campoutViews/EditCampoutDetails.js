@@ -14,33 +14,71 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 
-import Hike from '../../../data-models/Hike';
-// import {editHikeEventDocument} from '../../firebase/firebase.utils';
-
 import DateTimePicker from '@react-native-community/datetimepicker';
-import NextButton from '../../components/buttons/NextButton';
+import NextButton from '../../../components/buttons/NextButton';
 
-import Colors from '../../../constants/Colors';
+import Colors from '../../../../constants/Colors';
 import Constants from 'expo-constants';
 import {Ionicons} from '@expo/vector-icons';
-import {useSelector} from 'react-redux';
+import {useQuery, useMutation} from '@apollo/react-hooks';
+import {gql} from '@apollo/client';
 
-const EditHikeDetails = ({navigation, route}) => {
-  let dates = useSelector((state) => state.events.events);
+import {GET_CAMPOUT} from './CampoutView';
+
+const GET_VISIBILITY_FILTER = gql`
+  {
+    token: expoNotificationToken @client
+  }
+`;
+
+const UPDATE_CAMPOUT = gql`
+  mutation UpdateCampout($id: ID!, $updates: UpdateCampoutInput!) {
+    updateCampout(id: $id, input: $updates) {
+      id
+      type
+      title
+      description
+      datetime
+      numDays
+      location {
+        lat
+        lng
+      }
+      creator {
+        id
+        name
+      }
+    }
+  }
+`;
+
+const EditCampoutDetails = ({navigation, route}) => {
   const {currItem} = route.params;
-  const event = dates.find((event) => event.id === currItem);
+  const {
+    loading,
+    error,
+    data: {event},
+  } = useQuery(GET_CAMPOUT, {
+    variables: {id: currItem},
+  });
 
-  const expoToken = useSelector((state) => state.auth.expoToken);
+  if (Constants.isDevice) {
+    const {
+      data: {token},
+    } = useQuery(GET_VISIBILITY_FILTER);
+  }
 
-  const [date, setDate] = useState(event.date);
+  const [updateEvent] = useMutation(UPDATE_CAMPOUT);
+
+  const [date, setDate] = useState(event.datetime);
   const [mode, setMode] = useState('date');
   const [visible, setVisible] = useState(false);
 
   // description
   const [description, setDescription] = useState(event.description);
-  const [title, setTitle] = useState(event.name);
-  // display contact
-  const [distance, setDistance] = useState(event.distance);
+  const [title, setTitle] = useState(event.title);
+
+  const [numDays, setNumDays] = useState(event.numDays);
 
   const setState = (event, newDate) => {
     setDate(() => {
@@ -49,17 +87,16 @@ const EditHikeDetails = ({navigation, route}) => {
     });
   };
 
-  const show = (mode) => {
+  const show = mode => {
     setMode(() => {
       setVisible(true);
       return mode;
     });
   };
 
-  const sendPushNotification = async (body) => {
-    console.log(expoToken);
+  const sendPushNotification = async body => {
     const message = {
-      to: expoToken,
+      to: token,
       sound: 'default',
       title: 'ScoutTrek Reminder',
       body: `${body} event has been created!`,
@@ -79,17 +116,20 @@ const EditHikeDetails = ({navigation, route}) => {
   const back = () => navigation.goBack();
 
   const submit = () => {
-    const newHike = new Hike(
-      'Jake',
-      event.meetPoint,
-      event.location,
-      date,
-      title,
-      description,
-      distance
-    );
-    editHikeEventDocument(newHike, event.id);
-    sendPushNotification(title);
+    updateEvent({
+      variables: {
+        id: event.id,
+        updates: {
+          title,
+          description,
+          datetime: date,
+          numDays,
+        },
+      },
+    })
+      .then(res => console.log(res))
+      .catch(err => console.log(err));
+    // sendPushNotification(title);
     navigation.pop();
   };
 
@@ -136,18 +176,20 @@ const EditHikeDetails = ({navigation, route}) => {
           value={description}
           onFocus={() => setVisible(false)}
         />
-        <View style={styles.displayContactContainer}>
-          <Text style={styles.formHeading}>Hike Distance (in miles)?</Text>
+        <View style={styles.numDaysContainer}>
+          <Text style={styles.formHeading}>
+            How many days will you be gone?
+          </Text>
           <View style={styles.sliderContainer}>
             <Slider
               minimumValue={1}
-              maximumValue={30}
+              maximumValue={5}
               step={1}
               style={styles.slider}
-              value={distance}
-              onValueChange={setDistance}
+              value={numDays}
+              onValueChange={setNumDays}
             />
-            <Text style={styles.sliderText}>{distance}</Text>
+            <Text style={styles.sliderText}>{numDays}</Text>
           </View>
         </View>
 
@@ -196,14 +238,11 @@ const styles = StyleSheet.create({
     fontFamily: 'oxygen-bold',
     margin: 18,
   },
-  displayContactContainer: {
+  numDaysContainer: {
     width: '100%',
     alignItems: 'flex-start',
     paddingHorizontal: 20,
     marginTop: 15,
-  },
-  displayContact: {
-    marginHorizontal: 18,
   },
   sliderContainer: {
     flexDirection: 'row',
@@ -264,4 +303,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditHikeDetails;
+export default EditCampoutDetails;

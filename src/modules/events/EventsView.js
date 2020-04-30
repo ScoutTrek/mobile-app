@@ -60,18 +60,18 @@ const listData = [
         'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1582556922/ScoutTrek/campfire.png',
     },
   },
-  {
-    id: 3,
-    eventType: 'Backpacking',
-    title: 'CITIZEN ECO-DRIVE',
-    subtitle: "It's like hiking, but more Pro.",
-    badge: 'NEW',
-    badgeColor: 'green',
-    image: {
-      uri:
-        'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1582556924/ScoutTrek/backpacking_trip.png',
-    },
-  },
+  // {
+  //   id: 3,
+  //   eventType: 'Backpacking',
+  //   title: 'CITIZEN ECO-DRIVE',
+  //   subtitle: "It's like hiking, but more Pro.",
+  //   badge: 'NEW',
+  //   badgeColor: 'green',
+  //   image: {
+  //     uri:
+  //       'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1582556924/ScoutTrek/backpacking_trip.png',
+  //   },
+  // },
 ];
 
 const EventTypesScreen = ({navigation}) => {
@@ -83,13 +83,13 @@ const EventTypesScreen = ({navigation}) => {
       troopMeetingBtn(item),
       campingBtn(item),
       backpackingBtn(item),
-    ][2];
+    ][index];
 
   const _openEventCreator = (route, data) => {
     navigation.navigate(route, {...data});
   };
 
-  const hikingBtn = (item) => (
+  const hikingBtn = item => (
     <TouchableOpacity
       key={item.id}
       style={styles.eventContainer}
@@ -110,11 +110,11 @@ const EventTypesScreen = ({navigation}) => {
     </TouchableOpacity>
   );
 
-  const troopMeetingBtn = (item) => (
+  const troopMeetingBtn = item => (
     <TouchableOpacity
       key={item.id}
       style={styles.eventContainer}
-      onPress={() => _openEventCreator('ScoutMeetingNav', item)}>
+      onPress={() => _openEventCreator('ScoutMeeting', item)}>
       <View style={styles.eventContent}>
         <LinearGradient
           colors={['rgba(32,32,32,.65)', 'rgba(32,32,32,.75)']}
@@ -131,7 +131,7 @@ const EventTypesScreen = ({navigation}) => {
     </TouchableOpacity>
   );
 
-  const campingBtn = (item) => (
+  const campingBtn = item => (
     <TouchableOpacity
       key={item.id}
       style={styles.eventContainer}
@@ -152,7 +152,7 @@ const EventTypesScreen = ({navigation}) => {
     </TouchableOpacity>
   );
 
-  const backpackingBtn = (item) => (
+  const backpackingBtn = item => (
     <TouchableOpacity
       key={item.id}
       style={styles.eventContainer}
@@ -178,13 +178,15 @@ const EventTypesScreen = ({navigation}) => {
       <Heading title="New Event" />
       <FlatList
         contentContainerStyle={{flexGrow: 1, paddingBottom: 15}}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={item => item.id.toString()}
         style={{
           backgroundColor: colors.white,
           width: '100%',
         }}
         data={data}
-        renderItem={({index, item}) => _getRenderItemFunction(index, item)}
+        renderItem={({index, item}) => {
+          return _getRenderItemFunction(index, item);
+        }}
       />
       <NextButton
         text="Cancel"

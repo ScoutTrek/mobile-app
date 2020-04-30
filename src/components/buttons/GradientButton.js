@@ -1,6 +1,6 @@
-import React from 'react'
-import {TouchableOpacity, View, Text, StyleSheet} from 'react-native'
-import {LinearGradient} from 'expo-linear-gradient'
+import React from 'react';
+import {TouchableOpacity, View, Text, StyleSheet} from 'react-native';
+import {LinearGradient} from 'expo-linear-gradient';
 
 const GradientButton = ({title, onPress}) => {
   return (
@@ -16,8 +16,8 @@ const GradientButton = ({title, onPress}) => {
         <Text style={styles.text}>{title}</Text>
       </View>
     </TouchableOpacity>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -42,10 +42,10 @@ const styles = StyleSheet.create({
   text: {
     textAlign: 'center',
     color: '#fff',
-    fontFamily: 'oxygen',
+    fontFamily: 'oxygen-bold',
     fontSize: 16,
     fontWeight: 'bold',
   },
-})
+});
 
-export default GradientButton
+export default GradientButton;

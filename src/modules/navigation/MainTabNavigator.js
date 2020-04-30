@@ -3,10 +3,11 @@ import {Dimensions, Image} from 'react-native';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import AdventuresNav from '../../screens/HomeScreen';
+import AdventuresNav from '../home/Adventures';
 import CalendarNav from '../calendar/CalendarNav';
 import NewEventNav from './EventsNavigator';
 import {AntDesign} from '@expo/vector-icons';
+import HomeNav from './DrawerNavigator';
 
 // Global Styles
 import Colors from '../../../constants/Colors';
@@ -25,13 +26,22 @@ const MainBottomTabNavigator = () => {
       tabBarOptions={{
         showLabel: false,
       }}>
-      <MainBottomTab.Screen name="Adventures" component={AdventuresNav} />
-      <MainBottomTab.Screen name="Calendar" component={CalendarNav} />
+      <MainBottomTab.Screen name="Home" component={HomeNav} />
+      <MainBottomTab.Screen
+        name="Calendar"
+        component={CalendarNav}
+        options={{
+          headerShown: true,
+          title: 'Calendar',
+        }}
+        headerMode="screen"
+      />
       <MainBottomTab.Screen
         name="New Event"
         component={NewEventNav}
         options={{
           tabBarVisible: false,
+          headerShown: true,
         }}
       />
     </MainBottomTab.Navigator>
@@ -43,7 +53,7 @@ const MainBottomTabConfig = ({route}) => ({
     size = 30;
     let iconSource;
     switch (route.name) {
-      case 'Adventures':
+      case 'Home':
         return focused ? (
           <Image
             source={homeDark}

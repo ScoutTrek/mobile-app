@@ -1,0 +1,17 @@
+diff --git a/node_modules/react-native-calendars/src/agenda/index.js b/node_modules/react-native-calendars/src/agenda/index.js
+index dd56905..b291777 100644
+--- a/node_modules/react-native-calendars/src/agenda/index.js
++++ b/node_modules/react-native-calendars/src/agenda/index.js
+@@ -201,7 +201,11 @@ export default class AgendaView extends Component {
+       clearTimeout(this.scrollTimeout);
+       this.scrollTimeout = setTimeout(() => {
+         if (this.props.loadItemsForMonth && this._isMounted) {
+-          this.props.loadItemsForMonth(months[0]);
++          if (months && months[1]) {
++            this.props.loadItemsForMonth(months[1]);
++          } else {
++            this.props.loadItemsForMonth(months[0]);
++          }
+         }
+       }, 200);
+     }

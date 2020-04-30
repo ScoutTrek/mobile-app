@@ -14,19 +14,19 @@ import Constants from 'expo-constants';
 
 import {Notifications} from 'expo';
 import {useDispatch} from 'react-redux';
-import * as AuthActions from '../redux/auth/auth.actions';
-import {saveExpoToken} from '../redux/auth/auth.actions';
+import * as AuthActions from '../../redux/auth/auth.actions';
+import {saveExpoToken} from '../../redux/auth/auth.actions';
+import {gql} from '@apollo/client';
+import {useQuery} from '@apollo/react-hooks';
 
-export default function HomeScreen() {
-  const dispatch = useDispatch();
-
+export default function Adventures() {
   const [notifications, setNotifications] = useState({});
 
   async function alertIfRemoteNotificationsDisabledAsync() {
     const {status} = await Permissions.getAsync(Permissions.NOTIFICATIONS);
     if (status !== 'granted') {
       alert(
-        'Hey! You might want to enable notifications for my app, they are good.'
+        'Hey! If you enable notifications for ScoutTrek it will help you stay updated about events.'
       );
     }
   }
@@ -43,14 +43,7 @@ export default function HomeScreen() {
       }
       if (finalStatus !== 'granted') {
         alert('Failed to get push token for push notification!');
-        return;
       }
-
-      const token = await Notifications.getExpoPushTokenAsync();
-
-      console.log(token);
-
-      dispatch(saveExpoToken(token));
     }
   };
 
@@ -65,14 +58,10 @@ export default function HomeScreen() {
     alertIfRemoteNotificationsDisabledAsync();
   }, []);
 
+  console.log(notifications);
   return (
     <View style={styles.container}>
-      <Button
-        title="Sign Out"
-        onPress={() => dispatch(AuthActions.signOut())}
-      />
       <Text>Welcome to ScoutTrek</Text>
-      {/*<Text>{console.log(notifications)}</Text>*/}
     </View>
   );
 }

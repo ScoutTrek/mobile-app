@@ -16,20 +16,66 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 
-import Hike from '../../../../data-models/Hike';
+import {GET_EVENTS} from '../../../hooks/useReduxEvents';
 
 import RTE from '../../../components/RichTextEditor';
-
-// import {createHikeEventDocument} from '../../../firebase/firebase.utils';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import Colors from '../../../../constants/Colors';
 import Constants from 'expo-constants';
-import {useSelector} from 'react-redux';
+import {gql} from '@apollo/client';
+import {useMutation, useQuery} from '@apollo/react-hooks';
+
+const ADD_HIKE = gql`
+  mutation AddHike($hike: AddHikeInput!) {
+    addHike(input: $hike) {
+      id
+      type
+      title
+      description
+      datetime
+      location {
+        lat
+        lng
+      }
+      creator {
+        id
+        name
+      }
+    }
+  }
+`;
+
+const GET_EXPO_TOKEN = gql`
+  query GetToken {
+    currUser {
+      id
+      expoNotificationToken @client
+    }
+  }
+`;
 
 const HikeDetails = ({navigation, route}) => {
-  const expoToken = useSelector((state) => state.auth.expoToken);
+  const {data} = useQuery(GET_EXPO_TOKEN);
+
+  const [addHike] = useMutation(ADD_HIKE, {
+    update(cache, {data: {addHike}}) {
+      try {
+        const {events} = cache.readQuery({query: GET_EVENTS});
+        console.log(addHike);
+        cache.writeQuery({
+          query: GET_EVENTS,
+          data: {events: events.concat([addHike])},
+        });
+      } catch {
+        cache.writeQuery({
+          query: GET_EVENTS,
+          data: {events: [addHike]},
+        });
+      }
+    },
+  });
 
   const [date, setDate] = useState(new Date(Date.now()));
   const [mode, setMode] = useState('date');
@@ -50,16 +96,16 @@ const HikeDetails = ({navigation, route}) => {
     });
   };
 
-  const show = (mode) => {
+  const show = mode => {
     setMode(() => {
       setVisible(true);
       return mode;
     });
   };
 
-  const sendPushNotification = async (body) => {
+  const sendPushNotification = async body => {
     const message = {
-      to: expoToken,
+      to: data.currUser.expoNotificationToken,
       sound: 'default',
       title: 'ScoutTrek Reminder',
       body: `${body} event has been created!`,
@@ -79,16 +125,28 @@ const HikeDetails = ({navigation, route}) => {
   const back = () => navigation.goBack();
 
   const submit = () => {
-    const newHike = new Hike(
-      'Jake',
-      route.params['ChooseMeetPoint'],
-      route.params['ChooseLocation'],
-      date,
-      title,
-      description,
-      distance
-    );
-    createHikeEventDocument(newHike);
+    addHike({
+      variables: {
+        hike: {
+          title,
+          description,
+          datetime: date,
+          distance,
+          troop: '5e99f952a0d2524ecb6ceef8',
+          patrol: '5e99fefc0b31db502f6e0299',
+          location: {
+            lng: route.params['ChooseLocation'].longitude,
+            lat: route.params['ChooseLocation'].latitude,
+          },
+          meetLocation: {
+            lng: route.params['ChooseMeetPoint'].longitude,
+            lat: route.params['ChooseMeetPoint'].latitude,
+          },
+        },
+      },
+    })
+      .then(res => {})
+      .catch(err => console.log(err));
     sendPushNotification(title);
     navigation.popToTop();
     navigation.pop();
@@ -102,37 +160,35 @@ const HikeDetails = ({navigation, route}) => {
       style={{flex: 1}}
       enabled>
       <ScrollView contentContainerStyles={{flexGrow: 1}}>
-        {/*<View style={styles.inputContainer}>*/}
-        {/*  <Text style={styles.formHeading}>*/}
-        {/*    What will the event be called?*/}
-        {/*  </Text>*/}
-        {/*  <TextInput*/}
-        {/*    style={styles.input}*/}
-        {/*    onChangeText={setTitle}*/}
-        {/*    value={title}*/}
-        {/*    placeholder="Event Name"*/}
-        {/*    placeholderTextColor={Colors.placeholderTextColor}*/}
-        {/*  />*/}
-        {/*</View>*/}
-        {/*<View style={styles.dateTime}>*/}
-        {/*  <View style={styles.btns}>*/}
-        {/*    <Button title="Choose Date" onPress={() => show('date')} />*/}
-        {/*    <Button title="Meet Time" onPress={() => show('time')} />*/}
-        {/*  </View>*/}
-        {/*  <View style={styles.btns}>*/}
-        {/*    <Text>{date.toDateString()}</Text>*/}
-        {/*    <Text>{date.toTimeString().substr(0, 5)}</Text>*/}
-        {/*  </View>*/}
-        {/*</View>*/}
-        {/*{visible && (*/}
-        {/*  <DateTimePicker*/}
-        {/*    value={date}*/}
-        {/*    mode={mode}*/}
-        {/*    is24Hour={false}*/}
-        {/*    display="default"*/}
-        {/*    onChange={setState}*/}
-        {/*  />*/}
-        {/*)}*/}
+        <View style={styles.inputContainer}>
+          <Text style={styles.formHeading}>What will the event be called?</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={setTitle}
+            value={title}
+            placeholder="Event Name"
+            placeholderTextColor={Colors.placeholderTextColor}
+          />
+        </View>
+        <View style={styles.dateTime}>
+          <View style={styles.btns}>
+            <Button title="Choose Date" onPress={() => show('date')} />
+            <Button title="Meet Time" onPress={() => show('time')} />
+          </View>
+          <View style={styles.btns}>
+            <Text>{date.toDateString()}</Text>
+            <Text>{date.toTimeString().substr(0, 5)}</Text>
+          </View>
+        </View>
+        {visible && (
+          <DateTimePicker
+            value={date}
+            mode={mode}
+            is24Hour={false}
+            display="default"
+            onChange={setState}
+          />
+        )}
 
         <View style={styles.distanceContainer}>
           <Text style={styles.formHeading}>Hike Distance (in miles)?</Text>

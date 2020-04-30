@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   Keyboard,
 } from 'react-native';
-import MapView, {Marker} from 'react-native-maps';
+import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
 
 import ENV from '../../../../helpers/env';
 
@@ -62,7 +62,7 @@ const ChooseLocation = ({navigation, route}) => {
   const _getPlaceDetails = async id => {
     const locationDetails = await fetch(
       `https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=${ENV.googleApiKey}`
-    );
+    ).catch(err => console.log(err));
     const locationData = await locationDetails.json();
 
     const chosenPlace = {
@@ -106,6 +106,7 @@ const ChooseLocation = ({navigation, route}) => {
   return (
     <View style={styles.container}>
       <MapView
+        provider={PROVIDER_GOOGLE}
         style={styles.mapStyle}
         onPress={selectLocationHandler}
         initialRegion={{

@@ -6,64 +6,70 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {AppLoading} from 'expo';
 import {Asset} from 'expo-asset';
 import * as Font from 'expo-font';
-import {Provider, useDispatch, useSelector} from 'react-redux';
 import {Ionicons} from '@expo/vector-icons';
-import {store} from './src/redux/store';
+import {persistCache} from 'apollo-cache-persist';
 
 import {setContext} from 'apollo-link-context';
 import {ApolloClient, HttpLink, InMemoryCache, gql} from '@apollo/client';
+import {ApolloProvider, useQuery} from '@apollo/react-hooks';
 
-const authLink = setContext((_, {headers}) => {
+import {typeDefs, resolvers} from './src/localState/User';
+
+const authLink = setContext(async (_, {headers}) => {
   // get the authentication token from local storage if it exists
-  const token = localStorage.getItem('userToken');
-  // return the headers to the context so httpLink can read them
+  const token = await AsyncStorage.getItem('userToken');
   return {
     headers: {
       ...headers,
-      authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVlOThjZTc5NTQ0OWM0MTkwYWY2YTUwNiIsInJvbGUiOiJTQ09VVF9NQVNURVIiLCJpYXQiOjE1ODcwNzI2MzQsImV4cCI6MTU5MTgyNDYzNH0.xaEvK-7I168-6Opu9avjNdUqANgS2PbIv30kyC5tG30`,
+      authorization: `Bearer ${token}`,
     },
   };
 });
 
-const client = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: authLink.concat(
-    new HttpLink({
-      uri: 'http://localhost:4000',
-    })
-  ),
-});
+import {onError} from 'apollo-link-error';
 
 import AuthNavigator from './src/modules/auth/AuthNavigator';
 import MainTabNavigator from './src/modules/navigation/MainTabNavigator';
+import {GET_TOKEN} from './src/modules/auth/JoinPatrol';
 
-import * as AuthActions from './src/redux/auth/auth.actions';
+const cache = new InMemoryCache();
+
+cache.writeQuery({
+  query: gql`
+    query {
+      userToken
+    }
+  `,
+  data: {
+    userToken: '',
+  },
+});
 
 const AppLoadingContainer = () => {
-  const dispatch = useDispatch();
-  const isSignOut = useSelector(state => state.auth.isSignOut);
-  const userToken = useSelector(state => state.auth.userToken);
+  const {data, client} = useQuery(GET_TOKEN);
 
   const [loading, setLoading] = useState(true);
-
   React.useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const checkForToken = async () => {
-      let userToken;
       try {
-        userToken = await AsyncStorage.getItem('userToken');
+        const token = await AsyncStorage.getItem('userToken');
+        if (token) {
+          client.writeQuery({
+            query: GET_TOKEN,
+            data: {userToken: token},
+          });
+        }
       } catch (e) {
         console.log(e);
       }
-      // After restoring token, we may need to validate it in production apps
-      dispatch(AuthActions.getTokenFromMemory(userToken));
+      // After restoring token, we may need to validate it in production app
       setLoading(false);
     };
-
-    checkForToken();
-  }, []);
-
-  useEffect(() => {}, []);
+    if (data) {
+      checkForToken();
+    }
+  }, [data]);
 
   if (loading)
     return (
@@ -78,19 +84,21 @@ const AppLoadingContainer = () => {
         screenOptions={() => ({
           headerShown: false,
         })}>
-        {/*{userToken !== null ? (*/}
-        {/*  <Stack.Screen*/}
-        {/*    name="SignIn"*/}
-        {/*    component={AuthNavigator}*/}
-        {/*    options={{*/}
-        {/*      // When logging out, a pop animation feels intuitive*/}
-        {/*      // You can remove this if you want the default 'push' animation*/}
-        {/*      animationTypeForReplace: isSignOut ? 'pop' : 'push',*/}
-        {/*    }}*/}
-        {/*  />*/}
-        {/*) : (*/}
-        <Stack.Screen name="Home" component={MainTabNavigator} />
-        {/*)}*/}
+        {!data.userToken ? (
+          <Stack.Screen
+            name="AuthNav"
+            component={AuthNavigator}
+            options={
+              {
+                // When logging out, a pop animation feels intuitive
+                // You can remove this if you want the default 'push' animation
+                // animationTypeForReplace: isSignOut ? 'pop' : 'push',
+              }
+            }
+          />
+        ) : (
+          <Stack.Screen name="Home" component={MainTabNavigator} />
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -119,21 +127,64 @@ function handleLoadingError(error) {
 const Stack = createStackNavigator();
 
 export default function App() {
+  const [client, setApolloClient] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  React.useEffect(() => {
+    const linkApollo = async () => {
+      const errorLink = onError(({graphQLErrors, networkError}) => {
+        if (graphQLErrors)
+          graphQLErrors.map(({message, locations, path}) =>
+            console.log(
+              `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+            )
+          );
+
+        if (networkError) console.log(`[Network error]: ${networkError}`);
+      });
+
+      const link = authLink.concat(errorLink).concat(
+        new HttpLink({
+          uri: 'http://localhost:4000',
+        })
+      );
+
+      await persistCache({
+        cache,
+        storage: AsyncStorage,
+      });
+
+      const client = new ApolloClient({
+        cache,
+        link,
+        typeDefs,
+        resolvers,
+      });
+
+      setApolloClient(client);
+    };
+    linkApollo();
+  }, []);
 
   if (isLoading) {
     return (
       <AppLoading
         startAsync={loadResourcesAsync}
         onError={handleLoadingError}
-        onFinish={setIsLoading}
+        onFinish={() => setIsLoading(false)}
       />
     );
-  } else {
+  }
+  if (!client) {
     return (
-      <Provider store={store}>
-        <AppLoadingContainer />
-      </Provider>
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator />
+      </View>
     );
   }
+  return (
+    <ApolloProvider client={client}>
+      <AppLoadingContainer />
+    </ApolloProvider>
+  );
 }

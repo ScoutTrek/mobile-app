@@ -22,7 +22,7 @@ const SearchBar = ({locationToken, back, placeholder, _getPlaceDetails}) => {
         / /g,
         '+'
       )}&key=${ENV.googleApiKey}&sessiontoken=${locationToken}`
-    );
+    ).catch(err => console.log(err));
     const placesData = await places.json();
     setSuggestedPlaces(placesData.predictions);
   };
