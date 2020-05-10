@@ -6,6 +6,8 @@ import {
   TextInput,
   AsyncStorage,
   TouchableOpacity,
+  KeyboardAvoidingView,
+  Alert,
 } from 'react-native';
 import {gql} from '@apollo/client';
 import {useApolloClient, useMutation, useQuery} from '@apollo/react-hooks';
@@ -53,6 +55,8 @@ const JoinPatrol = ({navigation, route}) => {
 
   const [patrolName, setPatrolName] = useState('');
   const [patrolId, setPatrolId] = useState('');
+  const [isValid, setIsValid] = useState(false);
+
   const {data, error, loading} = useQuery(GET_PATROLS, {
     fetchPolicy: 'network-only',
     pollInterval: 500,
@@ -62,14 +66,21 @@ const JoinPatrol = ({navigation, route}) => {
   });
 
   const handleSignUp = async () => {
-    await signUp({
-      variables: {
-        userInfo: {
-          ...route.params,
-          patrol: patrolId,
+    if (isValid) {
+      await signUp({
+        variables: {
+          userInfo: {
+            ...route.params,
+            patrol: patrolId,
+          },
         },
-      },
-    });
+      });
+    } else {
+      Alert.alert(
+        'No patrol selected.',
+        'please select the patrol that you belong to or add a new one.'
+      );
+    }
   };
 
   useEffect(() => {
@@ -94,65 +105,70 @@ const JoinPatrol = ({navigation, route}) => {
 
   console.log(route.params);
   return (
-    <View style={{flex: 1}}>
-      <View style={styles.inputContainer}>
-        <Text style={styles.formHeading}>Select your patrol.</Text>
-        {data.patrols.map(patrol => (
-          <TouchableOpacity
-            onPress={() => {
-              setPatrolId(patrol.id);
-            }}
-            style={
-              patrol.id === patrolId
-                ? [styles.patrol, styles.active]
-                : styles.patrol
-            }
-            key={patrol.id}>
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: 'bold',
-                fontFamily: 'oxygen-bold',
-                color: '#fff',
-              }}>
-              {patrol.name}
-            </Text>
-          </TouchableOpacity>
-        ))}
-        <View style={styles.createPatrolWidget}>
-          <Text style={styles.patrolHeading}>Add a Patrol</Text>
-          <View style={{flexDirection: 'row'}}>
-            <TextInput
-              style={styles.patrolName}
-              onChangeText={setPatrolName}
-              value={patrolName}
-            />
+    <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
+      <View style={{flex: 1}}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.formHeading}>Select your patrol.</Text>
+          {data.patrols.map(patrol => (
             <TouchableOpacity
               onPress={() => {
-                addPatrol({
-                  variables: {
-                    troopId: route.params.troop,
-                    patrolInfo: {
-                      name: patrolName,
-                    },
-                  },
-                });
-                setPatrolName('');
+                setPatrolId(patrol.id);
+                setIsValid(true);
               }}
-              style={styles.btnAddPatrol}>
-              <AntDesign name="plus" size={35} />
+              style={
+                patrol.id === patrolId
+                  ? [styles.patrol, styles.active]
+                  : styles.patrol
+              }
+              key={patrol.id}>
+              <Text
+                style={{
+                  fontSize: 18,
+                  fontWeight: 'bold',
+                  fontFamily: 'oxygen-bold',
+                  color: '#fff',
+                }}>
+                {patrol.name}
+              </Text>
             </TouchableOpacity>
+          ))}
+          <View style={styles.createPatrolWidget}>
+            <Text style={styles.patrolHeading}>Add a Patrol</Text>
+            <View style={{flexDirection: 'row'}}>
+              <TextInput
+                style={styles.patrolName}
+                onChangeText={setPatrolName}
+                value={patrolName}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  addPatrol({
+                    variables: {
+                      troopId: route.params.troop,
+                      patrolInfo: {
+                        name: patrolName,
+                      },
+                    },
+                  });
+                  setPatrolName('');
+                }}
+                style={styles.btnAddPatrol}>
+                <AntDesign name="plus" size={35} />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
 
-      <View style={styles.btnContainer}>
-        <GradientButton
-          title={signUpData.loading ? `Loading...` : `Sign Up`}
-          onPress={handleSignUp}
-        />
+        <View style={styles.btnContainer}>
+          {!!patrolId && (
+            <GradientButton
+              title={signUpData.loading ? `Loading...` : `Finish`}
+              onPress={handleSignUp}
+            />
+          )}
+        </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

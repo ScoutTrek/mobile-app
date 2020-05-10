@@ -16,7 +16,7 @@ const CampoutStackNavigator = () => {
         name="ChooseLocation"
         component={ChooseLocationView}
         initialParams={{
-          placeholder: 'Where will your campout begin?',
+          placeholder: 'Where is your camp site?',
           nextView: 'ChooseMeetPoint',
         }}
       />

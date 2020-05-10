@@ -12,6 +12,7 @@ const HikeStackNavigator = () => {
       screenOptions={() => ({
         headerShown: false,
       })}>
+      <HikeStack.Screen name="HikeDetails" component={HikeDetails} />
       <HikeStack.Screen
         name="ChooseLocation"
         component={ChooseLocationView}
@@ -28,7 +29,6 @@ const HikeStackNavigator = () => {
           nextView: 'HikeDetails',
         }}
       />
-      <HikeStack.Screen name="HikeDetails" component={HikeDetails} />
     </HikeStack.Navigator>
   );
 };

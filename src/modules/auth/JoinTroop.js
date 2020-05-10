@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Alert,
+} from 'react-native';
 import {gql} from '@apollo/client';
 import {useQuery} from '@apollo/react-hooks';
 import Constants from 'expo-constants';
@@ -23,85 +30,104 @@ const JoinTroop = ({navigation, route}) => {
     fetchPolicy: 'network-only',
   });
   const [troopId, setTroopId] = useState('');
+  const [isValid, setIsValid] = useState(false);
 
   const nextForm = () => {
-    const signUpData = {
-      ...route.params,
-      troop: troopId,
-    };
-    delete signUpData.nextView;
-    navigation.navigate(route.params.nextView, signUpData);
+    if (isValid) {
+      const signUpData = {
+        ...route.params,
+        troop: troopId,
+      };
+      delete signUpData.nextView;
+      navigation.navigate(route.params.nextView, signUpData);
+    } else {
+      Alert.alert(
+        'No troop selected.',
+        'please select the troop that you belong to or add a new one.'
+      );
+    }
   };
 
+  
   if (loading) return null;
   if (error) return <Text>`Error! ${error}`</Text>;
-
+  
+  console.log("What the fuck?")
   return (
-    <View style={{flex: 1}}>
-      <View style={styles.inputContainer}>
-        <Text style={styles.formHeading}>What troop are you in?</Text>
-        {data.troops.map(troop => (
-          <TouchableOpacity
-            onPress={() => setTroopId(troop.id)}
-            style={
-              troop.id === troopId
-                ? [styles.patrol, styles.active]
-                : styles.patrol
-            }
-            key={troop.id}>
-            <Text
-              style={{
-                fontSize: 15,
-                fontWeight: 'bold',
-                fontFamily: 'oxygen-bold',
-                color: '#fff',
-              }}>
-              Troop {troop.unitNumber} of {troop.council} council
-            </Text>
-          </TouchableOpacity>
-        ))}
-        <View style={styles.btnContainer}>
-          <TouchableOpacity
-            style={{
-              justifyContent: 'center',
-              width: '100%',
-              borderRadius: 15,
-              backgroundColor: '#A0CD72',
-              paddingHorizontal: 20,
-            }}
-            onPress={() => {
-              const signUpData = {...route.params};
-              delete signUpData.nextView;
-              navigation.navigate('CreateTroop', signUpData);
-            }}>
-            <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'center',
-              }}>
+    <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
+      <View style={{flex: 1}}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.formHeading}>What troop are you in?</Text>
+          {data.troops.map(troop => (
+            <TouchableOpacity
+              onPress={() => {
+                setIsValid(true);
+                setTroopId(troop.id);
+              }}
+              style={
+                troop.id === troopId
+                  ? [styles.patrol, styles.active]
+                  : styles.patrol
+              }
+              key={troop.id}>
               <Text
                 style={{
-                  fontSize: 19,
-                  paddingVertical: 10,
-                  fontFamily: 'oxygen',
+                  fontSize: 15,
+                  fontWeight: 'bold',
+                  fontFamily: 'oxygen-bold',
+                  color: '#fff',
                 }}>
-                Add troop
+                Troop {troop.unitNumber} of {troop.council} council
               </Text>
-              <AntDesign
-                style={{position: 'absolute', left: 15, top: 10}}
-                name="pluscircleo"
-                size={24}
-              />
-            </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
+          ))}
+          {!isValid && <Text>Please select a troop or add one below</Text>}
+          <View style={styles.btnContainer}>
+            <TouchableOpacity
+              style={{
+                justifyContent: 'center',
+                width: '100%',
+                borderRadius: 15,
+                backgroundColor: '#A0CD72',
+                paddingHorizontal: 20,
+                borderWidth: 1,
+              }}
+              onPress={() => {
+                const signUpData = {...route.params};
+                delete signUpData.nextView;
+                navigation.navigate('CreateTroop', signUpData);
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'center',
+                }}>
+                <Text
+                  style={{
+                    fontSize: 19,
+                    paddingVertical: 10,
+                    fontFamily: 'oxygen',
+                  }}>
+                  Add troop
+                </Text>
+                <AntDesign
+                  style={{position: 'absolute', left: 15, top: 10}}
+                  name="pluscircleo"
+                  size={24}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
+        {isValid && (
+          <NextButton
+            text="Select your role"
+            iconName="ios-arrow-round-forward"
+            onClick={nextForm}
+          />
+        )}
       </View>
-      <NextButton
-        text="Select your role"
-        iconName="ios-arrow-round-forward"
-        onClick={nextForm}
-      />
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

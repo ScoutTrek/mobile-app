@@ -4,21 +4,19 @@ import {
   Text,
   Button,
   TextInput,
-  Switch,
+  Modal,
   Slider,
-  Platform,
   StyleSheet,
   ScrollView,
   Dimensions,
   TouchableOpacity,
-  TouchableWithoutFeedback,
-  Keyboard,
   KeyboardAvoidingView,
 } from 'react-native';
 
-import {GET_EVENTS} from '../../../hooks/useReduxEvents';
+import {GET_EVENTS} from '../../calendar/CalendarView';
 
 import RTE from '../../../components/RichTextEditor';
+import {Calendar} from 'react-native-calendars';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -26,6 +24,7 @@ import Colors from '../../../../constants/Colors';
 import Constants from 'expo-constants';
 import {gql} from '@apollo/client';
 import {useMutation, useQuery} from '@apollo/react-hooks';
+import CalModal from '../../../components/CalModal';
 
 const ADD_HIKE = gql`
   mutation AddHike($hike: AddHikeInput!) {
@@ -77,9 +76,10 @@ const HikeDetails = ({navigation, route}) => {
     },
   });
 
-  const [date, setDate] = useState(new Date(Date.now()));
-  const [mode, setMode] = useState('date');
-  const [visible, setVisible] = useState(false);
+  const [date, setDate] = useState('');
+  const [time, setTime] = useState();
+  const [showDateModal, setShowDateModal] = useState(false);
+  const [showTimeModal, setShowTimeModal] = useState(false);
 
   // description
   const [description, setDescription] = useState([]);
@@ -87,23 +87,8 @@ const HikeDetails = ({navigation, route}) => {
   // display contact
   const [distance, setDistance] = useState(1);
   const [duration, setDuration] = useState(1);
-  const [contact, setContact] = useState(false);
 
-  const setState = (event, newDate) => {
-    setDate(() => {
-      setVisible(Platform.OS === 'ios');
-      return newDate;
-    });
-  };
-
-  const show = mode => {
-    setMode(() => {
-      setVisible(true);
-      return mode;
-    });
-  };
-
-  const sendPushNotification = async body => {
+  const sendPushNotification = async (body) => {
     const message = {
       to: data.currUser.expoNotificationToken,
       sound: 'default',
@@ -132,8 +117,6 @@ const HikeDetails = ({navigation, route}) => {
           description,
           datetime: date,
           distance,
-          troop: '5e99f952a0d2524ecb6ceef8',
-          patrol: '5e99fefc0b31db502f6e0299',
           location: {
             lng: route.params['ChooseLocation'].longitude,
             lat: route.params['ChooseLocation'].latitude,
@@ -145,8 +128,8 @@ const HikeDetails = ({navigation, route}) => {
         },
       },
     })
-      .then(res => {})
-      .catch(err => console.log(err));
+      .then((res) => {})
+      .catch((err) => console.log(err));
     sendPushNotification(title);
     navigation.popToTop();
     navigation.pop();
@@ -172,23 +155,75 @@ const HikeDetails = ({navigation, route}) => {
         </View>
         <View style={styles.dateTime}>
           <View style={styles.btns}>
-            <Button title="Choose Date" onPress={() => show('date')} />
-            <Button title="Meet Time" onPress={() => show('time')} />
+            <Button
+              title="Choose Date"
+              onPress={() => setShowDateModal(true)}
+            />
+            <Button
+              title="Choose Time"
+              onPress={() => setShowTimeModal(true)}
+            />
           </View>
           <View style={styles.btns}>
-            <Text>{date.toDateString()}</Text>
-            <Text>{date.toTimeString().substr(0, 5)}</Text>
+            <Text>{date}</Text>
+            <Text>{time && time.toTimeString().substr(0, 5)}</Text>
           </View>
         </View>
-        {visible && (
+        <CalModal show={showDateModal} setShow={setShowDateModal}>
+          <Calendar
+            current={date}
+            markedDates={{
+              [date]: {
+                selected: true,
+                disableTouchEvent: true,
+                selectedDotColor: 'orange',
+              },
+            }}
+            onDayPress={(day) => {
+              setDate(day.dateString);
+            }}
+          />
+          <TouchableOpacity
+            onPress={() => {
+              setShowDateModal(false);
+            }}
+            style={{
+              padding: 12,
+              alignItems: 'center',
+              backgroundColor: Colors.lightGray,
+              borderRadius: 4,
+            }}>
+            <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
+              Choose Date
+            </Text>
+          </TouchableOpacity>
+        </CalModal>
+        <CalModal show={showTimeModal} setShow={setShowTimeModal}>
           <DateTimePicker
-            value={date}
-            mode={mode}
+            value={time || new Date()}
+            minuteInterval={5}
+            mode="time"
             is24Hour={false}
             display="default"
-            onChange={setState}
+            onChange={(event, date) => {
+              setTime(new Date(date));
+            }}
           />
-        )}
+          <TouchableOpacity
+            onPress={() => {
+              setShowTimeModal(false);
+            }}
+            style={{
+              padding: 12,
+              alignItems: 'center',
+              backgroundColor: Colors.lightGray,
+              borderRadius: 4,
+            }}>
+            <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
+              Choose Time
+            </Text>
+          </TouchableOpacity>
+        </CalModal>
 
         <View style={styles.distanceContainer}>
           <Text style={styles.formHeading}>Hike Distance (in miles)?</Text>
@@ -226,15 +261,16 @@ const styles = StyleSheet.create({
   },
   input: {
     padding: 12,
-    paddingHorizontal: 22,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: Colors.purple,
-    fontSize: 15,
+    marginHorizontal: 15,
+    borderRadius: 7,
+    borderWidth: 1,
     flexDirection: 'row',
     flex: 1,
+    fontSize: 15,
     fontFamily: 'oxygen',
     backgroundColor: '#fff',
+    textAlignVertical: 'top',
+    borderColor: Colors.primary,
   },
   dateTime: {
     marginTop: 15,

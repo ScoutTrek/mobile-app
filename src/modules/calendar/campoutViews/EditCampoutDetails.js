@@ -24,6 +24,7 @@ import {useQuery, useMutation} from '@apollo/react-hooks';
 import {gql} from '@apollo/client';
 
 import {GET_CAMPOUT} from './CampoutView';
+import RTE from '../../../components/RichTextEditor';
 
 const GET_VISIBILITY_FILTER = gql`
   {
@@ -87,14 +88,14 @@ const EditCampoutDetails = ({navigation, route}) => {
     });
   };
 
-  const show = mode => {
+  const show = (mode) => {
     setMode(() => {
       setVisible(true);
       return mode;
     });
   };
 
-  const sendPushNotification = async body => {
+  const sendPushNotification = async (body) => {
     const message = {
       to: token,
       sound: 'default',
@@ -127,8 +128,8 @@ const EditCampoutDetails = ({navigation, route}) => {
         },
       },
     })
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
     // sendPushNotification(title);
     navigation.pop();
   };
@@ -145,16 +146,7 @@ const EditCampoutDetails = ({navigation, route}) => {
             value={title}
           />
         </View>
-        {/*<View style={styles.dateTime}>*/}
-        {/*  <View style={styles.btns}>*/}
-        {/*    <Button title="Choose Date" onPress={() => show('date')} />*/}
-        {/*    <Button title="Meet Time" onPress={() => show('time')} />*/}
-        {/*  </View>*/}
-        {/*  <View style={styles.btns}>*/}
-        {/*    <Text>{date}</Text>*/}
-        {/*    <Text>{date}</Text>*/}
-        {/*  </View>*/}
-        {/*</View>*/}
+
         {visible && (
           <DateTimePicker
             value={date}
@@ -168,14 +160,7 @@ const EditCampoutDetails = ({navigation, route}) => {
         <Text style={styles.formHeading}>
           What do you want people to know about the event?
         </Text>
-        <TextInput
-          multiline
-          numberOfLines={1}
-          style={styles.input}
-          onChangeText={setDescription}
-          value={description}
-          onFocus={() => setVisible(false)}
-        />
+        <RTE description={description} setDescription={setDescription} />
         <View style={styles.numDaysContainer}>
           <Text style={styles.formHeading}>
             How many days will you be gone?

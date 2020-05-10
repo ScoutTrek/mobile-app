@@ -24,6 +24,7 @@ import {useQuery, useMutation} from '@apollo/react-hooks';
 import {gql} from '@apollo/client';
 
 import {GET_HIKE} from './HikeView';
+import RTE from '../../../components/RichTextEditor';
 
 const GET_VISIBILITY_FILTER = gql`
   {
@@ -84,14 +85,14 @@ const EditHikeDetails = ({navigation, route}) => {
     });
   };
 
-  const show = mode => {
+  const show = (mode) => {
     setMode(() => {
       setVisible(true);
       return mode;
     });
   };
 
-  const sendPushNotification = async body => {
+  const sendPushNotification = async (body) => {
     const message = {
       to: token,
       sound: 'default',
@@ -123,7 +124,7 @@ const EditHikeDetails = ({navigation, route}) => {
           distance,
         },
       },
-    }).catch(err => console.log(err));
+    }).catch((err) => console.log(err));
     // sendPushNotification(title);
     navigation.pop();
   };
@@ -140,16 +141,6 @@ const EditHikeDetails = ({navigation, route}) => {
             value={title}
           />
         </View>
-        {/*<View style={styles.dateTime}>*/}
-        {/*  <View style={styles.btns}>*/}
-        {/*    <Button title="Choose Date" onPress={() => show('date')} />*/}
-        {/*    <Button title="Meet Time" onPress={() => show('time')} />*/}
-        {/*  </View>*/}
-        {/*  <View style={styles.btns}>*/}
-        {/*    <Text>{date}</Text>*/}
-        {/*    <Text>{date}</Text>*/}
-        {/*  </View>*/}
-        {/*</View>*/}
         {visible && (
           <DateTimePicker
             value={date}
@@ -163,14 +154,8 @@ const EditHikeDetails = ({navigation, route}) => {
         <Text style={styles.formHeading}>
           What do you want people to know about the event?
         </Text>
-        <TextInput
-          multiline
-          numberOfLines={1}
-          style={styles.input}
-          onChangeText={setDescription}
-          value={description}
-          onFocus={() => setVisible(false)}
-        />
+        <RTE description={description} setDescription={setDescription} />
+
         <View style={styles.displayContactContainer}>
           <Text style={styles.formHeading}>Hike Distance (in miles)?</Text>
           <View style={styles.sliderContainer}>
@@ -200,12 +185,12 @@ const styles = StyleSheet.create({
   },
   input: {
     padding: 12,
-    marginHorizontal: 18,
+    marginHorizontal: 15,
     borderRadius: 7,
     borderWidth: 1,
-    fontSize: 15,
     flexDirection: 'row',
     flex: 1,
+    fontSize: 15,
     fontFamily: 'oxygen',
     backgroundColor: '#fff',
     textAlignVertical: 'top',

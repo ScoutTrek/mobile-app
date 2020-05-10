@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useReducer} from 'react';
 import {
   Button,
   Dimensions,
@@ -87,19 +87,48 @@ const ADD_TROOP = gql`
   }
 `;
 
+import {formReducer} from '../SignUp';
+
 const CreateTroop = ({navigation, route}) => {
   const [addTroop, {data, loading}] = useMutation(ADD_TROOP);
-  const [council, setCouncil] = useState('');
-  const [state, setState] = useState({});
-  const [unitNumber, setUnitNumber] = useState(null);
+
+  const [formState, dispatchFormChange] = useReducer(formReducer, {
+    inputValues: {
+      council: '',
+      state: '',
+      city: '',
+      unitNumber: '',
+    },
+    inputValidities: {
+      council: false,
+      state: false,
+      unitNumber: false,
+    },
+    formIsValid: false,
+  });
+
+  const handleInputChange = (inputIdentifier, value) => {
+    let isValid = false;
+    if (value.trim().length > 0) {
+      isValid = true;
+    }
+
+    dispatchFormChange({
+      type: 'UPDATE_INPUT_FIELD',
+      value: value,
+      input: inputIdentifier,
+      isValid,
+    });
+  };
 
   const nextForm = async () => {
+    console.log(formState);
     await addTroop({
       variables: {
         troopInfo: {
-          council,
-          state,
-          unitNumber: +unitNumber,
+          council: formState.inputValues.council,
+          state: formState.inputValues.state,
+          unitNumber: +formState.inputValues.unitNumber,
         },
       },
     });
@@ -127,8 +156,8 @@ const CreateTroop = ({navigation, route}) => {
           </Text>
           <TextInput
             style={styles.input}
-            onChangeText={setCouncil}
-            value={council}
+            onChangeText={value => handleInputChange('council', value)}
+            value={formState.inputValues.council}
             placeholder="Council Name"
             placeholderTextColor={Colors.placeholderTextColor}
           />
@@ -139,9 +168,9 @@ const CreateTroop = ({navigation, route}) => {
             style={{
               width: (Dimensions.get('window').width * 2) / 3,
             }}
-            selectedValue={state}
-            onValueChange={value => setState(value)}
-            onSelect={setState}>
+            selectedValue={formState.inputValues.state}
+            onValueChange={value => handleInputChange('state', value)}
+            onSelect={value => handleInputChange('state', value)}>
             {STATES.map(state => (
               <Picker.Item key={state} label={state} value={state} />
             ))}
@@ -151,9 +180,8 @@ const CreateTroop = ({navigation, route}) => {
           <Text style={styles.formHeading}>What is your troop number?</Text>
           <TextInput
             style={styles.troopNumber}
-            onChangeText={setUnitNumber}
-            value={unitNumber}
-            placeholder="11"
+            onChangeText={value => handleInputChange('unitNumber', value)}
+            value={formState.inputValues.unitNumber}
             placeholderTextColor={Colors.placeholderTextColor}
           />
         </View>

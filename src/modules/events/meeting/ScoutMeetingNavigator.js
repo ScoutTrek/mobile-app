@@ -2,7 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import ChooseLocationView from '../eventComponents/ChooseLocation';
-import SelectScoutMeetingInfo from './SelectScoutMeetingInfo';
+import ScoutMeetingDetails from './ScoutMeetingDetails';
 
 const ScoutMeeting = createStackNavigator();
 
@@ -22,7 +22,7 @@ const ScoutMeetingStackNavigator = () => {
       />
       <ScoutMeeting.Screen
         name="ScoutMeetingInfo"
-        component={SelectScoutMeetingInfo}
+        component={ScoutMeetingDetails}
       />
     </ScoutMeeting.Navigator>
   );

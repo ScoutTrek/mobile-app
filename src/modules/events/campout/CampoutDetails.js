@@ -16,7 +16,7 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 
-import {GET_EVENTS} from '../../../hooks/useReduxEvents';
+import {GET_EVENTS} from '../../calendar/CalendarView';
 
 import RTE from '../../../components/RichTextEditor';
 
@@ -75,37 +75,16 @@ const CampoutDetails = ({navigation, route}) => {
     },
   });
 
-  const [date, setDate] = useState(new Date(Date.now()));
-  const [mode, setMode] = useState('date');
-  const [visible, setVisible] = useState(false);
+  const [showLeaveDate, setShowLeaveDate] = useState(false);
 
-  // description
-  const [description, setDescription] = useState([]);
+  const [description, setDescription] = useState('');
   const [title, setTitle] = useState('');
-  // display contact
-  const [numDays, setNumDays] = useState(1);
-  const [duration, setDuration] = useState(1);
-  const [contact, setContact] = useState(false);
 
-  const setState = (event, newDate) => {
-    setDate(() => {
-      setVisible(Platform.OS === 'ios');
-      return newDate;
-    });
-  };
-
-  const show = mode => {
-    setMode(() => {
-      setVisible(true);
-      return mode;
-    });
-  };
-
-  const sendPushNotification = async body => {
+  const sendPushNotification = async (body) => {
     const message = {
       to: data.currUser.expoNotificationToken,
       sound: 'default',
-      title: 'ScoutTrek Reminder',
+      title: 'ScoutTrek Alert',
       body: `${body} event has been created!`,
       icon: '../../assets/images/Icon.png',
     };
@@ -129,7 +108,6 @@ const CampoutDetails = ({navigation, route}) => {
           title,
           description,
           datetime: date,
-          numDays,
           location: {
             lng: route.params['ChooseLocation'].longitude,
             lat: route.params['ChooseLocation'].latitude,
@@ -141,8 +119,8 @@ const CampoutDetails = ({navigation, route}) => {
         },
       },
     })
-      .then(res => console.log(res))
-      .catch(err => console.log(err));
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
     sendPushNotification(title);
     navigation.popToTop();
     navigation.pop();
@@ -168,10 +146,6 @@ const CampoutDetails = ({navigation, route}) => {
         </View>
         <View style={styles.dateTime}>
           <View style={styles.btns}>
-            <Button title="Choose Date" onPress={() => show('date')} />
-            <Button title="Meet Time" onPress={() => show('time')} />
-          </View>
-          <View style={styles.btns}>
             <Text>{date.toDateString()}</Text>
             <Text>{date.toTimeString().substr(0, 5)}</Text>
           </View>
@@ -182,25 +156,40 @@ const CampoutDetails = ({navigation, route}) => {
             mode={mode}
             is24Hour={false}
             display="default"
-            onChange={setState}
+            onChange={setDate}
           />
         )}
 
         <View style={styles.distanceContainer}>
-          <Text style={styles.formHeading}>
-            How many days will you be gone?
-          </Text>
-          <View style={styles.sliderContainer}>
-            <Slider
-              minimumValue={1}
-              maximumValue={5}
-              step={1}
-              style={styles.slider}
-              value={numDays}
-              onValueChange={setNumDays}
+          <Text style={styles.formHeading}>When do you plan to leave?</Text>
+          <CalModal show={showLeaveDate} setShow={setShowLeaveDate}>
+            <Calendar
+              current={date}
+              markedDates={{
+                [date]: {
+                  selected: true,
+                  disableTouchEvent: true,
+                },
+              }}
+              onDayPress={(day) => {
+                setDate(day.dateString);
+              }}
             />
-            <Text style={styles.sliderText}>{numDays}</Text>
-          </View>
+            <TouchableOpacity
+              onPress={() => {
+                setShowDateModal(false);
+              }}
+              style={{
+                padding: 12,
+                alignItems: 'center',
+                backgroundColor: Colors.lightGray,
+                borderRadius: 4,
+              }}>
+              <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
+                Choose Date
+              </Text>
+            </TouchableOpacity>
+          </CalModal>
         </View>
 
         <Text style={styles.formHeading}>
@@ -224,15 +213,16 @@ const styles = StyleSheet.create({
   },
   input: {
     padding: 12,
-    paddingHorizontal: 22,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
-    borderColor: Colors.purple,
-    fontSize: 15,
+    marginHorizontal: 15,
+    borderRadius: 7,
+    borderWidth: 1,
     flexDirection: 'row',
     flex: 1,
+    fontSize: 15,
     fontFamily: 'oxygen',
     backgroundColor: '#fff',
+    textAlignVertical: 'top',
+    borderColor: Colors.primary,
   },
   dateTime: {
     marginTop: 15,

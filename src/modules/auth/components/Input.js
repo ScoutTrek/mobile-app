@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {StyleSheet, TextInput} from 'react-native';
 
 const AuthInput = ({placeholder, onInputChange, ...props}) => {
-  const [value, setValue] = useState();
+  const [value, setValue] = useState('');
 
   useEffect(() => {
     onInputChange(value);

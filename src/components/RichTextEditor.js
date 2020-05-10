@@ -8,19 +8,21 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 
-import CNRichTextEditor, {
+import CNEditor, {
   CNToolbar,
-  getInitialObject,
   getDefaultStyles,
 } from 'react-native-cn-richtext-editor';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
+import Colors from '../../constants/Colors'
 
 const defaultStyles = getDefaultStyles();
 
 class App extends Component {
   constructor(props) {
     super(props);
-
+  
+    this.customStyles = {...defaultStyles, body: {fontSize: 14}, heading : {fontSize: 16}, title : {fontSize: 20}, ol : {fontSize: 12 }, ul: {fontSize: 12}, bold: {fontSize: 12, fontWeight: 'bold'}};
+  
     this.state = {
       selectedTag: 'body',
       selectedStyles: [],
@@ -29,55 +31,64 @@ class App extends Component {
     this.editor = null;
   }
 
-  onStyleKeyPress = toolType => {
+  onStyleKeyPress = (toolType) => {
     this.editor.applyToolbar(toolType);
   };
 
-  onSelectedTagChanged = tag => {
+  onSelectedTagChanged = (tag) => {
     this.setState({
       selectedTag: tag,
     });
   };
 
-  onSelectedStyleChanged = styles => {
+  onSelectedStyleChanged = (styles) => {
     this.setState({
       selectedStyles: styles,
     });
   };
 
   render() {
-    const {description} = this.props;
     return (
-      <View
-        // behavior="padding"
-        // enabled
-        // keyboardVerticalOffset={0}
+      <KeyboardAvoidingView
+        behavior="padding"
+        enabled
+        keyboardVerticalOffset={0}
         style={{
+          margin: 12,
           flex: 1,
-          backgroundColor: '#fff',
           flexDirection: 'column',
           justifyContent: 'flex-end',
         }}>
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.main}>
-            <CNRichTextEditor
-              ref={input => (this.editor = input)}
-              onSelectedTagChanged={this.onSelectedTagChanged}
-              onSelectedStyleChanged={this.onSelectedStyleChanged}
-              value={description}
-              styleList={defaultStyles}
-              onValueChanged={this.props.setDescription}
-            />
-          </View>
-        </TouchableWithoutFeedback>
-
         <View
           style={{
-            minHeight: 45,
+            flex: 1,
+            backgroundColor: '#fff',
+            borderColor: Colors.lightGray,
+            borderWidth: 1
+          }}
+          onTouchStart={() => {
+            this.editor && this.editor.blur();
           }}>
+          <View style={styles.main} onTouchStart={(e) => e.stopPropagation()}>
+            <CNEditor
+              placeholder="What do you want everyone to know about this event?"
+              ref={(input) => (this.editor = input)}
+              onSelectedTagChanged={this.onSelectedTagChanged}
+              onSelectedStyleChanged={this.onSelectedStyleChanged}
+              onValueChanged={(value) => {
+                this.props.setDescription(value);
+              }}
+              styleList={this.customStyles}
+              initialHtml={this.props.description}
+            />
+          </View>
+        </View>
+
+        <View>
           <CNToolbar
             style={{
-              height: 45,
+              height: 44,
+              borderRadius: 0,
             }}
             iconSetContainerStyle={{
               flexGrow: 1,
@@ -161,16 +172,17 @@ class App extends Component {
             onStyleKeyPress={this.onStyleKeyPress}
           />
         </View>
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }
 
 const styles = StyleSheet.create({
   main: {
-    // flex: 1,
+    flex: 1,
     minHeight: 200,
-    padding: 10,
+    marginTop: 20,
+    paddingHorizontal: 10,
     alignItems: 'stretch',
   },
   toolbarButton: {

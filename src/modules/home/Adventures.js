@@ -58,7 +58,6 @@ export default function Adventures() {
     alertIfRemoteNotificationsDisabledAsync();
   }, []);
 
-  console.log(notifications);
   return (
     <View style={styles.container}>
       <Text>Welcome to ScoutTrek</Text>

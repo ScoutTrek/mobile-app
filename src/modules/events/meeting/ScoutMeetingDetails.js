@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -28,7 +28,7 @@ import RadioForm, {
 } from 'react-native-simple-radio-button';
 import {gql} from '@apollo/client';
 import {useMutation, useQuery} from '@apollo/react-hooks';
-import {GET_EVENTS} from '../../../hooks/useReduxEvents';
+import {GET_EVENTS} from '../../calendar/CalendarView';
 
 export const weekDays = {
   SUNDAY: 0,
@@ -44,12 +44,13 @@ export const getInitialDate = (target, current) => {
   target = +target;
   current = +current;
   if (target === current) {
-    return 6;
+    return 7;
   }
   if (target > current) {
-    return 6 - (target - current);
+    return target - current;
   } else {
-    return 6 + target - current;
+    console.log(current, ' current', target, ' target');
+    return 7 + target - current;
   }
 };
 
@@ -82,12 +83,13 @@ const GET_EXPO_TOKEN = gql`
   }
 `;
 
-const SelectScoutMeetingInfo = ({navigation, route}) => {
+const ScoutMeetingDetails = ({navigation, route}) => {
   const {data} = useQuery(GET_EXPO_TOKEN);
   const [addScoutMeeting] = useMutation(ADD_SCOUT_MEETING, {
     update(cache, {data: {event}}) {
       try {
         const {events} = cache.readQuery({query: GET_EVENTS});
+        console.log('Is the cache trying to save?', event);
         cache.writeQuery({
           query: GET_EVENTS,
           data: {events: events.concat([event])},
@@ -105,14 +107,14 @@ const SelectScoutMeetingInfo = ({navigation, route}) => {
 
   const [time, setTime] = useState(new Date(Date.now()));
   const [showClock, setShowClock] = useState(false);
-  const [value, setValue] = useState(new Date().getDay());
-  // const [startDate, setStartDate] = useState(new Date(Date.now()));
-  // const [endDate, setEndDate] = useState(new Date(Date.now()));
+  const [weekday, setWeekday] = useState('MONDAY');
+
+  // Add meeting day ranges in the future.
 
   const [description, setDescription] = useState('');
   const [shakedownWeek, setShakedownWeek] = useState(false);
 
-  const sendPushNotification = async body => {
+  const sendPushNotification = async (body) => {
     const message = {
       to: data.currUser.expoNotificationToken,
       sound: 'default',
@@ -131,11 +133,10 @@ const SelectScoutMeetingInfo = ({navigation, route}) => {
     });
   };
 
-  console.log(value, time);
   const back = () => navigation.goBack();
   const submit = () => {
     const d = new Date();
-    d.setDate(d.getDate() + getInitialDate(weekDays[value], d.getDay()));
+    d.setDate(d.getDate() + getInitialDate(weekDays[weekday], d.getDay()));
     const datetime = new Date(
       d.toISOString().split('T')[0] + 'T' + time.toTimeString().split(' ')[0]
     );
@@ -143,8 +144,9 @@ const SelectScoutMeetingInfo = ({navigation, route}) => {
       title: 'Troop Meeting',
       description,
       datetime,
-      day: value,
+      day: weekday,
       time,
+      shakedown: shakedownWeek,
       location: {
         lng: route.params['ChooseLocation'].longitude,
         lat: route.params['ChooseLocation'].latitude,
@@ -154,8 +156,8 @@ const SelectScoutMeetingInfo = ({navigation, route}) => {
       variables: {
         scoutMeeting,
       },
-    }).catch(err => console.log(err));
-    sendPushNotification('Troop Meeting');
+    }).catch((err) => console.log(err));
+    Constants.isDevice && sendPushNotification('Troop Meeting');
     navigation.popToTop();
     navigation.pop();
     navigation.navigate('Calendar');
@@ -184,7 +186,7 @@ const SelectScoutMeetingInfo = ({navigation, route}) => {
               labelHorizontal={false}
               buttonColor={'#2196f3'}
               initial={'MONDAY'}
-              onPress={setValue}
+              onPress={(value) => setWeekday(value)}
             />
           </View>
           <Text style={styles.formHeading}>What time will you start?</Text>
@@ -204,8 +206,6 @@ const SelectScoutMeetingInfo = ({navigation, route}) => {
                 display="default"
                 onChange={(event, date) => {
                   setTime(new Date(date));
-                  console.log(showClock);
-                  setShowClock(false);
                 }}
               />
             )}
@@ -269,4 +269,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SelectScoutMeetingInfo;
+export default ScoutMeetingDetails;

@@ -22,7 +22,7 @@ import Constants from 'expo-constants';
 import {Ionicons} from '@expo/vector-icons';
 import {useQuery, useMutation} from '@apollo/react-hooks';
 import {gql} from '@apollo/client';
-import {GET_EVENTS} from '../../../hooks/useReduxEvents';
+import {GET_EVENTS} from '../CalendarView';
 import RadioForm from 'react-native-simple-radio-button';
 import RTE from '../../../components/RichTextEditor';
 import Toggle from '../../../components/formfields/Toggle';
@@ -30,13 +30,7 @@ import {GET_SCOUT_MEETING} from '../scoutMeetingViews/ScoutMeetingView';
 import {
   getInitialDate,
   weekDays,
-} from '../../events/meeting/SelectScoutMeetingInfo';
-
-const GET_VISIBILITY_FILTER = gql`
-  {
-    token: expoNotificationToken @client
-  }
-`;
+} from '../../events/meeting/ScoutMeetingDetails';
 
 const UPDATE_SCOUT_MEETING = gql`
   mutation UpdateScoutMeeting($id: ID!, $updates: UpdateScoutMeetingInput!) {
@@ -93,6 +87,7 @@ const EditScoutMeetingDetails = ({navigation, route}) => {
     const datetime = new Date(
       d.toISOString().split('T')[0] + 'T' + time.toTimeString().split(' ')[0]
     );
+    console.log(shakedownWeek);
     const scoutMeeting = {
       title: 'Troop Meeting',
       description,
@@ -106,7 +101,7 @@ const EditScoutMeetingDetails = ({navigation, route}) => {
         id: event.id,
         updates: scoutMeeting,
       },
-    }).then(res => console.log(res));
+    }).then((res) => console.log(res));
     navigation.pop();
   };
 
@@ -134,7 +129,7 @@ const EditScoutMeetingDetails = ({navigation, route}) => {
               buttonColor={'#2196f3'}
               animation={true}
               initial={'MONDAY'}
-              onPress={val => setValue(val)}
+              onPress={(val) => setValue(val)}
             />
           </View>
           <Text style={styles.formHeading}>

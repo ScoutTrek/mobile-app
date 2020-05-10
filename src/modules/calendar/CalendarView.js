@@ -14,6 +14,28 @@ import Colors from '../../../constants/Colors';
 import fonts from '../../styles/fonts';
 
 import useReduxEvents from '../../hooks/useReduxEvents';
+import {useQuery} from '@apollo/react-hooks';
+import {gql} from '@apollo/client';
+
+export const GET_EVENTS = gql`
+  query ALL_EVENTS {
+    events {
+      id
+      type
+      title
+      description
+      datetime
+      location {
+        lat
+        lng
+      }
+      creator {
+        id
+        name
+      }
+    }
+  }
+`;
 
 const getColor = label => {
   switch (label) {
@@ -29,8 +51,11 @@ const getColor = label => {
 };
 
 const CalendarView = ({navigation}) => {
-  const {getItems, loading, error} = useReduxEvents();
+  const {data, loading, error} = useQuery(GET_EVENTS);
+
   const [items, setItems] = useState({});
+
+  const getItems = useReduxEvents(data);
 
   const rowHasChanged = (r1, r2) => {
     return r1.name !== r2.name;

@@ -17,7 +17,9 @@ import {typeDefs, resolvers} from './src/localState/User';
 
 const authLink = setContext(async (_, {headers}) => {
   // get the authentication token from local storage if it exists
+  // const token = await AsyncStorage.getItem('userToken')
   const token = await AsyncStorage.getItem('userToken');
+  console.log(token);
   return {
     headers: {
       ...headers,
@@ -88,13 +90,9 @@ const AppLoadingContainer = () => {
           <Stack.Screen
             name="AuthNav"
             component={AuthNavigator}
-            options={
-              {
-                // When logging out, a pop animation feels intuitive
-                // You can remove this if you want the default 'push' animation
-                // animationTypeForReplace: isSignOut ? 'pop' : 'push',
-              }
-            }
+            options={{
+              animationTypeForReplace: 'push',
+            }}
           />
         ) : (
           <Stack.Screen name="Home" component={MainTabNavigator} />
@@ -136,7 +134,11 @@ export default function App() {
         if (graphQLErrors)
           graphQLErrors.map(({message, locations, path}) =>
             console.log(
-              `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+              `[GraphQL error]: Message: ${message}, Location: ${JSON.stringify(
+                locations,
+                null,
+                2
+              )}, Path: ${path}`
             )
           );
 
@@ -145,7 +147,7 @@ export default function App() {
 
       const link = authLink.concat(errorLink).concat(
         new HttpLink({
-          uri: 'http://localhost:4000',
+          uri: 'https://scouttrek-node-api.appspot.com/:4000',
         })
       );
 

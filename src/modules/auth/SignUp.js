@@ -6,7 +6,7 @@ import {
   KeyboardAvoidingView,
   Image,
   Dimensions,
-  AsyncStorage,
+  Alert,
 } from 'react-native';
 import Constants from 'expo-constants';
 import {Ionicons} from '@expo/vector-icons';
@@ -15,14 +15,24 @@ import GradientButton from '../../components/buttons/GradientButton';
 import {LinearGradient} from 'expo-linear-gradient';
 import InlineButton from '../../components/buttons/InlineButton';
 
-const formReducer = (state, action) => {
+export const formReducer = (state, action) => {
   if (action.type === 'UPDATE_INPUT_FIELD') {
     const updatedValues = {
       ...state.inputValues,
       [action.input]: action.value,
     };
+    const updatedValidities = {
+      ...state.inputValidities,
+      [action.input]: action.isValid,
+    };
+    let updatedFormIsValid = true;
+    for (const key in updatedValidities) {
+      updatedFormIsValid = updatedFormIsValid && updatedValidities[key];
+    }
     return {
       inputValues: updatedValues,
+      inputValidities: updatedValidities,
+      formIsValid: updatedFormIsValid,
     };
   }
 };
@@ -35,24 +45,68 @@ const SignUp = ({navigation, route}) => {
       password: '',
       confirmPassword: '',
     },
+    inputValidities: {
+      name: false,
+      email: false,
+      password: false,
+      confirmPassword: false,
+    },
+    formIsValid: false,
   });
 
   const handleNext = () => {
-    const signUpData = {
-      name: formState.inputValues.name,
-      email: formState.inputValues.email,
-      password: formState.inputValues.password,
-      passwordConfirm: formState.inputValues.confirmPassword,
-    };
-    navigation.navigate(route.params.nextView, signUpData);
+    const matchEmail = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
+    if (formState.formIsValid) {
+      const signUpData = {
+        name: formState.inputValues.name,
+        email: formState.inputValues.email,
+        password: formState.inputValues.password,
+        passwordConfirm: formState.inputValues.confirmPassword,
+      };
+      navigation.navigate(route.params.nextView, signUpData);
+    } else if (formState.inputValues.password < 8) {
+      Alert.alert(
+        'Please enter a password with at least 8 characters.',
+        'It is helpful to use one capital letter and one symbol.'
+      );
+    } else if (
+      formState.inputValues.password !== formState.inputValues.confirmPassword
+    ) {
+      Alert.alert(
+        'Whoops, the passwords you entered do not match.',
+        'Please re-enter passwords to confirm they match.'
+      );
+    } else if (!matchEmail.test(formState.inputValues.email)) {
+      Alert.alert(
+        "Looks like you didn't enter a valid email.",
+        'please make sure you put your full email address.'
+      );
+    } else {
+      Alert.alert(
+        "Whoops, we couldn't understand the form.",
+        'please make sure you entered valid information.'
+      );
+    }
   };
 
-  const handleInputChange = (inputIdentifier, value) =>
+  const handleInputChange = (inputIdentifier, value) => {
+    let isValid = false;
+    if (value.trim().length > 0) {
+      isValid = true;
+    }
+    if (inputIdentifier === 'confirmPassword') {
+      if (value !== formState.inputValues.password) {
+        isValid = false;
+      }
+    }
+
     dispatchFormChange({
       type: 'UPDATE_INPUT_FIELD',
       value: value,
       input: inputIdentifier,
+      isValid,
     });
+  };
 
   return (
     <View style={styles.screen}>
