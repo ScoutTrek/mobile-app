@@ -156,7 +156,7 @@ const CreateTroop = ({navigation, route}) => {
           </Text>
           <TextInput
             style={styles.input}
-            onChangeText={value => handleInputChange('council', value)}
+            onChangeText={(value) => handleInputChange('council', value)}
             value={formState.inputValues.council}
             placeholder="Council Name"
             placeholderTextColor={Colors.placeholderTextColor}
@@ -169,9 +169,9 @@ const CreateTroop = ({navigation, route}) => {
               width: (Dimensions.get('window').width * 2) / 3,
             }}
             selectedValue={formState.inputValues.state}
-            onValueChange={value => handleInputChange('state', value)}
-            onSelect={value => handleInputChange('state', value)}>
-            {STATES.map(state => (
+            onValueChange={(value) => handleInputChange('state', value)}
+            onSelect={(value) => handleInputChange('state', value)}>
+            {STATES.map((state) => (
               <Picker.Item key={state} label={state} value={state} />
             ))}
           </Picker>
@@ -180,7 +180,7 @@ const CreateTroop = ({navigation, route}) => {
           <Text style={styles.formHeading}>What is your troop number?</Text>
           <TextInput
             style={styles.troopNumber}
-            onChangeText={value => handleInputChange('unitNumber', value)}
+            onChangeText={(value) => handleInputChange('unitNumber', value)}
             value={formState.inputValues.unitNumber}
             placeholderTextColor={Colors.placeholderTextColor}
           />

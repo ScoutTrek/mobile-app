@@ -27,7 +27,7 @@ const ChooseRole = ({navigation, route}) => {
       <View style={{flex: 1}}>
         <View style={styles.inputContainer}>
           <Text style={styles.formHeading}>What state do you live in?</Text>
-          {ROLES.map(role => (
+          {ROLES.map((role) => (
             <TouchableOpacity
               onPress={() => {
                 const signUpData = {

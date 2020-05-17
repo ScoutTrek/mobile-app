@@ -17,6 +17,7 @@ import {GET_EVENTS} from '../../calendar/CalendarView';
 
 import RTE from '../../../components/RichTextEditor';
 import {Calendar} from 'react-native-calendars';
+import CalModal from '../../../components/CalModal';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -24,7 +25,6 @@ import Colors from '../../../../constants/Colors';
 import Constants from 'expo-constants';
 import {gql} from '@apollo/client';
 import {useMutation, useQuery} from '@apollo/react-hooks';
-import CalModal from '../../../components/CalModal';
 
 const ADD_HIKE = gql`
   mutation AddHike($hike: AddHikeInput!) {
@@ -77,16 +77,15 @@ const HikeDetails = ({navigation, route}) => {
   });
 
   const [date, setDate] = useState('');
-  const [time, setTime] = useState();
+  const [time, setTime] = useState(new Date());
   const [showDateModal, setShowDateModal] = useState(false);
   const [showTimeModal, setShowTimeModal] = useState(false);
 
   // description
   const [description, setDescription] = useState([]);
-  const [title, setTitle] = useState('');
+
   // display contact
   const [distance, setDistance] = useState(1);
-  const [duration, setDuration] = useState(1);
 
   const sendPushNotification = async (body) => {
     const message = {
@@ -113,24 +112,26 @@ const HikeDetails = ({navigation, route}) => {
     addHike({
       variables: {
         hike: {
-          title,
+          title: route.params.name,
           description,
-          datetime: date,
+          datetime: route.params.datetime,
+          meetTime: route.params.meetTime,
+          leaveTime: route.params.leaveTime,
           distance,
           location: {
-            lng: route.params['ChooseLocation'].longitude,
-            lat: route.params['ChooseLocation'].latitude,
+            lng: route.params.location.longitude,
+            lat: route.params.location.latitude,
           },
           meetLocation: {
-            lng: route.params['ChooseMeetPoint'].longitude,
-            lat: route.params['ChooseMeetPoint'].latitude,
+            lng: route.params.meetLocation.longitude,
+            lat: route.params.meetLocation.latitude,
           },
         },
       },
     })
       .then((res) => {})
       .catch((err) => console.log(err));
-    sendPushNotification(title);
+    sendPushNotification(route.params.name);
     navigation.popToTop();
     navigation.pop();
     navigation.navigate('Calendar');
@@ -143,30 +144,20 @@ const HikeDetails = ({navigation, route}) => {
       style={{flex: 1}}
       enabled>
       <ScrollView contentContainerStyles={{flexGrow: 1}}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.formHeading}>What will the event be called?</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={setTitle}
-            value={title}
-            placeholder="Event Name"
-            placeholderTextColor={Colors.placeholderTextColor}
-          />
-        </View>
-        <View style={styles.dateTime}>
-          <View style={styles.btns}>
-            <Button
-              title="Choose Date"
-              onPress={() => setShowDateModal(true)}
-            />
-            <Button
-              title="Choose Time"
-              onPress={() => setShowTimeModal(true)}
-            />
-          </View>
-          <View style={styles.btns}>
-            <Text>{date}</Text>
-            <Text>{time && time.toTimeString().substr(0, 5)}</Text>
+        <View style={styles.endTimeContainer}>
+          <Text style={styles.formHeading}>
+            Roughly what time will the event end?
+          </Text>
+          <View style={styles.dateTime}>
+            <View style={styles.btns}>
+              <Button
+                title="Choose Time"
+                onPress={() => setShowTimeModal(true)}
+              />
+            </View>
+            <View style={styles.btns}>
+              <Text>{time && time.toTimeString().substr(0, 5)}</Text>
+            </View>
           </View>
         </View>
         <CalModal show={showDateModal} setShow={setShowDateModal}>
@@ -200,7 +191,7 @@ const HikeDetails = ({navigation, route}) => {
         </CalModal>
         <CalModal show={showTimeModal} setShow={setShowTimeModal}>
           <DateTimePicker
-            value={time || new Date()}
+            value={time}
             minuteInterval={5}
             mode="time"
             is24Hour={false}
@@ -255,9 +246,9 @@ const HikeDetails = ({navigation, route}) => {
 };
 
 const styles = StyleSheet.create({
-  inputContainer: {
-    width: '100%',
+  endTimeContainer: {
     marginTop: 10 + Constants.statusBarHeight,
+    paddingHorizontal: 20,
   },
   input: {
     padding: 12,
@@ -273,12 +264,10 @@ const styles = StyleSheet.create({
     borderColor: Colors.primary,
   },
   dateTime: {
-    marginTop: 15,
     flexDirection: 'row',
   },
   btns: {
     width: Dimensions.get('window').width / 2 - 30,
-    height: Dimensions.get('window').height / 5,
     margin: 15,
     justifyContent: 'space-evenly',
   },
@@ -300,7 +289,6 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'flex-start',
     paddingHorizontal: 20,
-    marginTop: 15,
   },
   displayContact: {
     marginHorizontal: 18,

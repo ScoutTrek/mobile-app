@@ -21,11 +21,11 @@ function getMonthObject(datestring) {
   return monthObject;
 }
 
-const useReduxEvents = data => {
+const useReduxEvents = (data) => {
   if (data) {
-    return calData => {
+    return (calData) => {
       const items = getMonthObject(calData.dateString);
-      data.events.forEach(({id, creator, datetime, type}) => {
+      data.events.forEach(({id, title, creator, datetime, type}) => {
         let strDate = new Date(parseInt(datetime)).toISOString();
         strDate = strDate.split('T')[0];
         if (
@@ -33,6 +33,7 @@ const useReduxEvents = data => {
           new Date(parseInt(datetime)).getFullYear() === 2020
         ) {
           items[strDate].push({
+            title,
             type,
             name: creator.name,
             id,

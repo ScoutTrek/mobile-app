@@ -13,7 +13,7 @@ const CalModal = (props) => {
             flex: 1,
             alignItems: 'center',
             justifyContent: 'center',
-            backgroundColor: 'rgba(0,0,0,0.5)',
+            backgroundColor: 'rgba(0,0,0,0.6)',
           }}>
           <View
             style={{

@@ -13,16 +13,24 @@ import CNEditor, {
   getDefaultStyles,
 } from 'react-native-cn-richtext-editor';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
-import Colors from '../../constants/Colors'
+import Colors from '../../constants/Colors';
 
 const defaultStyles = getDefaultStyles();
 
 class App extends Component {
   constructor(props) {
     super(props);
-  
-    this.customStyles = {...defaultStyles, body: {fontSize: 14}, heading : {fontSize: 16}, title : {fontSize: 20}, ol : {fontSize: 12 }, ul: {fontSize: 12}, bold: {fontSize: 12, fontWeight: 'bold'}};
-  
+
+    this.customStyles = {
+      ...defaultStyles,
+      body: {fontSize: 14},
+      heading: {fontSize: 16},
+      title: {fontSize: 20},
+      ol: {fontSize: 12},
+      ul: {fontSize: 12},
+      bold: {fontSize: 12, fontWeight: 'bold'},
+    };
+
     this.state = {
       selectedTag: 'body',
       selectedStyles: [],
@@ -64,7 +72,7 @@ class App extends Component {
             flex: 1,
             backgroundColor: '#fff',
             borderColor: Colors.lightGray,
-            borderWidth: 1
+            borderWidth: 1,
           }}
           onTouchStart={() => {
             this.editor && this.editor.blur();

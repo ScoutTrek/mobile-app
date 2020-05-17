@@ -12,6 +12,7 @@ export default {
   brown: '#382B14',
   darkBrown: '#241C0D',
   offWhite: '#EDEDEF',
+  offWhite2: '#f9f4f1',
   lightGray: '#DFDFE0',
   placeholderTextColor: '#5C5750',
   tabIconDefault: '#ccc',

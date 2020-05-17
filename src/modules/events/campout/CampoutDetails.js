@@ -19,6 +19,8 @@ import {
 import {GET_EVENTS} from '../../calendar/CalendarView';
 
 import RTE from '../../../components/RichTextEditor';
+import {Calendar} from 'react-native-calendars';
+import CalModal from '../../../components/CalModal';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
 
@@ -75,7 +77,13 @@ const CampoutDetails = ({navigation, route}) => {
     },
   });
 
-  const [showLeaveDate, setShowLeaveDate] = useState(false);
+  const [showStartDatetime, setShowStartDatetime] = useState(false);
+  const [showEndDatetime, setShowEndDatetime] = useState(false);
+
+  const [startDate, setStartDate] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [endTime, setEndTime] = useState('');
 
   const [description, setDescription] = useState('');
   const [title, setTitle] = useState('');
@@ -102,12 +110,20 @@ const CampoutDetails = ({navigation, route}) => {
   const back = () => navigation.goBack();
 
   const submit = () => {
+    const startDatetime = `${startDate}T${
+      startTime.toISOString().split('T')[1]
+    }`;
+    const endDatetime = `${endDate}T${endTime.toISOString().split('T')[1]}`;
+
     addCampout({
       variables: {
         campout: {
           title,
           description,
-          datetime: date,
+          startDatetime,
+          // create multi-day events
+          datetime: startDatetime,
+          endDatetime,
           location: {
             lng: route.params['ChooseLocation'].longitude,
             lat: route.params['ChooseLocation'].latitude,
@@ -145,53 +161,161 @@ const CampoutDetails = ({navigation, route}) => {
           />
         </View>
         <View style={styles.dateTime}>
-          <View style={styles.btns}>
-            <Text>{date.toDateString()}</Text>
-            <Text>{date.toTimeString().substr(0, 5)}</Text>
-          </View>
-        </View>
-        {visible && (
-          <DateTimePicker
-            value={date}
-            mode={mode}
-            is24Hour={false}
-            display="default"
-            onChange={setDate}
-          />
-        )}
-
-        <View style={styles.distanceContainer}>
-          <Text style={styles.formHeading}>When do you plan to leave?</Text>
-          <CalModal show={showLeaveDate} setShow={setShowLeaveDate}>
-            <Calendar
-              current={date}
-              markedDates={{
-                [date]: {
-                  selected: true,
-                  disableTouchEvent: true,
-                },
-              }}
-              onDayPress={(day) => {
-                setDate(day.dateString);
-              }}
-            />
-            <TouchableOpacity
-              onPress={() => {
-                setShowDateModal(false);
-              }}
-              style={{
-                padding: 12,
-                alignItems: 'center',
-                backgroundColor: Colors.lightGray,
-                borderRadius: 4,
-              }}>
-              <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
-                Choose Date
-              </Text>
-            </TouchableOpacity>
-          </CalModal>
+          <TouchableOpacity
+            onPress={() => {
+              setShowStartDatetime(true);
+            }}
+            style={{
+              padding: 12,
+              margin: 5,
+              alignItems: 'center',
+              backgroundColor: Colors.lightGreen,
+              borderRadius: 4,
+            }}>
+            <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
+              {!startTime
+                ? `When you will depart...`
+                : `Change when you will leave...`}
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setShowEndDatetime(true);
+            }}
+            style={{
+              padding: 12,
+              margin: 5,
+              alignItems: 'center',
+              backgroundColor: Colors.lightGreen,
+              borderRadius: 4,
+            }}>
+            <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
+              {!endTime
+                ? `When will you return...`
+                : `Change when you will return...`}
+            </Text>
+          </TouchableOpacity>
         </View>
 
+        <CalModal show={showStartDatetime} setShow={setShowStartDatetime}>
+          {!startDate ? (
+            <View>
+              <Calendar
+                current={startDate}
+                markedDates={{
+                  [startDate]: {
+                    selected: true,
+                    disableTouchEvent: true,
+                  },
+                }}
+                onDayPress={(day) => {
+                  setStartDate(day.dateString);
+                }}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  setShowStartDatetime(false);
+                }}
+                style={{
+                  padding: 12,
+                  alignItems: 'center',
+                  backgroundColor: Colors.lightGray,
+                  borderRadius: 4,
+                }}>
+                <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
+                  Choose Date
+                </Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View>
+              <DateTimePicker
+                value={startTime || new Date()}
+                minuteInterval={5}
+                mode="time"
+                is24Hour={false}
+                display="default"
+                onChange={(event, date) => {
+                  setStartTime(new Date(date));
+                }}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  setShowStartDatetime(false);
+                }}
+                style={{
+                  padding: 12,
+                  alignItems: 'center',
+                  backgroundColor: Colors.lightGray,
+                  borderRadius: 4,
+                }}>
+                <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
+                  Choose Time
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </CalModal>
+
+        <CalModal show={showEndDatetime} setShow={setShowEndDatetime}>
+          {!endDate ? (
+            <View>
+              <Calendar
+                current={endDate}
+                markedDates={{
+                  [endDate]: {
+                    selected: true,
+                    disableTouchEvent: true,
+                  },
+                }}
+                onDayPress={(day) => {
+                  setEndDate(day.dateString);
+                }}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  setShowEndDatetime(false);
+                }}
+                style={{
+                  padding: 12,
+                  alignItems: 'center',
+                  backgroundColor: Colors.lightGray,
+                  borderRadius: 4,
+                }}>
+                <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
+                  Choose Date
+                </Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View>
+              <DateTimePicker
+                value={endTime || new Date()}
+                minuteInterval={5}
+                mode="time"
+                is24Hour={false}
+                display="default"
+                onChange={(event, date) => {
+                  setEndTime(new Date(date));
+                }}
+              />
+              <TouchableOpacity
+                onPress={() => {
+                  setShowEndDatetime(false);
+                }}
+                style={{
+                  padding: 12,
+                  alignItems: 'center',
+                  backgroundColor: Colors.lightGray,
+                  borderRadius: 4,
+                }}>
+                <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
+                  Choose Time
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </CalModal>
         <Text style={styles.formHeading}>
           What do you want people to know about the camping trip?
         </Text>
@@ -226,7 +350,7 @@ const styles = StyleSheet.create({
   },
   dateTime: {
     marginTop: 15,
-    flexDirection: 'row',
+    padding: 10,
   },
   btns: {
     width: Dimensions.get('window').width / 2 - 30,

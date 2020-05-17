@@ -89,7 +89,7 @@ const EventTypesScreen = ({navigation}) => {
     navigation.navigate(route, {...data});
   };
 
-  const hikingBtn = item => (
+  const hikingBtn = (item) => (
     <TouchableOpacity
       key={item.id}
       style={styles.eventContainer}
@@ -110,7 +110,7 @@ const EventTypesScreen = ({navigation}) => {
     </TouchableOpacity>
   );
 
-  const troopMeetingBtn = item => (
+  const troopMeetingBtn = (item) => (
     <TouchableOpacity
       key={item.id}
       style={styles.eventContainer}
@@ -131,7 +131,7 @@ const EventTypesScreen = ({navigation}) => {
     </TouchableOpacity>
   );
 
-  const campingBtn = item => (
+  const campingBtn = (item) => (
     <TouchableOpacity
       key={item.id}
       style={styles.eventContainer}
@@ -152,7 +152,7 @@ const EventTypesScreen = ({navigation}) => {
     </TouchableOpacity>
   );
 
-  const backpackingBtn = item => (
+  const backpackingBtn = (item) => (
     <TouchableOpacity
       key={item.id}
       style={styles.eventContainer}
@@ -178,7 +178,7 @@ const EventTypesScreen = ({navigation}) => {
       <Heading title="New Event" />
       <FlatList
         contentContainerStyle={{flexGrow: 1, paddingBottom: 15}}
-        keyExtractor={item => item.id.toString()}
+        keyExtractor={(item) => item.id.toString()}
         style={{
           backgroundColor: colors.white,
           width: '100%',

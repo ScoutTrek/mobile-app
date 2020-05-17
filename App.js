@@ -4,7 +4,6 @@ import {ActivityIndicator, View, AsyncStorage} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {AppLoading} from 'expo';
-import {Asset} from 'expo-asset';
 import * as Font from 'expo-font';
 import {Ionicons} from '@expo/vector-icons';
 import {persistCache} from 'apollo-cache-persist';
@@ -147,7 +146,7 @@ export default function App() {
 
       const link = authLink.concat(errorLink).concat(
         new HttpLink({
-          uri: 'https://scouttrek-node-api.appspot.com/:4000',
+          uri: 'http://localhost:4000',
         })
       );
 

@@ -9,18 +9,42 @@ import {
   Vibration,
   Button,
 } from 'react-native';
+import EventListItem from '../../components/EventListItem';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 
 import {Notifications} from 'expo';
-import {useDispatch} from 'react-redux';
-import * as AuthActions from '../../redux/auth/auth.actions';
-import {saveExpoToken} from '../../redux/auth/auth.actions';
 import {gql} from '@apollo/client';
 import {useQuery} from '@apollo/react-hooks';
+import Colors from '../../../constants/Colors';
 
-export default function Adventures() {
+export const GET_RECENT_EVENTS = gql`
+  query RECENT_EVENTS {
+    upcomingEvents {
+      id
+      type
+      title
+      description
+      datetime
+      location {
+        lat
+        lng
+      }
+      creator {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export default function Adventures({navigation}) {
   const [notifications, setNotifications] = useState({});
+  const {
+    loading,
+    error,
+    data: {upcomingEvents},
+  } = useQuery(GET_RECENT_EVENTS, {pollInterval: 100000});
 
   async function alertIfRemoteNotificationsDisabledAsync() {
     const {status} = await Permissions.getAsync(Permissions.NOTIFICATIONS);
@@ -47,29 +71,62 @@ export default function Adventures() {
     }
   };
 
-  const handleNotification = notification => {
+  const handleNotification = (notification) => {
     Vibration.vibrate();
     setNotifications(notification);
+  };
+
+  const viewEvent = (item) => {
+    if (item.type === 'Hike') {
+      navigation.navigate('Hike', {currItem: item.id});
+    } else if (item.type === 'ScoutMeeting') {
+      navigation.navigate('ScoutMeeting', {currItem: item.id});
+    } else if (item.type === 'Campout') {
+      navigation.navigate('Campout', {currItem: item.id});
+    }
   };
 
   useEffect(() => {
     registerForPushNotificationsAsync();
     Notifications.addListener(handleNotification);
-    alertIfRemoteNotificationsDisabledAsync();
+    Constants.isDevice && alertIfRemoteNotificationsDisabledAsync();
   }, []);
 
+  if (error) return <Text>Error: {error}</Text>;
+  if (loading) return <Text>Loading...</Text>;
+
   return (
-    <View style={styles.container}>
-      <Text>Welcome to ScoutTrek</Text>
+    <View style={styles.screen}>
+      <Text style={styles.heading}>Upcoming events</Text>
+      <View style={styles.container}>
+        {upcomingEvents.map((event) => (
+          <EventListItem
+            key={event.id}
+            id={event.id}
+            title={event.title}
+            type={event.type}
+            date={event.datetime}
+            creator={event.creator.name}
+            onSelect={viewEvent}
+          />
+        ))}
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: Colors.offWhite2,
+  },
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+  },
+  heading: {
+    fontSize: 24,
+    fontFamily: 'oxygen-bold',
+    padding: 22,
   },
 });

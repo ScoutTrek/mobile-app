@@ -65,7 +65,7 @@ const SignIn = ({navigation}) => {
           password: formState.inputValues.password,
         },
       },
-    }).catch(error => console.log('An error', error));
+    }).catch((error) => console.log('An error', error));
   };
 
   const handleInputChange = (inputIdentifier, value) =>
@@ -119,14 +119,14 @@ const SignIn = ({navigation}) => {
             </Text>
             <AuthInput
               autoCapitalize="none"
-              onInputChange={value => handleInputChange('email', value)}
+              onInputChange={(value) => handleInputChange('email', value)}
               placeholder="email"
               autoCompleteType="email"
             />
             <AuthInput
               autoCapitalize="none"
               onFocus={() => setSecure(true)}
-              onInputChange={value => handleInputChange('password', value)}
+              onInputChange={(value) => handleInputChange('password', value)}
               placeholder="password"
               textContentType="none"
               autoCompleteType="off"

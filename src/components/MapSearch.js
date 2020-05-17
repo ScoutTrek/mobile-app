@@ -22,12 +22,12 @@ const SearchBar = ({locationToken, back, placeholder, _getPlaceDetails}) => {
         / /g,
         '+'
       )}&key=${ENV.googleApiKey}&sessiontoken=${locationToken}`
-    ).catch(err => console.log(err));
+    ).catch((err) => console.log(err));
     const placesData = await places.json();
     setSuggestedPlaces(placesData.predictions);
   };
 
-  const searchUpdateHandler = value => {
+  const searchUpdateHandler = (value) => {
     setSearchText(value);
     if (searchText.length > 1) {
       getSuggestedPlaces();
@@ -55,7 +55,7 @@ const SearchBar = ({locationToken, back, placeholder, _getPlaceDetails}) => {
       </View>
       <View>
         {suggestedPlaces &&
-          suggestedPlaces.map(place => (
+          suggestedPlaces.map((place) => (
             <TouchableOpacity
               key={place.id}
               onPress={() => {

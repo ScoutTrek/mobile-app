@@ -51,10 +51,11 @@ const ADD_PATROL = gql`
 const JoinPatrol = ({navigation, route}) => {
   const client = useApolloClient();
   const [signUp, signUpData] = useMutation(SIGN_UP);
-  const [addPatrol] = useMutation(ADD_PATROL);
+  const [addPatrol, {data: patrolData}] = useMutation(ADD_PATROL);
 
   const [patrolName, setPatrolName] = useState('');
   const [patrolId, setPatrolId] = useState('');
+  const [patrolIsValid, setPatrolIsValid] = useState(false);
   const [isValid, setIsValid] = useState(false);
 
   const {data, error, loading} = useQuery(GET_PATROLS, {
@@ -109,7 +110,7 @@ const JoinPatrol = ({navigation, route}) => {
       <View style={{flex: 1}}>
         <View style={styles.inputContainer}>
           <Text style={styles.formHeading}>Select your patrol.</Text>
-          {data.patrols.map(patrol => (
+          {data.patrols.map((patrol) => (
             <TouchableOpacity
               onPress={() => {
                 setPatrolId(patrol.id);
@@ -132,31 +133,48 @@ const JoinPatrol = ({navigation, route}) => {
               </Text>
             </TouchableOpacity>
           ))}
-          <View style={styles.createPatrolWidget}>
-            <Text style={styles.patrolHeading}>Add a Patrol</Text>
-            <View style={{flexDirection: 'row'}}>
-              <TextInput
-                style={styles.patrolName}
-                onChangeText={setPatrolName}
-                value={patrolName}
-              />
-              <TouchableOpacity
-                onPress={() => {
-                  addPatrol({
-                    variables: {
-                      troopId: route.params.troop,
-                      patrolInfo: {
-                        name: patrolName,
-                      },
-                    },
-                  });
-                  setPatrolName('');
-                }}
-                style={styles.btnAddPatrol}>
-                <AntDesign name="plus" size={35} />
-              </TouchableOpacity>
+          {!patrolData && (
+            <View style={styles.createPatrolWidget}>
+              <Text style={styles.patrolHeading}>
+                Add your Patrol if you don't see yours listed above.
+              </Text>
+              <View style={{flexDirection: 'row'}}>
+                <TextInput
+                  placeholder="patrol name..."
+                  style={styles.patrolName}
+                  onChangeText={(value) => {
+                    setPatrolName(value);
+                    if (value.length > 2) {
+                      setPatrolIsValid(true);
+                    } else {
+                      setPatrolIsValid(false);
+                    }
+                  }}
+                  value={patrolName}
+                />
+                {patrolIsValid && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      addPatrol({
+                        variables: {
+                          troopId: route.params.troop,
+                          patrolInfo: {
+                            name: patrolName,
+                          },
+                        },
+                      });
+                      setPatrolName('');
+                      setPatrolIsValid(false);
+                    }}
+                    style={styles.btnAddPatrol}>
+                    <Text style={styles.addPatrol}>
+                      Add <AntDesign name="plus" size={18} />
+                    </Text>
+                  </TouchableOpacity>
+                )}
+              </View>
             </View>
-          </View>
+          )}
         </View>
 
         <View style={styles.btnContainer}>
@@ -254,6 +272,7 @@ const styles = StyleSheet.create({
   },
   patrolName: {
     flex: 1,
+    height: 48,
     backgroundColor: Colors.offWhite,
     fontSize: 16,
     padding: 12,
@@ -264,14 +283,18 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   btnAddPatrol: {
+    height: 48,
     justifyContent: 'center',
+    alignItems: 'center',
     margin: 6,
     marginRight: 7,
     borderRadius: 7,
-    padding: 2,
-    backgroundColor: Colors.offWhite,
-    borderColor: Colors.tabIconDefault,
-    borderWidth: 1,
+    padding: 10,
+    backgroundColor: Colors.lightGreen,
+  },
+  addPatrol: {
+    fontSize: 18,
+    fontFamily: 'oxygen-bold',
   },
 });
 

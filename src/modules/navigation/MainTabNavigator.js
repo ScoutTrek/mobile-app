@@ -30,10 +30,6 @@ const MainBottomTabNavigator = () => {
       <MainBottomTab.Screen
         name="Calendar"
         component={CalendarNav}
-        options={{
-          headerShown: true,
-          title: 'Calendar',
-        }}
         headerMode="screen"
       />
       <MainBottomTab.Screen

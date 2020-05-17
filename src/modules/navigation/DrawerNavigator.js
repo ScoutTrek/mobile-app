@@ -13,6 +13,13 @@ import {AntDesign} from '@expo/vector-icons';
 import {gql} from '@apollo/client';
 import {useApolloClient, useQuery} from '@apollo/react-hooks';
 import {GET_TOKEN} from '../auth/JoinPatrol';
+import Colors from '../../../constants/Colors';
+import HikeView from '../calendar/hikeViews/HikeView';
+import EditHikeDetails from '../calendar/hikeViews/EditHikeDetails';
+import ScoutMeetingView from '../calendar/scoutMeetingViews/ScoutMeetingView';
+import EditScoutMeeting from '../calendar/scoutMeetingViews/EditScoutMeetingDetails';
+import CampoutView from '../calendar/campoutViews/CampoutView';
+import EditCampoutDetails from '../calendar/campoutViews/EditCampoutDetails';
 
 const GET_CURR_USER = gql`
   query GetCurrUser {
@@ -127,6 +134,15 @@ const HomeStackNavigator = ({navigation}) => {
         },
       })}>
       <HomeStack.Screen name="Home" component={AdventuresNav} />
+
+      <HomeStack.Screen name="Hike" component={HikeView} />
+      <HomeStack.Screen name="EditHike" component={EditHikeDetails} />
+
+      <HomeStack.Screen name="ScoutMeeting" component={ScoutMeetingView} />
+      <HomeStack.Screen name="EditScoutMeeting" component={EditScoutMeeting} />
+
+      <HomeStack.Screen name="Campout" component={CampoutView} />
+      <HomeStack.Screen name="EditCampout" component={EditCampoutDetails} />
     </HomeStack.Navigator>
   );
 };
@@ -139,7 +155,7 @@ export default function Home() {
       screenOptions={() => ({
         headerShown: true,
       })}
-      drawerContent={props => <CustomDrawerContent {...props} />}
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
       initialRouteName="Adventures">
       <Drawer.Screen name="Adventures" component={HomeStackNavigator} />
       <Drawer.Screen name="Notifications" component={NotificationsScreen} />

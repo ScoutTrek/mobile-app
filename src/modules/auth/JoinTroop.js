@@ -48,17 +48,16 @@ const JoinTroop = ({navigation, route}) => {
     }
   };
 
-  
   if (loading) return null;
   if (error) return <Text>`Error! ${error}`</Text>;
-  
-  console.log("What the fuck?")
+
+  console.log('What the fuck?');
   return (
     <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
       <View style={{flex: 1}}>
         <View style={styles.inputContainer}>
           <Text style={styles.formHeading}>What troop are you in?</Text>
-          {data.troops.map(troop => (
+          {data.troops.map((troop) => (
             <TouchableOpacity
               onPress={() => {
                 setIsValid(true);
@@ -108,7 +107,7 @@ const JoinTroop = ({navigation, route}) => {
                     paddingVertical: 10,
                     fontFamily: 'oxygen',
                   }}>
-                  Add troop
+                  Add Troop
                 </Text>
                 <AntDesign
                   style={{position: 'absolute', left: 15, top: 10}}

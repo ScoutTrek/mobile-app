@@ -141,24 +141,24 @@ const SignUp = ({navigation, route}) => {
           <View style={styles.content}>
             <AuthInput
               autoCapitalize="none"
-              onInputChange={value => handleInputChange('name', value)}
+              onInputChange={(value) => handleInputChange('name', value)}
               placeholder="Name"
             />
             <AuthInput
               autoCapitalize="none"
-              onInputChange={value => handleInputChange('email', value)}
+              onInputChange={(value) => handleInputChange('email', value)}
               placeholder="Email"
             />
             <AuthInput
               autoCapitalize="none"
-              onInputChange={value => handleInputChange('password', value)}
+              onInputChange={(value) => handleInputChange('password', value)}
               placeholder="Password"
               textContentType="newPassword"
               secureTextEntry={true}
             />
             <AuthInput
               autoCapitalize="none"
-              onInputChange={value =>
+              onInputChange={(value) =>
                 handleInputChange('confirmPassword', value)
               }
               placeholder="Confirm Password"
@@ -172,7 +172,10 @@ const SignUp = ({navigation, route}) => {
 
       <View style={styles.footer}>
         <Text style={styles.footerText}>Already have an account?</Text>
-        <InlineButton title="Sign In" onPress={() => navigation.pop()} />
+        <InlineButton
+          title="Sign In"
+          onPress={() => navigation.navigate('SignIn')}
+        />
       </View>
     </View>
   );

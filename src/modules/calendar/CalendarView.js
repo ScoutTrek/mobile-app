@@ -37,7 +37,7 @@ export const GET_EVENTS = gql`
   }
 `;
 
-const getColor = label => {
+const getColor = (label) => {
   switch (label) {
     case 'Hike':
       return colors.secondary;
@@ -51,7 +51,7 @@ const getColor = label => {
 };
 
 const CalendarView = ({navigation}) => {
-  const {data, loading, error} = useQuery(GET_EVENTS);
+  const {data, loading, error} = useQuery(GET_EVENTS, {pollInterval: 100000});
 
   const [items, setItems] = useState({});
 
@@ -69,10 +69,10 @@ const CalendarView = ({navigation}) => {
     );
   };
 
-  const renderItem = item => {
+  const renderItem = (item) => {
     const labels =
       item.labels &&
-      item.labels.map(label => (
+      item.labels.map((label) => (
         <View
           key={`label-${label}`}
           style={{
@@ -102,13 +102,19 @@ const CalendarView = ({navigation}) => {
           <Text
             style={{
               color: '#48506B',
+              fontFamily: 'oxygen-bold',
+              fontSize: 18,
+              marginBottom: 10,
+            }}>
+            {item.title}
+          </Text>
+          <Text
+            style={{
+              color: '#48506B',
               fontFamily: fonts.primaryRegular,
               marginBottom: 10,
             }}>
             {item.name}
-          </Text>
-          <Text style={{color: '#9B9B9B', fontFamily: fonts.primaryRegular}}>
-            {item.time}
           </Text>
         </View>
 
@@ -117,7 +123,7 @@ const CalendarView = ({navigation}) => {
     );
   };
 
-  if (error) return console.log(error);
+  if (error) return <Text>Error: {error}</Text>;
   if (loading) return <Text>Loading...</Text>;
   return (
     <Agenda
@@ -125,7 +131,7 @@ const CalendarView = ({navigation}) => {
       current={new Date()}
       items={items}
       onVisibleMonthsChange={() => {}}
-      loadItemsForMonth={calData => {
+      loadItemsForMonth={(calData) => {
         const newItems = getItems(calData);
         setItems(newItems);
       }}
