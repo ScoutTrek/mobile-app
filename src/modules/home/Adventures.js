@@ -40,11 +40,9 @@ export const GET_RECENT_EVENTS = gql`
 
 export default function Adventures({navigation}) {
   const [notifications, setNotifications] = useState({});
-  const {
-    loading,
-    error,
-    data: {upcomingEvents},
-  } = useQuery(GET_RECENT_EVENTS, {pollInterval: 100000});
+  const {loading, error, data} = useQuery(GET_RECENT_EVENTS, {
+    pollInterval: 1000,
+  });
 
   async function alertIfRemoteNotificationsDisabledAsync() {
     const {status} = await Permissions.getAsync(Permissions.NOTIFICATIONS);
@@ -83,6 +81,8 @@ export default function Adventures({navigation}) {
       navigation.navigate('ScoutMeeting', {currItem: item.id});
     } else if (item.type === 'Campout') {
       navigation.navigate('Campout', {currItem: item.id});
+    } else if (item.type === 'SummerCamp') {
+      navigation.navigate('SummerCamp', {currItem: item.id});
     }
   };
 
@@ -94,12 +94,11 @@ export default function Adventures({navigation}) {
 
   if (error) return <Text>Error: {error}</Text>;
   if (loading) return <Text>Loading...</Text>;
-
   return (
-    <View style={styles.screen}>
+    <ScrollView style={styles.screen}>
       <Text style={styles.heading}>Upcoming events</Text>
       <View style={styles.container}>
-        {upcomingEvents.map((event) => (
+        {data.upcomingEvents.map((event) => (
           <EventListItem
             key={event.id}
             id={event.id}
@@ -111,14 +110,13 @@ export default function Adventures({navigation}) {
           />
         ))}
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: Colors.offWhite2,
   },
   container: {
     flex: 1,

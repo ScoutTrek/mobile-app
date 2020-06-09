@@ -19,8 +19,6 @@ import GradientButton from '../../components/buttons/GradientButton';
 import InlineButton from '../../components/buttons/InlineButton';
 import AuthInput from './components/Input';
 
-import {useDispatch} from 'react-redux';
-import * as AuthActions from '../../redux/auth/auth.actions';
 import {gql} from '@apollo/client';
 import {useApolloClient, useMutation} from '@apollo/react-hooks';
 import {GET_TOKEN} from './JoinPatrol';
@@ -112,7 +110,7 @@ const SignIn = ({navigation}) => {
           behavior="padding"
           keyboardVerticalOffset={15}>
           <View>
-            <Text style={styles.heading}>Welcome back to Scout Trek</Text>
+            <Text style={styles.heading}>Welcome back to ScoutTrek</Text>
             <Text style={styles.text}>
               Your personal assistant for all the scouting activities you
               already do.

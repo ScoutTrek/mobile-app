@@ -14,7 +14,7 @@ import {useApolloClient, useMutation, useQuery} from '@apollo/react-hooks';
 import GradientButton from '../../components/buttons/GradientButton';
 import Constants from 'expo-constants';
 import Colors from '../../../constants/Colors';
-import {AntDesign} from '@expo/vector-icons';
+import {AntDesign, Ionicons} from '@expo/vector-icons';
 
 export const GET_TOKEN = gql`
   {
@@ -104,7 +104,6 @@ const JoinPatrol = ({navigation, route}) => {
   if (loading) return null;
   if (error) return <Text>`Error! ${error}`</Text>;
 
-  console.log(route.params);
   return (
     <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
       <View style={{flex: 1}}>
@@ -122,6 +121,9 @@ const JoinPatrol = ({navigation, route}) => {
                   : styles.patrol
               }
               key={patrol.id}>
+              {patrol.id === patrolId && (
+                <Ionicons style={styles.check} name="ios-checkmark" size={32} />
+              )}
               <Text
                 style={{
                   fontSize: 18,
@@ -295,6 +297,12 @@ const styles = StyleSheet.create({
   addPatrol: {
     fontSize: 18,
     fontFamily: 'oxygen-bold',
+  },
+  check: {
+    position: 'absolute',
+    top: 5,
+    left: 15,
+    color: '#fff',
   },
 });
 

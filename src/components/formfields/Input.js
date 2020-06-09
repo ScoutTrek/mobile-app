@@ -21,12 +21,12 @@ const styles = StyleSheet.create({
   formControl: {
     width: '100%',
     marginBottom: 15,
-    padding: 14,
   },
   label: {
     fontFamily: 'oxygen-bold',
+    textAlign: 'center',
     fontSize: 20,
-    marginVertical: 10,
+    marginBottom: 28,
   },
   input: {
     padding: 18,

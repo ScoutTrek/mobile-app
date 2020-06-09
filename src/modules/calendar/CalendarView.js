@@ -51,7 +51,7 @@ const getColor = (label) => {
 };
 
 const CalendarView = ({navigation}) => {
-  const {data, loading, error} = useQuery(GET_EVENTS, {pollInterval: 100000});
+  const {data, loading, error} = useQuery(GET_EVENTS, {pollInterval: 10000});
 
   const [items, setItems] = useState({});
 
@@ -95,6 +95,8 @@ const CalendarView = ({navigation}) => {
             navigation.navigate('ScoutMeeting', {currItem: item.id});
           } else if (item.type === 'Campout') {
             navigation.navigate('Campout', {currItem: item.id});
+          } else if (item.type === 'SummerCamp') {
+            navigation.navigate('SummerCamp', {currItem: item.id});
           }
         }}
         style={styles.item}>

@@ -27,6 +27,13 @@ import NextButton from '../../../components/buttons/NextButton';
 import CalModal from '../../../components/CalModal';
 import {Calendar} from 'react-native-calendars';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import DateAndTimePicker from '../../../components/DateAndTimePicker';
+
+const ChooseDatesModal = (isMultipleDays) => {
+  if (isMultipleDays) {
+    return <View></View>;
+  }
+};
 
 const locationToken = uuidv4();
 
@@ -40,9 +47,14 @@ const ChooseLocation = ({navigation, route}) => {
   const [error, setError] = useState(null);
 
   const [date, setDate] = useState('');
-  const [time, setTime] = useState(new Date());
-  const [meetTime, setMeetTime] = useState(new Date());
-  const [leaveTime, setLeaveTime] = useState(new Date());
+  const [date2, setDate2] = useState('');
+  const [time, setTime] = useState(new Date('January 1, 2000 11:00:00'));
+  const [time2, setTime2] = useState(new Date());
+  const [showTimePicker, setShowTimePicker] = useState(Platform.OS === 'ios');
+  const [meetTime, setMeetTime] = useState(new Date('January 1, 2000 9:30:00'));
+  const [leaveTime, setLeaveTime] = useState(
+    new Date('January 1, 2000 10:00:00')
+  );
   const [showDateModal, setShowDateModal] = useState(false);
   const [showMeetTimeModal, setShowMeetTimeModal] = useState(false);
   const [showFirstModal, setShowFirstModal] = useState(true);
@@ -60,6 +72,7 @@ const ChooseLocation = ({navigation, route}) => {
   };
 
   const _getPlaceDetails = async (id) => {
+    console.log(ENV.googleApiKey);
     const locationDetails = await fetch(
       `https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=${ENV.googleApiKey}`
     ).catch((err) => console.log(err));
@@ -93,8 +106,8 @@ const ChooseLocation = ({navigation, route}) => {
         datetime: route.params.datetime,
         location: route.params.location,
         meetLocation: locationCoords,
-        meetTime,
-        leaveTime,
+        meetTime: meetTime.toString(),
+        leaveTime: leaveTime.toString(),
       };
       delete navData.nextView;
       navigation.navigate(nextView, navData);
@@ -157,75 +170,17 @@ const ChooseLocation = ({navigation, route}) => {
         />
       </View>
       {route.params.initialModal === 'date' ? (
-        <CalModal show={showDateModal} setShow={setShowDateModal}>
-          {!date || showFirstModal ? (
-            <View>
-              <View style={styles.heading}>
-                <Text style={styles.headingText}>When is the hike?</Text>
-              </View>
-              <Calendar
-                current={date}
-                markedDates={{
-                  [date]: {
-                    selected: true,
-                    disableTouchEvent: true,
-                    selectedDotColor: 'orange',
-                  },
-                }}
-                onDayPress={(day) => {
-                  setDate(day.dateString);
-                }}
-              />
-              <TouchableOpacity
-                onPress={() => {
-                  setShowFirstModal(false);
-                }}
-                style={{
-                  padding: 12,
-                  alignItems: 'center',
-                  backgroundColor: Colors.lightGray,
-                  borderRadius: 4,
-                }}>
-                <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
-                  Confirm
-                </Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <View>
-              <View style={styles.heading}>
-                <Text style={styles.headingText}>
-                  What time do you want to be at the trailhead?
-                </Text>
-              </View>
-              <DateTimePicker
-                value={time}
-                minuteInterval={5}
-                mode="time"
-                is24Hour={false}
-                display="default"
-                onChange={(event, date) => {
-                  setTime(new Date(date));
-                }}
-              />
-              <TouchableOpacity
-                onPress={() => {
-                  nextForm();
-                  setShowDateModal(false);
-                }}
-                style={{
-                  padding: 12,
-                  alignItems: 'center',
-                  backgroundColor: Colors.lightGray,
-                  borderRadius: 4,
-                }}>
-                <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
-                  Choose Time
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        </CalModal>
+        <DateAndTimePicker
+          chooseDay={route.params.chooseDate}
+          chooseTime={route.params.chooseTime}
+          nextForm={nextForm}
+          date={date}
+          setDate={setDate}
+          time={time}
+          setTime={setTime}
+          showModal={showDateModal}
+          setShowModal={setShowDateModal}
+        />
       ) : (
         <CalModal show={showMeetTimeModal} setShow={setShowMeetTimeModal}>
           {!meetTime || showFirstModal ? (
@@ -235,24 +190,33 @@ const ChooseLocation = ({navigation, route}) => {
                   {route.params.chooseMeetTime}
                 </Text>
               </View>
-              <DateTimePicker
-                value={meetTime}
-                minuteInterval={5}
-                mode="time"
-                is24Hour={false}
-                display="default"
-                onChange={(event, date) => {
-                  setMeetTime(new Date(date));
-                }}
-              />
+              {showTimePicker && (
+                <DateTimePicker
+                  value={meetTime}
+                  minuteInterval={5}
+                  mode="time"
+                  is24Hour={false}
+                  display="default"
+                  onChange={(event, date) => {
+                    setShowTimePicker(Platform.OS === 'ios');
+                    setMeetTime(new Date(date));
+                    if (Platform.OS === 'android') {
+                      setShowFirstModal(false);
+                    }
+                  }}
+                />
+              )}
               <TouchableOpacity
                 onPress={() => {
-                  setShowFirstModal(false);
+                  setShowTimePicker(true);
+                  if (Platform.OS === 'ios') {
+                    setShowFirstModal(false);
+                  }
                 }}
                 style={{
                   padding: 12,
                   alignItems: 'center',
-                  backgroundColor: Colors.lightGray,
+                  backgroundColor: Colors.lightGreen,
                   borderRadius: 4,
                 }}>
                 <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
@@ -267,29 +231,39 @@ const ChooseLocation = ({navigation, route}) => {
                   {route.params.chooseLeaveTime}
                 </Text>
               </View>
-              <DateTimePicker
-                value={leaveTime}
-                minuteInterval={5}
-                mode="time"
-                is24Hour={false}
-                display="default"
-                onChange={(event, date) => {
-                  setLeaveTime(new Date(date));
-                }}
-              />
+              {showTimePicker && (
+                <DateTimePicker
+                  value={leaveTime}
+                  minuteInterval={5}
+                  mode="time"
+                  is24Hour={false}
+                  display="default"
+                  onChange={(event, date) => {
+                    setShowTimePicker(Platform.OS === 'ios');
+                    setLeaveTime(new Date(date));
+                    if (Platform.OS === 'android') {
+                      setShowMeetTimeModal(false);
+                      nextForm();
+                    }
+                  }}
+                />
+              )}
               <TouchableOpacity
                 onPress={() => {
-                  setShowMeetTimeModal(false);
-                  nextForm();
+                  setShowTimePicker(true);
+                  if (Platform.OS === 'ios') {
+                    setShowMeetTimeModal(false);
+                    nextForm();
+                  }
                 }}
                 style={{
                   padding: 12,
                   alignItems: 'center',
-                  backgroundColor: Colors.lightGray,
+                  backgroundColor: Colors.lightGreen,
                   borderRadius: 4,
                 }}>
                 <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
-                  Confirm Leave Time
+                  Choose Leave Time
                 </Text>
               </TouchableOpacity>
             </View>

@@ -1,10 +1,9 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import {WebView} from 'react-native-webview';
 import EventHeader from '../components/EventHeader';
 import Colors from '../../../../constants/Colors';
 import InlineButton from '../../../components/buttons/InlineButton';
-import {Ionicons} from '@expo/vector-icons';
 
 import ENV from '../../../../helpers/env';
 
@@ -12,26 +11,15 @@ import {gql} from '@apollo/client';
 import {useQuery} from '@apollo/react-hooks';
 import ChatBtn from '../../../components/ChatBtn';
 
-export const GET_HIKE = gql`
-  query GetHike($id: ID!) {
-    event: hike(id: $id) {
+export const GET_SUMMER_CAMP = gql`
+  query GetSummerCamp($id: ID!) {
+    event: summerCamp(id: $id) {
       id
       type
       title
       description
       datetime
-      date
-      time
-      distance
-      messages {
-        _id
-        text
-        createdAt
-        user {
-          id
-          name
-        }
-      }
+      numDays
       location {
         lat
         lng
@@ -44,10 +32,9 @@ export const GET_HIKE = gql`
   }
 `;
 
-const EventDetailsScreen = ({route, navigation}) => {
+const SummerCampDetailsScreen = ({route, navigation}) => {
   const {currItem} = route.params;
-  const {loading, error, data} = useQuery(GET_HIKE, {
-    fetchPolicy: 'network-only',
+  const {loading, error, data} = useQuery(GET_SUMMER_CAMP, {
     variables: {id: currItem},
   });
 
@@ -69,12 +56,12 @@ const EventDetailsScreen = ({route, navigation}) => {
         />
         <View style={styles.info}>
           <View style={styles.leftInfoContainer}>
-            <Text style={styles.date}>{data.event.date}</Text>
+            <Text style={styles.date}>
+              {new Date(+data.event.datetime).toLocaleDateString()}
+            </Text>
           </View>
           <View style={styles.centerInfoContainer}>
-            <Text style={[styles.text, styles.eventType]}>
-              {data.event.type}
-            </Text>
+            <Text style={[styles.text, styles.eventType]}>Summer Camp</Text>
           </View>
 
           <View style={styles.rightInfoContainer}>
@@ -102,17 +89,10 @@ const EventDetailsScreen = ({route, navigation}) => {
         />
       </View>
       <View style={{margin: 15}}>
-        <ChatBtn
-          onPress={() =>
-            navigation.navigate('EventThread', {
-              id: data.event.id,
-              messages: data.event.messages,
-            })
-          }
-        />
+        <ChatBtn onPress={() => navigation.navigate('EventThread')} />
         <InlineButton
           title="Edit"
-          onPress={() => navigation.navigate('EditHike', {currItem})}
+          onPress={() => navigation.navigate('EditSummerCamp', {currItem})}
         />
       </View>
     </View>
@@ -152,7 +132,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   centerInfoContainer: {
-    flex: 1,
+    flex: 1.5,
     alignItems: 'center',
     height: '100%',
     justifyContent: 'center',
@@ -199,4 +179,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EventDetailsScreen;
+export default SummerCampDetailsScreen;

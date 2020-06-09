@@ -13,6 +13,27 @@ import EditScoutMeeting from './scoutMeetingViews/EditScoutMeetingDetails';
 import CampoutView from './campoutViews/CampoutView';
 import EditCampoutDetails from './campoutViews/EditCampoutDetails';
 
+import SummerCampView from './summerCampViews/SummerCampView';
+import EditSummerCampView from './summerCampViews/EditSummerCampView';
+import ChatModule from './EventThreads/ChatModule';
+
+import {enableScreens} from 'react-native-screens';
+import {createNativeStackNavigator} from 'react-native-screens/native-stack';
+
+enableScreens();
+const Stack = createNativeStackNavigator();
+
+function MyStack() {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="Notifications" component={Notifications} />
+      <Stack.Screen name="Profile" component={Profile} />
+      <Stack.Screen name="Settings" component={Settings} />
+    </Stack.Navigator>
+  );
+}
+
 const CalendarStack = createStackNavigator();
 
 function CalendarStackNavigator() {
@@ -34,6 +55,20 @@ function CalendarStackNavigator() {
 
       <CalendarStack.Screen name="Campout" component={CampoutView} />
       <CalendarStack.Screen name="EditCampout" component={EditCampoutDetails} />
+
+      <CalendarStack.Screen name="SummerCamp" component={SummerCampView} />
+      <CalendarStack.Screen
+        name="EditSummerCamp"
+        component={EditSummerCampView}
+      />
+
+      <CalendarStack.Screen
+        options={{
+          tabBarVisible: false,
+        }}
+        name="EventThread"
+        component={ChatModule}
+      />
     </CalendarStack.Navigator>
   );
 }

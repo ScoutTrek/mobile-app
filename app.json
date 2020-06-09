@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "ScoutTrek",
-    "slug": "ScoutTrekNative",
-    "privacy": "public",
+    "slug": "scout-trek-native",
+    "privacy": "unlisted",
     "sdkVersion": "36.0.0",
     "platforms": [
       "ios",
@@ -11,7 +11,7 @@
     ],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/Icon.png",
+    "icon": "./assets/images/ScoutTrekIcon.png",
     "updates": {
       "fallbackToCacheTimeout": 0
     },
@@ -19,10 +19,31 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "config": {
+        "googleMapsApiKey": "AIzaSyAt6vamY9lmYvjySgvPlvQ_HYEURESs8bk"
+      },
+      "bundleIdentifier": "com.scouttrek.kalebdavenport",
+      "buildNumber": "1.0.0"
     },
     "android": {
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "versionCode": 1,
+      "permissions": [
+        "ACCESS_FINE_LOCATION",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "READ_PHONE_STATE",
+        "VIBRATE",
+        "WAKE_LOCK",
+        "WRITE_EXTERNAL_STORAGE"
+      ],
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAt6vamY9lmYvjySgvPlvQ_HYEURESs8bk"
+        }
+      },
+      "package": "com.wowyourclient.scouttrek"
     },
     "splash": {
       "backgroundColor": "#2C3148",

@@ -11,6 +11,8 @@ function getIcon(eventType) {
       return <Ionicons name="md-people" size={27} />;
     case 'Campout':
       return <Ionicons name="md-bonfire" size={27} />;
+    case 'SummerCamp':
+      return <MaterialCommunityIcons name="tent" size={24} color="black" />;
   }
 }
 
@@ -28,7 +30,7 @@ const EventListItem = ({id, title, type, date, onSelect}) => {
         <View style={styles.weekday}>
           <Text style={styles.day}>
             {
-              ['Sun.', 'Mon.', 'Tue.', 'Wed.', 'Thur.', 'Fri.', 'Sat.'][
+              ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][
                 localDate.getDay()
               ]
             }
@@ -66,10 +68,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     width: '100%',
-    maxHeight: 80,
     marginVertical: 2,
     position: 'relative',
     shadowColor: '#000',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 15,
+    paddingVertical: 5,
+    marginHorizontal: 11,
+    marginVertical: 3,
+    borderRadius: 8,
+    backgroundColor: '#fff',
     shadowOffset: {
       width: 1,
       height: 1,
@@ -77,15 +88,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 1,
     elevation: 2,
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 15,
-    marginVertical: 5,
-    marginHorizontal: 11,
-    borderRadius: 8,
-    backgroundColor: '#fff',
   },
   info: {
     flexDirection: 'row',
@@ -106,14 +108,16 @@ const styles = StyleSheet.create({
   },
   day: {
     color: '#fff',
-    height: 26,
-    fontSize: 15,
+    fontSize: 14,
     paddingVertical: 4,
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
+    textAlign: 'center',
+    width: 50,
     marginRight: 20,
     backgroundColor: Colors.darkOrange,
     borderRadius: 13,
     overflow: 'hidden',
+    justifyContent: 'center',
   },
   month: {
     fontFamily: 'oxygen',

@@ -23,21 +23,28 @@ import {Ionicons} from '@expo/vector-icons';
 import {useQuery, useMutation} from '@apollo/react-hooks';
 import {gql} from '@apollo/client';
 
-import {GET_HIKE} from './HikeView';
+import {GET_SUMMER_CAMP} from './SummerCampView';
 import RTE from '../../../components/RichTextEditor';
 
-import {GET_EXPO_TOKEN} from '../../events/hike/HikeDetails';
+const GET_VISIBILITY_FILTER = gql`
+  {
+    token: expoNotificationToken @client
+  }
+`;
 
-const UPDATE_EVENT = gql`
-  mutation UpdateHike($id: ID!, $updates: UpdateHikeInput!) {
-    updateHike(id: $id, input: $updates) {
+const UPDATE_SUMMER_CAMP = gql`
+  mutation UpdateCampout($id: ID!, $updates: UpdateCampoutInput!) {
+    updateCampout(id: $id, input: $updates) {
       id
       type
       title
       description
-      date
-      time
-      distance
+      datetime
+      numDays
+      location {
+        lat
+        lng
+      }
       creator {
         id
         name
@@ -46,22 +53,23 @@ const UPDATE_EVENT = gql`
   }
 `;
 
-const EditHikeDetails = ({navigation, route}) => {
+const EditSummerCampView = ({navigation, route}) => {
   const {currItem} = route.params;
   const {
     loading,
     error,
     data: {event},
-  } = useQuery(GET_HIKE, {
+  } = useQuery(GET_SUMMER_CAMP, {
     variables: {id: currItem},
   });
-  const {
-    data: {currUser},
-  } = useQuery(GET_EXPO_TOKEN);
 
-  console.log(currUser.expoNotificationToken);
+  if (Constants.isDevice) {
+    const {
+      data: {token},
+    } = useQuery(GET_VISIBILITY_FILTER);
+  }
 
-  const [updateEvent] = useMutation(UPDATE_EVENT);
+  const [updateEvent] = useMutation(UPDATE_SUMMER_CAMP);
 
   const [date, setDate] = useState(event.datetime);
   const [mode, setMode] = useState('date');
@@ -71,7 +79,7 @@ const EditHikeDetails = ({navigation, route}) => {
   const [description, setDescription] = useState(event.description);
   const [title, setTitle] = useState(event.title);
 
-  const [distance, setDistance] = useState(event.distance);
+  const [numDays, setNumDays] = useState(event.numDays);
 
   const setState = (event, newDate) => {
     setDate(() => {
@@ -89,13 +97,13 @@ const EditHikeDetails = ({navigation, route}) => {
 
   const sendPushNotification = async (body) => {
     const message = {
-      to: currUser.expoNotificationToken,
+      to: token,
       sound: 'default',
       title: 'ScoutTrek Reminder',
-      body: `${body} event has been updated!`,
+      body: `${body} event has been created!`,
       icon: '../../assets/images/Icon.png',
     };
-    await fetch('https://exp.host/--/api/v2/push/send', {
+    const response = await fetch('https://exp.host/--/api/v2/push/send', {
       method: 'POST',
       headers: {
         Accept: 'application/json',
@@ -113,14 +121,16 @@ const EditHikeDetails = ({navigation, route}) => {
       variables: {
         id: event.id,
         updates: {
-          datetime: date,
           title,
           description,
-          distance,
+          datetime: date,
+          numDays,
         },
       },
-    }).catch((err) => console.log(err));
-    Constants.isDevice && sendPushNotification(title);
+    })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+    // sendPushNotification(title);
     navigation.pop();
   };
 
@@ -136,6 +146,7 @@ const EditHikeDetails = ({navigation, route}) => {
             value={title}
           />
         </View>
+
         {visible && (
           <DateTimePicker
             value={date}
@@ -150,19 +161,20 @@ const EditHikeDetails = ({navigation, route}) => {
           What do you want people to know about the event?
         </Text>
         <RTE description={description} setDescription={setDescription} />
-
-        <View style={styles.displayContactContainer}>
-          <Text style={styles.formHeading}>Hike Distance (in miles)?</Text>
+        <View style={styles.numDaysContainer}>
+          <Text style={styles.formHeading}>
+            How many days will you be gone?
+          </Text>
           <View style={styles.sliderContainer}>
             <Slider
               minimumValue={1}
-              maximumValue={30}
+              maximumValue={5}
               step={1}
               style={styles.slider}
-              value={distance}
-              onValueChange={setDistance}
+              value={numDays}
+              onValueChange={setNumDays}
             />
-            <Text style={styles.sliderText}>{distance}</Text>
+            <Text style={styles.sliderText}>{numDays}</Text>
           </View>
         </View>
 
@@ -180,12 +192,12 @@ const styles = StyleSheet.create({
   },
   input: {
     padding: 12,
-    marginHorizontal: 15,
+    marginHorizontal: 18,
     borderRadius: 7,
     borderWidth: 1,
+    fontSize: 15,
     flexDirection: 'row',
     flex: 1,
-    fontSize: 15,
     fontFamily: 'oxygen',
     backgroundColor: '#fff',
     textAlignVertical: 'top',
@@ -211,14 +223,11 @@ const styles = StyleSheet.create({
     fontFamily: 'oxygen-bold',
     margin: 18,
   },
-  displayContactContainer: {
+  numDaysContainer: {
     width: '100%',
     alignItems: 'flex-start',
     paddingHorizontal: 20,
     marginTop: 15,
-  },
-  displayContact: {
-    marginHorizontal: 18,
   },
   sliderContainer: {
     flexDirection: 'row',
@@ -279,4 +288,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default EditHikeDetails;
+export default EditSummerCampView;

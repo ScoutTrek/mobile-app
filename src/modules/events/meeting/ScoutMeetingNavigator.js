@@ -1,7 +1,7 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import ChooseLocationView from '../eventComponents/ChooseLocation';
+import ChooseLocationView from '../event_components/ChooseLocation';
 import ScoutMeetingDetails from './ScoutMeetingDetails';
 
 const ScoutMeeting = createStackNavigator();
@@ -18,6 +18,9 @@ const ScoutMeetingStackNavigator = () => {
         initialParams={{
           placeholder: 'Where will this meeting take place?',
           nextView: 'ScoutMeetingInfo',
+          chooseDate: 'What day will this recurring scout meeting begin on?',
+          chooseTime: 'What time will the meeting start?',
+          initialModal: 'date',
         }}
       />
       <ScoutMeeting.Screen

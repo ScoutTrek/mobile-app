@@ -11,7 +11,7 @@ import {gql} from '@apollo/client';
 import {useQuery} from '@apollo/react-hooks';
 import Constants from 'expo-constants';
 import Colors from '../../../constants/Colors';
-import {AntDesign} from '@expo/vector-icons';
+import {AntDesign, Ionicons} from '@expo/vector-icons';
 import NextButton from '../../components/buttons/NextButton';
 
 const GET_TROOPS = gql`
@@ -51,7 +51,6 @@ const JoinTroop = ({navigation, route}) => {
   if (loading) return null;
   if (error) return <Text>`Error! ${error}`</Text>;
 
-  console.log('What the fuck?');
   return (
     <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
       <View style={{flex: 1}}>
@@ -69,12 +68,17 @@ const JoinTroop = ({navigation, route}) => {
                   : styles.patrol
               }
               key={troop.id}>
+              {troop.id === troopId && (
+                <Ionicons style={styles.check} name="ios-checkmark" size={32} />
+              )}
               <Text
+                numberOfLines={1}
                 style={{
                   fontSize: 15,
                   fontWeight: 'bold',
                   fontFamily: 'oxygen-bold',
                   color: '#fff',
+                  paddingHorizontal: 10,
                 }}>
                 Troop {troop.unitNumber} of {troop.council} council
               </Text>
@@ -196,6 +200,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     width: '100%',
     marginVertical: 20,
+  },
+  check: {
+    position: 'absolute',
+    top: 5,
+    left: 15,
+    color: '#fff',
   },
 });
 

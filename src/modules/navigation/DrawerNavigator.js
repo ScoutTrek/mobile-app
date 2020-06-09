@@ -20,6 +20,8 @@ import ScoutMeetingView from '../calendar/scoutMeetingViews/ScoutMeetingView';
 import EditScoutMeeting from '../calendar/scoutMeetingViews/EditScoutMeetingDetails';
 import CampoutView from '../calendar/campoutViews/CampoutView';
 import EditCampoutDetails from '../calendar/campoutViews/EditCampoutDetails';
+import SummerCampView from '../calendar/summerCampViews/SummerCampView';
+import EditSummerCampView from '../calendar/summerCampViews/EditSummerCampView';
 
 const GET_CURR_USER = gql`
   query GetCurrUser {
@@ -143,6 +145,9 @@ const HomeStackNavigator = ({navigation}) => {
 
       <HomeStack.Screen name="Campout" component={CampoutView} />
       <HomeStack.Screen name="EditCampout" component={EditCampoutDetails} />
+
+      <HomeStack.Screen name="SummerCamp" component={SummerCampView} />
+      <HomeStack.Screen name="EditSummerCamp" component={EditSummerCampView} />
     </HomeStack.Navigator>
   );
 };

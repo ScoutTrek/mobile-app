@@ -49,7 +49,6 @@ export const getInitialDate = (target, current) => {
   if (target > current) {
     return target - current;
   } else {
-    console.log(current, ' current', target, ' target');
     return 7 + target - current;
   }
 };
@@ -89,7 +88,6 @@ const ScoutMeetingDetails = ({navigation, route}) => {
     update(cache, {data: {event}}) {
       try {
         const {events} = cache.readQuery({query: GET_EVENTS});
-        console.log('Is the cache trying to save?', event);
         cache.writeQuery({
           query: GET_EVENTS,
           data: {events: events.concat([event])},
@@ -137,19 +135,16 @@ const ScoutMeetingDetails = ({navigation, route}) => {
   const submit = () => {
     const d = new Date();
     d.setDate(d.getDate() + getInitialDate(weekDays[weekday], d.getDay()));
-    const datetime = new Date(
-      d.toISOString().split('T')[0] + 'T' + time.toTimeString().split(' ')[0]
-    );
     const scoutMeeting = {
       title: 'Troop Meeting',
       description,
-      datetime,
+      datetime: route.params.datetime,
       day: weekday,
-      time,
+      time: route.params.datetime,
       shakedown: shakedownWeek,
       location: {
-        lng: route.params['ChooseLocation'].longitude,
-        lat: route.params['ChooseLocation'].latitude,
+        lng: route.params.location.longitude,
+        lat: route.params.location.latitude,
       },
     };
     addScoutMeeting({
@@ -164,8 +159,18 @@ const ScoutMeetingDetails = ({navigation, route}) => {
   };
 
   return (
-    <KeyboardAvoidingView style={{flex: 1}} behavior="padding" enabled>
+    <KeyboardAvoidingView
+      behavior="position"
+      keyboardVerticalOffset={25}
+      enabled>
       <ScrollView contentContainerStyle={{flexGrow: 1, width: '100%'}}>
+        <Ionicons
+          name="ios-arrow-round-back"
+          color={Colors.darkBrown}
+          style={styles.backIcon}
+          size={38}
+          onPress={back}
+        />
         <View style={styles.screen}>
           <Text style={styles.formHeading}>
             What day will this Troop Meeting be on?
@@ -188,31 +193,32 @@ const ScoutMeetingDetails = ({navigation, route}) => {
               initial={'MONDAY'}
               onPress={(value) => setWeekday(value)}
             />
-          </View>
-          <Text style={styles.formHeading}>What time will you start?</Text>
-          <View style={styles.dateTime}>
-            <Button
-              title="Pick a time"
-              onPress={() => {
-                showClock ? setShowClock(false) : setShowClock(true);
-              }}
-            />
-            {showClock && (
-              <DateTimePicker
-                value={time}
-                minuteInterval={10}
-                mode="time"
-                is24Hour={false}
-                display="default"
-                onChange={(event, date) => {
-                  setTime(new Date(date));
-                }}
-              />
-            )}
+            {/*</View>*/}
+            {/*<Text style={styles.formHeading}>What time will you start?</Text>*/}
+            {/*<View style={styles.dateTime}>*/}
+            {/*  <Button*/}
+            {/*    title="Pick a time"*/}
+            {/*    onPress={() => {*/}
+            {/*      showClock ? setShowClock(false) : setShowClock(true);*/}
+            {/*    }}*/}
+            {/*  />*/}
+            {/*  {showClock && (*/}
+            {/*    <DateTimePicker*/}
+            {/*      value={time}*/}
+            {/*      minuteInterval={10}*/}
+            {/*      mode="time"*/}
+            {/*      is24Hour={false}*/}
+            {/*      display="default"*/}
+            {/*      onChange={(event, date) => {*/}
+            {/*        setTime(new Date(date));*/}
+            {/*      }}*/}
+            {/*    />*/}
+            {/*  )}*/}
           </View>
 
           <Text style={styles.formHeading}>
-            What activities will be taking place this week?
+            What activities will be taking place at these meetings? (You can add
+            information into individual meetings at a later time.)
           </Text>
         </View>
 
@@ -235,7 +241,8 @@ const ScoutMeetingDetails = ({navigation, route}) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    marginTop: Constants.statusBarHeight,
+    justifyContent: 'flex-start',
+    marginTop: 30 + Constants.statusBarHeight,
   },
   dateTime: {
     margin: 15,
@@ -244,6 +251,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     paddingHorizontal: 12,
+    marginTop: 20 + Constants.statusBarHeight,
     // justifyContent: 'center',
     alignItems: 'center',
   },
@@ -266,6 +274,14 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     fontSize: 18,
     fontFamily: 'oxygen-bold',
+  },
+  backIcon: {
+    paddingVertical: Constants.statusBarHeight / 3 + 5,
+    paddingHorizontal: 16,
+    position: 'absolute',
+    left: '1.5%',
+    top: Constants.statusBarHeight / 2,
+    zIndex: 1,
   },
 });
 

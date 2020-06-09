@@ -13,6 +13,8 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 
+import {Notifications} from 'expo';
+
 import {GET_EVENTS} from '../../calendar/CalendarView';
 
 import RTE from '../../../components/RichTextEditor';
@@ -25,6 +27,8 @@ import Colors from '../../../../constants/Colors';
 import Constants from 'expo-constants';
 import {gql} from '@apollo/client';
 import {useMutation, useQuery} from '@apollo/react-hooks';
+import {Ionicons} from '@expo/vector-icons';
+import ShowChosenTimeRow from '../../../components/ShowChosenTimeRow';
 
 const ADD_HIKE = gql`
   mutation AddHike($hike: AddHikeInput!) {
@@ -46,7 +50,7 @@ const ADD_HIKE = gql`
   }
 `;
 
-const GET_EXPO_TOKEN = gql`
+export const GET_EXPO_TOKEN = gql`
   query GetToken {
     currUser {
       id
@@ -62,7 +66,6 @@ const HikeDetails = ({navigation, route}) => {
     update(cache, {data: {addHike}}) {
       try {
         const {events} = cache.readQuery({query: GET_EVENTS});
-        console.log(addHike);
         cache.writeQuery({
           query: GET_EVENTS,
           data: {events: events.concat([addHike])},
@@ -87,12 +90,33 @@ const HikeDetails = ({navigation, route}) => {
   // display contact
   const [distance, setDistance] = useState(1);
 
-  const sendPushNotification = async (body) => {
-    const message = {
+  const sendPushNotification = async (name, date) => {
+    console.log(name, date);
+    const reminder = {
       to: data.currUser.expoNotificationToken,
       sound: 'default',
       title: 'ScoutTrek Reminder',
-      body: `${body} event has been created!`,
+      body: `This is a friendly reminder that ${name} is tomorrow at ${new Date(
+        +date
+      ).toLocaleTimeString([], {
+        hour: 'numeric',
+        minute: '2-digit',
+      })}.`,
+      icon: '../../assets/images/Icon.png',
+    };
+    // try {
+    //   await Notifications.scheduleLocalNotificationAsync(reminder, {
+    //     time: new Date(+date).getTime() + 86400000,
+    //   });
+    // } catch (err) {
+    //   return console.log(err);
+    // }
+    console.log(name, date, data.currUser.expoNotificationToken);
+    const message = {
+      to: data.currUser.expoNotificationToken,
+      sound: 'default',
+      title: 'Event Confirmed!',
+      body: `${name} event has been created!`,
       icon: '../../assets/images/Icon.png',
     };
     const response = await fetch('https://exp.host/--/api/v2/push/send', {
@@ -106,7 +130,9 @@ const HikeDetails = ({navigation, route}) => {
     });
   };
 
-  const back = () => navigation.goBack();
+  const back = () => {
+    navigation.goBack();
+  };
 
   const submit = () => {
     addHike({
@@ -128,10 +154,9 @@ const HikeDetails = ({navigation, route}) => {
           },
         },
       },
-    })
-      .then((res) => {})
-      .catch((err) => console.log(err));
-    sendPushNotification(route.params.name);
+    }).catch((err) => console.log(err));
+    console.log('success!');
+    sendPushNotification(route.params.name, route.params.datetime);
     navigation.popToTop();
     navigation.pop();
     navigation.navigate('Calendar');
@@ -139,175 +164,173 @@ const HikeDetails = ({navigation, route}) => {
 
   return (
     <KeyboardAvoidingView
-      behavior="padding"
-      keyboardVerticalOffset={0}
-      style={{flex: 1}}
+      behavior="position"
+      keyboardVerticalOffset={40}
       enabled>
-      <ScrollView contentContainerStyles={{flexGrow: 1}}>
-        <View style={styles.endTimeContainer}>
-          <Text style={styles.formHeading}>
-            Roughly what time will the event end?
-          </Text>
-          <View style={styles.dateTime}>
-            <View style={styles.btns}>
-              <Button
-                title="Choose Time"
-                onPress={() => setShowTimeModal(true)}
+      <ScrollView contentContainerStyle={{width: '100%'}}>
+        <Ionicons
+          name="ios-arrow-round-back"
+          color={Colors.darkBrown}
+          style={styles.backIcon}
+          size={38}
+          onPress={back}
+        />
+        <View style={styles.screen}>
+          <View style={styles.distanceContainer}>
+            <Text style={styles.formHeading}>Hike Distance (in miles)?</Text>
+            <View style={styles.sliderContainer}>
+              <Slider
+                minimumValue={1}
+                maximumValue={20}
+                step={1}
+                style={styles.slider}
+                value={distance}
+                onValueChange={setDistance}
               />
-            </View>
-            <View style={styles.btns}>
-              <Text>{time && time.toTimeString().substr(0, 5)}</Text>
+              <Text style={styles.sliderText}>{distance}</Text>
             </View>
           </View>
-        </View>
-        <CalModal show={showDateModal} setShow={setShowDateModal}>
-          <Calendar
-            current={date}
-            markedDates={{
-              [date]: {
-                selected: true,
-                disableTouchEvent: true,
-                selectedDotColor: 'orange',
-              },
-            }}
-            onDayPress={(day) => {
-              setDate(day.dateString);
-            }}
-          />
-          <TouchableOpacity
-            onPress={() => {
-              setShowDateModal(false);
-            }}
-            style={{
-              padding: 12,
-              alignItems: 'center',
-              backgroundColor: Colors.lightGray,
-              borderRadius: 4,
-            }}>
-            <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
-              Choose Date
-            </Text>
-          </TouchableOpacity>
-        </CalModal>
-        <CalModal show={showTimeModal} setShow={setShowTimeModal}>
-          <DateTimePicker
-            value={time}
-            minuteInterval={5}
-            mode="time"
-            is24Hour={false}
-            display="default"
-            onChange={(event, date) => {
-              setTime(new Date(date));
-            }}
-          />
-          <TouchableOpacity
-            onPress={() => {
-              setShowTimeModal(false);
-            }}
-            style={{
-              padding: 12,
-              alignItems: 'center',
-              backgroundColor: Colors.lightGray,
-              borderRadius: 4,
-            }}>
-            <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
-              Choose Time
-            </Text>
-          </TouchableOpacity>
-        </CalModal>
+          <View style={styles.endTimeContainer}>
+            {/*<ShowChosenTimeRow*/}
+            {/*  description="Name"*/}
+            {/*  value={route.params.name}*/}
+            {/*  color={Colors.lightOrange}*/}
+            {/*  icon="ios-information-circle"*/}
+            {/*/>*/}
+            {/*<ShowChosenTimeRow*/}
+            {/*  description="Event Time"*/}
+            {/*  value={new Date(route.params.datetime).toLocaleTimeString([], {*/}
+            {/*    hour: 'numeric',*/}
+            {/*    minute: '2-digit',*/}
+            {/*  })}*/}
+            {/*/>*/}
+            {/*<ShowChosenTimeRow*/}
+            {/*  description="Meet Time"*/}
+            {/*  value={new Date(route.params.meetTime).toLocaleTimeString([], {*/}
+            {/*    hour: 'numeric',*/}
+            {/*    minute: '2-digit',*/}
+            {/*  })}*/}
+            {/*/>*/}
 
-        <View style={styles.distanceContainer}>
-          <Text style={styles.formHeading}>Hike Distance (in miles)?</Text>
-          <View style={styles.sliderContainer}>
-            <Slider
-              minimumValue={1}
-              maximumValue={20}
-              step={1}
-              style={styles.slider}
-              value={distance}
-              onValueChange={setDistance}
+            <Text style={styles.formHeading}>
+              Roughly what time will the event end?
+            </Text>
+            <View style={styles.dateTime}>
+              <TouchableOpacity
+                style={styles.chooseEndTimeBtn}
+                onPress={() => setShowTimeModal(true)}>
+                <Text
+                  style={{
+                    color: '#fff',
+                    fontFamily: 'oxygen-bold',
+                  }}>
+                  Choose Time
+                </Text>
+              </TouchableOpacity>
+              <View>
+                <Text
+                  style={{
+                    fontFamily: 'oxygen',
+                    fontSize: 18,
+                  }}>
+                  {time &&
+                    time.toLocaleTimeString([], {
+                      hour: 'numeric',
+                      minute: '2-digit',
+                    })}{' '}
+                  {time === new Date() && `(current time)`}
+                </Text>
+              </View>
+            </View>
+          </View>
+          <CalModal show={showTimeModal} setShow={setShowTimeModal}>
+            <DateTimePicker
+              value={time}
+              minuteInterval={5}
+              mode="time"
+              is24Hour={false}
+              display="default"
+              onChange={(event, date) => {
+                setTime(new Date(date));
+              }}
             />
-            <Text style={styles.sliderText}>{distance}</Text>
-          </View>
+            <TouchableOpacity
+              onPress={() => {
+                setShowTimeModal(false);
+              }}
+              style={{
+                padding: 12,
+                alignItems: 'center',
+                backgroundColor: Colors.lightGray,
+                borderRadius: 4,
+              }}>
+              <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
+                Choose Time
+              </Text>
+            </TouchableOpacity>
+          </CalModal>
+
+          <Text style={styles.formHeading}>
+            What additional information do you want people to know about the
+            event?
+          </Text>
+
+          <RTE description={description} setDescription={setDescription} />
+
+          <TouchableOpacity onPress={submit} style={styles.submitBtn}>
+            <Text style={styles.text}>Complete</Text>
+          </TouchableOpacity>
         </View>
-
-        <Text style={styles.formHeading}>
-          What do you want people to know about the event?
-        </Text>
-
-        <RTE description={description} setDescription={setDescription} />
-
-        <TouchableOpacity onPress={submit} style={styles.submitBtn}>
-          <Text style={styles.text}>Complete</Text>
-        </TouchableOpacity>
       </ScrollView>
     </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
-  endTimeContainer: {
-    marginTop: 10 + Constants.statusBarHeight,
-    paddingHorizontal: 20,
+  screen: {
+    justifyContent: 'flex-start',
   },
-  input: {
-    padding: 12,
-    marginHorizontal: 15,
-    borderRadius: 7,
-    borderWidth: 1,
-    flexDirection: 'row',
-    flex: 1,
-    fontSize: 15,
-    fontFamily: 'oxygen',
-    backgroundColor: '#fff',
-    textAlignVertical: 'top',
-    borderColor: Colors.primary,
+  endTimeContainer: {
+    marginTop: 10,
+    marginBottom: 20,
   },
   dateTime: {
     flexDirection: 'row',
-  },
-  btns: {
-    width: Dimensions.get('window').width / 2 - 30,
-    margin: 15,
     justifyContent: 'space-evenly',
+    alignItems: 'center',
+    marginTop: 12,
   },
-  textEditor: {
-    height: 80,
-    backgroundColor: Colors.green,
-  },
-  textBar: {
-    flex: 1,
-    backgroundColor: Colors.offWhite,
+  chooseEndTimeBtn: {
+    backgroundColor: Colors.purple,
+    padding: 8,
+    borderRadius: 8,
   },
   formHeading: {
     borderColor: Colors.secondary,
     fontSize: 15,
     fontFamily: 'oxygen-bold',
-    margin: 18,
+    marginHorizontal: 22,
+    marginVertical: 18,
   },
   distanceContainer: {
-    width: '100%',
-    alignItems: 'flex-start',
-    paddingHorizontal: 20,
-  },
-  displayContact: {
-    marginHorizontal: 18,
+    marginTop: 32 + Constants.statusBarHeight,
   },
   sliderContainer: {
     flexDirection: 'row',
     flex: 1,
+    marginLeft: 28,
+    marginRight: 8,
   },
   slider: {
     flex: 7,
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
   },
   sliderText: {
     flex: 1,
-    textAlignVertical: 'center',
     textAlign: 'center',
     fontSize: 18,
     fontFamily: 'oxygen-bold',
-    paddingTop: 4,
+    paddingTop: 5,
   },
   submitBtn: {
     backgroundColor: Colors.green,
@@ -322,11 +345,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'oxygen-bold',
   },
-  toolbarButton: {
-    fontSize: 20,
-    width: 28,
-    height: 28,
-    textAlign: 'center',
+  backIcon: {
+    paddingVertical: Constants.statusBarHeight / 3 + 5,
+    paddingHorizontal: 16,
+    position: 'absolute',
+    left: '1.5%',
+    top: Constants.statusBarHeight / 2,
+    zIndex: 1,
   },
 });
 

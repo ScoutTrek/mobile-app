@@ -18,7 +18,7 @@ const authLink = setContext(async (_, {headers}) => {
   // get the authentication token from local storage if it exists
   // const token = await AsyncStorage.getItem('userToken')
   const token = await AsyncStorage.getItem('userToken');
-  console.log(token);
+  // console.log(token);
   return {
     headers: {
       ...headers,
@@ -146,7 +146,8 @@ export default function App() {
 
       const link = authLink.concat(errorLink).concat(
         new HttpLink({
-          uri: 'http://localhost:4000',
+          uri: 'https://scouttrek-node-api.appspot.com/:4000',
+          // uri: 'http://localhost:4000/',
         })
       );
 

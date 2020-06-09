@@ -60,6 +60,16 @@ const listData = [
         'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1582556922/ScoutTrek/campfire.png',
     },
   },
+  {
+    id: 3,
+    eventType: 'Summer Camp',
+    subtitle: 'A week of non-stop fun in the wild.',
+    priceFrom: true,
+    image: {
+      uri:
+        'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1590852981/ScoutTrek/ben-white-pV5ckb2HEVk-unsplash.jpg',
+    },
+  },
   // {
   //   id: 3,
   //   eventType: 'Backpacking',
@@ -82,6 +92,7 @@ const EventTypesScreen = ({navigation}) => {
       hikingBtn(item),
       troopMeetingBtn(item),
       campingBtn(item),
+      summerCampBtn(item),
       backpackingBtn(item),
     ][index];
 
@@ -150,6 +161,27 @@ const EventTypesScreen = ({navigation}) => {
         />
       </View>
     </TouchableOpacity>
+  );
+
+  const summerCampBtn = (item) => (
+    <TouchabldeOpacity
+      key={item.id}
+      style={styles.eventContainer}
+      onPress={() => _openEventCreator('SummerCamp', item)}>
+      <View style={styles.eventContent}>
+        <LinearGradient
+          colors={['rgba(32,32,32,0)', 'rgba(32,32,32,.75)']}
+          style={styles.gradient}>
+          <Text style={styles.eventTitle}>{item.eventType}</Text>
+          <Text style={styles.eventSubTitle}>{item.subtitle}</Text>
+        </LinearGradient>
+        <ImageBackground
+          style={styles.eventImage}
+          source={item.image}
+          resizeMode="cover"
+        />
+      </View>
+    </TouchabldeOpacity>
   );
 
   const backpackingBtn = (item) => (

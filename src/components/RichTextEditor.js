@@ -187,7 +187,7 @@ class App extends Component {
 
 const styles = StyleSheet.create({
   main: {
-    flex: 1,
+    // flex: 1,
     minHeight: 200,
     marginTop: 20,
     paddingHorizontal: 10,

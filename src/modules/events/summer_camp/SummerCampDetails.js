@@ -18,11 +18,10 @@ import Constants from 'expo-constants';
 import {gql} from '@apollo/client';
 import {useMutation, useQuery} from '@apollo/react-hooks';
 import {Ionicons} from '@expo/vector-icons';
-import DateAndTimePicker from '../../../components/DateAndTimePicker';
 
-const ADD_CAMPOUT = gql`
-  mutation AddCampout($campout: AddCampoutInput!) {
-    event: addCampout(input: $campout) {
+const ADD_SUMMER_CAMP = gql`
+  mutation AddSummerCamp($summer_camp: AddSummerCampInput!) {
+    event: addSummerCamp(input: $summer_camp) {
       id
       type
       title
@@ -49,9 +48,9 @@ const GET_EXPO_TOKEN = gql`
   }
 `;
 
-const CampoutDetails = ({navigation, route}) => {
+const SummerCampDetails = ({navigation, route}) => {
   const {data} = useQuery(GET_EXPO_TOKEN);
-  const [addCampout] = useMutation(ADD_CAMPOUT, {
+  const [addSummerCamp] = useMutation(ADD_SUMMER_CAMP, {
     update(cache, {data: {event}}) {
       try {
         const {events} = cache.readQuery({query: GET_EVENTS});
@@ -67,11 +66,6 @@ const CampoutDetails = ({navigation, route}) => {
       }
     },
   });
-
-  const [showEndDatetime, setShowEndDatetime] = useState(false);
-
-  const [endDate, setEndDate] = useState('');
-  const [endTime, setEndTime] = useState(new Date());
 
   const [description, setDescription] = useState('');
 
@@ -97,30 +91,24 @@ const CampoutDetails = ({navigation, route}) => {
   const back = () => navigation.goBack();
 
   const submit = () => {
-    if (!endDate) {
-      Alert.alert(
-        'Looks like you forgot something.',
-        'Please make sure to choose when your event will end.'
-      );
-      return;
-    } else if (!description) {
+    if (!description) {
       Alert.alert(
         'Looks like you forgot something.',
         "Are you sure you don't want to tell anything about the event."
       );
     }
-    const endDatetime = `${endDate}T${endTime.toISOString().split('T')[1]}`;
 
-    addCampout({
+    addSummerCamp({
       variables: {
-        campout: {
+        summer_camp: {
           title: route.params.name,
           description,
           startDatetime: route.params.datetime,
+          endDatetime: route.params.endDatetime,
           datetime: route.params.datetime,
-          endDatetime,
           meetTime: route.params.meetTime,
           leaveTime: route.params.leaveTime,
+          checkoutTime: route.params.checkoutTime,
           location: {
             lng: route.params.location.longitude,
             lat: route.params.location.latitude,
@@ -144,6 +132,7 @@ const CampoutDetails = ({navigation, route}) => {
     <KeyboardAvoidingView
       behavior="position"
       keyboardVerticalOffset={20}
+      stule={{flex: 1}}
       enabled>
       <ScrollView contentContainerStyles={{flexGrow: 1}}>
         <Ionicons
@@ -153,45 +142,8 @@ const CampoutDetails = ({navigation, route}) => {
           size={38}
           onPress={back}
         />
-        <View style={styles.dateTime}>
-          <TouchableOpacity
-            onPress={() => {
-              setShowEndDatetime(true);
-            }}
-            style={{
-              padding: 12,
-              margin: 5,
-              alignItems: 'center',
-              backgroundColor: Colors.lightGreen,
-              borderRadius: 4,
-            }}>
-            <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
-              When will you return...
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <DateAndTimePicker
-          chooseDay={route.params.chooseDate}
-          chooseTime={route.params.chooseTime}
-          nextForm={() => setShowEndDatetime(false)}
-          date={endDate}
-          setDate={setEndDate}
-          time={endTime}
-          setTime={setEndTime}
-          showModal={showEndDatetime}
-          setShowModal={setShowEndDatetime}
-        />
-        {endDate !== '' && (
-          <Text style={styles.endDateTime}>
-            {new Date(endDate).toLocaleDateString()},{' '}
-            {endTime.toLocaleTimeString([], {
-              hour: 'numeric',
-              minute: '2-digit',
-            })}
-          </Text>
-        )}
         <Text style={styles.formHeading}>
-          What do you want people to know about the camping trip?
+          What do you want scouts and parents to know about this summer camp?
         </Text>
 
         <RTE description={description} setDescription={setDescription} />
@@ -205,25 +157,16 @@ const CampoutDetails = ({navigation, route}) => {
 };
 
 const styles = StyleSheet.create({
-  dateTime: {
-    marginTop: 32 + Constants.statusBarHeight,
-    padding: 10,
-  },
   textEditor: {
     height: 80,
     backgroundColor: Colors.green,
   },
   formHeading: {
+    marginTop: 48 + Constants.statusBarHeight,
     borderColor: Colors.secondary,
     fontSize: 15,
     fontFamily: 'oxygen-bold',
     margin: 18,
-  },
-  endDateTime: {
-    textAlign: 'center',
-    fontSize: 20,
-    fontFamily: 'oxygen',
-    padding: 10,
   },
   submitBtn: {
     backgroundColor: Colors.green,
@@ -254,4 +197,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CampoutDetails;
+export default SummerCampDetails;

@@ -87,7 +87,6 @@ const EditScoutMeetingDetails = ({navigation, route}) => {
     const datetime = new Date(
       d.toISOString().split('T')[0] + 'T' + time.toTimeString().split(' ')[0]
     );
-    console.log(shakedownWeek);
     const scoutMeeting = {
       title: 'Troop Meeting',
       description,

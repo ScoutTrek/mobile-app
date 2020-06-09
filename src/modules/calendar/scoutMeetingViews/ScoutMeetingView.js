@@ -9,6 +9,7 @@ import ENV from '../../../../helpers/env';
 
 import {gql} from '@apollo/client';
 import {useQuery} from '@apollo/react-hooks';
+import ChatBtn from '../../../components/ChatBtn';
 
 export const GET_SCOUT_MEETING = gql`
   query GetScoutMeeting($id: ID!) {
@@ -100,6 +101,7 @@ const ScoutMeetingDetails = ({route, navigation}) => {
         </View>
       </View>
       <View style={{margin: 15}}>
+        <ChatBtn onPress={() => navigation.navigate('EventThread')} />
         <InlineButton
           title="Edit"
           onPress={() => navigation.navigate('EditScoutMeeting', {currItem})}

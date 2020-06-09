@@ -1,9 +1,9 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import ChooseLocationView from '../eventComponents/ChooseLocation';
+import ChooseLocationView from '../event_components/ChooseLocation';
 import HikeDetails from './HikeDetails';
-import ChooseName from '../eventComponents/ChooseName';
+import ChooseName from '../event_components/ChooseName';
 
 const HikeStack = createStackNavigator();
 

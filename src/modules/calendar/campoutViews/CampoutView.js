@@ -9,6 +9,7 @@ import ENV from '../../../../helpers/env';
 
 import {gql} from '@apollo/client';
 import {useQuery} from '@apollo/react-hooks';
+import ChatBtn from '../../../components/ChatBtn';
 
 export const GET_CAMPOUT = gql`
   query GetCampout($id: ID!) {
@@ -80,7 +81,7 @@ const CampoutDetailsScreen = ({route, navigation}) => {
                     <html lang="en">
                         <head>
                             <meta charset="UTF-8">
-                            <meta name="viewport" content="width=device-width, initial-scale=1.1">
+                            <meta name="viewport" content="width=device-width, initial-scale=0.99">
                         </head>
                         <body style="background-color: ${Colors.offWhite}">
                             ${data.event.description}
@@ -94,9 +95,13 @@ const CampoutDetailsScreen = ({route, navigation}) => {
         </Text>
       </View>
       <View style={{margin: 15}}>
+        <ChatBtn onPress={() => navigation.navigate('EventThread')} />
         <InlineButton
           title="Edit"
-          onPress={() => navigation.navigate('EditCampout', {currItem})}
+          onPress={() => {
+            console.log(data);
+            navigation.navigate('EditCampout', {messages: data.event.messages});
+          }}
         />
       </View>
     </View>
