@@ -1,11 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import {Platform, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {gql} from '@apollo/client';
 
 import {GiftedChat, Actions, Bubble} from 'react-native-gifted-chat';
 import {useMutation, useQuery} from '@apollo/react-hooks';
 import {GET_EVENTS} from '../CalendarView';
 import Colors from '../../../../constants/Colors';
+// import AccessoryBtn from './AccessoryBtn';
+import {GET_EXPO_TOKEN} from '../../events/hike/HikeDetails';
 // import CustomActions from './CustomActions';
 // import CustomView from './CustomView';
 
@@ -19,8 +21,8 @@ const GET_CURR_USER_BRIEF = gql`
 `;
 
 const SEND_MESSAGE = gql`
-  mutation AddMessage($eventId: ID!, $message: String!) {
-    addMessage(eventId: $eventId, message: $message) {
+  mutation AddMessage($eventId: ID!, $name: String!, $message: String!) {
+    addMessage(eventId: $eventId, name: $name, message: $message) {
       _id
       text
       createdAt
@@ -31,8 +33,27 @@ const SEND_MESSAGE = gql`
   }
 `;
 
+const GET_MESSAGES = gql`
+  query getMessages($id: ID!) {
+    messages(id: $id) {
+      _id
+      text
+      createdAt
+      user {
+        id
+        name
+      }
+    }
+  }
+`;
+
 export default function ChatModule({navigation, route}) {
-  const {data: user, loading, error} = useQuery(GET_CURR_USER_BRIEF);
+  const {data: user} = useQuery(GET_CURR_USER_BRIEF);
+
+  const {data: eventMessages, loading, error} = useQuery(GET_MESSAGES, {
+    pollInterval: 1000,
+    variables: {id: route.params.id},
+  });
 
   const [addMessage] = useMutation(SEND_MESSAGE, {
     // update(cache, {data: {addMessage}}) {
@@ -51,19 +72,27 @@ export default function ChatModule({navigation, route}) {
     // },
   });
 
-  const [messages, setMessages] = useState(
-    route.params.messages.map((message) => ({
-      ...message,
-      createdAt: new Date(+message.createdAt),
-      user: {
-        _id: parseInt(message.user.id, 16),
-        name: message.user.name,
-      },
-    }))
-  );
+  const [messages, setMessages] = useState([]);
+
   const [loadEarlier, setLoadEarlier] = useState(true);
   const [typingText, setTypingText] = useState(null);
   const [isLoadingEarlier, setIsLoadingEarlier] = useState(false);
+
+  useEffect(() => {
+    if (eventMessages) {
+      const messages = eventMessages.messages.map((message) => {
+        return {
+          ...message,
+          createdAt: new Date(+message.createdAt),
+          user: {
+            _id: parseInt(message.user.id, 16),
+            name: message.user.name,
+          },
+        };
+      });
+      setMessages(messages);
+    }
+  }, [eventMessages]);
 
   const onLoadEarlier = () => {
     setIsLoadingEarlier(true);
@@ -79,6 +108,7 @@ export default function ChatModule({navigation, route}) {
       await addMessage({
         variables: {
           eventId: route.params.id,
+          name: route.params.name,
           message: message.text,
         },
       });
@@ -101,9 +131,8 @@ export default function ChatModule({navigation, route}) {
 
   // renderCustomView(props) {
   //   return <CustomView {...props} />;
+  //   return <CustomView {...props} />;
   // }
-
-  console.log('test ', user.id, messages[5].user.id);
 
   const renderFooter = (props) => {
     if (typingText) {
@@ -115,6 +144,9 @@ export default function ChatModule({navigation, route}) {
     }
     return null;
   };
+
+  if (error) return <Text>Error: {error}</Text>;
+  if (loading) return <Text>Loading...</Text>;
 
   return (
     <GiftedChat
@@ -129,10 +161,16 @@ export default function ChatModule({navigation, route}) {
         _id: parseInt(user.user.id, 16),
         name: user.user.name,
       }}
-      // renderActions={this.renderCustomActions}
+      // renderAccessory={() => <AccessoryBtn onSend={onSend} />} // renderActions={this.renderCustomActions}
       renderBubble={renderBubble}
       // renderCustomView={this.renderCustomView}
       renderFooter={renderFooter}
+      minInputToolbarHeight={60}
+      textInputStyle={{
+        minHeight: 50,
+        textAlignVertical: 'center',
+        padding: 15,
+      }}
     />
   );
 }

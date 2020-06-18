@@ -3,33 +3,28 @@
     "name": "ScoutTrek",
     "slug": "scout-trek-native",
     "privacy": "unlisted",
-    "sdkVersion": "36.0.0",
     "platforms": [
       "ios",
-      "android",
-      "web"
+      "android"
     ],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/ScoutTrekIcon.png",
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "enabled": false
     },
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
       "supportsTablet": true,
-      "config": {
-        "googleMapsApiKey": "AIzaSyAt6vamY9lmYvjySgvPlvQ_HYEURESs8bk"
-      },
       "bundleIdentifier": "com.scouttrek.kalebdavenport",
-      "buildNumber": "1.0.0"
+      "buildNumber": "1.0.6"
     },
     "android": {
-      "googleServicesFile": "./google-services.json",
-      "versionCode": 1,
+      "versionCode": 5,
       "permissions": [
+        "NOTIFICATIONS",
         "ACCESS_FINE_LOCATION",
         "CAMERA",
         "READ_EXTERNAL_STORAGE",
@@ -50,13 +45,11 @@
       "resizeMode": "cover",
       "image": "./assets/images/loadingImage.png"
     },
-    "description": "",
+    "description": "Testing the publishing feature of Expo",
     "notification": {
       "icon": "./assets/images/Icon.png",
       "color": "#F29959",
-      "iosDisplayInForeground": true,
-      "androidMode": "collapse",
-      "androidCollapsedTitle": "ScoutTrek Reminders"
+      "iosDisplayInForeground": true
     }
   }
 }

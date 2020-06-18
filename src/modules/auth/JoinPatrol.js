@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Alert,
+  Vibration,
 } from 'react-native';
 import {gql} from '@apollo/client';
 import {useApolloClient, useMutation, useQuery} from '@apollo/react-hooks';
@@ -15,6 +16,8 @@ import GradientButton from '../../components/buttons/GradientButton';
 import Constants from 'expo-constants';
 import Colors from '../../../constants/Colors';
 import {AntDesign, Ionicons} from '@expo/vector-icons';
+import {Notifications} from 'expo';
+import * as Permissions from 'expo-permissions';
 
 export const GET_TOKEN = gql`
   {
@@ -68,10 +71,17 @@ const JoinPatrol = ({navigation, route}) => {
 
   const handleSignUp = async () => {
     if (isValid) {
+      let token;
+      try {
+        token = await Notifications.getExpoPushTokenAsync();
+      } catch (e) {
+        console.log(e);
+      }
       await signUp({
         variables: {
           userInfo: {
             ...route.params,
+            expoNotificationToken: token,
             patrol: patrolId,
           },
         },
@@ -96,10 +106,11 @@ const JoinPatrol = ({navigation, route}) => {
         console.log(e);
       }
     };
+
     if (signUpData.data) {
       setToken();
     }
-  });
+  }, [signUpData.data]);
 
   if (loading) return null;
   if (error) return <Text>`Error! ${error}`</Text>;

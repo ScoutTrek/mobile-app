@@ -122,7 +122,6 @@ const CreateTroop = ({navigation, route}) => {
   };
 
   const nextForm = async () => {
-    console.log(formState);
     await addTroop({
       variables: {
         troopInfo: {

@@ -28,6 +28,10 @@ const useReduxEvents = (data) => {
       data.events.forEach(({id, title, creator, datetime, type}) => {
         let strDate = new Date(parseInt(datetime)).toISOString();
         strDate = strDate.split('T')[0];
+        const name = creator.name.split(' ');
+        if (type === 'ScoutMeeting') {
+          type = 'Meeting';
+        }
         if (
           calData.month === new Date(parseInt(datetime)).getMonth() + 1 &&
           new Date(parseInt(datetime)).getFullYear() === 2020
@@ -38,7 +42,10 @@ const useReduxEvents = (data) => {
             name: creator.name,
             id,
             datetime,
-            labels: [creator.name, type],
+            labels: [
+              `${name[0]} ${name[1] ? name[1].substring(0, 1) : ''}`,
+              type,
+            ],
           });
         }
       });

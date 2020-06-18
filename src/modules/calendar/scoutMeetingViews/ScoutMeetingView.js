@@ -23,6 +23,15 @@ export const GET_SCOUT_MEETING = gql`
       datetime
       day
       shakedown
+      messages {
+        _id
+        text
+        createdAt
+        user {
+          id
+          name
+        }
+      }
       location {
         lat
         lng
@@ -38,6 +47,7 @@ export const GET_SCOUT_MEETING = gql`
 const ScoutMeetingDetails = ({route, navigation}) => {
   const {currItem} = route.params;
   const {loading, error, data} = useQuery(GET_SCOUT_MEETING, {
+    fetchPolicy: 'network-only',
     variables: {id: currItem},
   });
 
@@ -56,12 +66,15 @@ const ScoutMeetingDetails = ({route, navigation}) => {
         />
         <View style={styles.info}>
           <View style={styles.leftInfoContainer}>
-            <Text style={styles.date}>{data.event.date}</Text>
+            <Text style={styles.date}>
+              {new Date(+data.event.datetime).toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+              })}
+            </Text>
           </View>
           <View style={styles.centerInfoContainer}>
-            <Text style={[styles.text, styles.eventType]}>
-              {data.event.type}
-            </Text>
+            <Text style={[styles.text, styles.eventType]}>Scout Meeting</Text>
           </View>
 
           <View style={styles.rightInfoContainer}>
@@ -92,7 +105,11 @@ const ScoutMeetingDetails = ({route, navigation}) => {
           <Text style={styles.bold}>
             {data.event.day.charAt(0) + data.event.day.toLowerCase().slice(1)}
           </Text>
-          , {new Date(+data.event.datetime).toLocaleTimeString()}
+          ,{' '}
+          {new Date(+data.event.datetime).toLocaleTimeString([], {
+            hour: 'numeric',
+            minute: '2-digit',
+          })}
         </Text>
         <View style={styles.shakedown}>
           {data.event.shakedown && (
@@ -101,7 +118,15 @@ const ScoutMeetingDetails = ({route, navigation}) => {
         </View>
       </View>
       <View style={{margin: 15}}>
-        <ChatBtn onPress={() => navigation.navigate('EventThread')} />
+        <ChatBtn
+          onPress={() =>
+            navigation.navigate('EventThread', {
+              id: data.event.id,
+              name: data.event.title,
+              messages: data.event.messages,
+            })
+          }
+        />
         <InlineButton
           title="Edit"
           onPress={() => navigation.navigate('EditScoutMeeting', {currItem})}
@@ -117,6 +142,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.offWhite,
     color: Colors.purple,
     justifyContent: 'space-between',
+    paddingBottom: 15,
   },
   text: {
     paddingVertical: 3,
@@ -174,7 +200,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   description: {
-    marginVertical: 20,
+    margin: 20,
+    backgroundColor: Colors.offWhite,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   weekDay: {
     fontFamily: 'oxygen',

@@ -11,6 +11,7 @@ import {
   Dimensions,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 
 import {Notifications} from 'expo';
@@ -29,6 +30,8 @@ import {gql} from '@apollo/client';
 import {useMutation, useQuery} from '@apollo/react-hooks';
 import {Ionicons} from '@expo/vector-icons';
 import ShowChosenTimeRow from '../../../components/ShowChosenTimeRow';
+import RichInputContainer from '../../../components/containers/RichInputContainer';
+import SubmitBtn from '../../../components/buttons/SubmitButton';
 
 const ADD_HIKE = gql`
   mutation AddHike($hike: AddHikeInput!) {
@@ -90,48 +93,16 @@ const HikeDetails = ({navigation, route}) => {
   // display contact
   const [distance, setDistance] = useState(1);
 
-  const sendPushNotification = async (name, date) => {
-    console.log(name, date);
-    const reminder = {
-      to: data.currUser.expoNotificationToken,
-      sound: 'default',
-      title: 'ScoutTrek Reminder',
-      body: `This is a friendly reminder that ${name} is tomorrow at ${new Date(
-        +date
-      ).toLocaleTimeString([], {
-        hour: 'numeric',
-        minute: '2-digit',
-      })}.`,
-      icon: '../../assets/images/Icon.png',
-    };
-    // try {
-    //   await Notifications.scheduleLocalNotificationAsync(reminder, {
-    //     time: new Date(+date).getTime() + 86400000,
-    //   });
-    // } catch (err) {
-    //   return console.log(err);
-    // }
-    console.log(name, date, data.currUser.expoNotificationToken);
-    const message = {
-      to: data.currUser.expoNotificationToken,
-      sound: 'default',
-      title: 'Event Confirmed!',
-      body: `${name} event has been created!`,
-      icon: '../../assets/images/Icon.png',
-    };
-    const response = await fetch('https://exp.host/--/api/v2/push/send', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Accept-encoding': 'gzip, deflate',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(message),
-    });
-  };
+  // try {
+  //   await Notifications.scheduleLocalNotificationAsync(reminder, {
+  //     time: new Date(+date).getTime() + 86400000,
+  //   });
+  // } catch (err) {
+  //   return console.log(err);
+  // }
 
   const back = () => {
-    navigation.goBack();
+    navigation.pop();
   };
 
   const submit = () => {
@@ -156,140 +127,118 @@ const HikeDetails = ({navigation, route}) => {
       },
     }).catch((err) => console.log(err));
     console.log('success!');
-    sendPushNotification(route.params.name, route.params.datetime);
     navigation.popToTop();
     navigation.pop();
     navigation.navigate('Calendar');
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior="position"
-      keyboardVerticalOffset={40}
-      enabled>
-      <ScrollView contentContainerStyle={{width: '100%'}}>
-        <Ionicons
-          name="ios-arrow-round-back"
-          color={Colors.darkBrown}
-          style={styles.backIcon}
-          size={38}
-          onPress={back}
-        />
-        <View style={styles.screen}>
-          <View style={styles.distanceContainer}>
-            <Text style={styles.formHeading}>Hike Distance (in miles)?</Text>
-            <View style={styles.sliderContainer}>
-              <Slider
-                minimumValue={1}
-                maximumValue={20}
-                step={1}
-                style={styles.slider}
-                value={distance}
-                onValueChange={setDistance}
-              />
-              <Text style={styles.sliderText}>{distance}</Text>
-            </View>
-          </View>
-          <View style={styles.endTimeContainer}>
-            {/*<ShowChosenTimeRow*/}
-            {/*  description="Name"*/}
-            {/*  value={route.params.name}*/}
-            {/*  color={Colors.lightOrange}*/}
-            {/*  icon="ios-information-circle"*/}
-            {/*/>*/}
-            {/*<ShowChosenTimeRow*/}
-            {/*  description="Event Time"*/}
-            {/*  value={new Date(route.params.datetime).toLocaleTimeString([], {*/}
-            {/*    hour: 'numeric',*/}
-            {/*    minute: '2-digit',*/}
-            {/*  })}*/}
-            {/*/>*/}
-            {/*<ShowChosenTimeRow*/}
-            {/*  description="Meet Time"*/}
-            {/*  value={new Date(route.params.meetTime).toLocaleTimeString([], {*/}
-            {/*    hour: 'numeric',*/}
-            {/*    minute: '2-digit',*/}
-            {/*  })}*/}
-            {/*/>*/}
-
-            <Text style={styles.formHeading}>
-              Roughly what time will the event end?
-            </Text>
-            <View style={styles.dateTime}>
-              <TouchableOpacity
-                style={styles.chooseEndTimeBtn}
-                onPress={() => setShowTimeModal(true)}>
-                <Text
-                  style={{
-                    color: '#fff',
-                    fontFamily: 'oxygen-bold',
-                  }}>
-                  Choose Time
-                </Text>
-              </TouchableOpacity>
-              <View>
-                <Text
-                  style={{
-                    fontFamily: 'oxygen',
-                    fontSize: 18,
-                  }}>
-                  {time &&
-                    time.toLocaleTimeString([], {
-                      hour: 'numeric',
-                      minute: '2-digit',
-                    })}{' '}
-                  {time === new Date() && `(current time)`}
-                </Text>
-              </View>
-            </View>
-          </View>
-          <CalModal show={showTimeModal} setShow={setShowTimeModal}>
-            <DateTimePicker
-              value={time}
-              minuteInterval={5}
-              mode="time"
-              is24Hour={false}
-              display="default"
-              onChange={(event, date) => {
-                setTime(new Date(date));
-              }}
-            />
-            <TouchableOpacity
-              onPress={() => {
-                setShowTimeModal(false);
-              }}
-              style={{
-                padding: 12,
-                alignItems: 'center',
-                backgroundColor: Colors.lightGray,
-                borderRadius: 4,
-              }}>
-              <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
-                Choose Time
-              </Text>
-            </TouchableOpacity>
-          </CalModal>
-
-          <Text style={styles.formHeading}>
-            What additional information do you want people to know about the
-            event?
-          </Text>
-
-          <RTE description={description} setDescription={setDescription} />
-
-          <TouchableOpacity onPress={submit} style={styles.submitBtn}>
-            <Text style={styles.text}>Complete</Text>
-          </TouchableOpacity>
+    <RichInputContainer icon="back" back={back}>
+      <View style={styles.distanceContainer}>
+        <Text style={styles.formHeading}>Hike Distance (in miles)?</Text>
+        <View style={styles.sliderContainer}>
+          <Slider
+            minimumValue={1}
+            maximumValue={20}
+            step={1}
+            style={styles.slider}
+            value={distance}
+            onValueChange={setDistance}
+          />
+          <Text style={styles.sliderText}>{distance}</Text>
         </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+      </View>
+      <View style={styles.endTimeContainer}>
+        {/*<ShowChosenTimeRow*/}
+        {/*  description="Name"*/}
+        {/*  value={route.params.name}*/}
+        {/*  color={Colors.lightOrange}*/}
+        {/*  icon="ios-information-circle"*/}
+        {/*/>*/}
+        {/*<ShowChosenTimeRow*/}
+        {/*  description="Event Time"*/}
+        {/*  value={new Date(route.params.datetime).toLocaleTimeString([], {*/}
+        {/*    hour: 'numeric',*/}
+        {/*    minute: '2-digit',*/}
+        {/*  })}*/}
+        {/*/>*/}
+        {/*<ShowChosenTimeRow*/}
+        {/*  description="Meet Time"*/}
+        {/*  value={new Date(route.params.meetTime).toLocaleTimeString([], {*/}
+        {/*    hour: 'numeric',*/}
+        {/*    minute: '2-digit',*/}
+        {/*  })}*/}
+        {/*/>*/}
+
+        <Text style={styles.formHeading}>
+          Roughly what time will the event end?
+        </Text>
+        <View style={styles.dateTime}>
+          <TouchableOpacity
+            style={styles.chooseEndTimeBtn}
+            onPress={() => setShowTimeModal(true)}>
+            <Text
+              style={{
+                color: '#fff',
+                fontFamily: 'oxygen-bold',
+              }}>
+              Choose Time
+            </Text>
+          </TouchableOpacity>
+          <View>
+            <Text
+              style={{
+                fontFamily: 'oxygen',
+                fontSize: 18,
+              }}>
+              {time &&
+                time.toLocaleTimeString([], {
+                  hour: 'numeric',
+                  minute: '2-digit',
+                })}{' '}
+              {time === new Date() && `(current time)`}
+            </Text>
+          </View>
+        </View>
+      </View>
+      <CalModal show={showTimeModal} setShow={setShowTimeModal}>
+        <DateTimePicker
+          value={time}
+          minuteInterval={5}
+          mode="time"
+          isa24Hour={false}
+          display="default"
+          onChange={(event, date) => {
+            setTime(new Date(date));
+          }}
+        />
+        <TouchableOpacity
+          onPress={() => {
+            setShowTimeModal(false);
+          }}
+          style={{
+            padding: 12,
+            alignItems: 'center',
+            backgroundColor: Colors.lightGreen,
+            borderRadius: 4,
+          }}>
+          <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
+            Choose Time
+          </Text>
+        </TouchableOpacity>
+      </CalModal>
+
+      <RTE
+        heading="What additional information do you want people to know about this hike?"
+        description={description}
+        setDescription={setDescription}
+      />
+      <SubmitBtn submit={submit} title="Complete" />
+    </RichInputContainer>
   );
 };
 
 const styles = StyleSheet.create({
-  screen: {
-    justifyContent: 'flex-start',
-  },
   endTimeContainer: {
     marginTop: 10,
     marginBottom: 20,
@@ -311,9 +260,6 @@ const styles = StyleSheet.create({
     fontFamily: 'oxygen-bold',
     marginHorizontal: 22,
     marginVertical: 18,
-  },
-  distanceContainer: {
-    marginTop: 32 + Constants.statusBarHeight,
   },
   sliderContainer: {
     flexDirection: 'row',

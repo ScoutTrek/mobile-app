@@ -4,7 +4,10 @@ import {LinearGradient} from 'expo-linear-gradient';
 
 const GradientButton = ({title, onPress}) => {
   return (
-    <TouchableOpacity onPress={onPress} style={styles.container}>
+    <TouchableOpacity
+      activeOpacity={0.5}
+      onPress={onPress}
+      style={styles.container}>
       <View style={styles.inner}>
         <LinearGradient
           style={styles.background}
@@ -26,7 +29,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   inner: {
-    paddingVertical: 12,
+    paddingVertical: 10,
     paddingHorizontal: 18,
     overflow: 'hidden',
   },

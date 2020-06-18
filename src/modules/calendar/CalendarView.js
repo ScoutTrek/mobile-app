@@ -5,6 +5,7 @@ import {
   Text,
   ScrollView,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import {Agenda} from 'react-native-calendars';
 import Constants from 'expo-constants';
@@ -41,10 +42,12 @@ const getColor = (label) => {
   switch (label) {
     case 'Hike':
       return colors.secondary;
-    case 'ScoutMeeting':
+    case 'Meeting':
       return Colors.orange;
     case 'Campout':
       return colors.yellow;
+    case 'SummerCamp':
+      return colors.green;
     default:
       return colors.primary;
   }
@@ -69,6 +72,34 @@ const CalendarView = ({navigation}) => {
     );
   };
 
+  const viewEvent = (item) => {
+    if (item.type === 'Hike') {
+      navigation.navigate('ViewEvents', {
+        screen: 'Hike',
+        params: {currItem: item.id},
+      });
+    } else if (item.type === 'Meeting') {
+      navigation.navigate('ViewEvents', {
+        screen: 'ScoutMeeting',
+        params: {
+          currItem: item.id,
+        },
+      });
+    } else if (item.type === 'Campout') {
+      navigation.navigate('ViewEvents', {
+        screen: 'Campout',
+        params: {currItem: item.id},
+      });
+    } else if (item.type === 'SummerCamp') {
+      navigation.navigate('ViewEvents', {
+        screen: 'SummerCamp',
+        params: {
+          currItem: item.id,
+        },
+      });
+    }
+  };
+
   const renderItem = (item) => {
     const labels =
       item.labels &&
@@ -82,31 +113,21 @@ const CalendarView = ({navigation}) => {
             backgroundColor: getColor(label),
             borderRadius: 3,
           }}>
-          <Text style={{color: 'white'}}>{label}</Text>
+          <Text style={{color: 'white', textAlign: 'center'}}>{label}</Text>
         </View>
       ));
 
     return (
-      <TouchableOpacity
-        onPress={() => {
-          if (item.type === 'Hike') {
-            navigation.navigate('Hike', {currItem: item.id});
-          } else if (item.type === 'ScoutMeeting') {
-            navigation.navigate('ScoutMeeting', {currItem: item.id});
-          } else if (item.type === 'Campout') {
-            navigation.navigate('Campout', {currItem: item.id});
-          } else if (item.type === 'SummerCamp') {
-            navigation.navigate('SummerCamp', {currItem: item.id});
-          }
-        }}
-        style={styles.item}>
+      <TouchableOpacity onPress={() => viewEvent(item)} style={styles.item}>
         <View>
           <Text
+            numberOfLines={1}
             style={{
               color: '#48506B',
               fontFamily: 'oxygen-bold',
               fontSize: 18,
               marginBottom: 10,
+              maxWidth: Dimensions.get('window').width * 0.5,
             }}>
             {item.title}
           </Text>
@@ -154,8 +175,8 @@ const CalendarView = ({navigation}) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     marginTop: Constants.statusBarHeight,
+    flex: 1,
   },
   item: {
     flexDirection: 'row',

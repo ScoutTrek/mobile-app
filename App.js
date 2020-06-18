@@ -31,6 +31,7 @@ import {onError} from 'apollo-link-error';
 
 import AuthNavigator from './src/modules/auth/AuthNavigator';
 import MainTabNavigator from './src/modules/navigation/MainTabNavigator';
+import ViewEventStackNavigator from './src/modules/navigation/ViewEventStack';
 import {GET_TOKEN} from './src/modules/auth/JoinPatrol';
 
 const cache = new InMemoryCache();
@@ -96,6 +97,7 @@ const AppLoadingContainer = () => {
         ) : (
           <Stack.Screen name="Home" component={MainTabNavigator} />
         )}
+        <Stack.Screen name="ViewEvents" component={ViewEventStackNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -147,7 +149,7 @@ export default function App() {
       const link = authLink.concat(errorLink).concat(
         new HttpLink({
           uri: 'https://scouttrek-node-api.appspot.com/:4000',
-          // uri: 'http://localhost:4000/',
+          // uri: 'http://localhost:4000/',4000
         })
       );
 

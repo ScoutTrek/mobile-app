@@ -23,6 +23,8 @@ import EditCampoutDetails from '../calendar/campoutViews/EditCampoutDetails';
 import SummerCampView from '../calendar/summerCampViews/SummerCampView';
 import EditSummerCampView from '../calendar/summerCampViews/EditSummerCampView';
 
+import {ChatStack} from '../calendar/CalendarNav';
+
 const GET_CURR_USER = gql`
   query GetCurrUser {
     user: currUser {
@@ -79,39 +81,49 @@ function CustomDrawerContent(props) {
         }}>
         <View>
           <DrawerItemList {...props} />
-          <View style={{padding: 22, alignItems: 'center'}}>
-            <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
-              {data.user.name}
-            </Text>
-            <Text style={{fontSize: 15, fontFamily: 'oxygen', marginTop: 12}}>
-              {data.user.email}
-            </Text>
-            <Text style={{fontSize: 15, fontFamily: 'oxygen', marginTop: 18}}>
-              {data.user.role}
-            </Text>
-          </View>
-          <View style={{padding: 24, alignItems: 'flex-start'}}>
-            <Text
-              style={{fontSize: 16, fontFamily: 'oxygen-bold', marginTop: 18}}>
-              Patrol
-            </Text>
-            <Text style={{fontSize: 16, fontFamily: 'oxygen', marginTop: 10}}>
-              {data.user.patrol.name}
-            </Text>
-          </View>
-        </View>
-
-        <DrawerItem
-          label="Logout"
-          onPress={() => {
-            AsyncStorage.removeItem('userToken').then(() => {
-              client.writeQuery({
-                query: GET_TOKEN,
-                data: {userToken: null},
+          <DrawerItem
+            label="Logout"
+            onPress={() => {
+              AsyncStorage.removeItem('userToken').then(() => {
+                client.writeQuery({
+                  query: GET_TOKEN,
+                  data: {userToken: null},
+                });
               });
-            });
-          }}
-        />
+            }}
+          />
+          {data.user.role === 'SCOUT' && (
+            <View>
+              <View style={{padding: 22, alignItems: 'center'}}>
+                <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
+                  {data.user.name}
+                </Text>
+                <Text
+                  style={{fontSize: 15, fontFamily: 'oxygen', marginTop: 12}}>
+                  {data.user.email}
+                </Text>
+                <Text
+                  style={{fontSize: 15, fontFamily: 'oxygen', marginTop: 18}}>
+                  {data.user.role}
+                </Text>
+              </View>
+              <View style={{padding: 24, alignItems: 'flex-start'}}>
+                <Text
+                  style={{
+                    fontSize: 16,
+                    fontFamily: 'oxygen-bold',
+                    marginTop: 18,
+                  }}>
+                  Patrol
+                </Text>
+                <Text
+                  style={{fontSize: 16, fontFamily: 'oxygen', marginTop: 10}}>
+                  {data.user.patrol.name}
+                </Text>
+              </View>
+            </View>
+          )}
+        </View>
       </View>
     </DrawerContentScrollView>
   );
@@ -136,18 +148,6 @@ const HomeStackNavigator = ({navigation}) => {
         },
       })}>
       <HomeStack.Screen name="Home" component={AdventuresNav} />
-
-      <HomeStack.Screen name="Hike" component={HikeView} />
-      <HomeStack.Screen name="EditHike" component={EditHikeDetails} />
-
-      <HomeStack.Screen name="ScoutMeeting" component={ScoutMeetingView} />
-      <HomeStack.Screen name="EditScoutMeeting" component={EditScoutMeeting} />
-
-      <HomeStack.Screen name="Campout" component={CampoutView} />
-      <HomeStack.Screen name="EditCampout" component={EditCampoutDetails} />
-
-      <HomeStack.Screen name="SummerCamp" component={SummerCampView} />
-      <HomeStack.Screen name="EditSummerCamp" component={EditSummerCampView} />
     </HomeStack.Navigator>
   );
 };

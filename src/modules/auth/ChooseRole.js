@@ -10,8 +10,8 @@ import Colors from '../../../constants/Colors';
 import Constants from 'expo-constants';
 
 const ROLES = [
-  'SCOUT_MASTER',
-  'SR_PATROL_LEADER',
+  'SCOUTMASTER',
+  'SENIOR_PATROL_LEADER',
   'PATROL_LEADER',
   'SCOUT',
   'PARENT',
@@ -26,7 +26,9 @@ const ChooseRole = ({navigation, route}) => {
       enabled>
       <View style={{flex: 1}}>
         <View style={styles.inputContainer}>
-          <Text style={styles.formHeading}>What state do you live in?</Text>
+          <Text style={styles.formHeading}>
+            What is your role within the Troop?
+          </Text>
           {ROLES.map((role) => (
             <TouchableOpacity
               onPress={() => {

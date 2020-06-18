@@ -138,7 +138,6 @@ const ChooseLocation = ({navigation, route}) => {
   return (
     <View style={styles.container}>
       <MapView
-        provider={PROVIDER_GOOGLE}
         style={styles.mapStyle}
         onPress={selectLocationHandler}
         initialRegion={{

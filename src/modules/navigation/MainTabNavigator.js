@@ -3,7 +3,6 @@ import {Dimensions, Image} from 'react-native';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import AdventuresNav from '../home/Adventures';
 import CalendarNav from '../calendar/CalendarNav';
 import NewEventNav from './EventsNavigator';
 import {AntDesign} from '@expo/vector-icons';
@@ -24,7 +23,9 @@ const MainBottomTabNavigator = () => {
     <MainBottomTab.Navigator
       screenOptions={MainBottomTabConfig}
       tabBarOptions={{
-        showLabel: false,
+        showLabel: true,
+        activeTintColor: Colors.darkBrown,
+        labelStyle: {top: -1},
       }}>
       <MainBottomTab.Screen name="Home" component={HomeNav} />
       <MainBottomTab.Screen
@@ -46,7 +47,7 @@ const MainBottomTabNavigator = () => {
 
 const MainBottomTabConfig = ({route}) => ({
   tabBarIcon: ({focused, color, size}) => {
-    size = 30;
+    size = 24;
     let iconSource;
     switch (route.name) {
       case 'Home':
@@ -72,13 +73,12 @@ const MainBottomTabConfig = ({route}) => ({
       //   iconSource = iconGrids
       //   break
       case 'New Event':
-        size = 50;
+        size = 26;
         return (
           <AntDesign
             name="pluscircle"
             color={focused ? Colors.darkOrange : Colors.orange}
             size={size}
-            style={{bottom: Dimensions.get('window').height / 90}}
           />
         );
       default:

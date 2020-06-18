@@ -13,7 +13,7 @@ export const resolvers = {
       let token;
       try {
         token = await Notifications.getExpoPushTokenAsync();
-        console.log('token', token);
+        console.log('Token ', token);
       } catch (e) {
         console.log(e);
       }

@@ -164,7 +164,7 @@ const EventTypesScreen = ({navigation}) => {
   );
 
   const summerCampBtn = (item) => (
-    <TouchabldeOpacity
+    <TouchableOpacity
       key={item.id}
       style={styles.eventContainer}
       onPress={() => _openEventCreator('SummerCamp', item)}>
@@ -181,7 +181,7 @@ const EventTypesScreen = ({navigation}) => {
           resizeMode="cover"
         />
       </View>
-    </TouchabldeOpacity>
+    </TouchableOpacity>
   );
 
   const backpackingBtn = (item) => (

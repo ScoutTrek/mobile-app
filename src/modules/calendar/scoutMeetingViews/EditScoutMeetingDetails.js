@@ -31,6 +31,9 @@ import {
   getInitialDate,
   weekDays,
 } from '../../events/meeting/ScoutMeetingDetails';
+import {GET_EXPO_TOKEN} from '../../events/hike/HikeDetails';
+import RichInputContainer from '../../../components/containers/RichInputContainer';
+import SubmitBtn from '../../../components/buttons/SubmitButton';
 
 const UPDATE_SCOUT_MEETING = gql`
   mutation UpdateScoutMeeting($id: ID!, $updates: UpdateScoutMeetingInput!) {
@@ -65,6 +68,8 @@ const EditScoutMeetingDetails = ({navigation, route}) => {
   } = useQuery(GET_SCOUT_MEETING, {
     variables: {id: currItem},
   });
+
+  const {data} = useQuery(GET_EXPO_TOKEN);
 
   const [updateScoutMeeting] = useMutation(UPDATE_SCOUT_MEETING);
   // ## Below will become a reducer
@@ -105,82 +110,62 @@ const EditScoutMeetingDetails = ({navigation, route}) => {
   };
 
   return (
-    <KeyboardAvoidingView style={{flex: 1}} behavior="padding" enabled>
-      <ScrollView contentContainerStyle={{flexGrow: 1, width: '100%'}}>
-        <View style={styles.screen}>
-          <Text style={styles.formHeading}>
-            What day will this Troop Meeting be on?
-          </Text>
-          <View style={styles.time}>
-            <RadioForm
-              radio_props={[
-                {label: 'M', value: 'MONDAY'},
-                {label: 'T', value: 'TUESDAY'},
-                {label: 'W', value: 'WEDNESDAY'},
-                {label: 'Th', value: 'THURSDAY'},
-                {label: 'F', value: 'FRIDAY'},
-                {label: 'S', value: 'SATURDAY'},
-                {label: 'Su', value: 'SUNDAY'},
-              ]}
-              buttonSize={Dimensions.get('window').width / 14}
-              formHorizontal={true}
-              labelHorizontal={false}
-              buttonColor={'#2196f3'}
-              animation={true}
-              initial={'MONDAY'}
-              onPress={(val) => setValue(val)}
-            />
-          </View>
-          <Text style={styles.formHeading}>
-            What activities will be taking place this week?
-          </Text>
-          <View style={styles.dateTime}>
-            <DateTimePicker
-              value={time}
-              mode="time"
-              is24Hour={false}
-              display="default"
-              onChange={(event, date) => {
-                setTime(new Date(date));
-              }}
-            />
-          </View>
-
-          <Text style={styles.formHeading}>
-            What activities will be taking place this week?
-          </Text>
-        </View>
-
-        <RTE description={description} setDescription={setDescription} />
-
-        <Toggle
-          heading="Will there be a shakedown this week?"
-          active={shakedownWeek}
-          onChange={setShakedownWeek}
+    <RichInputContainer back={back}>
+      // Turn into component
+      <Text style={styles.formHeading}>
+        Do you want to change the day of the troop meeting?
+      </Text>
+      <View style={styles.time}>
+        <RadioForm
+          radio_props={[
+            {label: 'M', value: 'MONDAY'},
+            {label: 'T', value: 'TUESDAY'},
+            {label: 'W', value: 'WEDNESDAY'},
+            {label: 'Th', value: 'THURSDAY'},
+            {label: 'F', value: 'FRIDAY'},
+            {label: 'S', value: 'SATURDAY'},
+            {label: 'Su', value: 'SUNDAY'},
+          ]}
+          buttonSize={Dimensions.get('window').width / 18}
+          formHorizontal={true}
+          labelHorizontal={false}
+          buttonColor={'#2196f3'}
+          animation={true}
+          initial={event.day.toUpperCase()}
+          onPress={(val) => setValue(val)}
         />
-
-        <TouchableOpacity onPress={submit} style={styles.submitBtn}>
-          <Text style={styles.text}>Complete</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </KeyboardAvoidingView>
+      </View>
+      {/*<View style={styles.dateTime}>*/}
+      {/*  <DateTimePicker*/}
+      {/*    value={time}*/}
+      {/*    mode="time"*/}
+      {/*    is24Hour={false}*/}
+      {/*    display="default"*/}
+      {/*    onChange={(event, date) => {*/}
+      {/*      setTime(new Date(date));*/}
+      {/*    }}*/}
+      {/*  />*/}
+      {/*</View>*/}
+      <RTE
+        heading="What do you want people to know about this troop meeting?"
+        description={description}
+        setDescription={setDescription}
+      />
+      <Toggle
+        heading="Will there be a shakedown this week?"
+        active={shakedownWeek}
+        onChange={setShakedownWeek}
+      />
+      <SubmitBtn submit={submit} title="Update" />
+    </RichInputContainer>
   );
 };
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    marginTop: Constants.statusBarHeight,
-  },
-  dateTime: {
-    margin: 15,
-  },
   time: {
     flexDirection: 'row',
-    width: '100%',
-    paddingHorizontal: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingHorizontal: 16,
+    justifyContent: 'flex-start',
   },
   formHeading: {
     borderColor: Colors.secondary,
@@ -188,19 +173,6 @@ const styles = StyleSheet.create({
     fontFamily: 'oxygen-bold',
     marginTop: 25,
     margin: 18,
-  },
-  submitBtn: {
-    backgroundColor: Colors.green,
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 62,
-  },
-  text: {
-    color: '#ffffff',
-    fontSize: 18,
-    fontFamily: 'oxygen-bold',
   },
 });
 

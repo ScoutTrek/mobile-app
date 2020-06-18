@@ -20,6 +20,15 @@ export const GET_SUMMER_CAMP = gql`
       description
       datetime
       numDays
+      messages {
+        _id
+        text
+        createdAt
+        user {
+          id
+          name
+        }
+      }
       location {
         lat
         lng
@@ -35,6 +44,7 @@ export const GET_SUMMER_CAMP = gql`
 const SummerCampDetailsScreen = ({route, navigation}) => {
   const {currItem} = route.params;
   const {loading, error, data} = useQuery(GET_SUMMER_CAMP, {
+    fetchPolicy: 'network-only',
     variables: {id: currItem},
   });
 
@@ -57,7 +67,10 @@ const SummerCampDetailsScreen = ({route, navigation}) => {
         <View style={styles.info}>
           <View style={styles.leftInfoContainer}>
             <Text style={styles.date}>
-              {new Date(+data.event.datetime).toLocaleDateString()}
+              {new Date(+data.event.datetime).toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+              })}
             </Text>
           </View>
           <View style={styles.centerInfoContainer}>
@@ -89,7 +102,15 @@ const SummerCampDetailsScreen = ({route, navigation}) => {
         />
       </View>
       <View style={{margin: 15}}>
-        <ChatBtn onPress={() => navigation.navigate('EventThread')} />
+        <ChatBtn
+          onPress={() =>
+            navigation.navigate('EventThread', {
+              id: data.event.id,
+              name: data.event.title,
+              messages: data.event.messages,
+            })
+          }
+        />
         <InlineButton
           title="Edit"
           onPress={() => navigation.navigate('EditSummerCamp', {currItem})}
@@ -105,6 +126,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.offWhite,
     color: Colors.purple,
     justifyContent: 'space-between',
+    paddingBottom: 15,
   },
   text: {
     paddingVertical: 3,

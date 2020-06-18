@@ -2,15 +2,10 @@ import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
-  Button,
-  TextInput,
-  Platform,
   StyleSheet,
   ScrollView,
   Dimensions,
   TouchableOpacity,
-  TouchableWithoutFeedback,
-  Keyboard,
   KeyboardAvoidingView,
 } from 'react-native';
 
@@ -29,6 +24,8 @@ import RadioForm, {
 import {gql} from '@apollo/client';
 import {useMutation, useQuery} from '@apollo/react-hooks';
 import {GET_EVENTS} from '../../calendar/CalendarView';
+import RichInputContainer from '../../../components/containers/RichInputContainer';
+import SubmitBtn from '../../../components/buttons/SubmitButton';
 
 export const weekDays = {
   SUNDAY: 0,
@@ -112,26 +109,7 @@ const ScoutMeetingDetails = ({navigation, route}) => {
   const [description, setDescription] = useState('');
   const [shakedownWeek, setShakedownWeek] = useState(false);
 
-  const sendPushNotification = async (body) => {
-    const message = {
-      to: data.currUser.expoNotificationToken,
-      sound: 'default',
-      title: 'ScoutTrek Reminder',
-      body: `${body} event has been created!`,
-      icon: '../../assets/images/Icon.png',
-    };
-    const response = await fetch('https://exp.host/--/api/v2/push/send', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Accept-encoding': 'gzip, deflate',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(message),
-    });
-  };
-
-  const back = () => navigation.goBack();
+  const back = () => navigation.pop();
   const submit = () => {
     const d = new Date();
     d.setDate(d.getDate() + getInitialDate(weekDays[weekday], d.getDay()));
@@ -152,106 +130,80 @@ const ScoutMeetingDetails = ({navigation, route}) => {
         scoutMeeting,
       },
     }).catch((err) => console.log(err));
-    Constants.isDevice && sendPushNotification('Troop Meeting');
     navigation.popToTop();
     navigation.pop();
     navigation.navigate('Calendar');
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior="position"
-      keyboardVerticalOffset={25}
-      enabled>
-      <ScrollView contentContainerStyle={{flexGrow: 1, width: '100%'}}>
-        <Ionicons
-          name="ios-arrow-round-back"
-          color={Colors.darkBrown}
-          style={styles.backIcon}
-          size={38}
-          onPress={back}
+    <RichInputContainer icon="back" back={back}>
+      <Text style={styles.formHeading}>
+        What day will this Troop Meeting be on?
+      </Text>
+      <View style={styles.time}>
+        <RadioForm
+          radio_props={[
+            {label: 'M', value: 'MONDAY'},
+            {label: 'T', value: 'TUESDAY'},
+            {label: 'W', value: 'WEDNESDAY'},
+            {label: 'Th', value: 'THURSDAY'},
+            {label: 'F', value: 'FRIDAY'},
+            {label: 'S', value: 'SATURDAY'},
+            {label: 'Su', value: 'SUNDAY'},
+          ]}
+          buttonSize={Dimensions.get('window').width / 14}
+          formHorizontal={true}
+          labelHorizontal={false}
+          buttonColor={'#2196f3'}
+          initial={'MONDAY'}
+          onPress={(value) => setWeekday(value)}
         />
-        <View style={styles.screen}>
-          <Text style={styles.formHeading}>
-            What day will this Troop Meeting be on?
-          </Text>
-          <View style={styles.time}>
-            <RadioForm
-              radio_props={[
-                {label: 'M', value: 'MONDAY'},
-                {label: 'T', value: 'TUESDAY'},
-                {label: 'W', value: 'WEDNESDAY'},
-                {label: 'Th', value: 'THURSDAY'},
-                {label: 'F', value: 'FRIDAY'},
-                {label: 'S', value: 'SATURDAY'},
-                {label: 'Su', value: 'SUNDAY'},
-              ]}
-              buttonSize={Dimensions.get('window').width / 14}
-              formHorizontal={true}
-              labelHorizontal={false}
-              buttonColor={'#2196f3'}
-              initial={'MONDAY'}
-              onPress={(value) => setWeekday(value)}
-            />
-            {/*</View>*/}
-            {/*<Text style={styles.formHeading}>What time will you start?</Text>*/}
-            {/*<View style={styles.dateTime}>*/}
-            {/*  <Button*/}
-            {/*    title="Pick a time"*/}
-            {/*    onPress={() => {*/}
-            {/*      showClock ? setShowClock(false) : setShowClock(true);*/}
-            {/*    }}*/}
-            {/*  />*/}
-            {/*  {showClock && (*/}
-            {/*    <DateTimePicker*/}
-            {/*      value={time}*/}
-            {/*      minuteInterval={10}*/}
-            {/*      mode="time"*/}
-            {/*      is24Hour={false}*/}
-            {/*      display="default"*/}
-            {/*      onChange={(event, date) => {*/}
-            {/*        setTime(new Date(date));*/}
-            {/*      }}*/}
-            {/*    />*/}
-            {/*  )}*/}
-          </View>
+        {/*</View>*/}
+        {/*<Text style={styles.formHeading}>What time will you start?</Text>*/}
+        {/*<View style={styles.dateTime}>*/}
+        {/*  <Button*/}
+        {/*    title="Pick a time"*/}
+        {/*    onPress={() => {*/}
+        {/*      showClock ? setShowClock(false) : setShowClock(true);*/}
+        {/*    }}*/}
+        {/*  />*/}
+        {/*  {showClock && (*/}
+        {/*    <DateTimePicker*/}
+        {/*      value={time}*/}
+        {/*      minuteInterval={10}*/}
+        {/*      mode="time"*/}
+        {/*      is24Hour={false}*/}
+        {/*      display="default"*/}
+        {/*      onChange={(event, date) => {*/}
+        {/*        setTime(new Date(date));*/}
+        {/*      }}*/}
+        {/*    />*/}
+        {/*  )}*/}
+      </View>
 
-          <Text style={styles.formHeading}>
-            What activities will be taking place at these meetings? (You can add
-            information into individual meetings at a later time.)
-          </Text>
-        </View>
+      <RTE
+        heading="What activities will be taking place at these meetings? (You can add
+        information into individual meetings at a later time.)"
+        description={description}
+        setDescription={setDescription}
+      />
 
-        <RTE description={description} setDescription={setDescription} />
+      <Toggle
+        heading="Will there be a shakedown this week?"
+        active={shakedownWeek}
+        onChange={setShakedownWeek}
+      />
 
-        <Toggle
-          heading="Will there be a shakedown this week?"
-          active={shakedownWeek}
-          onChange={setShakedownWeek}
-        />
-
-        <TouchableOpacity onPress={submit} style={styles.submitBtn}>
-          <Text style={styles.text}>Complete</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </KeyboardAvoidingView>
+      <SubmitBtn submit={submit} title="Complete" />
+    </RichInputContainer>
   );
 };
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    justifyContent: 'flex-start',
-    marginTop: 30 + Constants.statusBarHeight,
-  },
-  dateTime: {
-    margin: 15,
-  },
   time: {
     flexDirection: 'row',
     width: '100%',
     paddingHorizontal: 12,
-    marginTop: 20 + Constants.statusBarHeight,
     // justifyContent: 'center',
     alignItems: 'center',
   },

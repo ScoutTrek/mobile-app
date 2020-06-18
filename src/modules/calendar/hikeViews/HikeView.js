@@ -69,7 +69,12 @@ const EventDetailsScreen = ({route, navigation}) => {
         />
         <View style={styles.info}>
           <View style={styles.leftInfoContainer}>
-            <Text style={styles.date}>{data.event.date}</Text>
+            <Text style={styles.date}>
+              {new Date(+data.event.datetime).toLocaleDateString('en-US', {
+                month: 'long',
+                day: 'numeric',
+              })}
+            </Text>
           </View>
           <View style={styles.centerInfoContainer}>
             <Text style={[styles.text, styles.eventType]}>
@@ -106,6 +111,7 @@ const EventDetailsScreen = ({route, navigation}) => {
           onPress={() =>
             navigation.navigate('EventThread', {
               id: data.event.id,
+              name: data.event.title,
               messages: data.event.messages,
             })
           }
@@ -125,6 +131,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.offWhite,
     color: Colors.purple,
     justifyContent: 'space-between',
+    paddingBottom: 15,
   },
   text: {
     paddingVertical: 3,

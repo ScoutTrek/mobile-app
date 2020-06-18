@@ -1,6 +1,7 @@
 import React from 'react';
 import {Button, View} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {Ionicons} from '@expo/vector-icons';
 
 import CalendarView from './CalendarView';
 
@@ -17,58 +18,44 @@ import SummerCampView from './summerCampViews/SummerCampView';
 import EditSummerCampView from './summerCampViews/EditSummerCampView';
 import ChatModule from './EventThreads/ChatModule';
 
-import {enableScreens} from 'react-native-screens';
-import {createNativeStackNavigator} from 'react-native-screens/native-stack';
+const Stack = createStackNavigator();
 
-enableScreens();
-const Stack = createNativeStackNavigator();
-
-function MyStack() {
+export function ChatStack({navigation, route}) {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={Home} />
-      <Stack.Screen name="Notifications" component={Notifications} />
-      <Stack.Screen name="Profile" component={Profile} />
-      <Stack.Screen name="Settings" component={Settings} />
+      <Stack.Screen
+        name="Message Board"
+        component={ChatModule}
+        initialParams={route.params}
+        options={{
+          headerHideBackButton: false,
+          backButtonInCustomView: true,
+          headerLeft: () => (
+            <Ionicons
+              name="ios-arrow-back"
+              size={30}
+              style={{paddingHorizontal: 20}}
+              onPress={() => {
+                navigation.pop();
+              }}
+            />
+          ),
+        }}
+      />
     </Stack.Navigator>
   );
 }
 
 const CalendarStack = createStackNavigator();
 
-function CalendarStackNavigator() {
+function CalendarStackNavigator({navigation, route}) {
   return (
     <CalendarStack.Navigator
+      initialRouteName="Calendar"
       screenOptions={() => ({
         headerShown: false,
       })}>
       <CalendarStack.Screen name="Calendar" component={CalendarView} />
-
-      <CalendarStack.Screen name="Hike" component={HikeView} />
-      <CalendarStack.Screen name="EditHike" component={EditHikeDetails} />
-
-      <CalendarStack.Screen name="ScoutMeeting" component={ScoutMeetingView} />
-      <CalendarStack.Screen
-        name="EditScoutMeeting"
-        component={EditScoutMeeting}
-      />
-
-      <CalendarStack.Screen name="Campout" component={CampoutView} />
-      <CalendarStack.Screen name="EditCampout" component={EditCampoutDetails} />
-
-      <CalendarStack.Screen name="SummerCamp" component={SummerCampView} />
-      <CalendarStack.Screen
-        name="EditSummerCamp"
-        component={EditSummerCampView}
-      />
-
-      <CalendarStack.Screen
-        options={{
-          tabBarVisible: false,
-        }}
-        name="EventThread"
-        component={ChatModule}
-      />
     </CalendarStack.Navigator>
   );
 }

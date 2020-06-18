@@ -19,6 +19,8 @@ import {gql} from '@apollo/client';
 import {useMutation, useQuery} from '@apollo/react-hooks';
 import {Ionicons} from '@expo/vector-icons';
 import DateAndTimePicker from '../../../components/DateAndTimePicker';
+import RichInputContainer from '../../../components/containers/RichInputContainer';
+import SubmitBtn from '../../../components/buttons/SubmitButton';
 
 const ADD_CAMPOUT = gql`
   mutation AddCampout($campout: AddCampoutInput!) {
@@ -75,26 +77,7 @@ const CampoutDetails = ({navigation, route}) => {
 
   const [description, setDescription] = useState('');
 
-  const sendPushNotification = async (body) => {
-    const message = {
-      to: data.currUser.expoNotificationToken,
-      sound: 'default',
-      title: 'ScoutTrek Alert',
-      body: `${body} event has been created!`,
-      icon: '../../assets/images/Icon.png',
-    };
-    const response = await fetch('https://exp.host/--/api/v2/push/send', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Accept-encoding': 'gzip, deflate',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(message),
-    });
-  };
-
-  const back = () => navigation.goBack();
+  const back = () => navigation.pop();
 
   const submit = () => {
     if (!endDate) {
@@ -134,123 +117,71 @@ const CampoutDetails = ({navigation, route}) => {
     })
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
-    Constants.isDevice && sendPushNotification(route.params.name);
     navigation.popToTop();
     navigation.pop();
     navigation.navigate('Calendar');
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior="position"
-      keyboardVerticalOffset={20}
-      enabled>
-      <ScrollView contentContainerStyles={{flexGrow: 1}}>
-        <Ionicons
-          name="ios-arrow-round-back"
-          color={Colors.darkBrown}
-          style={styles.backIcon}
-          size={38}
-          onPress={back}
-        />
-        <View style={styles.dateTime}>
-          <TouchableOpacity
-            onPress={() => {
-              setShowEndDatetime(true);
-            }}
-            style={{
-              padding: 12,
-              margin: 5,
-              alignItems: 'center',
-              backgroundColor: Colors.lightGreen,
-              borderRadius: 4,
-            }}>
-            <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
-              When will you return...
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <DateAndTimePicker
-          chooseDay={route.params.chooseDate}
-          chooseTime={route.params.chooseTime}
-          nextForm={() => setShowEndDatetime(false)}
-          date={endDate}
-          setDate={setEndDate}
-          time={endTime}
-          setTime={setEndTime}
-          showModal={showEndDatetime}
-          setShowModal={setShowEndDatetime}
-        />
-        {endDate !== '' && (
-          <Text style={styles.endDateTime}>
-            {new Date(endDate).toLocaleDateString()},{' '}
-            {endTime.toLocaleTimeString([], {
-              hour: 'numeric',
-              minute: '2-digit',
-            })}
+    <RichInputContainer icon="back" back={back}>
+      <View style={styles.dateTime}>
+        <TouchableOpacity
+          onPress={() => {
+            setShowEndDatetime(true);
+          }}
+          style={{
+            padding: 12,
+            margin: 5,
+            alignItems: 'center',
+            backgroundColor: Colors.lightGreen,
+            borderRadius: 4,
+          }}>
+          <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
+            When will you return...
           </Text>
-        )}
-        <Text style={styles.formHeading}>
-          What do you want people to know about the camping trip?
-        </Text>
-
-        <RTE description={description} setDescription={setDescription} />
-
-        <TouchableOpacity onPress={submit} style={styles.submitBtn}>
-          <Text style={styles.text}>Complete</Text>
         </TouchableOpacity>
-      </ScrollView>
-    </KeyboardAvoidingView>
+      </View>
+      <DateAndTimePicker
+        chooseDay={route.params.chooseDate}
+        chooseTime={route.params.chooseTime}
+        nextForm={() => setShowEndDatetime(false)}
+        date={endDate}
+        setDate={setEndDate}
+        time={endTime}
+        setTime={setEndTime}
+        showModal={showEndDatetime}
+        setShowModal={setShowEndDatetime}
+      />
+      {endDate !== '' && (
+        <Text style={styles.endDateTime}>
+          {new Date(endDate).toLocaleDateString()},{' '}
+          {endTime.toLocaleTimeString([], {
+            hour: 'numeric',
+            minute: '2-digit',
+          })}
+        </Text>
+      )}
+
+      <RTE
+        heading="What additional information do you want people to know about this campout?"
+        description={description}
+        setDescription={setDescription}
+      />
+      <SubmitBtn submit={submit} title="Complete" />
+    </RichInputContainer>
   );
 };
 
 const styles = StyleSheet.create({
   dateTime: {
-    marginTop: 32 + Constants.statusBarHeight,
-    padding: 10,
-  },
-  textEditor: {
-    height: 80,
-    backgroundColor: Colors.green,
-  },
-  formHeading: {
-    borderColor: Colors.secondary,
-    fontSize: 15,
-    fontFamily: 'oxygen-bold',
-    margin: 18,
+    paddingTop: 10,
+    paddingHorizontal: 10,
   },
   endDateTime: {
     textAlign: 'center',
     fontSize: 20,
     fontFamily: 'oxygen',
     padding: 10,
-  },
-  submitBtn: {
-    backgroundColor: Colors.green,
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 52,
-  },
-  text: {
-    color: '#ffffff',
-    fontSize: 18,
-    fontFamily: 'oxygen-bold',
-  },
-  toolbarButton: {
-    fontSize: 20,
-    width: 28,
-    height: 28,
-    textAlign: 'center',
-  },
-  backIcon: {
-    paddingVertical: Constants.statusBarHeight / 3 + 5,
-    paddingHorizontal: 16,
-    position: 'absolute',
-    left: '1.5%',
-    top: Constants.statusBarHeight / 2,
-    zIndex: 1,
   },
 });
 

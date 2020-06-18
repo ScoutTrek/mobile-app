@@ -18,6 +18,8 @@ import Constants from 'expo-constants';
 import {gql} from '@apollo/client';
 import {useMutation, useQuery} from '@apollo/react-hooks';
 import {Ionicons} from '@expo/vector-icons';
+import RichInputContainer from '../../../components/containers/RichInputContainer';
+import SubmitBtn from '../../../components/buttons/SubmitButton';
 
 const ADD_SUMMER_CAMP = gql`
   mutation AddSummerCamp($summer_camp: AddSummerCampInput!) {
@@ -69,26 +71,7 @@ const SummerCampDetails = ({navigation, route}) => {
 
   const [description, setDescription] = useState('');
 
-  const sendPushNotification = async (body) => {
-    const message = {
-      to: data.currUser.expoNotificationToken,
-      sound: 'default',
-      title: 'ScoutTrek Alert',
-      body: `${body} event has been created!`,
-      icon: '../../assets/images/Icon.png',
-    };
-    const response = await fetch('https://exp.host/--/api/v2/push/send', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Accept-encoding': 'gzip, deflate',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(message),
-    });
-  };
-
-  const back = () => navigation.goBack();
+  const back = () => navigation.pop();
 
   const submit = () => {
     if (!description) {
@@ -122,79 +105,21 @@ const SummerCampDetails = ({navigation, route}) => {
     })
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
-    Constants.isDevice && sendPushNotification(route.params.name);
     navigation.popToTop();
     navigation.pop();
     navigation.navigate('Calendar');
   };
 
   return (
-    <KeyboardAvoidingView
-      behavior="position"
-      keyboardVerticalOffset={20}
-      stule={{flex: 1}}
-      enabled>
-      <ScrollView contentContainerStyles={{flexGrow: 1}}>
-        <Ionicons
-          name="ios-arrow-round-back"
-          color={Colors.darkBrown}
-          style={styles.backIcon}
-          size={38}
-          onPress={back}
-        />
-        <Text style={styles.formHeading}>
-          What do you want scouts and parents to know about this summer camp?
-        </Text>
-
-        <RTE description={description} setDescription={setDescription} />
-
-        <TouchableOpacity onPress={submit} style={styles.submitBtn}>
-          <Text style={styles.text}>Complete</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </KeyboardAvoidingView>
+    <RichInputContainer icon="back" back={back}>
+      <RTE
+        heading="What additional information do you want people to know about this summer camp?"
+        description={description}
+        setDescription={setDescription}
+      />
+      <SubmitBtn submit={submit} title="Complete" />
+    </RichInputContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  textEditor: {
-    height: 80,
-    backgroundColor: Colors.green,
-  },
-  formHeading: {
-    marginTop: 48 + Constants.statusBarHeight,
-    borderColor: Colors.secondary,
-    fontSize: 15,
-    fontFamily: 'oxygen-bold',
-    margin: 18,
-  },
-  submitBtn: {
-    backgroundColor: Colors.green,
-    flexDirection: 'row',
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 52,
-  },
-  text: {
-    color: '#ffffff',
-    fontSize: 18,
-    fontFamily: 'oxygen-bold',
-  },
-  toolbarButton: {
-    fontSize: 20,
-    width: 28,
-    height: 28,
-    textAlign: 'center',
-  },
-  backIcon: {
-    paddingVertical: Constants.statusBarHeight / 3 + 5,
-    paddingHorizontal: 16,
-    position: 'absolute',
-    left: '1.5%',
-    top: Constants.statusBarHeight / 2,
-    zIndex: 1,
-  },
-});
 
 export default SummerCampDetails;

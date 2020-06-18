@@ -8,11 +8,9 @@ import {
   View,
   KeyboardAvoidingView,
   Dimensions,
-  ScrollView,
-  ActivityIndicator,
   AsyncStorage,
+  Platform,
 } from 'react-native';
-import Constants from 'expo-constants';
 import {FontAwesome} from '@expo/vector-icons';
 import {LinearGradient} from 'expo-linear-gradient';
 import GradientButton from '../../components/buttons/GradientButton';
@@ -55,8 +53,8 @@ const SignIn = ({navigation}) => {
     },
   });
 
-  const handleSignIn = () => {
-    logIn({
+  const handleSignIn = async () => {
+    await logIn({
       variables: {
         userInfo: {
           email: formState.inputValues.email,
@@ -91,7 +89,9 @@ const SignIn = ({navigation}) => {
   });
 
   return (
-    <View style={styles.screen}>
+    <KeyboardAvoidingView
+      style={styles.screen}
+      behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
       <LinearGradient
         colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)']}
         style={styles.gradientOverlay}
@@ -105,40 +105,35 @@ const SignIn = ({navigation}) => {
       />
 
       <View style={styles.main}>
-        <KeyboardAvoidingView
-          style={styles.content}
-          behavior="padding"
-          keyboardVerticalOffset={15}>
-          <View>
-            <Text style={styles.heading}>Welcome back to ScoutTrek</Text>
-            <Text style={styles.text}>
-              Your personal assistant for all the scouting activities you
-              already do.
-            </Text>
-            <AuthInput
-              autoCapitalize="none"
-              onInputChange={(value) => handleInputChange('email', value)}
-              placeholder="email"
-              autoCompleteType="email"
-            />
-            <AuthInput
-              autoCapitalize="none"
-              onFocus={() => setSecure(true)}
-              onInputChange={(value) => handleInputChange('password', value)}
-              placeholder="password"
-              textContentType="none"
-              autoCompleteType="off"
-              secureTextEntry={secure}
-              blurOnSubmit={false}
-              autoComplete={false}
-            />
+        <View>
+          <Text style={styles.heading}>Welcome back to ScoutTrek</Text>
+          <Text style={styles.text}>
+            Your personal assistant for all the Scouting activities you already
+            do.
+          </Text>
+          <AuthInput
+            autoCapitalize="none"
+            onInputChange={(value) => handleInputChange('email', value)}
+            placeholder="email"
+            autoCompleteType="email"
+          />
+          <AuthInput
+            autoCapitalize="none"
+            onFocus={() => setSecure(true)}
+            onInputChange={(value) => handleInputChange('password', value)}
+            placeholder="password"
+            textContentType="none"
+            autoCompleteType="off"
+            secureTextEntry={secure}
+            blurOnSubmit={false}
+            autoComplete={false}
+          />
 
-            <GradientButton
-              title={loading ? `Loading...` : `Log In`}
-              onPress={handleSignIn}
-            />
-          </View>
-        </KeyboardAvoidingView>
+          <GradientButton
+            title={loading ? `Loading...` : `Log In`}
+            onPress={handleSignIn}
+          />
+        </View>
       </View>
       <View style={styles.footer}>
         <Text style={styles.footerText}>Don&rsquo;t have an account?</Text>
@@ -147,7 +142,7 @@ const SignIn = ({navigation}) => {
           onPress={() => navigation.navigate('SignUp')}
         />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -191,20 +186,15 @@ const styles = StyleSheet.create({
   main: {
     flex: 1,
     justifyContent: 'flex-end',
-  },
-  content: {
-    justifyContent: 'flex-end',
     paddingHorizontal: 12,
     paddingVertical: 10,
-    marginBottom: 10,
   },
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
     fontSize: 10,
-    marginTop: 22,
-    marginBottom: 28,
+    marginBottom: 12,
   },
   footerText: {
     fontFamily: 'oxygen',

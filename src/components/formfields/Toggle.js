@@ -23,7 +23,8 @@ const styles = StyleSheet.create({
     borderColor: Colors.secondary,
     fontSize: 15,
     fontFamily: 'oxygen-bold',
-    margin: 18,
+    marginHorizontal: 10,
+    marginVertical: 18,
   },
 });
 

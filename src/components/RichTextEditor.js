@@ -2,10 +2,9 @@ import React, {Component} from 'react';
 import {
   View,
   StyleSheet,
-  Keyboard,
-  TouchableWithoutFeedback,
-  Text,
   KeyboardAvoidingView,
+  Text,
+  ScrollView,
 } from 'react-native';
 
 import CNEditor, {
@@ -56,129 +55,135 @@ class App extends Component {
   };
 
   render() {
+    const {heading} = this.props;
     return (
-      <KeyboardAvoidingView
-        behavior="padding"
-        enabled
-        keyboardVerticalOffset={0}
-        style={{
-          margin: 12,
-          flex: 1,
-          flexDirection: 'column',
-          justifyContent: 'flex-end',
-        }}>
+      <KeyboardAvoidingView style={{marginTop: 28}} behavior="padding">
+        <Text style={styles.formHeading}>{heading}</Text>
         <View
           style={{
             flex: 1,
-            backgroundColor: '#fff',
-            borderColor: Colors.lightGray,
-            borderWidth: 1,
-          }}
-          onTouchStart={() => {
-            this.editor && this.editor.blur();
+            margin: 16,
+            flexDirection: 'column',
+            justifyContent: 'flex-end',
           }}>
-          <View style={styles.main} onTouchStart={(e) => e.stopPropagation()}>
-            <CNEditor
-              placeholder="What do you want everyone to know about this event?"
-              ref={(input) => (this.editor = input)}
-              onSelectedTagChanged={this.onSelectedTagChanged}
-              onSelectedStyleChanged={this.onSelectedStyleChanged}
-              onValueChanged={(value) => {
-                this.props.setDescription(value);
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: '#fff',
+              borderColor: Colors.lightGray,
+              borderTopLeftRadius: 4,
+              borderTopRightRadius: 4,
+              borderWidth: 1,
+            }}
+            onTouchStart={() => {
+              this.editor && this.editor.blur();
+            }}>
+            <View style={styles.main} onTouchStart={(e) => e.stopPropagation()}>
+              <CNEditor
+                placeholder="What do you want everyone to know about this event?"
+                ref={(input) => (this.editor = input)}
+                onSelectedTagChanged={this.onSelectedTagChanged}
+                onSelectedStyleChanged={this.onSelectedStyleChanged}
+                onValueChanged={(value) => {
+                  this.props.setDescription(value);
+                }}
+                styleList={this.customStyles}
+                initialHtml={this.props.description}
+              />
+            </View>
+          </View>
+
+          <View>
+            <CNToolbar
+              style={{
+                height: 44,
+                borderRadius: 0,
+                borderTopWidth: 0,
+                borderBottomLeftRadius: 4,
+                borderBottomRightRadius: 4,
               }}
-              styleList={this.customStyles}
-              initialHtml={this.props.description}
+              iconSetContainerStyle={{
+                flexGrow: 1,
+                justifyContent: 'space-evenly',
+                alignItems: 'center',
+              }}
+              size={32}
+              iconSet={[
+                {
+                  type: 'tool',
+                  iconArray: [
+                    {
+                      toolTypeText: 'bold',
+                      buttonTypes: 'style',
+                      iconComponent: (
+                        <MaterialCommunityIcons name="format-bold" />
+                      ),
+                    },
+                    {
+                      toolTypeText: 'italic',
+                      buttonTypes: 'style',
+                      iconComponent: (
+                        <MaterialCommunityIcons name="format-italic" />
+                      ),
+                    },
+                    {
+                      toolTypeText: 'underline',
+                      buttonTypes: 'style',
+                      iconComponent: (
+                        <MaterialCommunityIcons name="format-underline" />
+                      ),
+                    },
+                  ],
+                },
+                {
+                  type: 'seperator',
+                },
+                {
+                  type: 'tool',
+                  iconArray: [
+                    {
+                      toolTypeText: 'body',
+                      buttonTypes: 'tag',
+                      iconComponent: (
+                        <MaterialCommunityIcons name="format-text" />
+                      ),
+                    },
+                    {
+                      toolTypeText: 'title',
+                      buttonTypes: 'tag',
+                      iconComponent: (
+                        <MaterialCommunityIcons name="format-header-1" />
+                      ),
+                    },
+                    {
+                      toolTypeText: 'heading',
+                      buttonTypes: 'tag',
+                      iconComponent: (
+                        <MaterialCommunityIcons name="format-header-3" />
+                      ),
+                    },
+                    {
+                      toolTypeText: 'ul',
+                      buttonTypes: 'tag',
+                      iconComponent: (
+                        <MaterialCommunityIcons name="format-list-bulleted" />
+                      ),
+                    },
+                    {
+                      toolTypeText: 'ol',
+                      buttonTypes: 'tag',
+                      iconComponent: (
+                        <MaterialCommunityIcons name="format-list-numbered" />
+                      ),
+                    },
+                  ],
+                },
+              ]}
+              selectedTag={this.state.selectedTag}
+              selectedStyles={this.state.selectedStyles}
+              onStyleKeyPress={this.onStyleKeyPress}
             />
           </View>
-        </View>
-
-        <View>
-          <CNToolbar
-            style={{
-              height: 44,
-              borderRadius: 0,
-            }}
-            iconSetContainerStyle={{
-              flexGrow: 1,
-              justifyContent: 'space-evenly',
-              alignItems: 'center',
-            }}
-            size={32}
-            iconSet={[
-              {
-                type: 'tool',
-                iconArray: [
-                  {
-                    toolTypeText: 'bold',
-                    buttonTypes: 'style',
-                    iconComponent: (
-                      <MaterialCommunityIcons name="format-bold" />
-                    ),
-                  },
-                  {
-                    toolTypeText: 'italic',
-                    buttonTypes: 'style',
-                    iconComponent: (
-                      <MaterialCommunityIcons name="format-italic" />
-                    ),
-                  },
-                  {
-                    toolTypeText: 'underline',
-                    buttonTypes: 'style',
-                    iconComponent: (
-                      <MaterialCommunityIcons name="format-underline" />
-                    ),
-                  },
-                ],
-              },
-              {
-                type: 'seperator',
-              },
-              {
-                type: 'tool',
-                iconArray: [
-                  {
-                    toolTypeText: 'body',
-                    buttonTypes: 'tag',
-                    iconComponent: (
-                      <MaterialCommunityIcons name="format-text" />
-                    ),
-                  },
-                  {
-                    toolTypeText: 'title',
-                    buttonTypes: 'tag',
-                    iconComponent: (
-                      <MaterialCommunityIcons name="format-header-1" />
-                    ),
-                  },
-                  {
-                    toolTypeText: 'heading',
-                    buttonTypes: 'tag',
-                    iconComponent: (
-                      <MaterialCommunityIcons name="format-header-3" />
-                    ),
-                  },
-                  {
-                    toolTypeText: 'ul',
-                    buttonTypes: 'tag',
-                    iconComponent: (
-                      <MaterialCommunityIcons name="format-list-bulleted" />
-                    ),
-                  },
-                  {
-                    toolTypeText: 'ol',
-                    buttonTypes: 'tag',
-                    iconComponent: (
-                      <MaterialCommunityIcons name="format-list-numbered" />
-                    ),
-                  },
-                ],
-              },
-            ]}
-            selectedTag={this.state.selectedTag}
-            selectedStyles={this.state.selectedStyles}
-            onStyleKeyPress={this.onStyleKeyPress}
-          />
         </View>
       </KeyboardAvoidingView>
     );
@@ -187,11 +192,17 @@ class App extends Component {
 
 const styles = StyleSheet.create({
   main: {
-    // flex: 1,
+    flex: 1,
     minHeight: 200,
     marginTop: 20,
     paddingHorizontal: 10,
     alignItems: 'stretch',
+  },
+  formHeading: {
+    borderColor: Colors.secondary,
+    fontSize: 15,
+    fontFamily: 'oxygen-bold',
+    marginHorizontal: 20,
   },
   toolbarButton: {
     fontSize: 20,

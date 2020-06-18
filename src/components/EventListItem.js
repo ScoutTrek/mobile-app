@@ -1,5 +1,12 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
 import Colors from '../../constants/Colors';
 import {Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
 
@@ -25,7 +32,9 @@ const EventListItem = ({id, title, type, date, onSelect}) => {
       <View style={styles.row}>
         <View style={styles.info}>
           <Text style={styles.type}>{getIcon(type)}</Text>
-          <Text style={styles.title}>{title}</Text>
+          <Text numberOfLines={1} style={styles.title}>
+            {title}
+          </Text>
         </View>
         <View style={styles.weekday}>
           <Text style={styles.day}>
@@ -36,7 +45,7 @@ const EventListItem = ({id, title, type, date, onSelect}) => {
             }
           </Text>
 
-          <View style={styles.date}>
+          <View style={styles.dateContainer}>
             <Text style={styles.month}>
               {
                 [
@@ -68,26 +77,17 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     width: '100%',
-    marginVertical: 2,
-    position: 'relative',
-    shadowColor: '#000',
   },
   row: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 15,
-    paddingVertical: 5,
-    marginHorizontal: 11,
-    marginVertical: 3,
-    borderRadius: 8,
     backgroundColor: '#fff',
-    shadowOffset: {
-      width: 1,
-      height: 1,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 1,
-    elevation: 2,
+    paddingHorizontal: 15,
+    borderColor: Colors.darkGray,
+    borderWidth: 0.5,
+    borderRadius: 4,
+    marginHorizontal: 8,
+    marginVertical: 5,
   },
   info: {
     flexDirection: 'row',
@@ -99,8 +99,9 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'oxygen',
-    fontSize: 16,
-    paddingBottom: 2,
+    fontSize: 15,
+    paddingBottom: 1,
+    maxWidth: Dimensions.get('window').width * 0.5,
   },
   weekday: {
     flexDirection: 'row',
@@ -112,7 +113,7 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
     paddingHorizontal: 8,
     textAlign: 'center',
-    width: 50,
+    width: 53,
     marginRight: 20,
     backgroundColor: Colors.darkOrange,
     borderRadius: 13,
@@ -122,11 +123,18 @@ const styles = StyleSheet.create({
   month: {
     fontFamily: 'oxygen',
     fontSize: 14,
+    paddingTop: 1,
+  },
+  dateContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    paddingVertical: 2,
   },
   date: {
-    justifyContent: 'center',
     fontFamily: 'oxygen-bold',
-    fontSize: 24,
+    lineHeight: 24,
+    fontSize: 22,
     color: Colors.darkBrown,
   },
 });

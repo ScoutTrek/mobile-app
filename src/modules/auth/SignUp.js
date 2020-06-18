@@ -7,6 +7,7 @@ import {
   Image,
   Dimensions,
   Alert,
+  Platform,
 } from 'react-native';
 import Constants from 'expo-constants';
 import {Ionicons} from '@expo/vector-icons';
@@ -109,7 +110,9 @@ const SignUp = ({navigation, route}) => {
   };
 
   return (
-    <View style={styles.screen}>
+    <KeyboardAvoidingView
+      style={styles.screen}
+      behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
       <LinearGradient
         colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)']}
         style={styles.gradientOverlay}
@@ -137,37 +140,35 @@ const SignUp = ({navigation, route}) => {
           </Text>
         </View>
 
-        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={5}>
-          <View style={styles.content}>
-            <AuthInput
-              autoCapitalize="none"
-              onInputChange={(value) => handleInputChange('name', value)}
-              placeholder="Name"
-            />
-            <AuthInput
-              autoCapitalize="none"
-              onInputChange={(value) => handleInputChange('email', value)}
-              placeholder="Email"
-            />
-            <AuthInput
-              autoCapitalize="none"
-              onInputChange={(value) => handleInputChange('password', value)}
-              placeholder="Password"
-              textContentType="newPassword"
-              secureTextEntry={true}
-            />
-            <AuthInput
-              autoCapitalize="none"
-              onInputChange={(value) =>
-                handleInputChange('confirmPassword', value)
-              }
-              placeholder="Confirm Password"
-              textContentType="newPassword"
-              secureTextEntry={true}
-            />
-            <GradientButton title="Sign Up" onPress={handleNext} />
-          </View>
-        </KeyboardAvoidingView>
+        <View style={styles.content}>
+          <AuthInput
+            autoCapitalize="words"
+            onInputChange={(value) => handleInputChange('name', value)}
+            placeholder="First name / Last name"
+          />
+          <AuthInput
+            autoCapitalize="none"
+            onInputChange={(value) => handleInputChange('email', value)}
+            placeholder="Email"
+          />
+          <AuthInput
+            autoCapitalize="none"
+            onInputChange={(value) => handleInputChange('password', value)}
+            placeholder="Password"
+            textContentType="newPassword"
+            secureTextEntry={true}
+          />
+          <AuthInput
+            autoCapitalize="none"
+            onInputChange={(value) =>
+              handleInputChange('confirmPassword', value)
+            }
+            placeholder="Confirm Password"
+            textContentType="newPassword"
+            secureTextEntry={true}
+          />
+          <GradientButton title="Sign Up" onPress={handleNext} />
+        </View>
       </View>
 
       <View style={styles.footer}>
@@ -177,7 +178,7 @@ const SignUp = ({navigation, route}) => {
           onPress={() => navigation.navigate('SignIn')}
         />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -226,15 +227,13 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingHorizontal: 12,
     paddingVertical: 7,
-    marginBottom: 8,
   },
   footer: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
     fontSize: 10,
-    marginTop: 8,
-    marginBottom: 28,
+    marginBottom: 12,
   },
   footerText: {
     fontFamily: 'oxygen',
