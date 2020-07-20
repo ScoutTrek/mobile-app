@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   View,
   Picker,
+  Alert,
 } from 'react-native';
 import Colors from '../../../../constants/Colors';
 import Constants from 'expo-constants';
@@ -88,6 +89,7 @@ const ADD_TROOP = gql`
 `;
 
 import {formReducer} from '../SignUp';
+import RichInputContainer from '../../../components/containers/RichInputContainer';
 
 const CreateTroop = ({navigation, route}) => {
   const [addTroop, {data, loading}] = useMutation(ADD_TROOP);
@@ -102,6 +104,7 @@ const CreateTroop = ({navigation, route}) => {
     inputValidities: {
       council: false,
       state: false,
+      city: false,
       unitNumber: false,
     },
     formIsValid: false,
@@ -121,16 +124,28 @@ const CreateTroop = ({navigation, route}) => {
     });
   };
 
+  const back = () => {
+    navigation.goBack();
+  };
+
   const nextForm = async () => {
-    await addTroop({
-      variables: {
-        troopInfo: {
-          council: formState.inputValues.council,
-          state: formState.inputValues.state,
-          unitNumber: +formState.inputValues.unitNumber,
+    if (formState.formIsValid) {
+      await addTroop({
+        variables: {
+          troopInfo: {
+            council: formState.inputValues.council,
+            state: formState.inputValues.state,
+            city: formState.inputValues.city,
+            unitNumber: +formState.inputValues.unitNumber,
+          },
         },
-      },
-    });
+      });
+    } else {
+      Alert.alert(
+        'Almost finished!',
+        'Please fill out all of the Troop information before continuing to the next step.'
+      );
+    }
   };
 
   if (data && !loading) {
@@ -143,15 +158,11 @@ const CreateTroop = ({navigation, route}) => {
   }
 
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      keyboardVerticalOffset={0}
-      style={{flex: 1}}
-      enabled>
-      <View style={{flex: 1}}>
+    <RichInputContainer icon="back" back={back}>
+      <View style={{flex: 1, paddingBottom: 100}}>
         <View style={styles.inputContainer}>
           <Text style={styles.formHeading}>
-            What is the name of your troop council?
+            What is the name of your Troop council?
           </Text>
           <TextInput
             style={styles.input}
@@ -163,42 +174,55 @@ const CreateTroop = ({navigation, route}) => {
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.formHeading}>What state do you live in?</Text>
-          <Picker
-            style={{
-              width: (Dimensions.get('window').width * 2) / 3,
-            }}
-            selectedValue={formState.inputValues.state}
-            onValueChange={(value) => handleInputChange('state', value)}
-            onSelect={(value) => handleInputChange('state', value)}>
-            {STATES.map((state) => (
-              <Picker.Item key={state} label={state} value={state} />
-            ))}
-          </Picker>
+          <View style={{alignItems: 'center'}}>
+            <Picker
+              style={{
+                width: (Dimensions.get('window').width * 2) / 2.5,
+              }}
+              selectedValue={formState.inputValues.state}
+              onValueChange={(value) => handleInputChange('state', value)}
+              onSelect={(value) => handleInputChange('state', value)}>
+              {STATES.map((state) => (
+                <Picker.Item key={state} label={state} value={state} />
+              ))}
+            </Picker>
+          </View>
         </View>
         <View style={styles.inputContainer}>
-          <Text style={styles.formHeading}>What is your troop number?</Text>
+          <Text style={styles.formHeading}>What city is your Troop in?</Text>
+          <TextInput
+            style={styles.input}
+            onChangeText={(value) => handleInputChange('city', value)}
+            value={formState.inputValues.city}
+            placeholder="City"
+            placeholderTextColor={Colors.placeholderTextColor}
+          />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.formHeading}>What is your Troop number?</Text>
           <TextInput
             style={styles.troopNumber}
             onChangeText={(value) => handleInputChange('unitNumber', value)}
             value={formState.inputValues.unitNumber}
+            placeholder=""
             placeholderTextColor={Colors.placeholderTextColor}
           />
         </View>
-        <NextButton
-          text="Select your role"
-          iconName="ios-arrow-round-forward"
-          onClick={nextForm}
-        />
+        {formState.formIsValid && (
+          <NextButton
+            text="Select your role"
+            iconName="ios-arrow-round-forward"
+            onClick={nextForm}
+          />
+        )}
       </View>
-    </KeyboardAvoidingView>
+    </RichInputContainer>
   );
 };
 
 const styles = StyleSheet.create({
   inputContainer: {
     width: '100%',
-    alignItems: 'center',
-    marginTop: 15 + Constants.statusBarHeight,
     paddingHorizontal: 15,
   },
   input: {
@@ -214,14 +238,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   troopNumber: {
-    padding: 16,
+    padding: 12,
     alignItems: 'flex-start',
     width: 100,
     height: 50,
     borderWidth: 1,
     borderRadius: 10,
     borderColor: Colors.purple,
-    fontSize: 15,
+    fontSize: 17,
     flexDirection: 'row',
     fontFamily: 'oxygen',
     backgroundColor: '#fff',
@@ -234,7 +258,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.secondary,
     fontSize: 15,
     fontFamily: 'oxygen-bold',
-    margin: 18,
+    marginVertical: 18,
   },
 });
 

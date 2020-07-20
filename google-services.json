@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "57092033462",
+    "firebase_url": "https://scouttrek.firebaseio.com",
+    "project_id": "scouttrek",
+    "storage_bucket": "scouttrek.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:57092033462:android:3780107edb98dbaa980f17",
+        "android_client_info": {
+          "package_name": "com.wowyourclient.scouttrek"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "57092033462-i6e0054gavvdglngbonsk1t5pmqh9vk5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_EcjRJcW15cRQ4LleoLj2eMQQn4alU4I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "57092033462-i6e0054gavvdglngbonsk1t5pmqh9vk5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

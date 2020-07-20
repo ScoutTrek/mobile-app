@@ -10,7 +10,7 @@ import ENV from '../../../../helpers/env';
 
 import {gql} from '@apollo/client';
 import {useQuery} from '@apollo/react-hooks';
-import ChatBtn from '../../../components/ChatBtn';
+import NoShadowPurpleBtn from '../../../components/buttons/NoShadowPurpleBtn';
 
 export const GET_HIKE = gql`
   query GetHike($id: ID!) {
@@ -107,7 +107,7 @@ const EventDetailsScreen = ({route, navigation}) => {
         />
       </View>
       <View style={{margin: 15}}>
-        <ChatBtn
+        <NoShadowPurpleBtn
           onPress={() =>
             navigation.navigate('EventThread', {
               id: data.event.id,

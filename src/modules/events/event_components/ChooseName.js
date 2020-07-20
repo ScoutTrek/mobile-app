@@ -21,22 +21,28 @@ const ChooseName = ({navigation, route}) => {
 
   return (
     <RichInputContainer icon="back" back={back}>
-      <View style={styles.input}>
-        <Input
-          value={name}
-          autoCompleteType="off"
-          autoFocus={false}
-          autoCorrect={false}
-          onChangeText={(value) => {
-            setName(value);
-            if (name.length > 2) {
-              setNameIsValid(true);
-            } else {
-              setNameIsValid(false);
-            }
-          }}
-          heading={route.params.placeholder}
-        />
+      <View
+        style={{
+          padding: 10,
+          height: Dimensions.get('window').height / 1.5,
+        }}>
+        <View style={styles.input}>
+          <Input
+            value={name}
+            autoCompleteType="off"
+            autoFocus={false}
+            autoCorrect={false}
+            onChangeText={(value) => {
+              setName(value);
+              if (name.length > 2) {
+                setNameIsValid(true);
+              } else {
+                setNameIsValid(false);
+              }
+            }}
+            heading={route.params.placeholder}
+          />
+        </View>
       </View>
       {nameIsValid && (
         <NextButton

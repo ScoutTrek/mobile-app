@@ -9,7 +9,7 @@ import ENV from '../../../../helpers/env';
 
 import {gql} from '@apollo/client';
 import {useQuery} from '@apollo/react-hooks';
-import ChatBtn from '../../../components/ChatBtn';
+import NoShadowPurpleBtn from '../../../components/buttons/NoShadowPurpleBtn';
 
 export const GET_SCOUT_MEETING = gql`
   query GetScoutMeeting($id: ID!) {
@@ -118,7 +118,7 @@ const ScoutMeetingDetails = ({route, navigation}) => {
         </View>
       </View>
       <View style={{margin: 15}}>
-        <ChatBtn
+        <NoShadowPurpleBtn
           onPress={() =>
             navigation.navigate('EventThread', {
               id: data.event.id,

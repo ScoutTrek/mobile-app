@@ -12,6 +12,7 @@ import {
 import Constants from 'expo-constants';
 import {Ionicons} from '@expo/vector-icons';
 import AuthInput from './components/Input';
+import Footer from './components/Footer';
 import GradientButton from '../../components/buttons/GradientButton';
 import {LinearGradient} from 'expo-linear-gradient';
 import InlineButton from '../../components/buttons/InlineButton';
@@ -57,15 +58,8 @@ const SignUp = ({navigation, route}) => {
 
   const handleNext = () => {
     const matchEmail = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-    if (formState.formIsValid) {
-      const signUpData = {
-        name: formState.inputValues.name,
-        email: formState.inputValues.email,
-        password: formState.inputValues.password,
-        passwordConfirm: formState.inputValues.confirmPassword,
-      };
-      navigation.navigate(route.params.nextView, signUpData);
-    } else if (formState.inputValues.password < 8) {
+    console.log(formState);
+    if (formState.inputValues.password.length < 8) {
       Alert.alert(
         'Please enter a password with at least 8 characters.',
         'It is helpful to use one capital letter and one symbol.'
@@ -82,6 +76,14 @@ const SignUp = ({navigation, route}) => {
         "Looks like you didn't enter a valid email.",
         'please make sure you put your full email address.'
       );
+    } else if (formState.formIsValid) {
+      const signUpData = {
+        name: formState.inputValues.name,
+        email: formState.inputValues.email,
+        password: formState.inputValues.password,
+        passwordConfirm: formState.inputValues.confirmPassword,
+      };
+      navigation.navigate(route.params.nextView, signUpData);
     } else {
       Alert.alert(
         "Whoops, we couldn't understand the form.",
@@ -96,6 +98,9 @@ const SignUp = ({navigation, route}) => {
       isValid = true;
     }
     if (inputIdentifier === 'confirmPassword') {
+      if (formState.inputValues.password.length < 8) {
+        isValid = false;
+      }
       if (value !== formState.inputValues.password) {
         isValid = false;
       }
@@ -112,7 +117,7 @@ const SignUp = ({navigation, route}) => {
   return (
     <KeyboardAvoidingView
       style={styles.screen}
-      behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <LinearGradient
         colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)']}
         style={styles.gradientOverlay}
@@ -170,14 +175,11 @@ const SignUp = ({navigation, route}) => {
           <GradientButton title="Sign Up" onPress={handleNext} />
         </View>
       </View>
-
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>Already have an account?</Text>
-        <InlineButton
-          title="Sign In"
-          onPress={() => navigation.navigate('SignIn')}
-        />
-      </View>
+      <Footer
+        footerText="Already have an account?"
+        btnType="Sign In"
+        onPress={() => navigation.navigate('SignIn')}
+      />
     </KeyboardAvoidingView>
   );
 };
@@ -209,14 +211,14 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     width: '100%',
-    height: Dimensions.get('window').height * 0.62,
+    height: Dimensions.get('window').height * 0.5,
   },
   jumboImage: {
     position: 'absolute',
     top: 0,
     left: 0,
     width: '100%',
-    height: Dimensions.get('window').height * 0.62,
+    height: Dimensions.get('window').height * 0.5,
     zIndex: -1,
   },
   main: {
@@ -227,18 +229,6 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     paddingHorizontal: 12,
     paddingVertical: 7,
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
-    fontSize: 10,
-    marginBottom: 12,
-  },
-  footerText: {
-    fontFamily: 'oxygen',
-    color: '#241C0D',
-    fontSize: 14,
   },
 });
 

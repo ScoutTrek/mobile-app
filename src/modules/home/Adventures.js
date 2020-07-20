@@ -14,11 +14,11 @@ import Constants from 'expo-constants';
 
 import {Notifications} from 'expo';
 import {gql} from '@apollo/client';
-import {useApolloClient, useQuery} from '@apollo/react-hooks';
+import {useApolloClient, useMutation, useQuery} from '@apollo/react-hooks';
 import Colors from '../../../constants/Colors';
 
-export const GET_RECENT_EVENTS = gql`
-  query RECENT_EVENTS {
+export const GET_UPCOMING_EVENTS = gql`
+  query UpcomingEvents {
     upcomingEvents {
       id
       type
@@ -37,12 +37,20 @@ export const GET_RECENT_EVENTS = gql`
   }
 `;
 
+export const UPDATE_EXPO_TOKEN = gql`
+  mutation UpdateExpoToken($token: UpdateUserInput!) {
+    updateCurrUser(input: $token) {
+      id
+    }
+  }
+`;
+
 export default function Adventures({navigation}) {
-  const {loading, error, data} = useQuery(GET_RECENT_EVENTS, {
-    pollInterval: 1000,
+  const {loading, error, data} = useQuery(GET_UPCOMING_EVENTS, {
+    fetchPolicy: 'network-only',
   });
 
-  const [notifications, setNotifications] = useState({});
+  const [updateToken] = useMutation(UPDATE_EXPO_TOKEN);
 
   // Create Hook
   const viewEvent = (item) => {
@@ -74,9 +82,6 @@ export default function Adventures({navigation}) {
   };
 
   const registerForPushNotificationsAsync = async () => {
-    const {status: sampleStatus} = await Permissions.askAsync(
-      Permissions.NOTIFICATIONS
-    );
     if (Constants.isDevice) {
       const {status: existingStatus} = await Permissions.getAsync(
         Permissions.NOTIFICATIONS
@@ -90,9 +95,29 @@ export default function Adventures({navigation}) {
         alert('Failed to get push token for push notification!');
         return;
       }
+
       let token = await Notifications.getExpoPushTokenAsync();
+
+      if (Constants.isDevice) {
+        await updateToken({
+          variables: {
+            token: {
+              expoNotificationToken: token,
+            },
+          },
+        });
+      }
     } else {
       alert('Must use physical device for Push Notifications');
+    }
+
+    if (Platform.OS === 'android') {
+      Notifications.createChannelAndroidAsync('default', {
+        name: 'default',
+        sound: true,
+        priority: 'max',
+        vibrate: [0, 250, 250, 250],
+      });
     }
   };
 
@@ -105,14 +130,8 @@ export default function Adventures({navigation}) {
     }
   }
 
-  const handleNotification = (notification) => {
-    Vibration.vibrate();
-    setNotifications(notification);
-  };
-
   useEffect(() => {
     registerForPushNotificationsAsync();
-    Notifications.addListener(handleNotification);
     Constants.isDevice && alertIfRemoteNotificationsDisabledAsync();
   }, []);
 
@@ -152,7 +171,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 24,
-    fontFamily: 'oxygen-bold',
+    fontFamily: 'raleway-bold',
     padding: 18,
     paddingBottom: 10,
   },

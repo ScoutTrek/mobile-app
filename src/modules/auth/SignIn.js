@@ -20,6 +20,7 @@ import AuthInput from './components/Input';
 import {gql} from '@apollo/client';
 import {useApolloClient, useMutation} from '@apollo/react-hooks';
 import {GET_TOKEN} from './JoinPatrol';
+import Footer from './components/Footer';
 
 const formReducer = (state, action) => {
   if (action.type === 'UPDATE_INPUT_FIELD') {
@@ -59,6 +60,7 @@ const SignIn = ({navigation}) => {
         userInfo: {
           email: formState.inputValues.email,
           password: formState.inputValues.password,
+          expoNotificationToken: '',
         },
       },
     }).catch((error) => console.log('An error', error));
@@ -135,13 +137,11 @@ const SignIn = ({navigation}) => {
           />
         </View>
       </View>
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>Don&rsquo;t have an account?</Text>
-        <InlineButton
-          title="Sign Up Now"
-          onPress={() => navigation.navigate('SignUp')}
-        />
-      </View>
+      <Footer
+        footerText="Don&rsquo;t have an account?"
+        btnType="Sign Up Now"
+        onPress={() => navigation.navigate('SignUp')}
+      />
     </KeyboardAvoidingView>
   );
 };

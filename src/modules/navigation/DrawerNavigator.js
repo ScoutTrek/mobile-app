@@ -1,5 +1,12 @@
 import * as React from 'react';
-import {Button, Text, View, Dimensions, AsyncStorage} from 'react-native';
+import {
+  Button,
+  Text,
+  View,
+  Dimensions,
+  AsyncStorage,
+  Vibration,
+} from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createStackNavigator} from '@react-navigation/stack';
 import AdventuresNav from '../home/Adventures';
@@ -13,17 +20,8 @@ import {AntDesign} from '@expo/vector-icons';
 import {gql} from '@apollo/client';
 import {useApolloClient, useQuery} from '@apollo/react-hooks';
 import {GET_TOKEN} from '../auth/JoinPatrol';
-import Colors from '../../../constants/Colors';
-import HikeView from '../calendar/hikeViews/HikeView';
-import EditHikeDetails from '../calendar/hikeViews/EditHikeDetails';
-import ScoutMeetingView from '../calendar/scoutMeetingViews/ScoutMeetingView';
-import EditScoutMeeting from '../calendar/scoutMeetingViews/EditScoutMeetingDetails';
-import CampoutView from '../calendar/campoutViews/CampoutView';
-import EditCampoutDetails from '../calendar/campoutViews/EditCampoutDetails';
-import SummerCampView from '../calendar/summerCampViews/SummerCampView';
-import EditSummerCampView from '../calendar/summerCampViews/EditSummerCampView';
 
-import {ChatStack} from '../calendar/CalendarNav';
+import {Notifications} from 'expo';
 
 const GET_CURR_USER = gql`
   query GetCurrUser {
@@ -46,27 +44,34 @@ const GET_CURR_USER = gql`
   }
 `;
 
-function HomeScreen({navigation}) {
-  return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Button
-        onPress={() => navigation.navigate('Notifications')}
-        title="Go to notifications"
-      />
-    </View>
-  );
-}
-
 function NotificationsScreen({navigation}) {
+  const [notifications, setNotifications] = React.useState({});
+  const client = useApolloClient();
+
+  const handleNotification = (notification) => {
+    Vibration.vibrate();
+    setNotifications(notification);
+  };
+
+  React.useEffect(() => {
+    Notifications.addListener(handleNotification);
+  }, []);
+
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <View style={{alignItems: 'center', justifyContent: 'center'}}>
+        {/*<Text>Origin: {notifications.origin}</Text>*/}
+        {/*<Text>Data: {JSON.stringify(notifications)}</Text>*/}
+      </View>
       <Button onPress={() => navigation.goBack()} title="Go back home" />
     </View>
   );
 }
 
 function CustomDrawerContent(props) {
-  const {data, loading, error} = useQuery(GET_CURR_USER);
+  const {data, loading, error} = useQuery(GET_CURR_USER, {
+    fetchPolicy: 'network-only',
+  });
   const client = useApolloClient();
 
   if (loading) return <Text> </Text>;
@@ -83,13 +88,14 @@ function CustomDrawerContent(props) {
           <DrawerItemList {...props} />
           <DrawerItem
             label="Logout"
-            onPress={() => {
+            onPress={async () => {
               AsyncStorage.removeItem('userToken').then(() => {
                 client.writeQuery({
                   query: GET_TOKEN,
-                  data: {userToken: null},
+                  data: {userToken: ''},
                 });
               });
+              // await client.resetStore();
             }}
           />
           {data.user.role === 'SCOUT' && (

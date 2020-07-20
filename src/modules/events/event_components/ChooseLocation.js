@@ -124,6 +124,7 @@ const ChooseLocation = ({navigation, route}) => {
       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${tappedLocation.latitude},${tappedLocation.longitude}&key=${ENV.googleApiKey}`
     );
     const locationData = await locationDetails.json();
+    console.log(locationData);
     setLocationString(locationData.results[0].formatted_address);
   };
 

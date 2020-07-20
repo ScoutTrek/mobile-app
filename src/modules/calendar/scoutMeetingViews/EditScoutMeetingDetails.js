@@ -69,8 +69,6 @@ const EditScoutMeetingDetails = ({navigation, route}) => {
     variables: {id: currItem},
   });
 
-  const {data} = useQuery(GET_EXPO_TOKEN);
-
   const [updateScoutMeeting] = useMutation(UPDATE_SCOUT_MEETING);
   // ## Below will become a reducer
 

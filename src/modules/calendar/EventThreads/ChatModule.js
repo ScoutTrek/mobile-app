@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {gql} from '@apollo/client';
 
@@ -6,7 +6,7 @@ import {GiftedChat, Actions, Bubble} from 'react-native-gifted-chat';
 import {useMutation, useQuery} from '@apollo/react-hooks';
 import {GET_EVENTS} from '../CalendarView';
 import Colors from '../../../../constants/Colors';
-// import AccessoryBtn from './AccessoryBtn';
+import AccessoryBtn from './AccessoryBtn';
 import {GET_EXPO_TOKEN} from '../../events/hike/HikeDetails';
 // import CustomActions from './CustomActions';
 // import CustomView from './CustomView';
@@ -21,8 +21,18 @@ const GET_CURR_USER_BRIEF = gql`
 `;
 
 const SEND_MESSAGE = gql`
-  mutation AddMessage($eventId: ID!, $name: String!, $message: String!) {
-    addMessage(eventId: $eventId, name: $name, message: $message) {
+  mutation AddMessage(
+    $eventId: ID!
+    $name: String!
+    $message: String!
+    $image: String
+  ) {
+    addMessage(
+      eventId: $eventId
+      name: $name
+      message: $message
+      image: $image
+    ) {
       _id
       text
       createdAt
@@ -38,6 +48,7 @@ const GET_MESSAGES = gql`
     messages(id: $id) {
       _id
       text
+      image
       createdAt
       user {
         id
@@ -48,29 +59,16 @@ const GET_MESSAGES = gql`
 `;
 
 export default function ChatModule({navigation, route}) {
-  const {data: user} = useQuery(GET_CURR_USER_BRIEF);
+  const {
+    data: {user},
+  } = useQuery(GET_CURR_USER_BRIEF);
 
   const {data: eventMessages, loading, error} = useQuery(GET_MESSAGES, {
     pollInterval: 1000,
     variables: {id: route.params.id},
   });
 
-  const [addMessage] = useMutation(SEND_MESSAGE, {
-    // update(cache, {data: {addMessage}}) {
-    //   try {
-    //     const {events} = cache.readQuery({query: GET_EVENTS});
-    //     cache.writeQuery({
-    //       query: GET_EVENTS,
-    //       data: {events: events.concat([addMessage])},
-    //     });
-    //   } catch {
-    //     cache.writeQuery({
-    //       query: GET_EVENTS,
-    //       data: {events: [addHike]},
-    //     });
-    //   }
-    // },
-  });
+  const [addMessage] = useMutation(SEND_MESSAGE);
 
   const [messages, setMessages] = useState([]);
 
@@ -103,18 +101,18 @@ export default function ChatModule({navigation, route}) {
     }, 1000); // simulating network
   };
 
-  const onSend = (messages = []) => {
+  const onSend = useCallback((messages = []) => {
     messages.map(async (message) => {
       await addMessage({
         variables: {
           eventId: route.params.id,
           name: route.params.name,
           message: message.text,
+          image: message.image,
         },
       });
-      setMessages((prev) => GiftedChat.append(messages, prev));
     });
-  };
+  }, []);
 
   const renderBubble = (props) => {
     return (
@@ -158,10 +156,10 @@ export default function ChatModule({navigation, route}) {
       inverted={false}
       alignTop={false}
       user={{
-        _id: parseInt(user.user.id, 16),
-        name: user.user.name,
+        _id: parseInt(user.id, 16),
+        name: user.name,
       }}
-      // renderAccessory={() => <AccessoryBtn onSend={onSend} />} // renderActions={this.renderCustomActions}
+      renderAccessory={() => <AccessoryBtn onSend={onSend} />} // renderActions={this.renderCustomActions}
       renderBubble={renderBubble}
       // renderCustomView={this.renderCustomView}
       renderFooter={renderFooter}

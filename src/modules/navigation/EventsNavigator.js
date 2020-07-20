@@ -17,7 +17,7 @@ const EventStackNavigator = () => {
       })}>
       <EventStack.Screen name="EventTypeList" component={EventsView} />
       <EventStack.Screen name="Hike" component={HikeNavigator} />
-      <EventStack.Screen name="ScoutMeeting" component={ScoutMeetingNavigator} />
+      <EventStack.Screen name="TroopMeeting" component={ScoutMeetingNavigator} />
       <EventStack.Screen name="Campout" component={CampoutNavigator} />
       <EventStack.Screen name="SummerCamp" component={SummerCampNavigator} />
 

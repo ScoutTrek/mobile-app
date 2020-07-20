@@ -1,20 +1,33 @@
 import {MaterialIcons} from '@expo/vector-icons';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import {getLocationAsync, pickImageAsync, takePictureAsync} from './mediaUtils';
+import {useMutation} from '@apollo/react-hooks';
+import {gql} from '@apollo/client';
 
-export default class AccessoryBar extends React.Component {
-  render() {
-    const {onSend, isTyping} = this.props;
-
-    return (
-      <View style={styles.container}>
-        <Button onPress={() => pickImageAsync(onSend)} name="photo" />
-        <Button onPress={() => takePictureAsync(onSend)} name="camera" />
-      </View>
-    );
+const SINGLE_UPLOAD_MUTATION = gql`
+  mutation UploadImage($file: Upload!) {
+    file: uploadImage(file: $file)
   }
+`;
+
+export default function AccessoryBar({onSend, isTyping}) {
+  const [uploadFileMutation, {data}] = useMutation(SINGLE_UPLOAD_MUTATION, {
+    onCompleted({file}) {
+      onSend([{text: '', image: file}]);
+    },
+  });
+
+  return (
+    <View style={styles.container}>
+      <Button onPress={() => pickImageAsync(uploadFileMutation)} name="photo" />
+      <Button
+        onPress={() => takePictureAsync(uploadFileMutation)}
+        name="camera"
+      />
+    </View>
+  );
 }
 
 const Button = ({onPress, size = 30, color = 'rgba(0,0,0,0.5)', ...props}) => (

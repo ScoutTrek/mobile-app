@@ -3,16 +3,13 @@ import {
   StyleSheet,
   View,
   Text,
-  ScrollView,
   TouchableOpacity,
   Dimensions,
 } from 'react-native';
 import {Agenda} from 'react-native-calendars';
 import Constants from 'expo-constants';
 
-import colors from '../../styles/colors';
 import Colors from '../../../constants/Colors';
-import fonts from '../../styles/fonts';
 
 import useReduxEvents from '../../hooks/useReduxEvents';
 import {useQuery} from '@apollo/react-hooks';
@@ -41,15 +38,15 @@ export const GET_EVENTS = gql`
 const getColor = (label) => {
   switch (label) {
     case 'Hike':
-      return colors.secondary;
+      return Colors.red;
     case 'Meeting':
       return Colors.orange;
     case 'Campout':
-      return colors.yellow;
+      return Colors.yellow;
     case 'SummerCamp':
-      return colors.green;
+      return Colors.green;
     default:
-      return colors.primary;
+      return Colors.red;
   }
 };
 
@@ -134,7 +131,7 @@ const CalendarView = ({navigation}) => {
           <Text
             style={{
               color: '#48506B',
-              fontFamily: fonts.primaryRegular,
+              fontFamily: 'oxygen',
               marginBottom: 10,
             }}>
             {item.name}
@@ -162,10 +159,10 @@ const CalendarView = ({navigation}) => {
       renderEmptyDate={renderEmptyDate}
       rowHasChanged={rowHasChanged}
       theme={{
-        dotColor: colors.primaryLight,
-        selectedDayBackgroundColor: colors.primaryLight,
-        agendaDayTextColor: colors.primaryLight,
-        agendaDayNumColor: colors.primaryLight,
+        dotColor: Colors.red,
+        selectedDayBackgroundColor: Colors.red,
+        agendaDayTextColor: Colors.red,
+        agendaDayNumColor: Colors.red,
         agendaTodayColor: '#4F44B6',
         backgroundColor: '#F1F1F8',
       }}

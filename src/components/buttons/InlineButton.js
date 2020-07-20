@@ -15,10 +15,10 @@ const InlineButton = ({title, onPress}) => {
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 11,
+    marginVertical: 8,
   },
   inner: {
-    paddingVertical: 4,
+    paddingVertical: 3,
     paddingHorizontal: 9,
     backgroundColor: Colors.darkBrown,
     borderRadius: 4,
