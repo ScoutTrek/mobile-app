@@ -1,24 +1,17 @@
 import React, {useState, useRef} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Alert,
-} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 
 import {GET_EVENTS} from '../../calendar/CalendarView';
 
 import RTE from '../../../components/RichTextEditor';
 
 import Colors from '../../../../constants/Colors';
+import Fonts from '../../../../constants/Fonts';
 import Constants from 'expo-constants';
 import {gql} from '@apollo/client';
 import {useMutation, useQuery} from '@apollo/react-hooks';
 import {Ionicons} from '@expo/vector-icons';
-import DateAndTimePicker from '../../../components/DateAndTimePicker';
+import DateAndTimePicker from '../../../components/formfields/DateAndTimePicker';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
 import SubmitBtn from '../../../components/buttons/SubmitButton';
 
@@ -136,7 +129,7 @@ const CampoutDetails = ({navigation, route}) => {
             backgroundColor: Colors.lightGreen,
             borderRadius: 4,
           }}>
-          <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
+          <Text style={{fontSize: 18, fontFamily: Fonts.primaryTextBold}}>
             When will you return...
           </Text>
         </TouchableOpacity>
@@ -180,7 +173,7 @@ const styles = StyleSheet.create({
   endDateTime: {
     textAlign: 'center',
     fontSize: 20,
-    fontFamily: 'oxygen',
+    fontFamily: Fonts.primaryText,
     padding: 10,
   },
 });

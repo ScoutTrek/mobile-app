@@ -1,12 +1,13 @@
-import React, {useState, useEffect} from 'react'
-import {View, Text, StyleSheet} from 'react-native'
-import EventHeader from '../components/EventHeader'
+import React, {useState, useEffect} from 'react';
+import {View, Text, StyleSheet} from 'react-native';
+import EventHeader from '../components/EventHeader';
+import Fonts from '../../constants/Fonts';
 
 const EventDetailsScreen = ({navigation}) => {
-  const [EventInfo, setEventInfo] = useState(undefined)
+  const [EventInfo, setEventInfo] = useState(undefined);
 
   if (!EventInfo) {
-    return <View />
+    return <View />;
   }
 
   return (
@@ -23,8 +24,8 @@ const EventDetailsScreen = ({navigation}) => {
       </View>
       <Text style={styles.description}>{description}</Text>
     </View>
-  )
-}
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -34,17 +35,17 @@ const styles = StyleSheet.create({
   info: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     marginBottom: 10,
   },
   description: {
-    fontFamily: 'oxygen',
+    fontFamily: Fonts.primaryText,
     fontSize: 16,
     padding: 30,
   },
   rating: {
-    fontFamily: 'oxygen-black',
+    fontFamily: Fonts.primaryTextBold,
   },
-})
+});
 
-export default EventDetailsScreen
+export default EventDetailsScreen;

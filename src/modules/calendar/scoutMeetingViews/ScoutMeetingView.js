@@ -1,15 +1,19 @@
-import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, ScrollView} from 'react-native';
 import {WebView} from 'react-native-webview';
 import EventHeader from '../components/EventHeader';
 import Colors from '../../../../constants/Colors';
+import Fonts from '../../../../constants/Fonts';
 import InlineButton from '../../../components/buttons/InlineButton';
 
-import ENV from '../../../../helpers/env';
+import {GOOGLE_MAPS_API_KEY} from '../../../../env';
 
 import {gql} from '@apollo/client';
-import {useQuery} from '@apollo/react-hooks';
+import {useMutation, useQuery} from '@apollo/react-hooks';
 import NoShadowPurpleBtn from '../../../components/buttons/NoShadowPurpleBtn';
+import Location from '../../../components/EventInfoComponents/Location';
+import Time from '../../../components/EventInfoComponents/Time';
+import {DELETE_EVENT} from '../campoutViews/CampoutView';
 
 export const GET_SCOUT_MEETING = gql`
   query GetScoutMeeting($id: ID!) {
@@ -51,10 +55,35 @@ const ScoutMeetingDetails = ({route, navigation}) => {
     variables: {id: currItem},
   });
 
+  const [deleteEvent] = useMutation(DELETE_EVENT);
+
+  const [address, setAddress] = useState('');
+  const [meetAddress, setMeetAddress] = useState('');
+
+  useEffect(() => {
+    const getAddresses = async () => {
+      const address = await getAddress(
+        +data.event.location.lat,
+        +data.event.location.lng
+      );
+      const meetAddress = await getAddress(
+        +data.event.meetLocation.lat,
+        +data.event.meetLocation.lng
+      );
+      Promise.all([address, meetAddress]).then((values) => {
+        setAddress(address);
+        setMeetAddress(meetAddress);
+      });
+    };
+    if (data && !address) {
+      getAddresses();
+    }
+  }, [data]);
+
   if (loading) return null;
   if (error) return `Error! ${error}`;
 
-  const mapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${data.event.location.lat},${data.event.location.lng}&zoom=13&size=325x375&maptype=roadmap&markers=color:blue%7C${data.event.location.lat},${data.event.location.lng}&key=${ENV.googleApiKey}`;
+  const mapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${data.event.location.lat},${data.event.location.lng}&zoom=13&size=325x375&maptype=roadmap&markers=color:blue%7C${data.event.location.lat},${data.event.location.lng}&key=${GOOGLE_MAPS_API_KEY}`;
 
   return (
     <View style={styles.container}>
@@ -63,7 +92,13 @@ const ScoutMeetingDetails = ({route, navigation}) => {
           navigation={navigation}
           image_path={data.event.location ? mapUrl : null}
           title={data.event.title}
+          name={data.event.creator.name}
+          date={+data.event.datetime}
         />
+        <Location heading="Event location" address={address} />
+        <Location heading="Meet Place" address={meetAddress} />
+        <Time time={+data.event.meetTime} text="arrive at meet place" />
+        <Time time={+data.event.leaveTime} text="leave meet place" />
         <View style={styles.info}>
           <View style={styles.leftInfoContainer}>
             <Text style={styles.date}>
@@ -75,12 +110,6 @@ const ScoutMeetingDetails = ({route, navigation}) => {
           </View>
           <View style={styles.centerInfoContainer}>
             <Text style={[styles.text, styles.eventType]}>Scout Meeting</Text>
-          </View>
-
-          <View style={styles.rightInfoContainer}>
-            <Text style={styles.creator}>
-              {data.event.creator.name.split(' ')[0]}
-            </Text>
           </View>
         </View>
 
@@ -131,6 +160,29 @@ const ScoutMeetingDetails = ({route, navigation}) => {
           title="Edit"
           onPress={() => navigation.navigate('EditScoutMeeting', {currItem})}
         />
+        <InlineButton
+          title="Cancel"
+          color={Colors.red}
+          onPress={Alert.alert(
+            'Are you sure you want to cancel this event?',
+            'This action cannot be undone.',
+            [
+              {text: 'Cancel', style: 'cancel'},
+              {
+                text: 'Confirm',
+                onPress: async () => {
+                  await deleteEvent({
+                    variables: {
+                      id: data.event.id,
+                    },
+                  });
+                  navigation.goBack();
+                },
+              },
+            ],
+            {cancelable: true}
+          )}
+        />
       </View>
     </View>
   );
@@ -150,7 +202,7 @@ const styles = StyleSheet.create({
   },
   info: {
     flexDirection: 'row',
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     marginVertical: 5,
     height: 50,
   },
@@ -178,7 +230,7 @@ const styles = StyleSheet.create({
   eventType: {
     textAlign: 'center',
     fontSize: 18,
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
   },
   rightInfoContainer: {
     flex: 1,
@@ -188,7 +240,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   creator: {
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     overflow: 'hidden',
     color: Colors.darkBrown,
     backgroundColor: Colors.orange,
@@ -207,18 +259,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   weekDay: {
-    fontFamily: 'oxygen',
+    fontFamily: Fonts.primaryText,
     fontSize: 18,
     paddingHorizontal: 30,
   },
   shakedown: {
-    fontFamily: 'oxygen',
+    fontFamily: Fonts.primaryText,
     fontSize: 16,
     paddingVertical: 10,
     paddingHorizontal: 30,
   },
   bold: {
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     fontSize: 21,
   },
 });

@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import Colors from '../../constants/Colors';
 import {Ionicons, MaterialCommunityIcons} from '@expo/vector-icons';
+import Fonts from '../../constants/Fonts';
 
 function getIcon(eventType) {
   switch (eventType) {
@@ -82,11 +83,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     backgroundColor: '#fff',
-    paddingHorizontal: 15,
+    paddingHorizontal: 17,
     borderColor: Colors.darkGray,
     borderWidth: 0.5,
     borderRadius: 4,
-    marginHorizontal: 8,
+    marginHorizontal: 10,
     marginVertical: 5,
   },
   info: {
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
     width: 36,
   },
   title: {
-    fontFamily: 'oxygen',
+    fontFamily: Fonts.primaryText,
     fontSize: 15,
     paddingBottom: 1,
     maxWidth: Dimensions.get('window').width * 0.5,
@@ -121,7 +122,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   month: {
-    fontFamily: 'oxygen',
+    fontFamily: Fonts.primaryText,
     fontSize: 14,
     paddingTop: 1,
   },
@@ -132,7 +133,7 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
   },
   date: {
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     lineHeight: 24,
     fontSize: 22,
     color: Colors.darkBrown,

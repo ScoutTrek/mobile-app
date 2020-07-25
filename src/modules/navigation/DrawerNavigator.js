@@ -101,15 +101,23 @@ function CustomDrawerContent(props) {
           {data.user.role === 'SCOUT' && (
             <View>
               <View style={{padding: 22, alignItems: 'center'}}>
-                <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
+                <Text style={{fontSize: 18, fontFamily: Fonts.primaryTextBold}}>
                   {data.user.name}
                 </Text>
                 <Text
-                  style={{fontSize: 15, fontFamily: 'oxygen', marginTop: 12}}>
+                  style={{
+                    fontSize: 15,
+                    fontFamily: Fonts.primaryText,
+                    marginTop: 12,
+                  }}>
                   {data.user.email}
                 </Text>
                 <Text
-                  style={{fontSize: 15, fontFamily: 'oxygen', marginTop: 18}}>
+                  style={{
+                    fontSize: 15,
+                    fontFamily: Fonts.primaryText,
+                    marginTop: 18,
+                  }}>
                   {data.user.role}
                 </Text>
               </View>
@@ -117,13 +125,17 @@ function CustomDrawerContent(props) {
                 <Text
                   style={{
                     fontSize: 16,
-                    fontFamily: 'oxygen-bold',
+                    fontFamily: Fonts.primaryTextBold,
                     marginTop: 18,
                   }}>
                   Patrol
                 </Text>
                 <Text
-                  style={{fontSize: 16, fontFamily: 'oxygen', marginTop: 10}}>
+                  style={{
+                    fontSize: 16,
+                    fontFamily: Fonts.primaryText,
+                    marginTop: 10,
+                  }}>
                   {data.user.patrol.name}
                 </Text>
               </View>

@@ -24,8 +24,9 @@ const MainBottomTabNavigator = () => {
       screenOptions={MainBottomTabConfig}
       tabBarOptions={{
         showLabel: true,
+        inactiveTintColor: Colors.lightBrown,
         activeTintColor: Colors.darkBrown,
-        labelStyle: {top: -1},
+        labelStyle: {fontSize: 12.5, bottom: 2},
       }}>
       <MainBottomTab.Screen name="Home" component={HomeNav} />
       <MainBottomTab.Screen
@@ -46,7 +47,7 @@ const MainBottomTabNavigator = () => {
 };
 
 const MainBottomTabConfig = ({route}) => ({
-  tabBarIcon: ({focused, color, size}) => {
+  tabBarIcon: ({focused, size}) => {
     size = 24;
     let iconSource;
     switch (route.name) {
@@ -54,31 +55,41 @@ const MainBottomTabConfig = ({route}) => ({
         return focused ? (
           <Image
             source={homeDark}
-            style={{width: size - 4, height: size - 4}}
+            style={{width: size - 4, height: size - 4, top: 2}}
           />
         ) : (
-          <AntDesign name="home" color={Colors.activeGreen} size={size} />
+          <AntDesign
+            name="home"
+            color={Colors.activeGreen}
+            size={size}
+            style={{top: 2}}
+          />
         );
       case 'Calendar':
         iconSource = 'calendar';
         return focused ? (
           <Image
             source={calendarDark}
-            style={{width: size - 4, height: size - 4}}
+            style={{width: size - 4, height: size - 4, top: 2}}
           />
         ) : (
-          <AntDesign name="calendar" color={Colors.purple} size={size} />
+          <AntDesign
+            name="calendar"
+            color={Colors.purple}
+            size={size}
+            style={{top: 2}}
+          />
         );
       // case 'Memories':
       //   iconSource = iconGrids
       //   break
       case 'New Event':
-        size = 26;
         return (
           <AntDesign
             name="pluscircle"
             color={focused ? Colors.darkOrange : Colors.orange}
             size={size}
+            style={{top: 2}}
           />
         );
       default:

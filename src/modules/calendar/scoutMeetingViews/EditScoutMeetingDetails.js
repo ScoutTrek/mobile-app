@@ -1,23 +1,11 @@
 import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  Button,
-  TextInput,
-  Switch,
-  Slider,
-  Platform,
-  StyleSheet,
-  ScrollView,
-  Dimensions,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-} from 'react-native';
+import {View, Text, StyleSheet, Dimensions} from 'react-native';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
 import NextButton from '../../../components/buttons/NextButton';
 
 import Colors from '../../../../constants/Colors';
+import Fonts from '../../../../constants/Fonts';
 import Constants from 'expo-constants';
 import {Ionicons} from '@expo/vector-icons';
 import {useQuery, useMutation} from '@apollo/react-hooks';
@@ -168,7 +156,7 @@ const styles = StyleSheet.create({
   formHeading: {
     borderColor: Colors.secondary,
     fontSize: 15,
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     marginTop: 25,
     margin: 18,
   },

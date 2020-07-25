@@ -11,6 +11,7 @@ import {gql} from '@apollo/client';
 import {useQuery} from '@apollo/react-hooks';
 import Constants from 'expo-constants';
 import Colors from '../../../constants/Colors';
+import Fonts from '../../../constants/Fonts';
 import {AntDesign, Ionicons} from '@expo/vector-icons';
 import NextButton from '../../components/buttons/NextButton';
 
@@ -76,7 +77,7 @@ const JoinTroop = ({navigation, route}) => {
                 style={{
                   fontSize: 15,
                   fontWeight: 'bold',
-                  fontFamily: 'oxygen-bold',
+                  fontFamily: Fonts.primaryTextBold,
                   color: '#fff',
                   paddingHorizontal: 10,
                 }}>
@@ -109,7 +110,7 @@ const JoinTroop = ({navigation, route}) => {
                   style={{
                     fontSize: 19,
                     paddingVertical: 10,
-                    fontFamily: 'oxygen',
+                    fontFamily: Fonts.primaryText,
                   }}>
                   Add Troop
                 </Text>
@@ -173,7 +174,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontSize: 17,
     flexDirection: 'row',
-    fontFamily: 'oxygen',
+    fontFamily: Fonts.primaryText,
     backgroundColor: '#fff',
   },
   troopNumber: {
@@ -186,13 +187,13 @@ const styles = StyleSheet.create({
     borderColor: Colors.purple,
     fontSize: 15,
     flexDirection: 'row',
-    fontFamily: 'oxygen',
+    fontFamily: Fonts.primaryText,
     backgroundColor: '#fff',
   },
   formHeading: {
     borderColor: Colors.secondary,
     fontSize: 16,
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     margin: 18,
   },
   btnContainer: {

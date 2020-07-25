@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   KeyboardAvoidingView,
   StyleSheet,
@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import Colors from '../../../constants/Colors';
+import Fonts from '../../../constants/Fonts';
 import Constants from 'expo-constants';
 
 const ROLES = [
@@ -44,8 +45,7 @@ const ChooseRole = ({navigation, route}) => {
               <Text
                 style={{
                   fontSize: 18,
-                  fontWeight: 'bold',
-                  fontFamily: 'oxygen-bold',
+                  fontFamily: Fonts.primaryTextBold,
                   color: '#fff',
                 }}>
                 {role.replace(/_/g, ' ')}
@@ -95,13 +95,13 @@ const styles = StyleSheet.create({
     borderColor: Colors.purple,
     fontSize: 15,
     flexDirection: 'row',
-    fontFamily: 'oxygen',
+    fontFamily: Fonts.primaryText,
     backgroundColor: '#fff',
   },
   formHeading: {
-    borderColor: Colors.secondary,
+    borderColor: Colors.green,
     fontSize: 15,
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     margin: 18,
   },
 });

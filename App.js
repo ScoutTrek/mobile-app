@@ -1,4 +1,6 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState} from 'react';
+
+import {setCustomText} from 'react-native-global-props';
 import {ActivityIndicator, View, AsyncStorage} from 'react-native';
 
 import {NavigationContainer} from '@react-navigation/native';
@@ -8,40 +10,63 @@ import * as Font from 'expo-font';
 import {Ionicons} from '@expo/vector-icons';
 import {persistCache} from 'apollo-cache-persist';
 
-import {setContext} from 'apollo-link-context';
 import {ApolloClient, HttpLink, InMemoryCache, gql} from '@apollo/client';
 import {ApolloProvider, useQuery} from '@apollo/react-hooks';
 
 import {typeDefs, resolvers} from './src/localState/User';
 
-const authLink = setContext(async (_, {headers}) => {
-  // get the authentication token from local storage if it exists
-  // const token = await AsyncStorage.getItem('userToken')
-  const token = await AsyncStorage.getItem('userToken');
-  // console.log(token);
-  return {
-    headers: {
-      ...headers,
-      authorization: `Bearer ${token}`,
-    },
-  };
-});
-
 import {onError} from 'apollo-link-error';
+import {ApolloLink, Observable} from 'apollo-link';
+import {createUploadLink} from 'apollo-upload-client';
 
 import AuthNavigator from './src/modules/auth/AuthNavigator';
 import MainTabNavigator from './src/modules/navigation/MainTabNavigator';
 import ViewEventStackNavigator from './src/modules/navigation/ViewEventStack';
 import {GET_TOKEN} from './src/modules/auth/JoinPatrol';
 
+import * as Sentry from 'sentry-expo';
+
+Sentry.init({
+  dsn:
+    'https://02780727dd3a4192a8b5014eee036ca1@o412271.ingest.sentry.io/5288757',
+  enableInExpoDevelopment: true,
+  debug: true,
+});
+
 const cache = new InMemoryCache();
 
+const request = async (operation) => {
+  const token = await AsyncStorage.getItem('userToken');
+  operation.setContext({
+    headers: {
+      authorization: token,
+    },
+  });
+};
+
+const requestLink = new ApolloLink(
+  (operation, forward) =>
+    new Observable((observer) => {
+      let handle;
+      Promise.resolve(operation)
+        .then((oper) => request(oper))
+        .then(() => {
+          handle = forward(operation).subscribe({
+            next: observer.next.bind(observer),
+            error: observer.error.bind(observer),
+            complete: observer.complete.bind(observer),
+          });
+        })
+        .catch(observer.error.bind(observer));
+
+      return () => {
+        if (handle) handle.unsubscribe();
+      };
+    })
+);
+
 cache.writeQuery({
-  query: gql`
-    query {
-      userToken
-    }
-  `,
+  query: GET_TOKEN,
   data: {
     userToken: '',
   },
@@ -49,6 +74,12 @@ cache.writeQuery({
 
 const AppLoadingContainer = () => {
   const {data, client} = useQuery(GET_TOKEN);
+
+  const customTextProps = {
+    style: {
+      fontFamily: 'montserrat-med',
+    },
+  };
 
   const [loading, setLoading] = useState(true);
   React.useEffect(() => {
@@ -80,6 +111,8 @@ const AppLoadingContainer = () => {
       </View>
     );
 
+  setCustomText(customTextProps);
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -107,10 +140,10 @@ async function loadResourcesAsync() {
   await Promise.all([
     Font.loadAsync({
       ...Ionicons.font,
-
-      oxygen: require('./assets/fonts/Oxygen-Regular.ttf'),
-      'oxygen-light': require('./assets/fonts/Oxygen-Light.ttf'),
-      'oxygen-bold': require('./assets/fonts/Oxygen-Bold.ttf'),
+      montserrat: require('./assets/fonts/Montserrat/Montserrat-Regular.ttf'),
+      'montserrat-med': require('./assets/fonts/Montserrat/Montserrat-Medium.ttf'),
+      'montserrat-light': require('./assets/fonts/Montserrat/Montserrat-Light.ttf'),
+      'montserrat-bold': require('./assets/fonts/Montserrat/Montserrat-Bold.ttf'),
       'raleway-bold': require('./assets/fonts/Raleway/Raleway-Bold.ttf'),
       'raleway-black': require('./assets/fonts/Raleway/Raleway-Black.ttf'),
     }),
@@ -131,36 +164,33 @@ export default function App() {
 
   React.useEffect(() => {
     const linkApollo = async () => {
-      const errorLink = onError(({graphQLErrors, networkError}) => {
-        if (graphQLErrors)
-          graphQLErrors.map(({message, locations, path}) =>
-            console.log(
-              `[GraphQL error]: Message: ${message}, Location: ${JSON.stringify(
-                locations,
-                null,
-                2
-              )}, Path: ${path}`
-            )
-          );
-
-        if (networkError) console.log(`[Network error]: ${networkError}`);
-      });
-
-      const link = authLink.concat(errorLink).concat(
-        new HttpLink({
-          uri: 'https://scouttrek-node-api.appspot.com/:4000',
-          // uri: 'http://localhost:4000/',4000
-        })
-      );
-
       await persistCache({
         cache,
         storage: AsyncStorage,
       });
-
       const client = new ApolloClient({
+        link: ApolloLink.from([
+          onError(({graphQLErrors, networkError}) => {
+            if (graphQLErrors)
+              graphQLErrors.map(({message, locations, path}) =>
+                console.log(
+                  `[GraphQL error]: Message: ${message}, Location: ${JSON.stringify(
+                    locations,
+                    null,
+                    2
+                  )}, Path: ${path}`
+                )
+              );
+
+            if (networkError) console.log(`[Network error]: ${networkError}`);
+          }),
+          requestLink,
+          createUploadLink({
+            uri: 'https://scouttrek-node-api.appspot.com/:4000',
+            // uri: 'http://localhost:4000/',
+          }),
+        ]),
         cache,
-        link,
         typeDefs,
         resolvers,
       });

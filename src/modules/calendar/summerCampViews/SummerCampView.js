@@ -3,13 +3,15 @@ import {View, Text, StyleSheet} from 'react-native';
 import {WebView} from 'react-native-webview';
 import EventHeader from '../components/EventHeader';
 import Colors from '../../../../constants/Colors';
+import Fonts from '../../../../constants/Fonts';
 import InlineButton from '../../../components/buttons/InlineButton';
 
-import ENV from '../../../../helpers/env';
+import {GOOGLE_MAPS_API_KEY} from '../../../../env';
 
 import {gql} from '@apollo/client';
 import {useQuery} from '@apollo/react-hooks';
 import NoShadowPurpleBtn from '../../../components/buttons/NoShadowPurpleBtn';
+import RichInputContainer from '../../../components/containers/RichInputContainer';
 
 export const GET_SUMMER_CAMP = gql`
   query GetSummerCamp($id: ID!) {
@@ -54,10 +56,10 @@ const SummerCampDetailsScreen = ({route, navigation}) => {
   // Clear database and
   let mapUrl;
   if (data.event.location) {
-    mapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${data.event.location.lat},${data.event.location.lng}&zoom=13&size=325x375&maptype=roadmap&markers=color:blue%7C${data.event.location.lat},${data.event.location.lng}&key=${ENV.googleApiKey}`;
+    mapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${data.event.location.lat},${data.event.location.lng}&zoom=13&size=325x375&maptype=roadmap&markers=color:blue%7C${data.event.location.lat},${data.event.location.lng}&key=${GOOGLE_MAPS_API_KEY}`;
   }
   return (
-    <View style={styles.container}>
+    <RichInputContainer back={() => navigation.goBack()}>
       <View style={{flex: 1}}>
         <EventHeader
           navigation={navigation}
@@ -116,7 +118,7 @@ const SummerCampDetailsScreen = ({route, navigation}) => {
           onPress={() => navigation.navigate('EditSummerCamp', {currItem})}
         />
       </View>
-    </View>
+    </RichInputContainer>
   );
 };
 
@@ -134,7 +136,7 @@ const styles = StyleSheet.create({
   },
   info: {
     flexDirection: 'row',
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     marginVertical: 5,
     height: 50,
   },
@@ -162,7 +164,7 @@ const styles = StyleSheet.create({
   eventType: {
     textAlign: 'center',
     fontSize: 18,
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
   },
   rightInfoContainer: {
     flex: 1.25,
@@ -172,7 +174,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   creator: {
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     overflow: 'hidden',
     color: Colors.darkBrown,
     backgroundColor: Colors.orange,
@@ -191,12 +193,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   distance: {
-    fontFamily: 'oxygen',
+    fontFamily: Fonts.primaryText,
     fontSize: 16,
     paddingHorizontal: 30,
   },
   bold: {
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     fontSize: 18,
   },
 });

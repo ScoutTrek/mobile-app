@@ -11,6 +11,7 @@ import {
   AsyncStorage,
   Platform,
 } from 'react-native';
+import Fonts from '../../../constants/Fonts';
 import {FontAwesome} from '@expo/vector-icons';
 import {LinearGradient} from 'expo-linear-gradient';
 import GradientButton from '../../components/buttons/GradientButton';
@@ -154,7 +155,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 25,
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     textAlign: 'center',
     alignItems: 'center',
     fontWeight: 'bold',
@@ -164,7 +165,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     textAlign: 'center',
-    fontFamily: 'oxygen',
+    fontFamily: Fonts.primaryText,
     padding: 22,
     color: '#382B14',
   },
@@ -197,7 +198,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   footerText: {
-    fontFamily: 'oxygen',
+    fontFamily: Fonts.primaryText,
     color: '#241C0D',
     fontSize: 14,
   },

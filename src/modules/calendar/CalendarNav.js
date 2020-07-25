@@ -5,17 +5,6 @@ import {Ionicons} from '@expo/vector-icons';
 
 import CalendarView from './CalendarView';
 
-import HikeView from './hikeViews/HikeView';
-import EditHikeDetails from './hikeViews/EditHikeDetails';
-
-import ScoutMeetingView from './scoutMeetingViews/ScoutMeetingView';
-import EditScoutMeeting from './scoutMeetingViews/EditScoutMeetingDetails';
-
-import CampoutView from './campoutViews/CampoutView';
-import EditCampoutDetails from './campoutViews/EditCampoutDetails';
-
-import SummerCampView from './summerCampViews/SummerCampView';
-import EditSummerCampView from './summerCampViews/EditSummerCampView';
 import ChatModule from './EventThreads/ChatModule';
 
 const Stack = createStackNavigator();

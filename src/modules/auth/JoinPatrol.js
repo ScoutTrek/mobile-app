@@ -6,18 +6,15 @@ import {
   TextInput,
   AsyncStorage,
   TouchableOpacity,
-  KeyboardAvoidingView,
   Alert,
-  Vibration,
 } from 'react-native';
 import {gql} from '@apollo/client';
 import {useApolloClient, useMutation, useQuery} from '@apollo/react-hooks';
 import GradientButton from '../../components/buttons/GradientButton';
 import Constants from 'expo-constants';
 import Colors from '../../../constants/Colors';
+import Fonts from '../../../constants/Fonts';
 import {AntDesign, Ionicons} from '@expo/vector-icons';
-import {Notifications} from 'expo';
-import * as Permissions from 'expo-permissions';
 import RichInputContainer from '../../components/containers/RichInputContainer';
 
 export const GET_TOKEN = gql`
@@ -139,7 +136,7 @@ const JoinPatrol = ({navigation, route}) => {
               style={{
                 fontSize: 18,
                 fontWeight: 'bold',
-                fontFamily: 'oxygen-bold',
+                fontFamily: Fonts.primaryTextBold,
                 color: '#fff',
               }}>
               {patrol.name}
@@ -238,7 +235,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     fontSize: 17,
     flexDirection: 'row',
-    fontFamily: 'oxygen',
+    fontFamily: Fonts.primaryText,
     backgroundColor: '#fff',
   },
   troopNumber: {
@@ -251,13 +248,13 @@ const styles = StyleSheet.create({
     borderColor: Colors.purple,
     fontSize: 15,
     flexDirection: 'row',
-    fontFamily: 'oxygen',
+    fontFamily: Fonts.primaryText,
     backgroundColor: '#fff',
   },
   formHeading: {
     borderColor: Colors.secondary,
     fontSize: 15,
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     margin: 18,
   },
   btnContainer: {
@@ -277,7 +274,7 @@ const styles = StyleSheet.create({
   patrolHeading: {
     padding: 10,
     fontSize: 18,
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
   },
   patrolName: {
     flex: 1,
@@ -303,7 +300,7 @@ const styles = StyleSheet.create({
   },
   addPatrol: {
     fontSize: 18,
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
   },
   check: {
     position: 'absolute',

@@ -1,6 +1,7 @@
 import React from 'react';
 import {TouchableOpacity, View, Text, StyleSheet} from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
+import Fonts from '../../../constants/Fonts';
 
 const GradientButton = ({title, onPress}) => {
   return (
@@ -45,7 +46,7 @@ const styles = StyleSheet.create({
   text: {
     textAlign: 'center',
     color: '#fff',
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     fontSize: 16,
     fontWeight: 'bold',
   },

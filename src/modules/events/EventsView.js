@@ -3,7 +3,7 @@ import {StyleSheet, View, FlatList} from 'react-native';
 
 import Constants from 'expo-constants';
 
-import Heading from '../../components/Heading';
+import ViewHeading from '../../components/Headings/ViewHeading';
 import NextButton from '../../components/buttons/NextButton';
 
 import EventBtn from './components/EventBtn';
@@ -14,8 +14,7 @@ const listData = [
     id: 0,
     eventType: 'Hike',
     title: 'CITIZEN ECO-DRIVE',
-    subtitle:
-      'Plan a visit to the trail for the day, let ScoutTrek take care of everything else.',
+    subtitle: 'Plan a visit to the trail, let ScoutTrek take care of the rest.',
     image: {
       uri:
         'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1582556921/ScoutTrek/hiking_trip.png',
@@ -25,8 +24,7 @@ const listData = [
     id: 1,
     eventType: 'Troop Meeting',
     title: 'NEXT-LEVEL WEAR',
-    subtitle:
-      'Plan all the logistics for your weekly meetings in a fraction of the time.',
+    subtitle: 'Plan your weekly meeting logistics in minutes.',
     image: {
       uri:
         'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1582557266/ScoutTrek/ScoutBadgesImage.jpg',
@@ -74,7 +72,7 @@ const EventTypesScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Heading title="New Event" />
+      <ViewHeading title="New Event" />
       <FlatList
         contentContainerStyle={{flexGrow: 1, paddingBottom: 15}}
         keyExtractor={(item) => item.id.toString()}

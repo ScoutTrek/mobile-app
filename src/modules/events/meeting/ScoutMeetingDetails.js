@@ -1,17 +1,10 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  Dimensions,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-} from 'react-native';
+import {View, Text, StyleSheet, Dimensions} from 'react-native';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import Colors from '../../../../constants/Colors';
+import Fonts from '../../../../constants/Fonts';
 import Constants from 'expo-constants';
 import {Ionicons} from '@expo/vector-icons';
 import Toggle from '../../../components/formfields/Toggle';
@@ -210,7 +203,7 @@ const styles = StyleSheet.create({
   formHeading: {
     borderColor: Colors.secondary,
     fontSize: 15,
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     marginTop: 25,
     margin: 18,
   },
@@ -225,7 +218,7 @@ const styles = StyleSheet.create({
   text: {
     color: '#ffffff',
     fontSize: 18,
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
   },
   backIcon: {
     paddingVertical: Constants.statusBarHeight / 3 + 5,

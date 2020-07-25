@@ -1,5 +1,6 @@
 import React from 'react';
 import {StyleSheet, TouchableWithoutFeedback, View, Text} from 'react-native';
+import Fonts from '../../../../constants/Fonts';
 import InlineButton from '../../../components/buttons/InlineButton';
 
 const Footer = ({footerText, btnType, onPress}) => {
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   footerText: {
-    fontFamily: 'oxygen',
+    fontFamily: Fonts.primaryText,
     color: '#241C0D',
     fontSize: 14,
   },

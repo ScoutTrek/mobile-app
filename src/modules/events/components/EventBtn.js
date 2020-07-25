@@ -7,6 +7,8 @@ import {
   ImageBackground,
 } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
+import Fonts from '../../../../constants/Fonts';
+import Colors from '../../../../constants/Colors';
 
 const EventBtn = ({item, onPress}) => {
   return (
@@ -15,12 +17,15 @@ const EventBtn = ({item, onPress}) => {
       style={styles.eventContainer}
       onPress={onPress}>
       <View style={styles.eventContent}>
-        <LinearGradient
-          colors={['rgba(32,32,32,.25)', 'rgba(32,32,32,.6)']}
-          style={styles.gradient}>
+        <View style={styles.textContainer}>
           <Text style={styles.eventTitle}>{item.eventType}</Text>
           <Text style={styles.eventSubTitle}>{item.subtitle}</Text>
-        </LinearGradient>
+        </View>
+        <LinearGradient
+          colors={['rgba(32, 32, 32, 0.1)', 'rgba(32, 32, 32, 0.9)']}
+          style={styles.gradient}
+        />
+
         <ImageBackground
           style={styles.eventImage}
           source={item.image}
@@ -33,41 +38,46 @@ const EventBtn = ({item, onPress}) => {
 
 const styles = StyleSheet.create({
   eventContainer: {
-    marginTop: 5,
+    margin: 5,
     marginBottom: 15,
     backgroundColor: 'white',
   },
   eventContent: {
-    flex: 1,
     position: 'relative',
     marginHorizontal: 12,
-    height: 180,
-    borderRadius: 20,
+    height: 165,
+    borderRadius: 5,
     overflow: 'hidden',
-    alignItems: 'flex-start',
+  },
+  textContainer: {
+    flex: 1,
+    zIndex: 1000,
+    padding: 18,
+    justifyContent: 'flex-end',
   },
   eventTitle: {
     color: 'white',
-    fontSize: 24,
-    textShadowOffset: {width: 0, height: 0},
-    textShadowRadius: 7,
+    fontSize: 32,
     textShadowColor: '#000',
-    paddingHorizontal: 20,
-    paddingTop: 32,
+    textShadowOffset: {width: 0, height: 0},
+    textShadowRadius: 6,
+    fontFamily: Fonts.headingBlack,
+    zIndex: 1000,
   },
   eventSubTitle: {
+    height: '50%',
     color: 'white',
+    paddingTop: 10,
     fontSize: 18,
-    marginVertical: 5,
-    textShadowOffset: {width: 1, height: 1},
-    textShadowRadius: 3,
     textShadowColor: '#000',
-    paddingHorizontal: 20,
+    textShadowOffset: {width: 0, height: 0},
+    textShadowRadius: 6,
+    zIndex: 1000,
   },
   eventImage: {
     position: 'absolute',
     width: '100%',
-    height: 180,
+    height: 165,
     top: 0,
     left: 0,
     bottom: 0,
@@ -76,7 +86,7 @@ const styles = StyleSheet.create({
   gradient: {
     position: 'absolute',
     width: '100%',
-    height: 180,
+    height: 165,
     top: 0,
     left: 0,
     bottom: 0,

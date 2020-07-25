@@ -12,7 +12,6 @@ import RTE from '../../../components/RichTextEditor';
 import {GET_EXPO_TOKEN} from '../../events/hike/HikeDetails';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
 import SubmitBtn from '../../../components/buttons/SubmitButton';
-import Input from '../../../components/formfields/Input';
 import EditHeadingInput from '../components/EditHeadingInput';
 
 const UPDATE_EVENT = gql`

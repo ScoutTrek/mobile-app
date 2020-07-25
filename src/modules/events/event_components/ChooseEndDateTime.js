@@ -4,18 +4,17 @@ import {
   View,
   StyleSheet,
   Dimensions,
-  ActivityIndicator,
   TouchableOpacity,
-  Keyboard,
   Text,
 } from 'react-native';
 
 import Constants from 'expo-constants';
 import uuidv4 from 'uuid/v1';
 import Colors from '../../../../constants/Colors';
+import Fonts from '../../../../constants/Fonts';
 import CalModal from '../../../components/CalModal';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import DateAndTimePicker from '../../../components/DateAndTimePicker';
+import DateAndTimePicker from '../../../components/formfields/DateAndTimePicker';
 
 const ChooseEndDateTime = ({navigation, route}) => {
   const {nextView, placeholder} = route.params;
@@ -100,7 +99,7 @@ const ChooseEndDateTime = ({navigation, route}) => {
                 backgroundColor: Colors.lightGreen,
                 borderRadius: 4,
               }}>
-              <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
+              <Text style={{fontSize: 18, fontFamily: Fonts.primaryTextBold}}>
                 Choose Checkout Time
               </Text>
             </TouchableOpacity>
@@ -126,7 +125,7 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.tabIconDefault,
   },
   headingText: {
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     fontSize: 19,
     lineHeight: 28,
     padding: 5,

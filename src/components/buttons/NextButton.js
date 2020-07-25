@@ -2,6 +2,7 @@ import React from 'react';
 import {TouchableOpacity, Text, View, StyleSheet} from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import Colors from '../../../constants/Colors';
+import Fonts from '../../../constants/Fonts';
 
 const NextButton = ({text, color, iconName, onClick}) => {
   return (
@@ -41,7 +42,7 @@ const styles = StyleSheet.create({
   text: {
     color: '#ffffff',
     fontSize: 16,
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryText,
     paddingRight: 15,
   },
 });

@@ -1,6 +1,7 @@
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
 import Colors from '../../../constants/Colors';
+import Fonts from '../../../constants/Fonts';
 
 export default function SubmitBtn({submit, title}) {
   return (
@@ -23,6 +24,6 @@ const styles = StyleSheet.create({
   text: {
     color: '#ffffff',
     fontSize: 18,
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
   },
 });

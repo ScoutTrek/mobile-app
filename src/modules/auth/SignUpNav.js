@@ -3,7 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import SignUp from './SignUp';
 import JoinTroop from './JoinTroop';
-import CreateTroop from './components/Create.js';
+import CreateTroop from './components/CreateTroop.js';
 import ChooseRole from './ChooseRole';
 import JoinPatrol from './JoinPatrol';
 

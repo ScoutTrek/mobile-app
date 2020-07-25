@@ -9,6 +9,7 @@ import {
 import {Ionicons} from '@expo/vector-icons';
 
 import Colors from '../../constants/Colors';
+import Fonts from '../../constants/Fonts';
 
 const ShowChosenTimeRow = ({description, value, color, icon}) => {
   return (
@@ -23,8 +24,8 @@ const ShowChosenTimeRow = ({description, value, color, icon}) => {
           <Ionicons
             name={icon ? icon : 'md-watch'}
             color={Colors.brown}
-            style={{paddingTop: 3}}
-            size={25}
+            style={{paddingTop: 1}}
+            size={23}
           />
           <Text
             numberOfLines={1}
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
   },
   description: {
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     fontSize: 12,
     paddingLeft: 3,
     color: Colors.darkBrown,
@@ -67,7 +68,7 @@ const styles = StyleSheet.create({
   },
   value: {
     flex: 1,
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.headingBold,
     fontSize: 21,
     paddingHorizontal: 10,
   },

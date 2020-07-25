@@ -84,11 +84,13 @@ export default function Adventures({navigation}) {
   const registerForPushNotificationsAsync = async () => {
     if (Constants.isDevice) {
       const {status: existingStatus} = await Permissions.getAsync(
-        Permissions.NOTIFICATIONS
+        Permissions.NOTIFICATIONS,
+        Permissions.LOCATION
       );
       let finalStatus = existingStatus;
       if (existingStatus !== 'granted') {
         const {status} = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+        const locationStatus = await Permissions.askAsync(Permissions.LOCATION);
         finalStatus = status;
       }
       if (finalStatus !== 'granted') {

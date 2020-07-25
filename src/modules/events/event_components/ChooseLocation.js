@@ -1,39 +1,26 @@
 import React, {useState, useEffect} from 'react';
 import {
-  Platform,
   View,
   StyleSheet,
   Dimensions,
   ActivityIndicator,
-  TouchableOpacity,
   Keyboard,
-  Text,
-  ScrollView,
 } from 'react-native';
-import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
-
-import ENV from '../../../../helpers/env';
+import MapView, {Marker} from 'react-native-maps';
 
 import MapSearch from '../../../components/MapSearch';
 
-import {Ionicons} from '@expo/vector-icons';
+import {GOOGLE_MAPS_API_KEY} from '../../../../env';
 
 import Constants from 'expo-constants';
 import * as Location from 'expo-location';
 import * as Permissions from 'expo-permissions';
 import uuidv4 from 'uuid/v1';
 import Colors from '../../../../constants/Colors';
+import Fonts from '../../../../constants/Fonts';
 import NextButton from '../../../components/buttons/NextButton';
-import CalModal from '../../../components/CalModal';
-import {Calendar} from 'react-native-calendars';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import DateAndTimePicker from '../../../components/DateAndTimePicker';
-
-const ChooseDatesModal = (isMultipleDays) => {
-  if (isMultipleDays) {
-    return <View></View>;
-  }
-};
+import DateAndTimePicker from '../../../components/formfields/DateAndTimePicker';
+import TimePicker from '../../../components/formfields/TimePicker';
 
 const locationToken = uuidv4();
 
@@ -41,23 +28,18 @@ const ChooseLocation = ({navigation, route}) => {
   const {nextView, placeholder} = route.params;
 
   const [location, setLocation] = useState();
-  // const [locationId, setLocationId] = useState(null)
   const [locationCoords, setLocationCoords] = useState();
   const [locationString, setLocationString] = useState('');
   const [error, setError] = useState(null);
 
   const [date, setDate] = useState('');
-  const [date2, setDate2] = useState('');
   const [time, setTime] = useState(new Date('January 1, 2000 11:00:00'));
-  const [time2, setTime2] = useState(new Date());
-  const [showTimePicker, setShowTimePicker] = useState(Platform.OS === 'ios');
   const [meetTime, setMeetTime] = useState(new Date('January 1, 2000 9:30:00'));
   const [leaveTime, setLeaveTime] = useState(
     new Date('January 1, 2000 10:00:00')
   );
   const [showDateModal, setShowDateModal] = useState(false);
   const [showMeetTimeModal, setShowMeetTimeModal] = useState(false);
-  const [showFirstModal, setShowFirstModal] = useState(true);
 
   const _getLocationAsync = async () => {
     let {status} = await Permissions.askAsync(Permissions.LOCATION);
@@ -72,9 +54,8 @@ const ChooseLocation = ({navigation, route}) => {
   };
 
   const _getPlaceDetails = async (id) => {
-    console.log(ENV.googleApiKey);
     const locationDetails = await fetch(
-      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=${ENV.googleApiKey}`
+      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=${GOOGLE_MAPS_API_KEY}`
     ).catch((err) => console.log(err));
     const locationData = await locationDetails.json();
 
@@ -91,6 +72,7 @@ const ChooseLocation = ({navigation, route}) => {
 
   const back = () => navigation.popToTop();
   const nextForm = () => {
+    console.log(route);
     if (route.name === 'ChooseLocation') {
       const datetime = `${date}T${time.toISOString().split('T')[1]}`;
       const navData = {
@@ -101,6 +83,7 @@ const ChooseLocation = ({navigation, route}) => {
       delete navData.nextView;
       navigation.navigate(nextView, navData);
     } else if (route.name === 'ChooseMeetPoint') {
+      console.log(locationCoords);
       const navData = {
         name: route.params.name,
         datetime: route.params.datetime,
@@ -121,7 +104,7 @@ const ChooseLocation = ({navigation, route}) => {
     };
     setLocationCoords(tappedLocation);
     const locationDetails = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${tappedLocation.latitude},${tappedLocation.longitude}&key=${ENV.googleApiKey}`
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${tappedLocation.latitude},${tappedLocation.longitude}&key=${GOOGLE_MAPS_API_KEY}`
     );
     const locationData = await locationDetails.json();
     console.log(locationData);
@@ -171,8 +154,8 @@ const ChooseLocation = ({navigation, route}) => {
       </View>
       {route.params.initialModal === 'date' ? (
         <DateAndTimePicker
-          chooseDay={route.params.chooseDate}
-          chooseTime={route.params.chooseTime}
+          chooseDayMsg={route.params.chooseDate}
+          chooseTimeMsg={route.params.chooseTime}
           nextForm={nextForm}
           date={date}
           setDate={setDate}
@@ -182,93 +165,17 @@ const ChooseLocation = ({navigation, route}) => {
           setShowModal={setShowDateModal}
         />
       ) : (
-        <CalModal show={showMeetTimeModal} setShow={setShowMeetTimeModal}>
-          {!meetTime || showFirstModal ? (
-            <View>
-              <View style={styles.heading}>
-                <Text style={styles.headingText}>
-                  {route.params.chooseMeetTime}
-                </Text>
-              </View>
-              {showTimePicker && (
-                <DateTimePicker
-                  value={meetTime}
-                  minuteInterval={5}
-                  mode="time"
-                  is24Hour={false}
-                  display="default"
-                  onChange={(event, date) => {
-                    setShowTimePicker(Platform.OS === 'ios');
-                    setMeetTime(new Date(date));
-                    if (Platform.OS === 'android') {
-                      setShowFirstModal(false);
-                    }
-                  }}
-                />
-              )}
-              <TouchableOpacity
-                onPress={() => {
-                  setShowTimePicker(true);
-                  if (Platform.OS === 'ios') {
-                    setShowFirstModal(false);
-                  }
-                }}
-                style={{
-                  padding: 12,
-                  alignItems: 'center',
-                  backgroundColor: Colors.lightGreen,
-                  borderRadius: 4,
-                }}>
-                <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
-                  Confirm Meet Time
-                </Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <View>
-              <View style={styles.heading}>
-                <Text style={styles.headingText}>
-                  {route.params.chooseLeaveTime}
-                </Text>
-              </View>
-              {showTimePicker && (
-                <DateTimePicker
-                  value={leaveTime}
-                  minuteInterval={5}
-                  mode="time"
-                  is24Hour={false}
-                  display="default"
-                  onChange={(event, date) => {
-                    setShowTimePicker(Platform.OS === 'ios');
-                    setLeaveTime(new Date(date));
-                    if (Platform.OS === 'android') {
-                      setShowMeetTimeModal(false);
-                      nextForm();
-                    }
-                  }}
-                />
-              )}
-              <TouchableOpacity
-                onPress={() => {
-                  setShowTimePicker(true);
-                  if (Platform.OS === 'ios') {
-                    setShowMeetTimeModal(false);
-                    nextForm();
-                  }
-                }}
-                style={{
-                  padding: 12,
-                  alignItems: 'center',
-                  backgroundColor: Colors.lightGreen,
-                  borderRadius: 4,
-                }}>
-                <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
-                  Choose Leave Time
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        </CalModal>
+        <TimePicker
+          chooseTime1Msg={route.params.chooseMeetTime}
+          chooseTime2Msg={route.params.chooseLeaveTime}
+          nextForm={nextForm}
+          time1={meetTime}
+          setTime1={setMeetTime}
+          time2={leaveTime}
+          setTime2={setLeaveTime}
+          showModal={showMeetTimeModal}
+          setShowModal={setShowMeetTimeModal}
+        />
       )}
       {locationCoords && (
         <NextButton
@@ -299,7 +206,7 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.tabIconDefault,
   },
   headingText: {
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     fontSize: 19,
     lineHeight: 28,
     padding: 5,

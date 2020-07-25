@@ -13,6 +13,7 @@ import CNEditor, {
 } from 'react-native-cn-richtext-editor';
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
+import Fonts from '../../constants/Fonts';
 
 const defaultStyles = getDefaultStyles();
 
@@ -199,9 +200,9 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
   },
   formHeading: {
-    borderColor: Colors.secondary,
+    borderColor: Colors.orange,
     fontSize: 15,
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     marginHorizontal: 20,
   },
   toolbarButton: {

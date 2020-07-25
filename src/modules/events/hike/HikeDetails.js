@@ -1,30 +1,15 @@
 import React, {useState, useRef} from 'react';
-import {
-  View,
-  Text,
-  Button,
-  TextInput,
-  Modal,
-  Slider,
-  StyleSheet,
-  ScrollView,
-  Dimensions,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
-} from 'react-native';
-
-import {Notifications} from 'expo';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
 import {GET_EVENTS} from '../../calendar/CalendarView';
 
 import RTE from '../../../components/RichTextEditor';
-import {Calendar} from 'react-native-calendars';
 import CalModal from '../../../components/CalModal';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 import Colors from '../../../../constants/Colors';
+import Fonts from '../../../../constants/Fonts';
 import Constants from 'expo-constants';
 import {gql} from '@apollo/client';
 import {useMutation, useQuery} from '@apollo/react-hooks';
@@ -32,6 +17,8 @@ import {Ionicons} from '@expo/vector-icons';
 import ShowChosenTimeRow from '../../../components/ShowChosenTimeRow';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
 import SubmitBtn from '../../../components/buttons/SubmitButton';
+import Slider from '../../../components/formfields/Slider';
+import FormHeading from '../../../components/Headings/FormHeading';
 
 const ADD_HIKE = gql`
   mutation AddHike($hike: AddHikeInput!) {
@@ -42,6 +29,10 @@ const ADD_HIKE = gql`
       description
       datetime
       location {
+        lat
+        lng
+      }
+      meetLocation {
         lat
         lng
       }
@@ -134,100 +125,28 @@ const HikeDetails = ({navigation, route}) => {
 
   return (
     <RichInputContainer icon="back" back={back}>
-      <View style={styles.distanceContainer}>
-        <Text style={styles.formHeading}>Hike Distance (in miles)?</Text>
-        <View style={styles.sliderContainer}>
-          <Slider
-            minimumValue={1}
-            maximumValue={20}
-            step={1}
-            style={styles.slider}
-            value={distance}
-            onValueChange={setDistance}
-          />
-          <Text style={styles.sliderText}>{distance}</Text>
-        </View>
-      </View>
-      <View style={styles.endTimeContainer}>
-        {/*<ShowChosenTimeRow*/}
-        {/*  description="Name"*/}
-        {/*  value={route.params.name}*/}
-        {/*  color={Colors.lightOrange}*/}
-        {/*  icon="ios-information-circle"*/}
-        {/*/>*/}
-        {/*<ShowChosenTimeRow*/}
-        {/*  description="Event Time"*/}
-        {/*  value={new Date(route.params.datetime).toLocaleTimeString([], {*/}
-        {/*    hour: 'numeric',*/}
-        {/*    minute: '2-digit',*/}
-        {/*  })}*/}
-        {/*/>*/}
-        {/*<ShowChosenTimeRow*/}
-        {/*  description="Meet Time"*/}
-        {/*  value={new Date(route.params.meetTime).toLocaleTimeString([], {*/}
-        {/*    hour: 'numeric',*/}
-        {/*    minute: '2-digit',*/}
-        {/*  })}*/}
-        {/*/>*/}
+      {/*<ShowChosenTimeRow*/}
+      {/*  description="Name"*/}
+      {/*  value={route.params.name}*/}
+      {/*  color={Colors.lightOrange}*/}
+      {/*  icon="ios-information-circle"*/}
+      {/*/>*/}
+      {/*<ShowChosenTimeRow*/}
+      {/*  description="Event Time"*/}
+      {/*  value={new Date(route.params.datetime).toLocaleTimeString([], {*/}
+      {/*    hour: 'numeric',*/}
+      {/*    minute: '2-digit',*/}
+      {/*  })}*/}
+      {/*/>*/}
+      {/*<ShowChosenTimeRow*/}
+      {/*  description="Meet Time"*/}
+      {/*  value={new Date(route.params.meetTime).toLocaleTimeString([], {*/}
+      {/*    hour: 'numeric',*/}
+      {/*    minute: '2-digit',*/}
+      {/*  })}*/}
+      {/*/>*/}
 
-        <Text style={styles.formHeading}>
-          Roughly what time will the event end?
-        </Text>
-        <View style={styles.dateTime}>
-          <TouchableOpacity
-            style={styles.chooseEndTimeBtn}
-            onPress={() => setShowTimeModal(true)}>
-            <Text
-              style={{
-                color: '#fff',
-                fontFamily: 'oxygen-bold',
-              }}>
-              Choose Time
-            </Text>
-          </TouchableOpacity>
-          <View>
-            <Text
-              style={{
-                fontFamily: 'oxygen',
-                fontSize: 18,
-              }}>
-              {time &&
-                time.toLocaleTimeString([], {
-                  hour: 'numeric',
-                  minute: '2-digit',
-                })}{' '}
-              {time === new Date() && `(current time)`}
-            </Text>
-          </View>
-        </View>
-      </View>
-      <CalModal show={showTimeModal} setShow={setShowTimeModal}>
-        <DateTimePicker
-          value={time}
-          minuteInterval={5}
-          mode="time"
-          isa24Hour={false}
-          display="default"
-          onChange={(event, date) => {
-            setTime(new Date(date));
-          }}
-        />
-        <TouchableOpacity
-          onPress={() => {
-            setShowTimeModal(false);
-          }}
-          style={{
-            padding: 12,
-            alignItems: 'center',
-            backgroundColor: Colors.lightGreen,
-            borderRadius: 4,
-          }}>
-          <Text style={{fontSize: 18, fontFamily: 'oxygen-bold'}}>
-            Choose Time
-          </Text>
-        </TouchableOpacity>
-      </CalModal>
-
+      <Slider distance={distance} setDistance={setDistance} min={1} max={20} />
       <RTE
         heading="What additional information do you want people to know about this hike?"
         description={description}
@@ -257,26 +176,9 @@ const styles = StyleSheet.create({
   formHeading: {
     borderColor: Colors.secondary,
     fontSize: 15,
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     marginHorizontal: 22,
     marginVertical: 18,
-  },
-  sliderContainer: {
-    flexDirection: 'row',
-    flex: 1,
-    marginLeft: 28,
-    marginRight: 8,
-  },
-  slider: {
-    flex: 7,
-    justifyContent: 'center',
-  },
-  sliderText: {
-    flex: 1,
-    textAlign: 'center',
-    fontSize: 18,
-    fontFamily: 'oxygen-bold',
-    paddingTop: 5,
   },
   submitBtn: {
     backgroundColor: Colors.green,
@@ -289,7 +191,7 @@ const styles = StyleSheet.create({
   text: {
     color: '#ffffff',
     fontSize: 18,
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
   },
   backIcon: {
     paddingVertical: Constants.statusBarHeight / 3 + 5,

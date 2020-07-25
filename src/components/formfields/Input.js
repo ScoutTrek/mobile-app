@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, TextInput, StyleSheet} from 'react-native';
 import Colors from '../../../constants/Colors';
+import Fonts from '../../../constants/Fonts';
 
 const Input = (props) => {
   const {value, disabled, heading} = props;
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   label: {
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     textAlign: 'center',
     fontSize: 20,
     marginBottom: 28,

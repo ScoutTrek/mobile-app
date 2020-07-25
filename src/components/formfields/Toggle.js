@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, Switch, StyleSheet} from 'react-native';
 import Colors from '../../../constants/Colors';
+import Fonts from '../../../constants/Fonts';
 
 const Toggle = ({heading, active, onChange}) => {
   return (
@@ -22,7 +23,7 @@ const styles = StyleSheet.create({
   title: {
     borderColor: Colors.secondary,
     fontSize: 15,
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     marginHorizontal: 10,
     marginVertical: 18,
   },

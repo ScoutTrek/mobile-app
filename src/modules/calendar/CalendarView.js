@@ -10,8 +10,9 @@ import {Agenda} from 'react-native-calendars';
 import Constants from 'expo-constants';
 
 import Colors from '../../../constants/Colors';
+import Fonts from '../../../constants/Fonts';
 
-import useReduxEvents from '../../hooks/useReduxEvents';
+import useFetchEvents from '../../hooks/useFetchEvents';
 import {useQuery} from '@apollo/react-hooks';
 import {gql} from '@apollo/client';
 
@@ -38,7 +39,7 @@ export const GET_EVENTS = gql`
 const getColor = (label) => {
   switch (label) {
     case 'Hike':
-      return Colors.red;
+      return Colors.blue;
     case 'Meeting':
       return Colors.orange;
     case 'Campout':
@@ -46,7 +47,7 @@ const getColor = (label) => {
     case 'SummerCamp':
       return Colors.green;
     default:
-      return Colors.red;
+      return Colors.brown;
   }
 };
 
@@ -55,7 +56,7 @@ const CalendarView = ({navigation}) => {
 
   const [items, setItems] = useState({});
 
-  const getItems = useReduxEvents(data);
+  const getItems = useFetchEvents(data);
 
   const rowHasChanged = (r1, r2) => {
     return r1.name !== r2.name;
@@ -64,7 +65,9 @@ const CalendarView = ({navigation}) => {
   const renderEmptyDate = () => {
     return (
       <View style={styles.emptyDate}>
-        <Text style={{fontSize: 12}}>No events on this day.</Text>
+        <Text style={{fontSize: 12, color: Colors.lightBlue}}>
+          No events on this day.
+        </Text>
       </View>
     );
   };
@@ -105,6 +108,7 @@ const CalendarView = ({navigation}) => {
           key={`label-${label}`}
           style={{
             padding: 3,
+            paddingHorizontal: 5,
             margin: 2,
             fontSize: 10,
             backgroundColor: getColor(label),
@@ -115,14 +119,16 @@ const CalendarView = ({navigation}) => {
       ));
 
     return (
-      <TouchableOpacity onPress={() => viewEvent(item)} style={styles.item}>
+      <TouchableOpacity
+        onPress={() => viewEvent(item)}
+        style={styles.calendarEvent}>
         <View>
           <Text
             numberOfLines={1}
             style={{
-              color: '#48506B',
-              fontFamily: 'oxygen-bold',
-              fontSize: 18,
+              color: '#000',
+              fontFamily: Fonts.primaryTextBold,
+              fontSize: 16,
               marginBottom: 10,
               maxWidth: Dimensions.get('window').width * 0.5,
             }}>
@@ -130,11 +136,14 @@ const CalendarView = ({navigation}) => {
           </Text>
           <Text
             style={{
-              color: '#48506B',
-              fontFamily: 'oxygen',
-              marginBottom: 10,
+              color: '#000',
+              fontFamily: Fonts.primaryText,
+              marginBottom: 5,
             }}>
-            {item.name}
+            {new Date(+item.datetime).toLocaleDateString('en-US', {
+              month: 'long',
+              day: 'numeric',
+            })}
           </Text>
         </View>
 
@@ -159,11 +168,9 @@ const CalendarView = ({navigation}) => {
       renderEmptyDate={renderEmptyDate}
       rowHasChanged={rowHasChanged}
       theme={{
-        dotColor: Colors.red,
-        selectedDayBackgroundColor: Colors.red,
-        agendaDayTextColor: Colors.red,
-        agendaDayNumColor: Colors.red,
-        agendaTodayColor: '#4F44B6',
+        dotColor: Colors.green,
+        selectedDayBackgroundColor: Colors.purple,
+        agendaTodayColor: Colors.purple,
         backgroundColor: '#F1F1F8',
       }}
     />
@@ -175,7 +182,7 @@ const styles = StyleSheet.create({
     marginTop: Constants.statusBarHeight,
     flex: 1,
   },
-  item: {
+  calendarEvent: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     backgroundColor: 'white',
@@ -187,6 +194,7 @@ const styles = StyleSheet.create({
   emptyDate: {
     height: 15,
     flex: 1,
+    justifyContent: 'center',
     paddingTop: 30,
   },
 });

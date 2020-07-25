@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, Text, TextInput, StyleSheet} from 'react-native';
 import Colors from '../../../../constants/Colors';
+import Fonts from '../../../../constants/Fonts';
 
 const EditHeadingInput = (props) => {
   const {disabled, heading} = props;
@@ -21,7 +22,7 @@ const styles = StyleSheet.create({
   formHeading: {
     borderColor: Colors.secondary,
     fontSize: 15,
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     marginHorizontal: 20,
     margin: 16,
   },
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flex: 1,
     fontSize: 15,
-    fontFamily: 'oxygen',
+    fontFamily: Fonts.primaryText,
     backgroundColor: '#fff',
     textAlignVertical: 'center',
     borderColor: Colors.lightGray,
@@ -46,7 +47,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flex: 1,
     fontSize: 15,
-    fontFamily: 'oxygen',
+    fontFamily: Fonts.primaryText,
     backgroundColor: Colors.tabIconDefault,
     borderBottomColor: Colors.tabIconDefault,
   },

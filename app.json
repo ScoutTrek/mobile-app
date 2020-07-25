@@ -7,6 +7,18 @@
       "ios",
       "android"
     ],
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "scouttrek",
+            "project": "scouttrek",
+            "authToken": "aee5440c28cd4466a32e2d29c61724ebcddffb3172d0491fb3d481b038519af5"
+          }
+        }
+      ]
+    },
     "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/ScoutTrekIcon.png",
@@ -19,10 +31,10 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.scouttrek.kalebdavenport",
-      "buildNumber": "1.0.6"
+      "buildNumber": "1.0.16"
     },
     "android": {
-      "versionCode": 5,
+      "versionCode": 10,
       "permissions": [
         "NOTIFICATIONS",
         "ACCESS_FINE_LOCATION",
@@ -35,10 +47,11 @@
       ],
       "config": {
         "googleMaps": {
-          "apiKey": "AIzaSyAt6vamY9lmYvjySgvPlvQ_HYEURESs8bk"
+          "apiKey": "AIzaSyCy38WoJFJEn3gr7EEc1OAWcO-Xsslilbs"
         }
       },
-      "package": "com.wowyourclient.scouttrek"
+      "package": "com.wowyourclient.scouttrek",
+      "googleServicesFile": "./google-services.json"
     },
     "splash": {
       "backgroundColor": "#2C3148",

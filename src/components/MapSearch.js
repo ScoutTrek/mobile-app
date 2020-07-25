@@ -7,10 +7,10 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
-
-import ENV from '../../helpers/env';
+import {GOOGLE_MAPS_API_KEY} from '../../env';
 
 import Colors from '../../constants/Colors';
+import Fonts from '../../constants/Fonts';
 
 const SearchBar = ({locationToken, back, placeholder, _getPlaceDetails}) => {
   const [suggestedPlaces, setSuggestedPlaces] = useState();
@@ -21,7 +21,7 @@ const SearchBar = ({locationToken, back, placeholder, _getPlaceDetails}) => {
       `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${searchText.replace(
         / /g,
         '+'
-      )}&key=${ENV.googleApiKey}&sessiontoken=${locationToken}`
+      )}&key=${GOOGLE_MAPS_API_KEY}&sessiontoken=${locationToken}`
     ).catch((err) => console.log(err));
     const placesData = await places.json();
     setSuggestedPlaces(placesData.predictions);
@@ -55,20 +55,25 @@ const SearchBar = ({locationToken, back, placeholder, _getPlaceDetails}) => {
       </View>
       <View>
         {suggestedPlaces &&
-          suggestedPlaces.map((place) => (
-            <TouchableOpacity
-              key={place.id}
-              onPress={() => {
-                setSearchText('');
-                setSuggestedPlaces(null);
-                _getPlaceDetails(
-                  suggestedPlaces.find(({id}) => id === place.id).place_id
-                );
-              }}
-              style={styles.suggestedPlace}>
-              <Text style={styles.suggestedPlaceText}>{place.description}</Text>
-            </TouchableOpacity>
-          ))}
+          suggestedPlaces.map((place) => {
+            console.log(place);
+            return (
+              <TouchableOpacity
+                key={place.id}
+                onPress={() => {
+                  setSearchText('');
+                  setSuggestedPlaces(null);
+                  _getPlaceDetails(
+                    suggestedPlaces.find(({id}) => id === place.id).place_id
+                  );
+                }}
+                style={styles.suggestedPlace}>
+                <Text style={styles.suggestedPlaceText}>
+                  {place.description}
+                </Text>
+              </TouchableOpacity>
+            );
+          })}
       </View>
     </View>
   );
@@ -86,7 +91,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   suggestedPlaceText: {
-    fontFamily: 'oxygen',
+    fontFamily: Fonts.primaryText,
     fontSize: 14,
     paddingHorizontal: 20,
     paddingTop: 18,
@@ -103,7 +108,7 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 5,
     fontSize: 15,
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
   },
   searchIcon: {
     position: 'absolute',

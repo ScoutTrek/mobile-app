@@ -1,4 +1,4 @@
-import React, {useEffect, useReducer, useState} from 'react';
+import React, {useReducer} from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,6 +9,7 @@ import {
   Alert,
   Platform,
 } from 'react-native';
+import Fonts from '../../../constants/Fonts';
 import Constants from 'expo-constants';
 import {Ionicons} from '@expo/vector-icons';
 import AuthInput from './components/Input';
@@ -192,7 +193,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 22,
-    fontFamily: 'oxygen-bold',
+    fontFamily: Fonts.primaryTextBold,
     textAlign: 'center',
     alignItems: 'center',
     fontWeight: '800',
@@ -202,7 +203,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 20,
     textAlign: 'center',
-    fontFamily: 'oxygen',
+    fontFamily: Fonts.primaryText,
     padding: 22,
     color: '#241C0D',
   },
