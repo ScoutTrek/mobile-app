@@ -21,6 +21,7 @@ import {AntDesign} from '@expo/vector-icons';
 import {gql, useApolloClient, useQuery} from '@apollo/client';
 
 import {Notifications} from 'expo';
+import {userToken} from '../../../App';
 
 const GET_CURR_USER = gql`
   query GetCurrUser {
@@ -89,6 +90,7 @@ function CustomDrawerContent(props) {
             label="Logout"
             onPress={async () => {
               await AsyncStorage.removeItem('userToken');
+              userToken('');
               await client.resetStore();
             }}
           />

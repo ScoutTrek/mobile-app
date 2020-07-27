@@ -17,6 +17,7 @@ import {
   ApolloLink,
   InMemoryCache,
   concat,
+  makeVar,
 } from '@apollo/client';
 
 import AuthNavigator from './src/modules/auth/AuthNavigator';
@@ -47,14 +48,16 @@ const authMiddleware = new ApolloLink(async (operation, forward) => {
   return forward(operation);
 });
 
+// Global Apollo Variable that determines if the user is signed in or not.
+export const userToken = makeVar('');
+
 const AppLoadingContainer = () => {
   const [loading, setLoading] = useState(true);
-  const [token, setToken] = useState('');
 
   React.useEffect(() => {
     const checkForToken = async () => {
       try {
-        setToken(await AsyncStorage.getItem('userToken'));
+        userToken(await AsyncStorage.getItem('userToken'));
       } catch (e) {
         console.log(e);
       }
@@ -79,7 +82,7 @@ const AppLoadingContainer = () => {
         screenOptions={() => ({
           headerShown: false,
         })}>
-        {!token ? (
+        {!userToken() ? (
           <Stack.Screen
             name="AuthNav"
             component={AuthNavigator}
@@ -121,7 +124,21 @@ const Stack = createStackNavigator();
 
 export default function App() {
   const client = new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      typePolicies: {
+        User: {
+          fields: {
+            userToken: {
+              // Field policy for the isInCart field
+              read: async (_, {variables}) => {
+                // The read function for the isInCart field
+                return userToken();
+              },
+            },
+          },
+        },
+      },
+    }),
     link: concat(authMiddleware, httpLink),
     typeDefs,
     resolvers,

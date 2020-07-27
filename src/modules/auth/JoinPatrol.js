@@ -15,6 +15,7 @@ import Colors from '../../../constants/Colors';
 import Fonts from '../../../constants/Fonts';
 import {AntDesign, Ionicons} from '@expo/vector-icons';
 import RichInputContainer from '../../components/containers/RichInputContainer';
+import {userToken} from '../../../App';
 
 const SIGN_UP = gql`
   mutation SignUp($userInfo: SignupInput!) {
@@ -88,7 +89,11 @@ const JoinPatrol = ({navigation, route}) => {
   useEffect(() => {
     const setToken = async () => {
       try {
-        await AsyncStorage.setItem('userToken', signUpData.data.signup.token);
+        const token = await AsyncStorage.setItem(
+          'userToken',
+          signUpData.data.signup.token
+        );
+        userToken(token);
       } catch (e) {
         console.log(e);
       }

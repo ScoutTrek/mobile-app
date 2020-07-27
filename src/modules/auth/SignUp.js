@@ -10,13 +10,11 @@ import {
   Platform,
 } from 'react-native';
 import Fonts from '../../../constants/Fonts';
-import Constants from 'expo-constants';
 import {Ionicons} from '@expo/vector-icons';
 import AuthInput from './components/Input';
 import Footer from './components/Footer';
 import GradientButton from '../../components/buttons/GradientButton';
 import {LinearGradient} from 'expo-linear-gradient';
-import InlineButton from '../../components/buttons/InlineButton';
 
 export const formReducer = (state, action) => {
   if (action.type === 'UPDATE_INPUT_FIELD') {

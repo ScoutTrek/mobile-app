@@ -17,6 +17,7 @@ import AuthInput from './components/Input';
 import {gql, useApolloClient, useMutation} from '@apollo/client';
 import {GET_TOKEN} from './JoinPatrol';
 import Footer from './components/Footer';
+import {userToken} from '../../../App';
 
 const formReducer = (state, action) => {
   if (action.type === 'UPDATE_INPUT_FIELD') {
@@ -41,7 +42,6 @@ const LOG_IN = gql`
 const SignIn = ({navigation}) => {
   const [secure, setSecure] = useState(false);
   const [logIn, {data, loading}] = useMutation(LOG_IN);
-  const client = useApolloClient();
 
   const [formState, dispatchFormChange] = useReducer(formReducer, {
     inputValues: {
@@ -72,11 +72,8 @@ const SignIn = ({navigation}) => {
   useEffect(() => {
     const setToken = async () => {
       try {
-        await AsyncStorage.setItem('userToken', data.login.token);
-        await client.writeQuery({
-          query: GET_TOKEN,
-          data: {userToken: data.login.token},
-        });
+        const token = await AsyncStorage.setItem('userToken', data.login.token);
+        userToken(data.login.token);
       } catch (e) {
         console.log(e);
       }
