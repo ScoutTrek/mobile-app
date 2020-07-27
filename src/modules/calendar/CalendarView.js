@@ -13,8 +13,7 @@ import Colors from '../../../constants/Colors';
 import Fonts from '../../../constants/Fonts';
 
 import useFetchEvents from '../../hooks/useFetchEvents';
-import {useQuery} from '@apollo/react-hooks';
-import {gql} from '@apollo/client';
+import {gql, useQuery} from '@apollo/client';
 
 export const GET_EVENTS = gql`
   query ALL_EVENTS {

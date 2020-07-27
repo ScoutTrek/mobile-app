@@ -8,8 +8,7 @@ import Fonts from '../../../../constants/Fonts';
 import InlineButton from '../../../components/buttons/InlineButton';
 import Constants from 'expo-constants';
 
-import {gql} from '@apollo/client';
-import {useMutation, useQuery} from '@apollo/react-hooks';
+import {gql, useMutation, useQuery} from '@apollo/client';
 import NoShadowPurpleBtn from '../../../components/buttons/NoShadowPurpleBtn';
 import FormHeading from '../../../components/Headings/FormHeading';
 

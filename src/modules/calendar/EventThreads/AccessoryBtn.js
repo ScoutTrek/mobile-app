@@ -3,8 +3,7 @@ import React, {useEffect} from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import {getLocationAsync, pickImageAsync, takePictureAsync} from './mediaUtils';
-import {useMutation} from '@apollo/react-hooks';
-import {gql} from '@apollo/client';
+import {gql, useMutation} from '@apollo/client';
 
 const SINGLE_UPLOAD_MUTATION = gql`
   mutation UploadImage($file: Upload!) {

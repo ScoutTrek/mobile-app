@@ -17,9 +17,7 @@ import {
 } from '@react-navigation/drawer';
 
 import {AntDesign} from '@expo/vector-icons';
-import {gql} from '@apollo/client';
-import {useApolloClient, useQuery} from '@apollo/react-hooks';
-import {GET_TOKEN} from '../auth/JoinPatrol';
+import {gql, useApolloClient, useQuery} from '@apollo/client';
 
 import {Notifications} from 'expo';
 
@@ -89,13 +87,8 @@ function CustomDrawerContent(props) {
           <DrawerItem
             label="Logout"
             onPress={async () => {
-              AsyncStorage.removeItem('userToken').then(() => {
-                client.writeQuery({
-                  query: GET_TOKEN,
-                  data: {userToken: ''},
-                });
-              });
-              // await client.resetStore();
+              await AsyncStorage.removeItem('userToken');
+              await client.resetStore();
             }}
           />
           {data.user.role === 'SCOUT' && (

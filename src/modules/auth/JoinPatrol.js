@@ -8,20 +8,13 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import {gql} from '@apollo/client';
-import {useApolloClient, useMutation, useQuery} from '@apollo/react-hooks';
+import {gql, useApolloClient, useMutation, useQuery} from '@apollo/client';
 import GradientButton from '../../components/buttons/GradientButton';
 import Constants from 'expo-constants';
 import Colors from '../../../constants/Colors';
 import Fonts from '../../../constants/Fonts';
 import {AntDesign, Ionicons} from '@expo/vector-icons';
 import RichInputContainer from '../../components/containers/RichInputContainer';
-
-export const GET_TOKEN = gql`
-  {
-    userToken @client
-  }
-`;
 
 const SIGN_UP = gql`
   mutation SignUp($userInfo: SignupInput!) {
@@ -96,10 +89,6 @@ const JoinPatrol = ({navigation, route}) => {
     const setToken = async () => {
       try {
         await AsyncStorage.setItem('userToken', signUpData.data.signup.token);
-        await client.writeQuery({
-          query: GET_TOKEN,
-          data: {userToken: signUpData.data.signup.token},
-        });
       } catch (e) {
         console.log(e);
       }

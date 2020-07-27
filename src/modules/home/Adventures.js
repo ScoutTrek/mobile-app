@@ -1,4 +1,3 @@
-import * as WebBrowser from 'expo-web-browser';
 import React, {useState, useEffect} from 'react';
 import {
   View,
@@ -13,8 +12,7 @@ import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 
 import {Notifications} from 'expo';
-import {gql} from '@apollo/client';
-import {useApolloClient, useMutation, useQuery} from '@apollo/react-hooks';
+import {gql, useMutation, useQuery} from '@apollo/client';
 import Colors from '../../../constants/Colors';
 
 export const GET_UPCOMING_EVENTS = gql`
@@ -46,9 +44,7 @@ export const UPDATE_EXPO_TOKEN = gql`
 `;
 
 export default function Adventures({navigation}) {
-  const {loading, error, data} = useQuery(GET_UPCOMING_EVENTS, {
-    fetchPolicy: 'network-only',
-  });
+  const {loading, error, data} = useQuery(GET_UPCOMING_EVENTS);
 
   const [updateToken] = useMutation(UPDATE_EXPO_TOKEN);
 

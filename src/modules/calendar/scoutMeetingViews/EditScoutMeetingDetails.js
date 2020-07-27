@@ -6,10 +6,7 @@ import NextButton from '../../../components/buttons/NextButton';
 
 import Colors from '../../../../constants/Colors';
 import Fonts from '../../../../constants/Fonts';
-import Constants from 'expo-constants';
-import {Ionicons} from '@expo/vector-icons';
-import {useQuery, useMutation} from '@apollo/react-hooks';
-import {gql} from '@apollo/client';
+import {gql, useQuery, useMutation} from '@apollo/client';
 import {GET_EVENTS} from '../CalendarView';
 import RadioForm from 'react-native-simple-radio-button';
 import RTE from '../../../components/RichTextEditor';

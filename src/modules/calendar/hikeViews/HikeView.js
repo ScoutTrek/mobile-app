@@ -9,8 +9,7 @@ import {getAddress} from '../campoutViews/CampoutView';
 
 import {GOOGLE_MAPS_API_KEY} from '../../../../env';
 
-import {gql} from '@apollo/client';
-import {useMutation, useQuery} from '@apollo/react-hooks';
+import {gql, useMutation, useQuery} from '@apollo/client';
 import NoShadowPurpleBtn from '../../../components/buttons/NoShadowPurpleBtn';
 import {DELETE_EVENT} from '../campoutViews/CampoutView';
 import Location from '../../../components/EventInfoComponents/Location';
@@ -103,10 +102,12 @@ const EventDetailsScreen = ({route, navigation}) => {
         name={data.event.creator.name}
         date={+data.event.datetime}
       />
-      <Location heading="Event location" address={address} />
+
       <Location heading="Meet Place" address={meetAddress} />
       <Time time={+data.event.meetTime} text="arrive at meet place" />
       <Time time={+data.event.leaveTime} text="leave meet place" />
+      <Location heading="Event location" address={address} />
+      <Time time={+data.event.datetime} text="event start time" />
 
       <Description description={data.event.description} />
 

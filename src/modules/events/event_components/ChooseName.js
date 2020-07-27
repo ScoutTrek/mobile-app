@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Dimensions} from 'react-native';
+import {View, StyleSheet, KeyboardAvoidingView, Dimensions} from 'react-native';
 
 import Constants from 'expo-constants';
 import NextButton from '../../../components/buttons/NextButton';
@@ -21,10 +21,10 @@ const ChooseName = ({navigation, route}) => {
 
   return (
     <RichInputContainer icon="back" back={back}>
-      <View
+      <KeyboardAvoidingView
         style={{
-          padding: 10,
-          height: Dimensions.get('window').height / 1.5,
+          padding: 15,
+          height: Dimensions.get('window').height * 0.8,
         }}>
         <View style={styles.input}>
           <Input
@@ -43,14 +43,14 @@ const ChooseName = ({navigation, route}) => {
             heading={route.params.placeholder}
           />
         </View>
-      </View>
-      {nameIsValid && (
-        <NextButton
-          text="Choose Location"
-          iconName="ios-arrow-round-forward"
-          onClick={nextForm}
-        />
-      )}
+        {nameIsValid && (
+          <NextButton
+            text="Choose Location"
+            iconName="ios-arrow-round-forward"
+            onClick={nextForm}
+          />
+        )}
+      </KeyboardAvoidingView>
     </RichInputContainer>
   );
 };

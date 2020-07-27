@@ -7,8 +7,7 @@ import NextButton from '../../../components/buttons/NextButton';
 import Colors from '../../../../constants/Colors';
 import Constants from 'expo-constants';
 import {Ionicons} from '@expo/vector-icons';
-import {useQuery, useMutation} from '@apollo/react-hooks';
-import {gql} from '@apollo/client';
+import {gql, useQuery, useMutation} from '@apollo/client';
 
 import {GET_CAMPOUT} from './CampoutView';
 import RTE from '../../../components/RichTextEditor';

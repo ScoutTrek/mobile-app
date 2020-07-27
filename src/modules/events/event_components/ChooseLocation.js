@@ -72,7 +72,7 @@ const ChooseLocation = ({navigation, route}) => {
 
   const back = () => navigation.popToTop();
   const nextForm = () => {
-    console.log(route);
+    console.log(nextView);
     if (route.name === 'ChooseLocation') {
       const datetime = `${date}T${time.toISOString().split('T')[1]}`;
       const navData = {
@@ -83,7 +83,6 @@ const ChooseLocation = ({navigation, route}) => {
       delete navData.nextView;
       navigation.navigate(nextView, navData);
     } else if (route.name === 'ChooseMeetPoint') {
-      console.log(locationCoords);
       const navData = {
         name: route.params.name,
         datetime: route.params.datetime,
@@ -107,7 +106,6 @@ const ChooseLocation = ({navigation, route}) => {
       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${tappedLocation.latitude},${tappedLocation.longitude}&key=${GOOGLE_MAPS_API_KEY}`
     );
     const locationData = await locationDetails.json();
-    console.log(locationData);
     setLocationString(locationData.results[0].formatted_address);
   };
 

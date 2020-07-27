@@ -15,8 +15,7 @@ import RTE from '../../../components/RichTextEditor';
 
 import Colors from '../../../../constants/Colors';
 import Constants from 'expo-constants';
-import {gql} from '@apollo/client';
-import {useMutation, useQuery} from '@apollo/react-hooks';
+import {gql, useMutation, useQuery} from '@apollo/client';
 import {Ionicons} from '@expo/vector-icons';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
 import SubmitBtn from '../../../components/buttons/SubmitButton';

@@ -1,9 +1,8 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {gql} from '@apollo/client';
+import {gql, useMutation, useQuery} from '@apollo/client';
 
 import {GiftedChat, Actions, Bubble} from 'react-native-gifted-chat';
-import {useMutation, useQuery} from '@apollo/react-hooks';
 import {GET_EVENTS} from '../CalendarView';
 import Colors from '../../../../constants/Colors';
 import AccessoryBtn from './AccessoryBtn';

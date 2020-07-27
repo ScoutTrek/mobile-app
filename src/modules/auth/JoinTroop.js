@@ -7,8 +7,7 @@ import {
   KeyboardAvoidingView,
   Alert,
 } from 'react-native';
-import {gql} from '@apollo/client';
-import {useQuery} from '@apollo/react-hooks';
+import {gql, useQuery} from '@apollo/client';
 import Constants from 'expo-constants';
 import Colors from '../../../constants/Colors';
 import Fonts from '../../../constants/Fonts';

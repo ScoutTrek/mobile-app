@@ -15,9 +15,7 @@ import {
 import Colors from '../../../../constants/Colors';
 import Fonts from '../../../../constants/Fonts';
 import NextButton from '../../../components/buttons/NextButton';
-import {gql} from '@apollo/client';
-import {useMutation} from '@apollo/react-hooks';
-import {add} from 'react-native-reanimated';
+import {gql, useMutation} from '@apollo/client';
 
 const STATES = [
   'Alabama',

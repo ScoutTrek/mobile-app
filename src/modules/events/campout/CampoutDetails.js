@@ -7,10 +7,7 @@ import RTE from '../../../components/RichTextEditor';
 
 import Colors from '../../../../constants/Colors';
 import Fonts from '../../../../constants/Fonts';
-import Constants from 'expo-constants';
-import {gql} from '@apollo/client';
-import {useMutation, useQuery} from '@apollo/react-hooks';
-import {Ionicons} from '@expo/vector-icons';
+import {gql, useQuery, useMutation} from '@apollo/client';
 import DateAndTimePicker from '../../../components/formfields/DateAndTimePicker';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
 import SubmitBtn from '../../../components/buttons/SubmitButton';

@@ -3,8 +3,7 @@ import {Text, TextInput, StyleSheet} from 'react-native';
 
 import DateTimePicker from '@react-native-community/datetimepicker';
 
-import {useQuery, useMutation} from '@apollo/react-hooks';
-import {gql} from '@apollo/client';
+import {gql, useQuery, useMutation} from '@apollo/client';
 
 import {GET_HIKE} from './HikeView';
 import RTE from '../../../components/RichTextEditor';

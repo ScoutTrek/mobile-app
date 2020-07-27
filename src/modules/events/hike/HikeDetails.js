@@ -11,9 +11,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import Colors from '../../../../constants/Colors';
 import Fonts from '../../../../constants/Fonts';
 import Constants from 'expo-constants';
-import {gql} from '@apollo/client';
-import {useMutation, useQuery} from '@apollo/react-hooks';
-import {Ionicons} from '@expo/vector-icons';
+import {gql, useMutation, useQuery} from '@apollo/client';
 import ShowChosenTimeRow from '../../../components/ShowChosenTimeRow';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
 import SubmitBtn from '../../../components/buttons/SubmitButton';
@@ -125,26 +123,26 @@ const HikeDetails = ({navigation, route}) => {
 
   return (
     <RichInputContainer icon="back" back={back}>
-      {/*<ShowChosenTimeRow*/}
-      {/*  description="Name"*/}
-      {/*  value={route.params.name}*/}
-      {/*  color={Colors.lightOrange}*/}
-      {/*  icon="ios-information-circle"*/}
-      {/*/>*/}
-      {/*<ShowChosenTimeRow*/}
-      {/*  description="Event Time"*/}
-      {/*  value={new Date(route.params.datetime).toLocaleTimeString([], {*/}
-      {/*    hour: 'numeric',*/}
-      {/*    minute: '2-digit',*/}
-      {/*  })}*/}
-      {/*/>*/}
-      {/*<ShowChosenTimeRow*/}
-      {/*  description="Meet Time"*/}
-      {/*  value={new Date(route.params.meetTime).toLocaleTimeString([], {*/}
-      {/*    hour: 'numeric',*/}
-      {/*    minute: '2-digit',*/}
-      {/*  })}*/}
-      {/*/>*/}
+      <ShowChosenTimeRow
+        description="Name"
+        value={route.params.name}
+        color={Colors.lightOrange}
+        icon="ios-information-circle"
+      />
+      <ShowChosenTimeRow
+        description="Event Time"
+        value={new Date(route.params.datetime).toLocaleTimeString([], {
+          hour: 'numeric',
+          minute: '2-digit',
+        })}
+      />
+      <ShowChosenTimeRow
+        description="Meet Time"
+        value={new Date(route.params.meetTime).toLocaleTimeString([], {
+          hour: 'numeric',
+          minute: '2-digit',
+        })}
+      />
 
       <Slider distance={distance} setDistance={setDistance} min={1} max={20} />
       <RTE

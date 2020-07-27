@@ -8,8 +8,7 @@ import InlineButton from '../../../components/buttons/InlineButton';
 
 import {GOOGLE_MAPS_API_KEY} from '../../../../env';
 
-import {gql} from '@apollo/client';
-import {useQuery} from '@apollo/react-hooks';
+import {gql, useQuery} from '@apollo/client';
 import NoShadowPurpleBtn from '../../../components/buttons/NoShadowPurpleBtn';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
 

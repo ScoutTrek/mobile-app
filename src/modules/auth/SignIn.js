@@ -1,8 +1,6 @@
 import React, {useReducer, useEffect, useState} from 'react';
 import {
-  Button,
   Image,
-  Keyboard,
   StyleSheet,
   Text,
   View,
@@ -12,14 +10,11 @@ import {
   Platform,
 } from 'react-native';
 import Fonts from '../../../constants/Fonts';
-import {FontAwesome} from '@expo/vector-icons';
 import {LinearGradient} from 'expo-linear-gradient';
 import GradientButton from '../../components/buttons/GradientButton';
-import InlineButton from '../../components/buttons/InlineButton';
 import AuthInput from './components/Input';
 
-import {gql} from '@apollo/client';
-import {useApolloClient, useMutation} from '@apollo/react-hooks';
+import {gql, useApolloClient, useMutation} from '@apollo/client';
 import {GET_TOKEN} from './JoinPatrol';
 import Footer from './components/Footer';
 
