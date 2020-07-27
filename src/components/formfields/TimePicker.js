@@ -84,11 +84,8 @@ const TimePicker = ({
           )}
           <TouchableOpacity
             onPress={() => {
-              setShowTimePicker(true);
-              if (Platform.OS === 'ios') {
-                setShowModal(false);
-                nextForm();
-              }
+              setShowModal(false);
+              nextForm();
             }}
             style={{
               padding: 12,

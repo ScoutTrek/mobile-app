@@ -30,6 +30,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     marginTop: Constants.statusBarHeight,
+    backgroundColor: 'transparent',
   },
   inputContainer: {
     marginTop: 30,

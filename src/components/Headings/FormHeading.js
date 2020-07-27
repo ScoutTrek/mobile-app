@@ -13,11 +13,11 @@ const FormHeading = ({title, indented}) => {
 
 const styles = StyleSheet.create({
   formHeading: {
-    fontSize: 18,
-    fontFamily: Fonts.headingBold,
-    marginHorizontal: 22,
+    fontSize: 17,
+    fontFamily: Fonts.primaryTextBold,
+    marginHorizontal: 20,
+    marginBottom: 6,
     marginTop: 3,
-    marginBottom: 7,
   },
 });
 

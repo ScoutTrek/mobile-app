@@ -1,12 +1,13 @@
 import React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {Text, View, StyleSheet, Slider} from 'react-native';
 import Fonts from '../../../constants/Fonts';
+import FormHeading from '../Headings/FormHeading';
 
-const Slider = ({distance, setDistance, min, max}) => {
+const CustomSlider = ({distance, setDistance, min, max}) => {
   return (
-    <View>
-      <Text style={styles.formHeading}>Hike Distance (in miles)?</Text>
-      <View style={styles.sliderContainer}>
+    <View style={styles.sliderContainer}>
+      <FormHeading title="Hike Distance (in miles)?" />
+      <View style={styles.sliderRow}>
         <Slider
           minimumValue={min}
           maximumValue={max}
@@ -23,9 +24,12 @@ const Slider = ({distance, setDistance, min, max}) => {
 
 const styles = StyleSheet.create({
   sliderContainer: {
+    marginTop: 20,
+  },
+  sliderRow: {
     flexDirection: 'row',
     flex: 1,
-    marginLeft: 28,
+    marginLeft: 18,
     marginRight: 8,
   },
   slider: {
@@ -37,8 +41,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 18,
     fontFamily: Fonts.primaryTextBold,
-    paddingTop: 5,
+    paddingTop: 7,
   },
 });
 
-export default Slider;
+export default CustomSlider;

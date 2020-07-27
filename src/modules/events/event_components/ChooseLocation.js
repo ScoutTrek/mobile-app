@@ -72,7 +72,6 @@ const ChooseLocation = ({navigation, route}) => {
 
   const back = () => navigation.popToTop();
   const nextForm = () => {
-    console.log(nextView);
     if (route.name === 'ChooseLocation') {
       const datetime = `${date}T${time.toISOString().split('T')[1]}`;
       const navData = {
@@ -142,9 +141,7 @@ const ChooseLocation = ({navigation, route}) => {
         <MapSearch
           locationToken={locationToken}
           back={back}
-          nextForm={() => {
-            nextForm();
-          }}
+          nextForm={nextForm}
           placeholder={locationString ? locationString : placeholder}
           _getPlaceDetails={_getPlaceDetails}
           style={styles.searchBar}

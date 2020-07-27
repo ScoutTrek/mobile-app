@@ -14,6 +14,7 @@ import CNEditor, {
 import {MaterialCommunityIcons} from '@expo/vector-icons';
 import Colors from '../../constants/Colors';
 import Fonts from '../../constants/Fonts';
+import FormHeading from './Headings/FormHeading';
 
 const defaultStyles = getDefaultStyles();
 
@@ -58,8 +59,8 @@ class App extends Component {
   render() {
     const {heading} = this.props;
     return (
-      <KeyboardAvoidingView style={{marginTop: 28}} behavior="padding">
-        <Text style={styles.formHeading}>{heading}</Text>
+      <KeyboardAvoidingView style={{marginTop: 20}} behavior="padding">
+        <FormHeading title={heading} />
         <View
           style={{
             flex: 1,
@@ -194,8 +195,8 @@ class App extends Component {
 const styles = StyleSheet.create({
   main: {
     flex: 1,
-    minHeight: 200,
-    marginTop: 20,
+    minHeight: 220,
+    marginTop: 10,
     paddingHorizontal: 10,
     alignItems: 'stretch',
   },

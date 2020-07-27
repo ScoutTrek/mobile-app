@@ -80,5 +80,8 @@
     "jest": "^25.3.0",
     "jest-expo": "^37.0.0"
   },
+  "resolutions": {
+    "logkitty": "^0.7.1"
+  },
   "private": true
 }

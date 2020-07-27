@@ -15,6 +15,7 @@ import {
   DrawerItemList,
   DrawerItem,
 } from '@react-navigation/drawer';
+import Fonts from '../../../constants/Fonts';
 
 import {AntDesign} from '@expo/vector-icons';
 import {gql, useApolloClient, useQuery} from '@apollo/client';

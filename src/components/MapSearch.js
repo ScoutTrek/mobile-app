@@ -56,7 +56,6 @@ const SearchBar = ({locationToken, back, placeholder, _getPlaceDetails}) => {
       <View>
         {suggestedPlaces &&
           suggestedPlaces.map((place) => {
-            console.log(place);
             return (
               <TouchableOpacity
                 key={place.id}

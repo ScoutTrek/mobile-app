@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     borderTopRightRadius: 4,
     borderTopLeftRadius: 4,
-    backgroundColor: Colors.offWhite,
+    backgroundColor: '#fff',
     borderBottomWidth: 1.5,
     borderBottomColor: Colors.tabIconDefault,
   },
