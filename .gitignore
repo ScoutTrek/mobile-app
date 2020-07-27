@@ -17,4 +17,4 @@ env.js
 # macOS
 .DS_Store
 
-___tests__/**/*
+___tests__/*
