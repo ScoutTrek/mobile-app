@@ -14,7 +14,6 @@ const FormHeading = ({title, indented}) => {
 const styles = StyleSheet.create({
   formHeading: {
     fontSize: 17,
-    fontFamily: Fonts.primaryTextBold,
     marginHorizontal: 20,
     marginBottom: 6,
     marginTop: 3,

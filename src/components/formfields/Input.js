@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     borderRadius: 4,
     backgroundColor: Colors.tabIconDefault,
-    borderBottomWidth: 1.5,
+    borderBottomWidth: 2,
     borderBottomColor: Colors.tabIconDefault,
   },
 });

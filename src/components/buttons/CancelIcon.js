@@ -3,13 +3,13 @@ import Colors from '../../../constants/Colors';
 import React from 'react';
 import {StyleSheet} from 'react-native';
 
-export default function CancelIcon({back}) {
+export default function CancelIcon({back, white}) {
   return (
     <Ionicons
       name="ios-close"
-      color={Colors.darkBrown}
+      color={white ? '#fff' : Colors.darkBrown}
       style={styles.cancelIcon}
-      size={40}
+      size={48}
       onPress={back}
     />
   );
@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
   cancelIcon: {
     position: 'absolute',
     paddingHorizontal: 10,
+    top: '1%',
     left: '2.5%',
     zIndex: 1,
   },

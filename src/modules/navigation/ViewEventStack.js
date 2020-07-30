@@ -1,6 +1,6 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import {AntDesign} from '@expo/vector-icons';
-import AdventuresNav from '../home/Adventures';
+import AdventuresNav from '../home/UpcomingEvents';
 import HikeView from '../calendar/hikeViews/HikeView';
 import EditHikeDetails from '../calendar/hikeViews/EditHikeDetails';
 import ScoutMeetingView from '../calendar/scoutMeetingViews/ScoutMeetingView';

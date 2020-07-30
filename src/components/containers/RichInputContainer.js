@@ -9,13 +9,18 @@ import React from 'react';
 import Constants from 'expo-constants';
 import CancelIcon from '../buttons/CancelIcon';
 import BackIcon from '../buttons/BackIcon';
+import Colors from '../../../constants/Colors';
 
 const RichInputContainer = (props) => (
   <KeyboardAvoidingView
     behavior="padding"
     enabled={Platform.OS === 'ios'}
+    keyboardVerticalOffset={0}
     style={styles.screen}>
-    <ScrollView keyboardDismissMode="none" keyboardShouldPersistTaps="always">
+    <ScrollView
+      contentContainerStyle={{flexGrow: 1}}
+      keyboardDismissMode="none"
+      keyboardShouldPersistTaps="always">
       {props.icon === 'back' ? (
         <BackIcon back={props.back} />
       ) : (
@@ -30,10 +35,11 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     marginTop: Constants.statusBarHeight,
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.offWhite2,
   },
   inputContainer: {
     marginTop: 30,
+    flex: 1,
   },
 });
 

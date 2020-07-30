@@ -14,20 +14,20 @@ const DateAndTimePicker = ({
   setDate,
   time,
   setTime,
-  showModal,
-  setShowModal,
+  navigation,
 }) => {
   const [showFirstModal, setShowFirstModal] = useState(true);
   const [showTimePicker, setShowTimePicker] = useState(Platform.OS === 'ios');
 
   return (
-    <CalModal show={showModal} setShow={setShowModal}>
+    <CalModal goBack={navigation.goBack}>
       {!date || showFirstModal ? (
         <View>
           <View style={styles.heading}>
             <Text style={styles.headingText}>{chooseDayMsg}</Text>
           </View>
           <Calendar
+            style={{backgroundColor: '#fff'}}
             current={date}
             markingType={'custom'}
             markedDates={{
@@ -81,8 +81,8 @@ const DateAndTimePicker = ({
                 setShowTimePicker(Platform.OS === 'ios');
                 setTime(new Date(date));
                 if (Platform.OS === 'android') {
-                  setShowModal(false);
                   nextForm();
+                  setShowFirstModal(true);
                 }
               }}
             />
@@ -90,8 +90,8 @@ const DateAndTimePicker = ({
           <TouchableOpacity
             onPress={() => {
               if (Platform.OS === 'ios') {
-                setShowModal(false);
                 nextForm();
+                setShowFirstModal(true);
               }
               setShowTimePicker(true);
             }}

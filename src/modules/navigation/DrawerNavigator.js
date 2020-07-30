@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createStackNavigator} from '@react-navigation/stack';
-import AdventuresNav from '../home/Adventures';
+import AdventuresNav from '../home/UpcomingEvents';
 import {
   DrawerContentScrollView,
   DrawerItemList,
@@ -69,9 +69,7 @@ function NotificationsScreen({navigation}) {
 }
 
 function CustomDrawerContent(props) {
-  const {data, loading, error} = useQuery(GET_CURR_USER, {
-    fetchPolicy: 'network-only',
-  });
+  const {data, loading, error} = useQuery(GET_CURR_USER);
   const client = useApolloClient();
 
   if (loading) return <Text> </Text>;
@@ -89,9 +87,9 @@ function CustomDrawerContent(props) {
           <DrawerItem
             label="Logout"
             onPress={async () => {
-              await AsyncStorage.removeItem('userToken');
-              userToken('');
+              await userToken('');
               await client.resetStore();
+              await AsyncStorage.removeItem('userToken');
             }}
           />
           {data.user.role === 'SCOUT' && (
@@ -168,15 +166,15 @@ const HomeStackNavigator = ({navigation}) => {
 
 const Drawer = createDrawerNavigator();
 
-export default function Home() {
+export default function UpcomingEvents() {
   return (
     <Drawer.Navigator
       screenOptions={() => ({
         headerShown: true,
       })}
       drawerContent={(props) => <CustomDrawerContent {...props} />}
-      initialRouteName="Adventures">
-      <Drawer.Screen name="Adventures" component={HomeStackNavigator} />
+      initialRouteName="UpcomingEvents">
+      <Drawer.Screen name="Home" component={HomeStackNavigator} />
       <Drawer.Screen name="Notifications" component={NotificationsScreen} />
     </Drawer.Navigator>
   );

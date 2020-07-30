@@ -58,7 +58,7 @@ const SearchBar = ({locationToken, back, placeholder, _getPlaceDetails}) => {
           suggestedPlaces.map((place) => {
             return (
               <TouchableOpacity
-                key={place.id}
+                key={place.place_id}
                 onPress={() => {
                   setSearchText('');
                   setSuggestedPlaces(null);
@@ -105,9 +105,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: '15%',
     height: 60,
     width: '100%',
-    padding: 5,
-    fontSize: 15,
-    fontFamily: Fonts.primaryTextBold,
+    paddingTop: 1,
+    fontSize: 18,
   },
   searchIcon: {
     position: 'absolute',

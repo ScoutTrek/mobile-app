@@ -4,7 +4,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import ChooseLocationView from '../event_components/ChooseLocation';
 import SummerCampDetails from './SummerCampDetails';
 import ChooseName from '../event_components/ChooseName';
-import ChooseEndDateTime from '../event_components/ChooseEndDateTime';
+// import ChooseEndDateTime from '../event_components/ChooseEndDateTime';
 
 const SummerCampStack = createStackNavigator();
 
@@ -44,17 +44,17 @@ const SummerCampStackNavigator = () => {
           initialModal: 'time',
         }}
       />
-      <SummerCampStack.Screen
-        name="ChooseCheckoutTime"
-        component={ChooseEndDateTime}
-        initialParams={{
-          placeholder: 'What day will camp end?',
-          nextView: 'EventDetails',
-          chooseCheckoutTime: 'What day will you check out of camp?',
-          chooseReturnTime: 'Roughly what time will you return?',
-          initialModal: 'date',
-        }}
-      />
+      {/*<SummerCampStack.Screen*/}
+      {/*  name="ChooseCheckoutTime"*/}
+      {/*  component={ChooseEndDateTime}*/}
+      {/*  initialParams={{*/}
+      {/*    placeholder: 'What day will camp end?',*/}
+      {/*    nextView: 'EventDetails',*/}
+      {/*    chooseCheckoutTime: 'What day will you check out of camp?',*/}
+      {/*    chooseReturnTime: 'Roughly what time will you return?',*/}
+      {/*    initialModal: 'date',*/}
+      {/*  }}*/}
+      {/*/>*/}
       <SummerCampStack.Screen
         name="EventDetails"
         component={SummerCampDetails}

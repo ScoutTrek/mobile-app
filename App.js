@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import {setCustomText} from 'react-native-global-props';
 import {ActivityIndicator, View, AsyncStorage} from 'react-native';
@@ -16,9 +16,13 @@ import {
   HttpLink,
   ApolloLink,
   InMemoryCache,
-  concat,
+  from,
   makeVar,
+  useQuery,
+  gql,
 } from '@apollo/client';
+
+import {onError} from '@apollo/client/link/error';
 
 import AuthNavigator from './src/modules/auth/AuthNavigator';
 import MainTabNavigator from './src/modules/navigation/MainTabNavigator';
@@ -29,13 +33,28 @@ import * as Sentry from 'sentry-expo';
 Sentry.init({
   dsn:
     'https://02780727dd3a4192a8b5014eee036ca1@o412271.ingest.sentry.io/5288757',
-  enableInExpoDevelopment: true,
+  enableInExpoDevelopment: false,
   debug: true,
 });
 
 const httpLink = new HttpLink({
   uri: 'https://scouttrek-node-api.appspot.com/:4000',
 });
+
+const errorMiddleware = onError(
+  ({graphQLErrors, networkError, operation, forward}) => {
+    if (graphQLErrors) {
+      graphQLErrors.map(({message, locations, path}) =>
+        console.log(
+          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
+        )
+      );
+      return forward(operation);
+    }
+
+    if (networkError) console.log(`[Network error]: ${networkError}`);
+  }
+);
 
 const authMiddleware = new ApolloLink(async (operation, forward) => {
   // add the authorization to the headers
@@ -51,22 +70,26 @@ const authMiddleware = new ApolloLink(async (operation, forward) => {
 // Global Apollo Variable that determines if the user is signed in or not.
 export const userToken = makeVar('');
 
+const GET_USER_TOKEN = gql`
+  query UserToken {
+    userToken @client
+  }
+`;
+
 const AppLoadingContainer = () => {
+  const {data} = useQuery(GET_USER_TOKEN);
   const [loading, setLoading] = useState(true);
 
-  React.useEffect(() => {
-    const checkForToken = async () => {
-      try {
-        userToken(await AsyncStorage.getItem('userToken'));
-      } catch (e) {
-        console.log(e);
-      }
-      // After restoring token, I also need to add JWT validation
-      setLoading(false);
-    };
-    loadResourcesAsync().then(async () => {
-      await checkForToken();
+  try {
+    AsyncStorage.getItem('userToken').then((token) => {
+      userToken(token);
     });
+  } catch (e) {
+    console.log(e);
+  }
+
+  useEffect(() => {
+    loadResourcesAsync().then(() => setLoading(false));
   }, []);
 
   if (loading)
@@ -82,7 +105,7 @@ const AppLoadingContainer = () => {
         screenOptions={() => ({
           headerShown: false,
         })}>
-        {!userToken() ? (
+        {!data.userToken ? (
           <Stack.Screen
             name="AuthNav"
             component={AuthNavigator}
@@ -126,12 +149,10 @@ export default function App() {
   const client = new ApolloClient({
     cache: new InMemoryCache({
       typePolicies: {
-        User: {
+        Query: {
           fields: {
             userToken: {
-              // Field policy for the isInCart field
-              read: async (_, {variables}) => {
-                // The read function for the isInCart field
+              read(_, {variables}) {
                 return userToken();
               },
             },
@@ -139,7 +160,7 @@ export default function App() {
         },
       },
     }),
-    link: concat(authMiddleware, httpLink),
+    link: from([authMiddleware, errorMiddleware, httpLink]),
     typeDefs,
     resolvers,
   });

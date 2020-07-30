@@ -43,7 +43,7 @@ export const UPDATE_EXPO_TOKEN = gql`
   }
 `;
 
-export default function Adventures({navigation}) {
+export default function UpcomingEvents({navigation}) {
   const {loading, error, data} = useQuery(GET_UPCOMING_EVENTS);
 
   const [updateToken] = useMutation(UPDATE_EXPO_TOKEN);
@@ -143,19 +143,17 @@ export default function Adventures({navigation}) {
           <Text style={styles.heading}>Upcoming Events</Text>
         )}
         ListFooterComponent={() => <View style={{margin: 30}} />}
-        renderItem={({item}) => {
-          return (
-            <EventListItem
-              key={item.id}
-              id={item.id}
-              title={item.title}
-              type={item.type}
-              date={item.datetime}
-              creator={item.creator.name}
-              onSelect={viewEvent}
-            />
-          );
-        }}
+        renderItem={({item}) => (
+          <EventListItem
+            key={item.id}
+            id={item.id}
+            title={item.title}
+            type={item.type}
+            date={item.datetime}
+            creator={item.creator.name}
+            onSelect={viewEvent}
+          />
+        )}
         keyExtractor={(item) => item.id}
       />
     </SafeAreaView>

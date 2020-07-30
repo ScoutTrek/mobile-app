@@ -11,6 +11,8 @@ import {gql, useQuery, useMutation} from '@apollo/client';
 import DateAndTimePicker from '../../../components/formfields/DateAndTimePicker';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
 import SubmitBtn from '../../../components/buttons/SubmitButton';
+import Slider from '../../../components/formfields/Slider';
+import NextButton from '../../../components/buttons/NextButton';
 
 const ADD_CAMPOUT = gql`
   mutation AddCampout($campout: AddCampoutInput!) {
@@ -114,50 +116,16 @@ const CampoutDetails = ({navigation, route}) => {
 
   return (
     <RichInputContainer icon="back" back={back}>
-      <View style={styles.dateTime}>
-        <TouchableOpacity
-          onPress={() => {
-            setShowEndDatetime(true);
-          }}
-          style={{
-            padding: 12,
-            margin: 5,
-            alignItems: 'center',
-            backgroundColor: Colors.lightGreen,
-            borderRadius: 4,
-          }}>
-          <Text style={{fontSize: 18, fontFamily: Fonts.primaryTextBold}}>
-            When will you return...
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <DateAndTimePicker
-        chooseDay={route.params.chooseDate}
-        chooseTime={route.params.chooseTime}
-        nextForm={() => setShowEndDatetime(false)}
-        date={endDate}
-        setDate={setEndDate}
-        time={endTime}
-        setTime={setEndTime}
-        showModal={showEndDatetime}
-        setShowModal={setShowEndDatetime}
-      />
-      {endDate !== '' && (
-        <Text style={styles.endDateTime}>
-          {new Date(endDate).toLocaleDateString()},{' '}
-          {endTime.toLocaleTimeString([], {
-            hour: 'numeric',
-            minute: '2-digit',
-          })}
-        </Text>
-      )}
-
       <RTE
-        heading="What additional information do you want people to know about this campout?"
+        heading="What additional information do you want people to know about this hike?"
         description={description}
         setDescription={setDescription}
       />
-      <SubmitBtn submit={submit} title="Complete" />
+      <NextButton
+        text="Next"
+        iconName="ios-arrow-round-forward"
+        onClick={nextForm}
+      />
     </RichInputContainer>
   );
 };

@@ -1,10 +1,12 @@
 import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, Dimensions} from 'react-native';
+import {makeVar} from '@apollo/client';
 
-import Constants from 'expo-constants';
 import NextButton from '../../../components/buttons/NextButton';
 import Input from '../../../components/formfields/Input';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
+
+export const eventData = makeVar({});
 
 const ChooseName = ({navigation, route}) => {
   const {nextView} = route.params;
@@ -13,10 +15,17 @@ const ChooseName = ({navigation, route}) => {
 
   const back = () => navigation.popToTop();
   const nextForm = () => {
-    const navData = {
-      name,
-    };
-    navigation.navigate(nextView, navData);
+    if (nameIsValid) {
+      eventData({
+        name: {
+          title: 'Name',
+          value: name,
+          view: route.name,
+          type: 'name',
+        },
+      });
+      navigation.navigate(route.params.edit ? 'ConfirmEventDetails' : nextView);
+    }
   };
 
   return (

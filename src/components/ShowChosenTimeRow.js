@@ -6,12 +6,20 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import {Ionicons} from '@expo/vector-icons';
+import {Ionicons, MaterialIcons} from '@expo/vector-icons';
 
 import Colors from '../../constants/Colors';
 import Fonts from '../../constants/Fonts';
 
-const ShowChosenTimeRow = ({description, value, color, icon}) => {
+const ShowChosenTimeRow = ({
+  small,
+  location,
+  description,
+  value,
+  color,
+  icon,
+  onPress,
+}) => {
   return (
     <View
       style={[
@@ -21,22 +29,26 @@ const ShowChosenTimeRow = ({description, value, color, icon}) => {
       <View style={{flex: 1}}>
         <Text style={styles.description}>{description}</Text>
         <View style={styles.middleContainer}>
-          <Ionicons
-            name={icon ? icon : 'md-watch'}
-            color={Colors.brown}
-            style={{paddingTop: 1}}
-            size={23}
-          />
-          <Text
-            numberOfLines={1}
-            adjustsFontSizeToFit={true}
-            ellipsizeMode="tail"
-            style={styles.value}>
-            {value}
-          </Text>
+          {location ? (
+            <MaterialIcons
+              name="location-on"
+              style={{paddingTop: 1}}
+              size={23}
+              color={Colors.brown}
+            />
+          ) : (
+            <Ionicons
+              name={icon ? icon : 'md-watch'}
+              color={Colors.brown}
+              style={{paddingTop: 1}}
+              size={23}
+            />
+          )}
+
+          <Text style={[styles.value, small && {fontSize: 16}]}>{value}</Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.btnContainer}>
+      <TouchableOpacity onPress={onPress} style={styles.btnContainer}>
         <View style={styles.editBtn}>
           <Text style={styles.editBtnTxt}>Edit</Text>
         </View>
@@ -48,8 +60,7 @@ const ShowChosenTimeRow = ({description, value, color, icon}) => {
 const styles = StyleSheet.create({
   container: {
     marginHorizontal: 20,
-    marginTop: 10,
-    flex: 1,
+    marginTop: 12,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 10,
@@ -69,7 +80,7 @@ const styles = StyleSheet.create({
   value: {
     flex: 1,
     fontFamily: Fonts.headingBold,
-    fontSize: 21,
+    fontSize: 20,
     paddingHorizontal: 10,
   },
   editBtn: {

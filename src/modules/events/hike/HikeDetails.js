@@ -1,134 +1,48 @@
-import React, {useState, useRef} from 'react';
+import React, {useState} from 'react';
 import {StyleSheet} from 'react-native';
 
-import {GET_EVENTS} from '../../calendar/CalendarView';
-
 import RTE from '../../../components/RichTextEditor';
-import CalModal from '../../../components/CalModal';
-
-import DateTimePicker from '@react-native-community/datetimepicker';
 
 import Colors from '../../../../constants/Colors';
 import Fonts from '../../../../constants/Fonts';
 import Constants from 'expo-constants';
-import {gql, useMutation, useQuery} from '@apollo/client';
-import ShowChosenTimeRow from '../../../components/ShowChosenTimeRow';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
-import SubmitBtn from '../../../components/buttons/SubmitButton';
 import Slider from '../../../components/formfields/Slider';
 import NextButton from '../../../components/buttons/NextButton';
-
-const ADD_HIKE = gql`
-  mutation AddHike($hike: AddHikeInput!) {
-    addHike(input: $hike) {
-      id
-      type
-      title
-      description
-      datetime
-      location {
-        lat
-        lng
-      }
-      meetLocation {
-        lat
-        lng
-      }
-      creator {
-        id
-        name
-      }
-    }
-  }
-`;
-
-export const GET_EXPO_TOKEN = gql`
-  query GetToken {
-    currUser {
-      id
-      expoNotificationToken @client
-    }
-  }
-`;
+import {eventData} from '../event_components/ChooseName';
+import {toTitleCase} from '../../../components/utils/toTitleCase';
 
 const HikeDetails = ({navigation, route}) => {
-  const [addHike] = useMutation(ADD_HIKE, {
-    update(cache, {data: {addHike}}) {
-      try {
-        const {events} = cache.readQuery({query: GET_EVENTS});
-        cache.writeQuery({
-          query: GET_EVENTS,
-          data: {events: events.concat([addHike])},
-        });
-      } catch {
-        cache.writeQuery({
-          query: GET_EVENTS,
-          data: {events: [addHike]},
-        });
-      }
-    },
-  });
+  const {nextView} = route.params;
 
-  // description
   const [description, setDescription] = useState([]);
-
-  // display contact
   const [distance, setDistance] = useState(1);
 
-  const back = () => {
-    navigation.pop();
+  const nextForm = () => {
+    const prevData = eventData();
+    eventData({
+      ...prevData,
+      description: {
+        title: 'Description',
+        value: description,
+        type: 'description',
+        view: route.name,
+      },
+      distance: {
+        title: 'Distance',
+        value: distance,
+        view: route.name,
+      },
+    });
+    navigation.navigate(route.params.edit ? 'ConfirmEventDetails' : nextView);
   };
 
-  const submit = () => {
-    addHike({
-      variables: {
-        hike: {
-          title: route.params.name,
-          description,
-          datetime: route.params.datetime,
-          meetTime: route.params.meetTime,
-          leaveTime: route.params.leaveTime,
-          distance,
-          location: {
-            lng: route.params.location.longitude,
-            lat: route.params.location.latitude,
-          },
-          meetLocation: {
-            lng: route.params.meetLocation.longitude,
-            lat: route.params.meetLocation.latitude,
-          },
-        },
-      },
-    }).catch((err) => console.log(err));
-    console.log('success!');
-    navigation.popToTop();
-    navigation.pop();
-    navigation.navigate('Calendar');
+  const back = () => {
+    navigation.goBack();
   };
 
   return (
     <RichInputContainer icon="back" back={back}>
-      {/*<ShowChosenTimeRow*/}
-      {/*  description="Name"*/}
-      {/*  value={route.params.name}*/}
-      {/*  color={Colors.lightOrange}*/}
-      {/*  icon="ios-information-circle"*/}
-      {/*/>*/}
-      {/*<ShowChosenTimeRow*/}
-      {/*  description="Event Time"*/}
-      {/*  value={new Date(route.params.datetime).toLocaleTimeString([], {*/}
-      {/*    hour: 'numeric',*/}
-      {/*    minute: '2-digit',*/}
-      {/*  })}*/}
-      {/*/>*/}
-      {/*<ShowChosenTimeRow*/}
-      {/*  description="Meet Time"*/}
-      {/*  value={new Date(route.params.meetTime).toLocaleTimeString([], {*/}
-      {/*    hour: 'numeric',*/}
-      {/*    minute: '2-digit',*/}
-      {/*  })}*/}
-      {/*/>*/}
-
       <Slider distance={distance} setDistance={setDistance} min={1} max={20} />
       <RTE
         heading="What additional information do you want people to know about this hike?"
@@ -138,9 +52,8 @@ const HikeDetails = ({navigation, route}) => {
       <NextButton
         text="Next"
         iconName="ios-arrow-round-forward"
-        onClick={() => {}}
+        onClick={nextForm}
       />
-      {/*<SubmitBtn submit={submit} title="Complete" />*/}
     </RichInputContainer>
   );
 };

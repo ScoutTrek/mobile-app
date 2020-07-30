@@ -2,25 +2,15 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {View, Text, Button} from 'react-native';
 
-import ChooseLocationView from '../event_components/ChooseLocation';
-import HikeDetails from './HikeDetails';
 import ChooseName from '../event_components/ChooseName';
+import ChooseLocationView from '../event_components/ChooseLocation';
+import ChooseDateTime from '../event_components/ChooseDateTime';
+import HikeDetails from './HikeDetails';
+import ChooseTwoTimes from '../event_components/ChooseTwoTimes';
+import ConfirmHikeDetails from './ConfirmHikeDetails';
+import ChooseOneTime from '../event_components/ChooseOneTime';
 
 const HikeStack = createStackNavigator();
-
-function ModalScreen({navigation}) {
-  return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
-      <Text style={{fontSize: 30}}>This is a modal!</Text>
-      <Button onPress={() => navigation.goBack()} title="Dismiss" />
-    </View>
-  );
-}
 
 const HikeStackNavigator = () => {
   return (
@@ -42,9 +32,19 @@ const HikeStackNavigator = () => {
         component={ChooseLocationView}
         initialParams={{
           placeholder: 'Where do you want to hike?',
-          chooseDate: 'What day is your hike?',
-          chooseTime: 'What time do you want to be at the trailhead?',
-          initialModal: 'date',
+          nextView: 'ChooseDateTime',
+          valName: 'location',
+        }}
+      />
+      <HikeStack.Screen
+        name="ChooseDateTime"
+        component={ChooseDateTime}
+        options={{
+          animationEnabled: false,
+        }}
+        initialParams={{
+          chooseDateMsg: 'What day is your hike?',
+          chooseTimeMsg: 'What time do you want to be at the trailhead?',
           nextView: 'ChooseMeetPoint',
         }}
       />
@@ -53,20 +53,45 @@ const HikeStackNavigator = () => {
         component={ChooseLocationView}
         initialParams={{
           placeholder: 'Where should everyone meet?',
-          chooseMeetTime: 'What time should everybody meet?',
-          chooseLeaveTime: 'What time do you plan to leave your meet place?',
-          initialModal: 'time',
-          nextView: 'CoolModal',
+          nextView: 'ChooseMeetTime',
+          valName: 'meetLocation',
         }}
       />
       <HikeStack.Screen
+        name="ChooseMeetTime"
+        component={ChooseTwoTimes}
         options={{
           animationEnabled: false,
         }}
-        name="CoolModal"
-        component={ModalScreen}
+        initialParams={{
+          chooseTime1Msg: 'What time should everybody meet?',
+          chooseTime2Msg: 'What time do you plan to leave your meet place?',
+          nextView: 'EventDetails',
+          time1Name: 'meetTime',
+          time2Name: 'leaveTime',
+        }}
       />
-      <HikeStack.Screen name="EventDetails" component={HikeDetails} />
+      <HikeStack.Screen
+        name="EventDetails"
+        component={HikeDetails}
+        initialParams={{nextView: 'ChooseEndTime'}}
+      />
+      <HikeStack.Screen
+        name="ChooseEndTime"
+        component={ChooseOneTime}
+        options={{
+          animationEnabled: false,
+        }}
+        initialParams={{
+          chooseTimeMsg: 'Around what time will you return from the event?',
+          nextView: 'ConfirmEventDetails',
+          timeName: 'endTime',
+        }}
+      />
+      <HikeStack.Screen
+        name="ConfirmEventDetails"
+        component={ConfirmHikeDetails}
+      />
     </HikeStack.Navigator>
   );
 };

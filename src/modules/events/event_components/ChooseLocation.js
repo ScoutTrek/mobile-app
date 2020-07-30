@@ -19,32 +19,20 @@ import uuidv4 from 'uuid/v1';
 import Colors from '../../../../constants/Colors';
 import Fonts from '../../../../constants/Fonts';
 import NextButton from '../../../components/buttons/NextButton';
-import DateAndTimePicker from '../../../components/formfields/DateAndTimePicker';
-import TimePicker from '../../../components/formfields/TimePicker';
+import {eventData} from './ChooseName';
+import {toTitleCase} from '../../../components/utils/toTitleCase';
 
 const locationToken = uuidv4();
 
 const ChooseLocation = ({navigation, route}) => {
-  const {nextView, placeholder} = route.params;
-
   const [location, setLocation] = useState();
   const [locationCoords, setLocationCoords] = useState();
   const [locationString, setLocationString] = useState('');
-  const [error, setError] = useState(null);
-
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState(new Date('January 1, 2000 11:00:00'));
-  const [meetTime, setMeetTime] = useState(new Date('January 1, 2000 9:30:00'));
-  const [leaveTime, setLeaveTime] = useState(
-    new Date('January 1, 2000 10:00:00')
-  );
-  const [showDateModal, setShowDateModal] = useState(false);
-  const [showMeetTimeModal, setShowMeetTimeModal] = useState(false);
 
   const _getLocationAsync = async () => {
     let {status} = await Permissions.askAsync(Permissions.LOCATION);
     if (status !== 'granted') {
-      setError('Permission to access location was denied');
+      // setError('Permission to access location was denied');
     }
     const userLocation = await Location.getCurrentPositionAsync({});
     setLocation({
@@ -70,29 +58,22 @@ const ChooseLocation = ({navigation, route}) => {
     Keyboard.dismiss();
   };
 
-  const back = () => navigation.popToTop();
+  const back = () => navigation.goBack();
   const nextForm = () => {
-    if (route.name === 'ChooseLocation') {
-      const datetime = `${date}T${time.toISOString().split('T')[1]}`;
-      const navData = {
-        name: route.params.name,
-        location: locationCoords,
-        datetime,
-      };
-      delete navData.nextView;
-      navigation.navigate(nextView, navData);
-    } else if (route.name === 'ChooseMeetPoint') {
-      const navData = {
-        name: route.params.name,
-        datetime: route.params.datetime,
-        location: route.params.location,
-        meetLocation: locationCoords,
-        meetTime: meetTime.toString(),
-        leaveTime: leaveTime.toString(),
-      };
-      delete navData.nextView;
-      navigation.navigate(nextView, navData);
-    }
+    const prevData = eventData();
+    eventData({
+      ...prevData,
+      [route.params.valName]: {
+        title: toTitleCase(route.params.valName),
+        value: locationString,
+        coords: location,
+        type: 'address',
+        view: route.name,
+      },
+    });
+    navigation.navigate(
+      route.params.edit ? 'ConfirmEventDetails' : route.params.nextView
+    );
   };
 
   const selectLocationHandler = async (event) => {
@@ -142,45 +123,18 @@ const ChooseLocation = ({navigation, route}) => {
           locationToken={locationToken}
           back={back}
           nextForm={nextForm}
-          placeholder={locationString ? locationString : placeholder}
+          placeholder={
+            locationString ? locationString : route.params.placeholder
+          }
           _getPlaceDetails={_getPlaceDetails}
           style={styles.searchBar}
         />
       </View>
-      {route.params.initialModal === 'date' ? (
-        <DateAndTimePicker
-          chooseDayMsg={route.params.chooseDate}
-          chooseTimeMsg={route.params.chooseTime}
-          nextForm={nextForm}
-          date={date}
-          setDate={setDate}
-          time={time}
-          setTime={setTime}
-          showModal={showDateModal}
-          setShowModal={setShowDateModal}
-        />
-      ) : (
-        <TimePicker
-          chooseTime1Msg={route.params.chooseMeetTime}
-          chooseTime2Msg={route.params.chooseLeaveTime}
-          nextForm={nextForm}
-          time1={meetTime}
-          setTime1={setMeetTime}
-          time2={leaveTime}
-          setTime2={setLeaveTime}
-          showModal={showMeetTimeModal}
-          setShowModal={setShowMeetTimeModal}
-        />
-      )}
       {locationCoords && (
         <NextButton
           text="Next"
           iconName="ios-arrow-round-forward"
-          onClick={() => {
-            route.params.initialModal === 'date'
-              ? setShowDateModal(true)
-              : setShowMeetTimeModal(true);
-          }}
+          onClick={nextForm}
         />
       )}
     </View>

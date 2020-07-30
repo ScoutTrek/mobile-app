@@ -14,13 +14,12 @@ const TimePicker = ({
   setTime1,
   time2,
   setTime2,
-  showModal,
-  setShowModal,
+  navigation,
 }) => {
   const [showFirstModal, setShowFirstModal] = useState(true);
   const [showTimePicker, setShowTimePicker] = useState(Platform.OS === 'ios');
   return (
-    <CalModal show={showModal} setShow={setShowModal}>
+    <CalModal goBack={navigation.goBack}>
       {!time1 || showFirstModal ? (
         <View>
           <View style={styles.heading}>
@@ -76,7 +75,6 @@ const TimePicker = ({
                 setShowTimePicker(Platform.OS === 'ios');
                 setTime2(new Date(date));
                 if (Platform.OS === 'android') {
-                  setShowModal(false);
                   nextForm();
                 }
               }}
@@ -84,7 +82,6 @@ const TimePicker = ({
           )}
           <TouchableOpacity
             onPress={() => {
-              setShowModal(false);
               nextForm();
             }}
             style={{

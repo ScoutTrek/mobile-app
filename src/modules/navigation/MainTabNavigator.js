@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dimensions, Image} from 'react-native';
+import {Image} from 'react-native';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
@@ -28,7 +28,11 @@ const MainBottomTabNavigator = () => {
         activeTintColor: Colors.darkBrown,
         labelStyle: {fontSize: 12.5, bottom: 2},
       }}>
-      <MainBottomTab.Screen name="Home" component={HomeNav} />
+      <MainBottomTab.Screen
+        options={{tabBarLabel: 'Home'}}
+        name="UpcomingEvents"
+        component={HomeNav}
+      />
       <MainBottomTab.Screen
         name="Calendar"
         component={CalendarNav}
@@ -51,7 +55,7 @@ const MainBottomTabConfig = ({route}) => ({
     size = 24;
     let iconSource;
     switch (route.name) {
-      case 'Home':
+      case 'UpcomingEvents':
         return focused ? (
           <Image
             source={homeDark}
