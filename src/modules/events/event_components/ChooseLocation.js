@@ -1,11 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  ActivityIndicator,
-  Keyboard,
-} from 'react-native';
+import {View, StyleSheet, Dimensions, Keyboard} from 'react-native';
 import MapView, {Marker} from 'react-native-maps';
 
 import MapSearch from '../../../components/MapSearch';
@@ -20,14 +14,24 @@ import Colors from '../../../../constants/Colors';
 import Fonts from '../../../../constants/Fonts';
 import NextButton from '../../../components/buttons/NextButton';
 import {eventData} from './ChooseName';
-import {toTitleCase} from '../../../components/utils/toTitleCase';
 
 const locationToken = uuidv4();
 
 const ChooseLocation = ({navigation, route}) => {
-  const [location, setLocation] = useState();
-  const [locationCoords, setLocationCoords] = useState();
-  const [locationString, setLocationString] = useState('');
+  const initialLocation = eventData()?.[route.params.valName];
+  const [location, setLocation] = useState(
+    initialLocation
+      ? {latitude: initialLocation.lat, longitude: initialLocation.lng}
+      : null
+  );
+  const [locationCoords, setLocationCoords] = useState(
+    initialLocation
+      ? {latitude: initialLocation.lat, longitude: initialLocation.lng}
+      : null
+  );
+  const [locationString, setLocationString] = useState(
+    eventData()?.[route.params.valName]?.address || ''
+  );
 
   const _getLocationAsync = async () => {
     let {status} = await Permissions.askAsync(Permissions.LOCATION);
@@ -60,15 +64,12 @@ const ChooseLocation = ({navigation, route}) => {
 
   const back = () => navigation.goBack();
   const nextForm = () => {
-    const prevData = eventData();
     eventData({
-      ...prevData,
+      ...eventData(),
       [route.params.valName]: {
-        title: toTitleCase(route.params.valName),
-        value: locationString,
-        coords: location,
-        type: 'address',
-        view: route.name,
+        address: locationString,
+        lat: location.latitude,
+        lng: location.longitude,
       },
     });
     navigation.navigate(
@@ -94,7 +95,7 @@ const ChooseLocation = ({navigation, route}) => {
   }, []);
 
   if (!location) {
-    return <ActivityIndicator />;
+    return <View />;
   }
 
   return (
@@ -123,9 +124,8 @@ const ChooseLocation = ({navigation, route}) => {
           locationToken={locationToken}
           back={back}
           nextForm={nextForm}
-          placeholder={
-            locationString ? locationString : route.params.placeholder
-          }
+          placeholder={locationString || route.params.placeholder}
+          textValue={initialLocation?.address}
           _getPlaceDetails={_getPlaceDetails}
           style={styles.searchBar}
         />

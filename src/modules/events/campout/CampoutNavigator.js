@@ -6,7 +6,7 @@ import CampoutDetails from './CampoutDetails';
 import ChooseName from '../event_components/ChooseName';
 import ChooseDateTime from '../event_components/ChooseDateTime';
 import ChooseTwoTimes from '../event_components/ChooseTwoTimes';
-import ConfirmHikeDetails from '../hike/ConfirmHikeDetails';
+import ConfirmCampoutDetails from './ConfirmCampoutDetails';
 
 const CampoutStack = createStackNavigator();
 
@@ -15,7 +15,6 @@ const CampoutStackNavigator = () => {
     <CampoutStack.Navigator
       screenOptions={() => ({
         headerShown: false,
-        cardStyle: {backgroundColor: 'transparent'},
       })}>
       <CampoutStack.Screen
         name="ChooseName"
@@ -32,9 +31,6 @@ const CampoutStackNavigator = () => {
           placeholder: 'Where are you camping?',
           nextView: 'ChooseDateTime',
           valName: 'location',
-          chooseDate: 'What day does your campout start?',
-          chooseTime: 'What time do you need to be at the campground?',
-          initialModal: 'date',
         }}
       />
       <CampoutStack.Screen
@@ -44,10 +40,19 @@ const CampoutStackNavigator = () => {
           animationEnabled: false,
         }}
         initialParams={{
-          chooseDateMsg: 'What day is your hike?',
-          chooseTimeMsg: 'What time do you want to be at the trailhead?',
+          chooseDateMsg: 'What day is your campout?',
+          chooseTimeMsg: 'What time do you want to be at the campground?',
           nextView: 'ChooseMeetPoint',
           valName: 'datetime',
+        }}
+      />
+      <CampoutStack.Screen
+        name="ChooseMeetPoint"
+        component={ChooseLocationView}
+        initialParams={{
+          placeholder: 'Where should everyone meet?',
+          nextView: 'ChooseMeetTime',
+          valName: 'meetLocation',
         }}
       />
       <CampoutStack.Screen
@@ -62,30 +67,34 @@ const CampoutStackNavigator = () => {
           nextView: 'EventDetails',
           time1Name: 'meetTime',
           time2Name: 'leaveTime',
+          btn1: 'Confirm Meet Time',
+          btn2: 'Confirm Leave Time',
         }}
       />
+
       <CampoutStack.Screen
         name="EventDetails"
         component={CampoutDetails}
-        initialParams={{nextView: 'ChooseEndTime'}}
+        initialParams={{nextView: 'ChooseEndDatetime'}}
       />
       <CampoutStack.Screen
-        name="ChooseEndTime"
-        component={ChooseTwoTimes}
+        name="ChooseEndDatetime"
+        component={ChooseDateTime}
         options={{
           animationEnabled: false,
         }}
         initialParams={{
-          chooseTime1Msg: 'Around what time will you return from the campout?',
-          chooseTime2Msg: 'When will you arrive back at the meet place?',
-          nextView: 'ConfirmHikeDetails',
-          time1Name: 'endTime',
-          time2Name: 'pickupTime',
+          chooseDateMsg: 'What day will you return from your campout?',
+          chooseTimeMsg: 'Around what time will you return from the campout?',
+          nextView: 'ConfirmEventDetails',
+          valName: 'endDatetime',
+          dateName: 'endDate',
+          timeName: 'endTime',
         }}
       />
       <CampoutStack.Screen
         name="ConfirmEventDetails"
-        component={ConfirmHikeDetails}
+        component={ConfirmCampoutDetails}
       />
     </CampoutStack.Navigator>
   );

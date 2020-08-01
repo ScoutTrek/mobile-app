@@ -26,7 +26,7 @@ const MainBottomTabNavigator = () => {
         showLabel: true,
         inactiveTintColor: Colors.lightBrown,
         activeTintColor: Colors.darkBrown,
-        labelStyle: {fontSize: 12.5, bottom: 2},
+        labelStyle: {fontSize: 11.5, bottom: 3},
       }}>
       <MainBottomTab.Screen
         options={{tabBarLabel: 'Home'}}
@@ -52,37 +52,27 @@ const MainBottomTabNavigator = () => {
 
 const MainBottomTabConfig = ({route}) => ({
   tabBarIcon: ({focused, size}) => {
-    size = 24;
+    size = 24.5;
     let iconSource;
     switch (route.name) {
       case 'UpcomingEvents':
         return focused ? (
           <Image
             source={homeDark}
-            style={{width: size - 4, height: size - 4, top: 2}}
+            style={{width: size - 4, height: size - 4}}
           />
         ) : (
-          <AntDesign
-            name="home"
-            color={Colors.activeGreen}
-            size={size}
-            style={{top: 2}}
-          />
+          <AntDesign name="home" color={Colors.activeGreen} size={size} />
         );
       case 'Calendar':
         iconSource = 'calendar';
         return focused ? (
           <Image
             source={calendarDark}
-            style={{width: size - 4, height: size - 4, top: 2}}
+            style={{width: size - 4, height: size - 4}}
           />
         ) : (
-          <AntDesign
-            name="calendar"
-            color={Colors.purple}
-            size={size}
-            style={{top: 2}}
-          />
+          <AntDesign name="calendar" color={Colors.purple} size={size} />
         );
       // case 'Memories':
       //   iconSource = iconGrids
@@ -93,7 +83,6 @@ const MainBottomTabConfig = ({route}) => ({
             name="pluscircle"
             color={focused ? Colors.darkOrange : Colors.orange}
             size={size}
-            style={{top: 2}}
           />
         );
       default:

@@ -35,8 +35,18 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 4,
     borderTopLeftRadius: 4,
     backgroundColor: '#fff',
-    borderBottomWidth: 1.5,
-    borderBottomColor: Colors.tabIconDefault,
+    borderBottomWidth: 2,
+    borderBottomColor: Colors.purple,
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 0,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+
+    elevation: 3,
   },
   disabledInput: {
     padding: 8,

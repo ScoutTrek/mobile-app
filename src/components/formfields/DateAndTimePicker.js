@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import CalModal from '../CalModal';
 import {Platform, Text, TouchableOpacity, View, StyleSheet} from 'react-native';
 import {Calendar} from 'react-native-calendars';
@@ -12,12 +12,19 @@ const DateAndTimePicker = ({
   nextForm,
   date,
   setDate,
+  timeOnly,
   time,
   setTime,
   navigation,
 }) => {
   const [showFirstModal, setShowFirstModal] = useState(true);
   const [showTimePicker, setShowTimePicker] = useState(Platform.OS === 'ios');
+
+  useEffect(() => {
+    if (timeOnly) {
+      setShowFirstModal(false);
+    }
+  });
 
   return (
     <CalModal goBack={navigation.goBack}>
@@ -77,13 +84,13 @@ const DateAndTimePicker = ({
               minuteInterval={5}
               mode="time"
               display="default"
-              onChange={(event, date) => {
-                setShowTimePicker(Platform.OS === 'ios');
-                setTime(new Date(date));
+              onChange={(_, time) => {
                 if (Platform.OS === 'android') {
-                  nextForm();
+                  setShowTimePicker(false);
+                  nextForm(new Date(time));
                   setShowFirstModal(true);
                 }
+                setTime(new Date(time));
               }}
             />
           )}
@@ -92,8 +99,9 @@ const DateAndTimePicker = ({
               if (Platform.OS === 'ios') {
                 nextForm();
                 setShowFirstModal(true);
+              } else {
+                setShowTimePicker(true);
               }
-              setShowTimePicker(true);
             }}
             style={{
               padding: 12,

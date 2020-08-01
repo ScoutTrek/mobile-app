@@ -17,7 +17,6 @@ const HikeStackNavigator = () => {
     <HikeStack.Navigator
       screenOptions={() => ({
         headerShown: false,
-        cardStyle: {backgroundColor: 'transparent'},
       })}>
       <HikeStack.Screen
         name="ChooseName"
@@ -45,6 +44,7 @@ const HikeStackNavigator = () => {
         initialParams={{
           chooseDateMsg: 'What day is your hike?',
           chooseTimeMsg: 'What time do you want to be at the trailhead?',
+          valName: 'datetime',
           nextView: 'ChooseMeetPoint',
         }}
       />
@@ -69,6 +69,8 @@ const HikeStackNavigator = () => {
           nextView: 'EventDetails',
           time1Name: 'meetTime',
           time2Name: 'leaveTime',
+          btn1: 'Confirm Meet Time',
+          btn2: 'Confirm Leave Time',
         }}
       />
       <HikeStack.Screen
@@ -83,9 +85,9 @@ const HikeStackNavigator = () => {
           animationEnabled: false,
         }}
         initialParams={{
-          chooseTimeMsg: 'Around what time will you return from the event?',
+          chooseTimeMsg: 'Around what time will you return from the hike?',
           nextView: 'ConfirmEventDetails',
-          timeName: 'endTime',
+          valName: 'endDatetime',
         }}
       />
       <HikeStack.Screen

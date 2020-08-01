@@ -1,29 +1,25 @@
 import React from 'react';
-import {View} from 'react-native';
+import {Text, View} from 'react-native';
 import SubmitBtn from '../../../components/buttons/SubmitButton';
-import EventSnapshotList from '../../../components/EventSnapshotList';
+import ShowChosenTimeRow from '../../../components/ShowChosenTimeRow';
 import Colors from '../../../../constants/Colors';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
-import {gql, useMutation} from '@apollo/client';
-import {useIsFocused} from '@react-navigation/native';
+import {gql, useMutation, useQuery} from '@apollo/client';
 import {GET_EVENTS} from '../../calendar/CalendarView';
 import {eventData} from '../event_components/ChooseName';
 import FormHeading from '../../../components/Headings/FormHeading';
-import {hikeSchema} from '../../../../constants/DataSchema';
+import EventSnapshotList from '../../../components/EventSnapshotList';
+import {summerCampSchema} from '../../../../constants/DataSchema';
 
-const ADD_HIKE = gql`
-  mutation AddHike($hike: AddHikeInput!) {
-    event: addHike(input: $hike) {
+const ADD_SUMMER_CAMP = gql`
+  mutation AddSummerCamp($summer_camp: AddSummerCampInput!) {
+    event: addSummerCamp(input: $summer_camp) {
       id
       type
       title
       description
       datetime
       location {
-        lat
-        lng
-      }
-      meetLocation {
         lat
         lng
       }
@@ -35,8 +31,14 @@ const ADD_HIKE = gql`
   }
 `;
 
-const ConfirmHikeDetails = ({navigation}) => {
-  const [addHike] = useMutation(ADD_HIKE, {
+const ConfirmSummerCampDetails = ({navigation}) => {
+  const {data, loading} = useQuery(gql`
+    {
+      eventFormState @client
+    }
+  `);
+
+  const [addSummerCamp] = useMutation(ADD_SUMMER_CAMP, {
     update(cache, {data: {event}}) {
       try {
         const {events} = cache.readQuery({query: GET_EVENTS});
@@ -52,12 +54,11 @@ const ConfirmHikeDetails = ({navigation}) => {
       }
     },
   });
-  const isFocused = useIsFocused();
 
   const submit = () => {
-    addHike({
+    addSummerCamp({
       variables: {
-        hike: {...eventData()},
+        summer_camp: {...eventData()},
       },
     })
       .then(() => {
@@ -73,18 +74,18 @@ const ConfirmHikeDetails = ({navigation}) => {
     navigation.goBack();
   };
 
+  if (loading) return <Text>Loading...</Text>;
+
   return (
     <RichInputContainer icon="back" back={back}>
       <View style={{flex: 1, justifyContent: 'space-between'}}>
-        <View style={{marginVertical: 10}}>
+        <View style={{marginVertical: 8}}>
           <FormHeading title="Review Event Info" />
-          {isFocused && (
-            <EventSnapshotList
-              data={eventData()}
-              schema={hikeSchema}
-              navigation={navigation}
-            />
-          )}
+          <EventSnapshotList
+            data={data.eventFormState}
+            schema={summerCampSchema}
+            navigation={navigation}
+          />
         </View>
         <SubmitBtn submit={submit} title="Complete" />
       </View>
@@ -92,4 +93,4 @@ const ConfirmHikeDetails = ({navigation}) => {
   );
 };
 
-export default ConfirmHikeDetails;
+export default ConfirmSummerCampDetails;

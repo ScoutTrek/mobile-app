@@ -4,7 +4,12 @@ import {createStackNavigator} from '@react-navigation/stack';
 import ChooseLocationView from '../event_components/ChooseLocation';
 import SummerCampDetails from './SummerCampDetails';
 import ChooseName from '../event_components/ChooseName';
-// import ChooseEndDateTime from '../event_components/ChooseEndDateTime';
+import ChooseDateTime from '../event_components/ChooseDateTime';
+import ChooseTwoTimes from '../event_components/ChooseTwoTimes';
+import CampoutDetails from '../campout/CampoutDetails';
+import ConfirmCampoutDetails from '../campout/ConfirmCampoutDetails';
+import ChooseOneTime from '../event_components/ChooseOneTime';
+import ConfirmSummerCampDetails from './ConfirmSummerCampDetails';
 
 const SummerCampStack = createStackNavigator();
 
@@ -15,7 +20,7 @@ const SummerCampStackNavigator = () => {
         headerShown: false,
       })}>
       <SummerCampStack.Screen
-        name="ChooseName"
+        name="ChooseTime"
         component={ChooseName}
         initialParams={{
           placeholder: 'What is your summer camp called?',
@@ -27,10 +32,21 @@ const SummerCampStackNavigator = () => {
         component={ChooseLocationView}
         initialParams={{
           placeholder: 'Where are you camping?',
+          nextView: 'ChooseDateTime',
+          valName: 'location',
+        }}
+      />
+      <SummerCampStack.Screen
+        name="ChooseDateTime"
+        component={ChooseDateTime}
+        options={{
+          animationEnabled: false,
+        }}
+        initialParams={{
+          chooseDateMsg: 'What day does your summer camp start?',
+          chooseTimeMsg: 'What time will Scouts be arriving at camp?',
           nextView: 'ChooseMeetPoint',
-          chooseDate: 'What day does your summer camp start?',
-          chooseTime: 'What time do Scouts need to arrive at camp?',
-          initialModal: 'date',
+          valName: 'datetime',
         }}
       />
       <SummerCampStack.Screen
@@ -38,26 +54,58 @@ const SummerCampStackNavigator = () => {
         component={ChooseLocationView}
         initialParams={{
           placeholder: 'Where should everyone meet?',
-          nextView: 'ChooseCheckoutTime',
-          chooseMeetTime: 'What time should everybody meet?',
-          chooseLeaveTime: 'What time do you plan to leave your meet place?',
-          initialModal: 'time',
+          nextView: 'ChooseMeetTime',
+          valName: 'meetLocation',
         }}
       />
-      {/*<SummerCampStack.Screen*/}
-      {/*  name="ChooseCheckoutTime"*/}
-      {/*  component={ChooseEndDateTime}*/}
-      {/*  initialParams={{*/}
-      {/*    placeholder: 'What day will camp end?',*/}
-      {/*    nextView: 'EventDetails',*/}
-      {/*    chooseCheckoutTime: 'What day will you check out of camp?',*/}
-      {/*    chooseReturnTime: 'Roughly what time will you return?',*/}
-      {/*    initialModal: 'date',*/}
-      {/*  }}*/}
-      {/*/>*/}
+      <SummerCampStack.Screen
+        name="ChooseMeetTime"
+        component={ChooseTwoTimes}
+        options={{
+          animationEnabled: false,
+        }}
+        initialParams={{
+          chooseTime1Msg: 'What time should everybody meet?',
+          chooseTime2Msg: 'What time do you plan to leave your meet place?',
+          nextView: 'EventDetails',
+          time1Name: 'meetTime',
+          time2Name: 'leaveTime',
+          btn1: 'Confirm Meet Time',
+          btn2: 'Confirm Leave Time',
+        }}
+      />
       <SummerCampStack.Screen
         name="EventDetails"
-        component={SummerCampDetails}
+        component={CampoutDetails}
+        initialParams={{nextView: 'ChooseEndDatetime'}}
+      />
+      <SummerCampStack.Screen
+        name="ChooseEndDatetime"
+        component={ChooseDateTime}
+        options={{
+          animationEnabled: false,
+        }}
+        initialParams={{
+          chooseDateMsg: 'What day will Scouts check out of camp?',
+          chooseTimeMsg: 'Around what time will activities be finished?',
+          nextView: 'ReturnTime',
+          valName: 'endDatetime',
+          dateName: 'endDate',
+          timeName: 'endTime',
+        }}
+      />
+      <SummerCampStack.Screen
+        name="ReturnTime"
+        component={ChooseOneTime}
+        initialParams={{
+          chooseTimeMsg: 'Around what time will you return from camp?',
+          nextView: 'ConfirmEventDetails',
+          valName: 'pickupTime',
+        }}
+      />
+      <SummerCampStack.Screen
+        name="ConfirmEventDetails"
+        component={ConfirmSummerCampDetails}
       />
     </SummerCampStack.Navigator>
   );

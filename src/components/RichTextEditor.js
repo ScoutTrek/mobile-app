@@ -59,7 +59,9 @@ class App extends Component {
   render() {
     const {heading} = this.props;
     return (
-      <KeyboardAvoidingView style={{marginTop: 20}} behavior="padding">
+      <KeyboardAvoidingView
+        style={{marginTop: 20, paddingBottom: 0}}
+        behavior="padding">
         <FormHeading title={heading} />
         <View
           style={{
@@ -186,6 +188,9 @@ class App extends Component {
               onStyleKeyPress={this.onStyleKeyPress}
             />
           </View>
+          {this.props.children && (
+            <View style={{paddingTop: 20}}>{this.props.children}</View>
+          )}
         </View>
       </KeyboardAvoidingView>
     );

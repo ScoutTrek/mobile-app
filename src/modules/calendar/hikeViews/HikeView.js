@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet, Alert, ScrollView} from 'react-native';
-import {WebView} from 'react-native-webview';
+import {View, Alert, ScrollView} from 'react-native';
 import EventHeader from '../components/EventHeader';
 import Colors from '../../../../constants/Colors';
 import Fonts from '../../../../constants/Fonts';
@@ -49,11 +48,24 @@ export const GET_HIKE = gql`
 const EventDetailsScreen = ({route, navigation}) => {
   const {currItem} = route.params;
   const {loading, error, data} = useQuery(GET_HIKE, {
-    fetchPolicy: 'network-only',
     variables: {id: currItem},
   });
 
-  const [deleteEvent] = useMutation(DELETE_EVENT);
+  const [deleteEvent] = useMutation(DELETE_EVENT, {
+    update(cache, {data: {deleteEvent}}) {
+      cache.modify({
+        id: cache.identify(deleteEvent.id),
+        fields: {
+          events(_, {DELETE}) {
+            return DELETE;
+          },
+          upcomingEvents(_, {DELETE}) {
+            return DELETE;
+          },
+        },
+      });
+    },
+  });
 
   const [address, setAddress] = useState('');
   const [meetAddress, setMeetAddress] = useState('');

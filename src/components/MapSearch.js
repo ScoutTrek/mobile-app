@@ -12,9 +12,15 @@ import {GOOGLE_MAPS_API_KEY} from '../../env';
 import Colors from '../../constants/Colors';
 import Fonts from '../../constants/Fonts';
 
-const SearchBar = ({locationToken, back, placeholder, _getPlaceDetails}) => {
+const SearchBar = ({
+  locationToken,
+  textValue,
+  back,
+  placeholder,
+  _getPlaceDetails,
+}) => {
   const [suggestedPlaces, setSuggestedPlaces] = useState();
-  const [searchText, setSearchText] = useState('');
+  const [searchText, setSearchText] = useState(textValue || '');
 
   const getSuggestedPlaces = async () => {
     const places = await fetch(

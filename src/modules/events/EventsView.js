@@ -13,27 +13,24 @@ const listData = [
   {
     id: 0,
     eventType: 'Hike',
-    title: 'CITIZEN ECO-DRIVE',
     subtitle: 'Plan a visit to the trail, let ScoutTrek take care of the rest.',
     image: {
       uri:
         'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1582556921/ScoutTrek/hiking_trip.png',
     },
   },
-  {
-    id: 1,
-    eventType: 'Troop Meeting',
-    title: 'NEXT-LEVEL WEAR',
-    subtitle: 'Plan your weekly meeting logistics in minutes.',
-    image: {
-      uri:
-        'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1582557266/ScoutTrek/ScoutBadgesImage.jpg',
-    },
-  },
+  // {
+  //   id: 1,
+  //   eventType: 'Troop Meeting',
+  //   subtitle: 'Plan your weekly meeting logistics in minutes.',
+  //   image: {
+  //     uri:
+  //       'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1582557266/ScoutTrek/ScoutBadgesImage.jpg',
+  //   },
+  // },
   {
     id: 2,
     eventType: 'Campout',
-    title: 'CITIZEN ECO-DRIVE',
     subtitle: 'Spend a few days in the wild outdoors.',
     image: {
       uri:

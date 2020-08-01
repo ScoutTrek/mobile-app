@@ -167,7 +167,7 @@ const CalendarView = ({navigation}) => {
       renderEmptyDate={renderEmptyDate}
       rowHasChanged={rowHasChanged}
       theme={{
-        dotColor: Colors.green,
+        dotColor: Colors.yellow,
         selectedDayBackgroundColor: Colors.purple,
         agendaTodayColor: Colors.purple,
         backgroundColor: '#F1F1F8',

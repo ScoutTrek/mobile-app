@@ -9,6 +9,8 @@ import CalModal from '../CalModal';
 const TimePicker = ({
   chooseTime1Msg,
   chooseTime2Msg,
+  btn1,
+  btn2,
   nextForm,
   time1,
   setTime1,
@@ -18,6 +20,7 @@ const TimePicker = ({
 }) => {
   const [showFirstModal, setShowFirstModal] = useState(true);
   const [showTimePicker, setShowTimePicker] = useState(Platform.OS === 'ios');
+
   return (
     <CalModal goBack={navigation.goBack}>
       {!time1 || showFirstModal ? (
@@ -55,7 +58,7 @@ const TimePicker = ({
               borderRadius: 4,
             }}>
             <Text style={{fontSize: 18, fontFamily: Fonts.primaryTextBold}}>
-              Confirm Meet Time
+              {btn1}
             </Text>
           </TouchableOpacity>
         </View>
@@ -71,18 +74,24 @@ const TimePicker = ({
               mode="time"
               is24Hour={false}
               display="default"
-              onChange={(event, date) => {
-                setShowTimePicker(Platform.OS === 'ios');
-                setTime2(new Date(date));
+              onChange={(event, time) => {
                 if (Platform.OS === 'android') {
-                  nextForm();
+                  setShowTimePicker(false);
+                  nextForm(time);
+                  setShowFirstModal(true);
                 }
+                setTime2(new Date(time));
               }}
             />
           )}
           <TouchableOpacity
             onPress={() => {
-              nextForm();
+              if (Platform.OS === 'ios') {
+                nextForm();
+                setShowFirstModal(true);
+              } else {
+                setShowTimePicker(true);
+              }
             }}
             style={{
               padding: 12,
@@ -91,7 +100,7 @@ const TimePicker = ({
               borderRadius: 4,
             }}>
             <Text style={{fontSize: 18, fontFamily: Fonts.primaryTextBold}}>
-              Choose Leave Time
+              {btn2}
             </Text>
           </TouchableOpacity>
         </View>

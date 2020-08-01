@@ -39,6 +39,7 @@
     "graphql": "^14.6.0",
     "graphql-tag": "^2.10.3",
     "moment": "^2.27.0",
+    "moment-timezone": "^0.5.31",
     "optimism": "^0.12.1",
     "patch-package": "^6.2.2",
     "postinstall-postinstall": "^2.1.0",

@@ -9,6 +9,7 @@ export default {
   brightGreen: '#20FC8F',
   darkGreen: '#137C4E',
   yellow: '#FFCC00',
+  lightYellow: '#e9d499',
   purple: '#7F5289',
   brown: '#3a2e04',
   lightBrown: '#605d51',

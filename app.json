@@ -31,7 +31,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.scouttrek.kalebdavenport",
-      "buildNumber": "1.0.20"
+      "buildNumber": "1.0.22"
     },
     "android": {
       "versionCode": 10,

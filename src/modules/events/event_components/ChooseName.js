@@ -10,19 +10,15 @@ export const eventData = makeVar({});
 
 const ChooseName = ({navigation, route}) => {
   const {nextView} = route.params;
-  const [name, setName] = useState('');
-  const [nameIsValid, setNameIsValid] = useState(false);
+  const [name, setName] = useState(eventData()?.title || '');
+  const [nameIsValid, setNameIsValid] = useState(eventData() === {} || false);
 
   const back = () => navigation.popToTop();
   const nextForm = () => {
     if (nameIsValid) {
       eventData({
-        name: {
-          title: 'Name',
-          value: name,
-          view: route.name,
-          type: 'name',
-        },
+        ...eventData(),
+        title: name,
       });
       navigation.navigate(route.params.edit ? 'ConfirmEventDetails' : nextView);
     }
@@ -54,7 +50,8 @@ const ChooseName = ({navigation, route}) => {
         </View>
         {nameIsValid && (
           <NextButton
-            text="Choose Location"
+            inline
+            text={eventData() === {} ? `Choose Location` : `Confirm`}
             iconName="ios-arrow-round-forward"
             onClick={nextForm}
           />

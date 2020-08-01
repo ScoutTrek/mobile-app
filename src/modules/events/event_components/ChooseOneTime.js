@@ -11,19 +11,14 @@ import CalModal from '../../../components/CalModal';
 const ChooseOneTime = ({navigation, route}) => {
   const {nextView, chooseTimeMsg} = route.params;
 
-  const [time, setTime] = useState(new Date('January 1, 2000 17:30:00'));
+  const [time, setTime] = useState(
+    eventData()?.[route.params.valName] || new Date('January 1, 2000 17:30:00')
+  );
 
   const nextForm = () => {
-    const prevData = eventData();
     eventData({
-      ...prevData,
-      [route.params.timeName]: {
-        title: toTitleCase(route.params.timeName),
-        value: moment(time).format('hh:mm A'),
-        time,
-        type: 'time',
-        view: route.name,
-      },
+      ...eventData(),
+      [route.params.valName]: time,
     });
     navigation.navigate(route.params.edit ? 'ConfirmEventDetails' : nextView);
   };

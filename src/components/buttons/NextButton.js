@@ -4,13 +4,15 @@ import {Ionicons} from '@expo/vector-icons';
 import Colors from '../../../constants/Colors';
 import Fonts from '../../../constants/Fonts';
 
-const NextButton = ({text, color, iconName, onClick}) => {
+const NextButton = ({inline, text, color, iconName, onClick}) => {
   return (
     <TouchableOpacity
       onPress={onClick}
-      style={
-        color ? {...styles.nextBtn, backgroundColor: color} : styles.nextBtn
-      }>
+      style={[
+        styles.nextBtn,
+        color && {backgroundColor: color},
+        !inline && {position: 'absolute', bottom: 24, right: 30},
+      ]}>
       <Text style={styles.text}>{text}</Text>
       <Ionicons size={35} name={iconName} color="white" style={{height: 35}} />
     </TouchableOpacity>
@@ -26,9 +28,6 @@ const styles = StyleSheet.create({
     height: 42,
     borderRadius: 21,
     paddingHorizontal: 25,
-    position: 'absolute',
-    bottom: 24,
-    right: 30,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,

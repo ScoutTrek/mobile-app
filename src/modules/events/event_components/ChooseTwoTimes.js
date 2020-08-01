@@ -5,29 +5,22 @@ import {toTitleCase} from '../../../components/utils/toTitleCase';
 import moment from 'moment';
 
 const ChooseTwoTimes = ({navigation, route}) => {
-  const {nextView, chooseTime1Msg, chooseTime2Msg} = route.params;
+  const {nextView, chooseTime1Msg, chooseTime2Msg, btn1, btn2} = route.params;
 
-  const [time1, setTime1] = useState(new Date('January 1, 2000 10:30:00'));
-  const [time2, setTime2] = useState(new Date('January 1, 2000 11:00:00'));
+  const formState = eventData();
 
-  const nextForm = () => {
-    const prevData = eventData();
+  const [time1, setTime1] = useState(
+    formState?.[route.params.time1Name] || new Date('January 1, 2000 10:30:00')
+  );
+  const [time2, setTime2] = useState(
+    formState?.[route.params.time2Name] || new Date('January 1, 2000 11:00:00')
+  );
+
+  const nextForm = (time2) => {
     eventData({
-      ...prevData,
-      [route.params.time1Name]: {
-        title: toTitleCase(route.params.time1Name),
-        value: moment(time1).format('hh:mm A'),
-        time: time1,
-        type: 'time',
-        view: route.name,
-      },
-      [route.params.time2Name]: {
-        title: toTitleCase(route.params.time2Name),
-        value: moment(time2).format('hh:mm A'),
-        time: time2,
-        type: 'time',
-        view: route.name,
-      },
+      ...formState,
+      [route.params.time1Name]: time1,
+      [route.params.time2Name]: time2,
     });
     navigation.navigate(route.params.edit ? 'ConfirmEventDetails' : nextView);
   };
@@ -36,6 +29,8 @@ const ChooseTwoTimes = ({navigation, route}) => {
     <TimePicker
       chooseTime1Msg={chooseTime1Msg}
       chooseTime2Msg={chooseTime2Msg}
+      btn1={btn1}
+      btn2={btn2}
       nextForm={nextForm}
       time1={time1}
       setTime1={setTime1}

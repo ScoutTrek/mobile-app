@@ -8,14 +8,21 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import {gql, useApolloClient, useMutation, useQuery} from '@apollo/client';
+import {
+  gql,
+  makeVar,
+  useApolloClient,
+  useMutation,
+  useQuery,
+} from '@apollo/client';
 import GradientButton from '../../components/buttons/GradientButton';
 import Constants from 'expo-constants';
 import Colors from '../../../constants/Colors';
 import Fonts from '../../../constants/Fonts';
 import {AntDesign, Ionicons} from '@expo/vector-icons';
 import RichInputContainer from '../../components/containers/RichInputContainer';
-import {userToken} from '../../../App';
+
+export const userToken = makeVar('');
 
 const SIGN_UP = gql`
   mutation SignUp($userInfo: SignupInput!) {

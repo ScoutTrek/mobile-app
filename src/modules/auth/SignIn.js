@@ -15,9 +15,8 @@ import GradientButton from '../../components/buttons/GradientButton';
 import AuthInput from './components/Input';
 
 import {gql, useApolloClient, useMutation} from '@apollo/client';
-import {GET_TOKEN} from './JoinPatrol';
 import Footer from './components/Footer';
-import {userToken} from '../../../App';
+import {userToken} from './JoinPatrol';
 
 const formReducer = (state, action) => {
   if (action.type === 'UPDATE_INPUT_FIELD') {

@@ -11,12 +11,13 @@ const CalModal = (props) => {
         style={{
           flex: 1,
           marginTop: Constants.statusBarHeight,
+          marginBottom: 0,
           alignItems: 'center',
           justifyContent: 'center',
         }}>
         <LinearGradient
           // Background Linear Gradient
-          colors={['rgba(0,0,0,0.88)', 'rgba(0,0,0,0.78)']}
+          colors={['rgba(0,0,0,0.8)', 'rgba(0,0,0,0.6)']}
           style={{
             position: 'absolute',
             left: 0,

@@ -17,7 +17,6 @@ import {
   ApolloLink,
   InMemoryCache,
   from,
-  makeVar,
   useQuery,
   gql,
 } from '@apollo/client';
@@ -29,6 +28,10 @@ import MainTabNavigator from './src/modules/navigation/MainTabNavigator';
 import ViewEventStackNavigator from './src/modules/navigation/ViewEventStack';
 
 import * as Sentry from 'sentry-expo';
+
+// Global Apollo Variable that determines if the user is signed in or not.
+import {userToken} from './src/modules/auth/JoinPatrol';
+import {eventData} from './src/modules/events/event_components/ChooseName';
 
 Sentry.init({
   dsn:
@@ -66,9 +69,6 @@ const authMiddleware = new ApolloLink(async (operation, forward) => {
   });
   return forward(operation);
 });
-
-// Global Apollo Variable that determines if the user is signed in or not.
-export const userToken = makeVar('');
 
 const GET_USER_TOKEN = gql`
   query UserToken {
@@ -154,6 +154,11 @@ export default function App() {
             userToken: {
               read(_, {variables}) {
                 return userToken();
+              },
+            },
+            eventFormState: {
+              read() {
+                return eventData();
               },
             },
           },
