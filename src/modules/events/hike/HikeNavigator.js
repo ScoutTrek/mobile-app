@@ -9,6 +9,7 @@ import HikeDetails from './HikeDetails';
 import ChooseTwoTimes from '../event_components/ChooseTwoTimes';
 import ConfirmHikeDetails from './ConfirmHikeDetails';
 import ChooseOneTime from '../event_components/ChooseOneTime';
+import UpdateEventDetails from '../event_components/UpdateEventDetails';
 
 const HikeStack = createStackNavigator();
 
@@ -94,6 +95,7 @@ const HikeStackNavigator = () => {
         name="ConfirmEventDetails"
         component={ConfirmHikeDetails}
       />
+      <HikeStack.Screen name="EditEvent" component={UpdateEventDetails} />
     </HikeStack.Navigator>
   );
 };

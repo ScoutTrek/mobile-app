@@ -64,8 +64,7 @@ const ConfirmCampoutDetails = ({navigation}) => {
       .then(() => {
         navigation.popToTop();
         navigation.pop();
-        navigation.navigate('Calendar');
-        eventData({});
+        navigation.navigate('UpcomingEvents');
       })
       .catch((err) => console.log(err));
   };
@@ -83,6 +82,7 @@ const ConfirmCampoutDetails = ({navigation}) => {
           <FormHeading title="Review Event Info" />
           <EventSnapshotList
             data={data.eventFormState}
+            edit="create"
             schema={campoutSchema}
             navigation={navigation}
           />

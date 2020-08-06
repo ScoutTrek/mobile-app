@@ -18,6 +18,7 @@ import {gql, useMutation, useQuery} from '@apollo/client';
 import {GET_EVENTS} from '../../calendar/CalendarView';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
 import SubmitBtn from '../../../components/buttons/SubmitButton';
+import FormHeading from '../../../components/Headings/FormHeading';
 
 export const weekDays = {
   SUNDAY: 0,
@@ -91,9 +92,6 @@ const ScoutMeetingDetails = ({navigation, route}) => {
   });
 
   // ## Below will become a reducer
-
-  const [time, setTime] = useState(new Date(Date.now()));
-  const [showClock, setShowClock] = useState(false);
   const [weekday, setWeekday] = useState('MONDAY');
 
   // Add meeting day ranges in the future.
@@ -124,14 +122,12 @@ const ScoutMeetingDetails = ({navigation, route}) => {
     }).catch((err) => console.log(err));
     navigation.popToTop();
     navigation.pop();
-    navigation.navigate('Calendar');
+    navigation.navigate('UpcomingEvents');
   };
 
   return (
     <RichInputContainer icon="back" back={back}>
-      <Text style={styles.formHeading}>
-        What day will this Troop Meeting be on?
-      </Text>
+      <FormHeading title="What day will your Troop meeting take place?" />
       <View style={styles.time}>
         <RadioForm
           radio_props={[
@@ -150,27 +146,6 @@ const ScoutMeetingDetails = ({navigation, route}) => {
           initial={'MONDAY'}
           onPress={(value) => setWeekday(value)}
         />
-        {/*</View>*/}
-        {/*<Text style={styles.formHeading}>What time will you start?</Text>*/}
-        {/*<View style={styles.dateTime}>*/}
-        {/*  <Button*/}
-        {/*    title="Pick a time"*/}
-        {/*    onPress={() => {*/}
-        {/*      showClock ? setShowClock(false) : setShowClock(true);*/}
-        {/*    }}*/}
-        {/*  />*/}
-        {/*  {showClock && (*/}
-        {/*    <DateTimePicker*/}
-        {/*      value={time}*/}
-        {/*      minuteInterval={10}*/}
-        {/*      mode="time"*/}
-        {/*      is24Hour={false}*/}
-        {/*      display="default"*/}
-        {/*      onChange={(event, date) => {*/}
-        {/*        setTime(new Date(date));*/}
-        {/*      }}*/}
-        {/*    />*/}
-        {/*  )}*/}
       </View>
 
       <RTE
@@ -196,7 +171,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     width: '100%',
     paddingHorizontal: 12,
-    // justifyContent: 'center',
     alignItems: 'center',
   },
   formHeading: {

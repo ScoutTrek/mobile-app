@@ -25,7 +25,6 @@ export const GET_SCOUT_MEETING = gql`
       time
       datetime
       day
-      shakedown
       messages {
         _id
         text

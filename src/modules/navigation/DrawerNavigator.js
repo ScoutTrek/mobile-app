@@ -84,17 +84,9 @@ function CustomDrawerContent(props) {
         }}>
         <View>
           <DrawerItemList {...props} />
-          <DrawerItem
-            label="Logout"
-            onPress={async () => {
-              await userToken('');
-              await client.resetStore();
-              await AsyncStorage.removeItem('userToken');
-            }}
-          />
-          {data.user.role === 'SCOUT' && (
+          {data.user.role && (
             <View>
-              <View style={{padding: 22, alignItems: 'center'}}>
+              <View style={{padding: 20}}>
                 <Text style={{fontSize: 18, fontFamily: Fonts.primaryTextBold}}>
                   {data.user.name}
                 </Text>
@@ -115,12 +107,11 @@ function CustomDrawerContent(props) {
                   {data.user.role}
                 </Text>
               </View>
-              <View style={{padding: 24, alignItems: 'flex-start'}}>
+              <View style={{padding: 20, alignItems: 'flex-start'}}>
                 <Text
                   style={{
                     fontSize: 16,
                     fontFamily: Fonts.primaryTextBold,
-                    marginTop: 18,
                   }}>
                   Patrol
                 </Text>
@@ -136,6 +127,14 @@ function CustomDrawerContent(props) {
             </View>
           )}
         </View>
+        <DrawerItem
+          label="Logout"
+          onPress={async () => {
+            await userToken('');
+            await client.resetStore();
+            await AsyncStorage.removeItem('userToken');
+          }}
+        />
       </View>
     </DrawerContentScrollView>
   );

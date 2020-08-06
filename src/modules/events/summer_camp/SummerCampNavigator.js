@@ -6,10 +6,9 @@ import SummerCampDetails from './SummerCampDetails';
 import ChooseName from '../event_components/ChooseName';
 import ChooseDateTime from '../event_components/ChooseDateTime';
 import ChooseTwoTimes from '../event_components/ChooseTwoTimes';
-import CampoutDetails from '../campout/CampoutDetails';
-import ConfirmCampoutDetails from '../campout/ConfirmCampoutDetails';
 import ChooseOneTime from '../event_components/ChooseOneTime';
 import ConfirmSummerCampDetails from './ConfirmSummerCampDetails';
+import UpdateEventDetails from '../event_components/UpdateEventDetails';
 
 const SummerCampStack = createStackNavigator();
 
@@ -76,7 +75,7 @@ const SummerCampStackNavigator = () => {
       />
       <SummerCampStack.Screen
         name="EventDetails"
-        component={CampoutDetails}
+        component={SummerCampDetails}
         initialParams={{nextView: 'ChooseEndDatetime'}}
       />
       <SummerCampStack.Screen
@@ -107,6 +106,7 @@ const SummerCampStackNavigator = () => {
         name="ConfirmEventDetails"
         component={ConfirmSummerCampDetails}
       />
+      <SummerCampStack.Screen name="EditEvent" component={UpdateEventDetails} />
     </SummerCampStack.Navigator>
   );
 };

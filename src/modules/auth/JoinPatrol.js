@@ -21,6 +21,7 @@ import Colors from '../../../constants/Colors';
 import Fonts from '../../../constants/Fonts';
 import {AntDesign, Ionicons} from '@expo/vector-icons';
 import RichInputContainer from '../../components/containers/RichInputContainer';
+import AddItemForm from './components/AddItemFormSmall';
 
 export const userToken = makeVar('');
 
@@ -51,7 +52,6 @@ const ADD_PATROL = gql`
 `;
 
 const JoinPatrol = ({navigation, route}) => {
-  const client = useApolloClient();
   const [signUp, signUpData] = useMutation(SIGN_UP);
   const [addPatrol, {data: patrolData}] = useMutation(ADD_PATROL, {
     onCompleted: (data) => setPatrolId(data.addPatrol.id),
@@ -63,7 +63,6 @@ const JoinPatrol = ({navigation, route}) => {
   const [isValid, setIsValid] = useState(false);
 
   const {data, error, loading} = useQuery(GET_PATROLS, {
-    fetchPolicy: 'network-only',
     pollInterval: 500,
     variables: {
       troopId: route.params.troop,
@@ -144,46 +143,26 @@ const JoinPatrol = ({navigation, route}) => {
             </Text>
           </TouchableOpacity>
         ))}
-        <View style={styles.createPatrolWidget}>
-          <Text style={styles.patrolHeading}>
-            Add your Patrol if you don't see yours listed above.
-          </Text>
-          <View style={{flexDirection: 'row'}}>
-            <TextInput
-              placeholder="patrol name..."
-              style={styles.patrolName}
-              onChangeText={(value) => {
-                setPatrolName(value);
-                if (value.length > 2) {
-                  setPatrolIsValid(true);
-                } else {
-                  setPatrolIsValid(false);
-                }
-              }}
-              value={patrolName}
-            />
-            {patrolIsValid && (
-              <TouchableOpacity
-                onPress={async () => {
-                  await addPatrol({
-                    variables: {
-                      troopId: route.params.troop,
-                      patrolInfo: {
-                        name: patrolName,
-                      },
-                    },
-                  });
-                  setPatrolName('');
-                  setPatrolIsValid(false);
-                }}
-                style={styles.btnAddPatrol}>
-                <Text style={styles.addPatrol}>
-                  Add <AntDesign name="plus" size={18} />
-                </Text>
-              </TouchableOpacity>
-            )}
-          </View>
-        </View>
+        <AddItemForm
+          value={patrolName}
+          setValue={setPatrolName}
+          isValid={patrolIsValid}
+          setIsValid={setPatrolIsValid}
+          onPress={async () => {
+            await addPatrol({
+              variables: {
+                troopId: route.params.troop,
+                patrolInfo: {
+                  name: patrolName,
+                },
+              },
+            });
+            setPatrolName('');
+            setPatrolIsValid(false);
+          }}
+          heading="Add your Patrol if you don't see yours listed above."
+          placeholder="patrol name..."
+        />
       </View>
 
       <View style={styles.btnContainer}>
@@ -261,47 +240,6 @@ const styles = StyleSheet.create({
   btnContainer: {
     paddingVertical: 22,
     paddingHorizontal: 20,
-  },
-  createPatrolWidget: {
-    width: '100%',
-    borderColor: Colors.orange,
-    borderWidth: 1,
-    borderRadius: 7,
-    marginTop: 40,
-    padding: 5,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  patrolHeading: {
-    padding: 10,
-    fontSize: 18,
-    fontFamily: Fonts.primaryTextBold,
-  },
-  patrolName: {
-    flex: 1,
-    height: 48,
-    backgroundColor: Colors.offWhite,
-    fontSize: 16,
-    padding: 12,
-    margin: 6,
-    marginLeft: 7,
-    borderRadius: 7,
-    borderColor: Colors.tabIconDefault,
-    borderWidth: 1,
-  },
-  btnAddPatrol: {
-    height: 48,
-    justifyContent: 'center',
-    alignItems: 'center',
-    margin: 6,
-    marginRight: 7,
-    borderRadius: 7,
-    padding: 10,
-    backgroundColor: Colors.lightGreen,
-  },
-  addPatrol: {
-    fontSize: 18,
-    fontFamily: Fonts.primaryTextBold,
   },
   check: {
     position: 'absolute',

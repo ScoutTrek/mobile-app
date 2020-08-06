@@ -26,7 +26,11 @@ const CampoutDetails = ({navigation, route}) => {
       });
       Keyboard.dismiss();
       navigation.navigate(
-        route.params.edit ? 'ConfirmEventDetails' : route.params.nextView
+        route.params.edit === 'create'
+          ? 'ConfirmEventDetails'
+          : route.params.edit === 'edit'
+          ? 'EditEvent'
+          : route.params.nextView
       );
     }
   };

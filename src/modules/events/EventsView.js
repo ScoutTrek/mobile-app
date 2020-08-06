@@ -87,7 +87,7 @@ const EventTypesScreen = ({navigation}) => {
         text="Cancel"
         iconName="ios-close"
         color={Colors.darkOrange}
-        onClick={() => navigation.goBack()}
+        onClick={() => navigation.navigate('UpcomingEvents')}
       />
     </View>
   );

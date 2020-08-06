@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -14,6 +14,7 @@ import Fonts from '../../../constants/Fonts';
 
 import useFetchEvents from '../../hooks/useFetchEvents';
 import {gql, useQuery} from '@apollo/client';
+import moment from 'moment';
 
 export const GET_EVENTS = gql`
   query ALL_EVENTS {
@@ -50,16 +51,12 @@ const getColor = (label) => {
   }
 };
 
+const currDate = new Date();
+
 const CalendarView = ({navigation}) => {
   const {data, loading, error} = useQuery(GET_EVENTS, {pollInterval: 10000});
 
-  const [items, setItems] = useState({});
-
-  const getItems = useFetchEvents(data);
-
-  const rowHasChanged = (r1, r2) => {
-    return r1.name !== r2.name;
-  };
+  const [events, setEvents] = useFetchEvents();
 
   const renderEmptyDate = () => {
     return (
@@ -155,17 +152,19 @@ const CalendarView = ({navigation}) => {
   if (loading) return <Text>Loading...</Text>;
   return (
     <Agenda
-      style={styles.container}
       current={new Date()}
-      items={items}
-      onVisibleMonthsChange={() => {}}
-      loadItemsForMonth={(calData) => {
-        const newItems = getItems(calData);
-        setItems(newItems);
+      style={styles.container}
+      items={events}
+      onVisibleMonthsChange={(calData) => {
+        if (calData.length === 2) {
+          setEvents(data, calData[0]);
+        }
+        if (calData.length === 3) {
+          setEvents(data, calData[1]);
+        }
       }}
       renderItem={renderItem}
       renderEmptyDate={renderEmptyDate}
-      rowHasChanged={rowHasChanged}
       theme={{
         dotColor: Colors.yellow,
         selectedDayBackgroundColor: Colors.purple,

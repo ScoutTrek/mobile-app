@@ -1,7 +1,5 @@
-import React from 'react';
-
-const randomNumber = (min, max) =>
-  Math.floor(Math.random() * (max - min + 1) + min);
+import React, {useState} from 'react';
+import moment from 'moment';
 
 function daysInMonth(month, year) {
   return new Date(year, month, 0).getDate();
@@ -9,7 +7,7 @@ function daysInMonth(month, year) {
 
 function getMonthObject(datestring) {
   const absDate = new Date(datestring);
-  const offset = -1 * absDate.getTimezoneOffset() * 60 * 1000;
+  const offset = absDate.getTimezoneOffset() * 60 * 1000;
   const date = new Date(absDate.getTime() - offset);
   let monthObject = {};
   for (let i = 1; i <= daysInMonth(date.getMonth(), date.getFullYear()); i++) {
@@ -21,36 +19,42 @@ function getMonthObject(datestring) {
   return monthObject;
 }
 
-const useFetchEvents = (data) => {
-  if (data) {
-    return (calData) => {
+const useFetchEvents = () => {
+  const [events, setEvents] = useState({});
+  const [prevRenderMonth, setPrevRenderMonth] = useState();
+  const getItems = (data, calData) => {
+    if (calData.month === prevRenderMonth) return;
+    if (calData) {
+      const eventsInMonth = data.events.filter(
+        ({datetime}) =>
+          new Date(+datetime).getMonth() + 1 === calData.month &&
+          new Date(+datetime).getFullYear() === 2020
+      );
+
       const items = getMonthObject(calData.dateString);
-      data.events.forEach(({id, title, creator, datetime, type}) => {
-        let strDate = new Date(parseInt(datetime)).toISOString();
-        strDate = strDate.split('T')[0];
+      if (eventsInMonth === []) return;
+      eventsInMonth.forEach(({id, title, creator, datetime, type}) => {
         const name = creator.name.split(' ');
         if (type === 'ScoutMeeting') {
           type = 'Meeting';
         }
-        if (
-          calData.month === new Date(parseInt(datetime)).getMonth() + 1 &&
-          new Date(parseInt(datetime)).getFullYear() === 2020
-        ) {
-          items[strDate].push({
-            title,
+        const strDate = moment(+datetime).format('YYYY-MM-DD');
+        items[strDate].push({
+          title,
+          type,
+          id,
+          datetime,
+          labels: [
+            `${name[0]} ${name[1] ? name[1].substring(0, 1) : ''}`,
             type,
-            id,
-            datetime,
-            labels: [
-              `${name[0]} ${name[1] ? name[1].substring(0, 1) : ''}`,
-              type,
-            ],
-          });
-        }
+          ],
+        });
+        setPrevRenderMonth(calData.month);
+        setEvents(items);
       });
-      return items;
-    };
-  }
+    }
+  };
+  return [events, getItems];
 };
 
 export default useFetchEvents;

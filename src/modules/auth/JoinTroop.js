@@ -1,18 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Alert,
-} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Alert} from 'react-native';
 import {gql, useQuery} from '@apollo/client';
 import Constants from 'expo-constants';
 import Colors from '../../../constants/Colors';
 import Fonts from '../../../constants/Fonts';
 import {AntDesign, Ionicons} from '@expo/vector-icons';
 import NextButton from '../../components/buttons/NextButton';
+import RichInputContainer from '../../components/containers/RichInputContainer';
 
 const GET_TROOPS = gql`
   query GetTroops {
@@ -42,8 +36,8 @@ const JoinTroop = ({navigation, route}) => {
       navigation.navigate(route.params.nextView, signUpData);
     } else {
       Alert.alert(
-        'No troop selected.',
-        'please select the troop that you belong to or add a new one.'
+        'No Troop selected.',
+        'please select the Troop that you belong to or add a new one.'
       );
     }
   };
@@ -52,85 +46,83 @@ const JoinTroop = ({navigation, route}) => {
   if (error) return <Text>`Error! ${error}`</Text>;
 
   return (
-    <KeyboardAvoidingView style={{flex: 1}} behavior="padding">
-      <View style={{flex: 1}}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.formHeading}>What troop are you in?</Text>
-          {data.troops.map((troop) => (
-            <TouchableOpacity
-              onPress={() => {
-                setIsValid(true);
-                setTroopId(troop.id);
-              }}
-              style={
-                troop.id === troopId
-                  ? [styles.patrol, styles.active]
-                  : styles.patrol
-              }
-              key={troop.id}>
-              {troop.id === troopId && (
-                <Ionicons style={styles.check} name="ios-checkmark" size={32} />
-              )}
-              <Text
-                numberOfLines={1}
-                style={{
-                  fontSize: 15,
-                  fontWeight: 'bold',
-                  fontFamily: Fonts.primaryTextBold,
-                  color: '#fff',
-                  paddingHorizontal: 10,
-                }}>
-                Troop {troop.unitNumber} of {troop.council} council
-              </Text>
-            </TouchableOpacity>
-          ))}
-          {!isValid && <Text>Please select a troop or add one below</Text>}
-          <View style={styles.btnContainer}>
-            <TouchableOpacity
+    <RichInputContainer icon="back" back={navigation.goBack}>
+      <View style={styles.inputContainer}>
+        <Text style={styles.formHeading}>What Troop are you in?</Text>
+        {data.troops.map((troop) => (
+          <TouchableOpacity
+            onPress={() => {
+              setIsValid(true);
+              setTroopId(troop.id);
+            }}
+            style={
+              troop.id === troopId
+                ? [styles.patrol, styles.active]
+                : styles.patrol
+            }
+            key={troop.id}>
+            {troop.id === troopId && (
+              <Ionicons style={styles.check} name="ios-checkmark" size={32} />
+            )}
+            <Text
+              numberOfLines={1}
               style={{
-                justifyContent: 'center',
-                width: '100%',
-                borderRadius: 15,
-                backgroundColor: '#A0CD72',
-                paddingHorizontal: 20,
-                borderWidth: 1,
-              }}
-              onPress={() => {
-                const signUpData = {...route.params};
-                delete signUpData.nextView;
-                navigation.navigate('CreateTroop', signUpData);
+                fontSize: 15,
+                fontWeight: 'bold',
+                fontFamily: Fonts.primaryTextBold,
+                color: '#fff',
+                paddingHorizontal: 10,
               }}>
-              <View
+              Troop {troop.unitNumber} of {troop.council} council
+            </Text>
+          </TouchableOpacity>
+        ))}
+        {!isValid && <Text>Please select a troop or add one below</Text>}
+        <View style={styles.btnContainer}>
+          <TouchableOpacity
+            style={{
+              justifyContent: 'center',
+              width: '100%',
+              borderRadius: 15,
+              backgroundColor: '#A0CD72',
+              paddingHorizontal: 20,
+              borderWidth: 1,
+            }}
+            onPress={() => {
+              const signUpData = {...route.params};
+              delete signUpData.nextView;
+              navigation.navigate('CreateTroop', signUpData);
+            }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+              }}>
+              <Text
                 style={{
-                  flexDirection: 'row',
-                  justifyContent: 'center',
+                  fontSize: 19,
+                  paddingVertical: 10,
+                  fontFamily: Fonts.primaryText,
                 }}>
-                <Text
-                  style={{
-                    fontSize: 19,
-                    paddingVertical: 10,
-                    fontFamily: Fonts.primaryText,
-                  }}>
-                  Add Troop
-                </Text>
-                <AntDesign
-                  style={{position: 'absolute', left: 15, top: 10}}
-                  name="pluscircleo"
-                  size={24}
-                />
-              </View>
-            </TouchableOpacity>
-          </View>
+                Add Troop
+              </Text>
+              <AntDesign
+                style={{position: 'absolute', left: 15, top: 10}}
+                name="pluscircleo"
+                size={24}
+              />
+            </View>
+          </TouchableOpacity>
         </View>
-        {isValid && (
-          <NextButton
-            text="Select your role"
-            iconName="ios-arrow-round-forward"
-            onClick={nextForm}
-          />
-        )}
       </View>
-    </KeyboardAvoidingView>
+      {isValid && (
+        <NextButton
+          text="Select your role"
+          iconName="ios-arrow-round-forward"
+          onClick={nextForm}
+        />
+      )}
+    </RichInputContainer>
   );
 };
 
@@ -172,19 +164,6 @@ const styles = StyleSheet.create({
     borderColor: Colors.purple,
     borderRadius: 10,
     fontSize: 17,
-    flexDirection: 'row',
-    fontFamily: Fonts.primaryText,
-    backgroundColor: '#fff',
-  },
-  troopNumber: {
-    padding: 16,
-    alignItems: 'flex-start',
-    width: 100,
-    height: 50,
-    borderWidth: 1,
-    borderRadius: 10,
-    borderColor: Colors.purple,
-    fontSize: 15,
     flexDirection: 'row',
     fontFamily: Fonts.primaryText,
     backgroundColor: '#fff',

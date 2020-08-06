@@ -11,18 +11,17 @@ import {GET_EVENTS} from '../CalendarView';
 import RadioForm from 'react-native-simple-radio-button';
 import RTE from '../../../components/RichTextEditor';
 import Toggle from '../../../components/formfields/Toggle';
-import {GET_SCOUT_MEETING} from '../scoutMeetingViews/ScoutMeetingView';
+import {GET_SCOUT_MEETING} from './ScoutMeetingView';
 import {
   getInitialDate,
   weekDays,
 } from '../../events/meeting/ScoutMeetingDetails';
-import {GET_EXPO_TOKEN} from '../../events/hike/HikeDetails';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
 import SubmitBtn from '../../../components/buttons/SubmitButton';
 
 const UPDATE_SCOUT_MEETING = gql`
-  mutation UpdateScoutMeeting($id: ID!, $updates: UpdateScoutMeetingInput!) {
-    event: updateScoutMeeting(id: $id, input: $updates) {
+  mutation UpdateEvent($id: ID!, $updates: UpdateEventInput!) {
+    event: updateEvent(id: $id, input: $updates) {
       id
       type
       title

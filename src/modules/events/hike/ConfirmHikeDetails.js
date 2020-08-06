@@ -4,8 +4,7 @@ import SubmitBtn from '../../../components/buttons/SubmitButton';
 import EventSnapshotList from '../../../components/EventSnapshotList';
 import Colors from '../../../../constants/Colors';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
-import {gql, useMutation} from '@apollo/client';
-import {useIsFocused} from '@react-navigation/native';
+import {gql, useMutation, useQuery} from '@apollo/client';
 import {GET_EVENTS} from '../../calendar/CalendarView';
 import {eventData} from '../event_components/ChooseName';
 import FormHeading from '../../../components/Headings/FormHeading';
@@ -35,7 +34,12 @@ const ADD_HIKE = gql`
   }
 `;
 
-const ConfirmHikeDetails = ({navigation}) => {
+const ConfirmEventDetails = ({navigation}) => {
+  const {data, loading} = useQuery(gql`
+    {
+      eventFormState @client
+    }
+  `);
   const [addHike] = useMutation(ADD_HIKE, {
     update(cache, {data: {event}}) {
       try {
@@ -52,7 +56,6 @@ const ConfirmHikeDetails = ({navigation}) => {
       }
     },
   });
-  const isFocused = useIsFocused();
 
   const submit = () => {
     addHike({
@@ -63,7 +66,7 @@ const ConfirmHikeDetails = ({navigation}) => {
       .then(() => {
         navigation.popToTop();
         navigation.pop();
-        navigation.navigate('Calendar');
+        navigation.navigate('UpcomingEvents');
         eventData({});
       })
       .catch((err) => console.log(err));
@@ -78,13 +81,13 @@ const ConfirmHikeDetails = ({navigation}) => {
       <View style={{flex: 1, justifyContent: 'space-between'}}>
         <View style={{marginVertical: 10}}>
           <FormHeading title="Review Event Info" />
-          {isFocused && (
-            <EventSnapshotList
-              data={eventData()}
-              schema={hikeSchema}
-              navigation={navigation}
-            />
-          )}
+
+          <EventSnapshotList
+            data={data.eventFormState}
+            edit="create"
+            schema={hikeSchema}
+            navigation={navigation}
+          />
         </View>
         <SubmitBtn submit={submit} title="Complete" />
       </View>
@@ -92,4 +95,4 @@ const ConfirmHikeDetails = ({navigation}) => {
   );
 };
 
-export default ConfirmHikeDetails;
+export default ConfirmEventDetails;

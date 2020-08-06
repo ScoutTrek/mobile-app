@@ -20,7 +20,13 @@ const ChooseName = ({navigation, route}) => {
         ...eventData(),
         title: name,
       });
-      navigation.navigate(route.params.edit ? 'ConfirmEventDetails' : nextView);
+      navigation.navigate(
+        route.params.edit === 'create'
+          ? 'ConfirmEventDetails'
+          : route.params.edit === 'edit'
+          ? 'EditEvent'
+          : nextView
+      );
     }
   };
 

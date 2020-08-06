@@ -16,6 +16,8 @@ import {GOOGLE_MAPS_API_KEY} from '../../../../env';
 
 import Time from '../../../components/EventInfoComponents/Time';
 import Description from '../../../components/EventInfoComponents/Description';
+import {cloneDeep} from 'lodash';
+import {eventData} from '../../events/event_components/ChooseName';
 
 export const getAddress = async (latitude, longitude) => {
   const results = await ExpoLocation.reverseGeocodeAsync({
@@ -39,21 +41,21 @@ export const GET_CAMPOUT = gql`
   query GetCampout($id: ID!) {
     event: campout(id: $id) {
       id
-      type
       title
       description
       datetime
       meetTime
       leaveTime
       endDatetime
-      numDays
       location {
         lat
         lng
+        address
       }
       meetLocation {
         lat
         lng
+        address
       }
       creator {
         id
@@ -148,7 +150,17 @@ const CampoutDetailsScreen = ({route, navigation}) => {
         <InlineButton
           title="Edit"
           onPress={() => {
-            navigation.navigate('EditCampout', {currItem});
+            const campoutData = cloneDeep(data.event);
+            delete campoutData.id;
+            delete campoutData.creator;
+            eventData(campoutData);
+            navigation.navigate('EditCampout', {
+              screen: 'EditEvent',
+              params: {
+                id: currItem,
+                type: 'Campout',
+              },
+            });
           }}
         />
         <InlineButton

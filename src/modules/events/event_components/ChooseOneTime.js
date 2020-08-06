@@ -12,7 +12,9 @@ const ChooseOneTime = ({navigation, route}) => {
   const {nextView, chooseTimeMsg} = route.params;
 
   const [time, setTime] = useState(
-    eventData()?.[route.params.valName] || new Date('January 1, 2000 17:30:00')
+    moment(+eventData()?.[route.params.valName], 'MM-DD-YYYY').isValid()
+      ? moment(+eventData()?.[route.params.valName])
+      : new Date('January 1, 2000 17:30:00')
   );
 
   const nextForm = () => {
@@ -20,7 +22,13 @@ const ChooseOneTime = ({navigation, route}) => {
       ...eventData(),
       [route.params.valName]: time,
     });
-    navigation.navigate(route.params.edit ? 'ConfirmEventDetails' : nextView);
+    navigation.navigate(
+      route.params.edit === 'create'
+        ? 'ConfirmEventDetails'
+        : route.params.edit === 'edit'
+        ? 'EditEvent'
+        : nextView
+    );
   };
 
   return (

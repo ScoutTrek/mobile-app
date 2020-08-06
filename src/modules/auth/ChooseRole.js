@@ -1,14 +1,13 @@
-import React from 'react';
-import {
-  KeyboardAvoidingView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {useState} from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Colors from '../../../constants/Colors';
 import Fonts from '../../../constants/Fonts';
 import Constants from 'expo-constants';
+import RichInputContainer from '../../components/containers/RichInputContainer';
+import {Ionicons} from '@expo/vector-icons';
+import NextButton from '../../components/buttons/NextButton';
+import AddItemForm from './components/AddItemFormSmall';
+import FormHeading from '../../components/Headings/FormHeading';
 
 const ROLES = [
   'SCOUTMASTER',
@@ -19,48 +18,121 @@ const ROLES = [
 ];
 
 const ChooseRole = ({navigation, route}) => {
+  const [role, setRole] = useState('');
+  const [isValid, setIsValid] = useState(false);
+  const [childNameIsValid, setChildNameIsValid] = useState(false);
+  const [childName, setChildName] = useState('');
+  const [children, setChildren] = useState([]);
+
+  const nextForm = () => {
+    let signUpData;
+    if (role === 'PARENT') {
+      signUpData = {
+        ...route.params,
+        role,
+        children,
+      };
+    } else {
+      signUpData = {
+        ...route.params,
+        role,
+      };
+    }
+    delete signUpData.nextView;
+    navigation.navigate(route.params.nextView, signUpData);
+  };
+
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      keyboardVerticalOffset={0}
-      style={{flex: 1}}
-      enabled>
-      <View style={{flex: 1}}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.formHeading}>
-            What is your role within the Troop?
-          </Text>
-          {ROLES.map((role) => (
-            <TouchableOpacity
-              onPress={() => {
-                const signUpData = {
-                  ...route.params,
-                  role,
-                };
-                delete signUpData.nextView;
-                navigation.navigate(route.params.nextView, signUpData);
-              }}
-              style={styles.role}
-              key={role}>
-              <Text
-                style={{
-                  fontSize: 18,
-                  fontFamily: Fonts.primaryTextBold,
-                  color: '#fff',
-                }}>
-                {role.replace(/_/g, ' ')}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+    <RichInputContainer icon="back" back={navigation.goBack}>
+      <View style={styles.inputContainer}>
+        <Text style={styles.formHeading}>
+          What is your role within the Troop?
+        </Text>
+        {ROLES.map((currRole) => (
+          <TouchableOpacity
+            onPress={() => {
+              setIsValid(currRole !== 'PARENT');
+              setRole(currRole);
+            }}
+            style={[styles.role, currRole === role && styles.active]}
+            key={currRole}>
+            {currRole === role && (
+              <Ionicons style={styles.check} name="ios-checkmark" size={32} />
+            )}
+            <Text
+              numberOfLines={1}
+              style={{
+                fontSize: 15,
+                fontWeight: 'bold',
+                fontFamily: Fonts.primaryTextBold,
+                color: '#fff',
+                paddingHorizontal: 10,
+              }}>
+              {currRole
+                .replace(/_/g, ' ')
+                .toLowerCase()
+                .replace(/\w\S*/g, function (txt) {
+                  return (
+                    txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+                  );
+                })}
+            </Text>
+          </TouchableOpacity>
+        ))}
       </View>
-    </KeyboardAvoidingView>
+      <View
+        style={{
+          padding: 15,
+        }}>
+        {role === 'PARENT' && (
+          <AddItemForm
+            value={childName}
+            setValue={setChildName}
+            isValid={childNameIsValid}
+            setIsValid={setChildNameIsValid}
+            onPress={() => {
+              setIsValid(true);
+              setChildName('');
+              setChildren([...children, childName]);
+            }}
+            heading="Please add the names of the Scouts who belong to you."
+            placeholder="child name..."
+          />
+        )}
+        {!!children.length && (
+          <View style={{marginVertical: 15}}>
+            <FormHeading indented title="Your Scouts" />
+            {children.map((child) => (
+              <Text
+                key={child}
+                style={{padding: 4, fontFamily: Fonts.primaryTextBold}}>
+                {child}
+              </Text>
+            ))}
+          </View>
+        )}
+        {isValid && (
+          <View
+            style={{
+              marginVertical: 20,
+            }}>
+            <NextButton
+              inline
+              text="Select your patrol"
+              iconName="ios-arrow-round-forward"
+              onClick={nextForm}
+            />
+          </View>
+        )}
+      </View>
+    </RichInputContainer>
   );
 };
 
 const styles = StyleSheet.create({
   inputContainer: {
     width: '100%',
+    flex: 1,
     alignItems: 'center',
     marginTop: 15 + Constants.statusBarHeight,
     paddingHorizontal: 15,
@@ -70,19 +142,18 @@ const styles = StyleSheet.create({
     margin: 10,
     width: '100%',
     paddingHorizontal: 22,
-    borderWidth: 1,
-    backgroundColor: Colors.purple,
-    borderRadius: 10,
+    backgroundColor: Colors.green,
+    borderRadius: 40,
     flexDirection: 'row',
     justifyContent: 'center',
     color: '#fff',
     shadowColor: '#000',
     shadowOffset: {
-      width: 0,
-      height: 1,
+      width: 1,
+      height: 3,
     },
-    shadowOpacity: 0.32,
-    shadowRadius: 3,
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
     elevation: 3,
   },
   troopNumber: {
@@ -103,6 +174,16 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontFamily: Fonts.primaryTextBold,
     margin: 18,
+    marginVertical: 10,
+  },
+  active: {
+    backgroundColor: Colors.darkGreen,
+  },
+  check: {
+    position: 'absolute',
+    top: 5,
+    left: 15,
+    color: '#fff',
   },
 });
 

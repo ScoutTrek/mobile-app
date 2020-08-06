@@ -8,7 +8,6 @@ import {gql, useQuery, useMutation} from '@apollo/client';
 import {GET_HIKE} from './HikeView';
 import RTE from '../../../components/RichTextEditor';
 
-import {GET_EXPO_TOKEN} from '../../events/hike/HikeDetails';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
 import SubmitBtn from '../../../components/buttons/SubmitButton';
 import EditHeadingInput from '../components/EditHeadingInput';
@@ -34,13 +33,10 @@ const UPDATE_EVENT = gql`
 const EditHikeDetails = ({navigation, route}) => {
   const {currItem} = route.params;
   const {
-    loading,
-    error,
     data: {event},
   } = useQuery(GET_HIKE, {
     variables: {id: currItem},
   });
-  const {data} = useQuery(GET_EXPO_TOKEN);
 
   const [updateEvent] = useMutation(UPDATE_EVENT);
 

@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 
 import {setCustomText} from 'react-native-global-props';
 import {ActivityIndicator, View, AsyncStorage} from 'react-native';
+import * as Notifications from 'expo-notifications';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -76,7 +77,7 @@ const GET_USER_TOKEN = gql`
   }
 `;
 
-const AppLoadingContainer = () => {
+const AppLoadingContainer = ({navigation}) => {
   const {data} = useQuery(GET_USER_TOKEN);
   const [loading, setLoading] = useState(true);
 
@@ -91,6 +92,39 @@ const AppLoadingContainer = () => {
   useEffect(() => {
     loadResourcesAsync().then(() => setLoading(false));
   }, []);
+
+  React.useEffect(() => {
+    const subscription = Notifications.addNotificationResponseReceivedListener(
+      (response) => {
+        const notificationType =
+          response.notification.request.content.data.type;
+        const eventType = response.notification.request.content.data?.eventType;
+        const ID = response.notification.request.content.data.ID;
+
+        console.log('Notification received?');
+
+        switch (notificationType) {
+          case 'event':
+            return navigation.navigate('EventsView', {
+              screen: 'ViewEvents',
+              params: {
+                screen: eventType,
+                params: {currItem: ID},
+              },
+            });
+          case 'message':
+            return navigation.navigate('EventsView', {
+              screen: 'ViewEvents',
+              params: {
+                screen: 'EventThread',
+                params: {currItem: ID},
+              },
+            });
+        }
+      }
+    );
+    return () => subscription.remove();
+  }, [navigation]);
 
   if (loading)
     return (

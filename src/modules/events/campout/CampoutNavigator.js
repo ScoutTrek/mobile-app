@@ -7,6 +7,7 @@ import ChooseName from '../event_components/ChooseName';
 import ChooseDateTime from '../event_components/ChooseDateTime';
 import ChooseTwoTimes from '../event_components/ChooseTwoTimes';
 import ConfirmCampoutDetails from './ConfirmCampoutDetails';
+import UpdateEventDetails from '../event_components/UpdateEventDetails';
 
 const CampoutStack = createStackNavigator();
 
@@ -96,6 +97,7 @@ const CampoutStackNavigator = () => {
         name="ConfirmEventDetails"
         component={ConfirmCampoutDetails}
       />
+      <CampoutStack.Screen name="EditEvent" component={UpdateEventDetails} />
     </CampoutStack.Navigator>
   );
 };

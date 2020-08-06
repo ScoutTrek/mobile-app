@@ -57,7 +57,6 @@ const SignUp = ({navigation, route}) => {
 
   const handleNext = () => {
     const matchEmail = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-    console.log(formState);
     if (formState.inputValues.password.length < 8) {
       Alert.alert(
         'Please enter a password with at least 8 characters.',
@@ -148,7 +147,7 @@ const SignUp = ({navigation, route}) => {
           <AuthInput
             autoCapitalize="words"
             onInputChange={(value) => handleInputChange('name', value)}
-            placeholder="First name / Last name"
+            placeholder="First name & Last name"
           />
           <AuthInput
             autoCapitalize="none"

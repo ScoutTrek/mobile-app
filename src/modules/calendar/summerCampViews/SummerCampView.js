@@ -11,28 +11,29 @@ import {GOOGLE_MAPS_API_KEY} from '../../../../env';
 import {gql, useQuery} from '@apollo/client';
 import NoShadowPurpleBtn from '../../../components/buttons/NoShadowPurpleBtn';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
+import {cloneDeep} from 'lodash';
+import {eventData} from '../../events/event_components/ChooseName';
 
 export const GET_SUMMER_CAMP = gql`
   query GetSummerCamp($id: ID!) {
     event: summerCamp(id: $id) {
       id
-      type
       title
       description
       datetime
-      numDays
-      messages {
-        _id
-        text
-        createdAt
-        user {
-          id
-          name
-        }
-      }
+      meetTime
+      leaveTime
+      endDatetime
+      pickupTime
       location {
         lat
         lng
+        address
+      }
+      meetLocation {
+        lat
+        lng
+        address
       }
       creator {
         id
@@ -114,7 +115,19 @@ const SummerCampDetailsScreen = ({route, navigation}) => {
         />
         <InlineButton
           title="Edit"
-          onPress={() => navigation.navigate('EditSummerCamp', {currItem})}
+          onPress={() => {
+            const summerCampData = cloneDeep(data.event);
+            delete summerCampData.id;
+            delete summerCampData.creator;
+            eventData(summerCampData);
+            navigation.navigate('EditSummerCamp', {
+              screen: 'EditEvent',
+              params: {
+                id: currItem,
+                type: 'SummerCamp',
+              },
+            });
+          }}
         />
       </View>
     </RichInputContainer>

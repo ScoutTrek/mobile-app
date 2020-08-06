@@ -1,7 +1,7 @@
 export const hikeSchema = [
   {
     name: 'title',
-    title: 'Name',
+    title: 'Hike Name',
     type: 'name',
     view: 'ChooseName',
   },
@@ -31,7 +31,7 @@ export const hikeSchema = [
   },
   {
     name: 'datetime',
-    title: 'Time',
+    title: 'Event Time',
     type: 'time',
     view: 'ChooseDateTime',
   },
@@ -65,7 +65,7 @@ export const hikeSchema = [
 export const campoutSchema = [
   {
     name: 'title',
-    title: 'Name',
+    title: 'Campout Name',
     type: 'name',
     view: 'ChooseName',
   },
@@ -95,7 +95,7 @@ export const campoutSchema = [
   },
   {
     name: 'datetime',
-    title: 'Time',
+    title: 'Event Time',
     type: 'time',
     view: 'ChooseDateTime',
   },
@@ -128,7 +128,7 @@ export const campoutSchema = [
 export const summerCampSchema = [
   {
     name: 'title',
-    title: 'Name',
+    title: 'Summer Camp Name',
     type: 'name',
     view: 'ChooseName',
   },
@@ -158,7 +158,7 @@ export const summerCampSchema = [
   },
   {
     name: 'datetime',
-    title: 'Time',
+    title: 'Event Time',
     type: 'time',
     view: 'ChooseDateTime',
   },

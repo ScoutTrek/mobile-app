@@ -5,6 +5,7 @@ import {Calendar} from 'react-native-calendars';
 import Colors from '../../../constants/Colors';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Fonts from '../../../constants/Fonts';
+import moment from 'moment';
 
 const DateAndTimePicker = ({
   chooseDayMsg,
@@ -35,10 +36,10 @@ const DateAndTimePicker = ({
           </View>
           <Calendar
             style={{backgroundColor: '#fff'}}
-            current={date}
+            current={moment(date).format('YYYY-MM-DD')}
             markingType={'custom'}
             markedDates={{
-              [new Date().toLocaleDateString('en-US')]: {
+              [moment().format('YYYY-MM-DD')]: {
                 customStyles: {
                   container: {
                     backgroundColor: Colors.lightGray,
@@ -49,7 +50,7 @@ const DateAndTimePicker = ({
                   },
                 },
               },
-              [date]: {
+              [moment(date).format('YYYY-MM-DD')]: {
                 selected: true,
                 disableTouchEvent: true,
               },

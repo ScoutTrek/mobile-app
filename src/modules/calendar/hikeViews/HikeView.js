@@ -15,27 +15,29 @@ import Location from '../../../components/EventInfoComponents/Location';
 import Time from '../../../components/EventInfoComponents/Time';
 import Constants from 'expo-constants';
 import Description from '../../../components/EventInfoComponents/Description';
+import {eventData} from '../../events/event_components/ChooseName';
+import {cloneDeep} from 'lodash';
 
 export const GET_HIKE = gql`
   query GetHike($id: ID!) {
     event: hike(id: $id) {
       id
-      type
       title
       description
       datetime
-      date
-      time
       distance
       meetTime
       leaveTime
+      endDatetime
       location {
         lat
         lng
+        address
       }
       meetLocation {
         lat
         lng
+        address
       }
       creator {
         id
@@ -142,7 +144,19 @@ const EventDetailsScreen = ({route, navigation}) => {
       <View style={{marginHorizontal: 15, marginBottom: 12}}>
         <InlineButton
           title="Edit"
-          onPress={() => navigation.navigate('EditHike', {currItem})}
+          onPress={() => {
+            const hikeData = cloneDeep(data.event);
+            delete hikeData.id;
+            delete hikeData.creator;
+            eventData(hikeData);
+            navigation.navigate('EditHike', {
+              screen: 'EditEvent',
+              params: {
+                id: currItem,
+                type: 'Hike',
+              },
+            });
+          }}
         />
         <InlineButton
           title="Cancel"

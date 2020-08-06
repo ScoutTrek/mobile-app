@@ -1,10 +1,11 @@
 import React from 'react';
-import {View} from 'react-native';
+import {View, Text} from 'react-native';
 import ShowChosenTimeRow from './ShowChosenTimeRow';
 import Colors from '../../constants/Colors';
 import moment from 'moment';
 
-const EventSnapshotList = ({schema, data, navigation}) => {
+const EventSnapshotList = ({schema, edit, data, navigation}) => {
+  if (data === {}) return <Text>Loading</Text>;
   return (
     <View>
       {schema.map((rule) => {
@@ -14,10 +15,10 @@ const EventSnapshotList = ({schema, data, navigation}) => {
               <ShowChosenTimeRow
                 key={rule.title}
                 description={rule.title}
-                value={moment(data[rule.name]).format('MMM D, YYYY')}
+                value={moment(+data[rule.name]).format('MMM D, YYYY')}
                 color={Colors.lightYellow}
                 onPress={() =>
-                  navigation.navigate(rule.view, {edit: true, timeOnly: false})
+                  navigation.navigate(rule.view, {edit, timeOnly: false})
                 }
                 icon="ios-calendar"
               />
@@ -27,11 +28,11 @@ const EventSnapshotList = ({schema, data, navigation}) => {
               <ShowChosenTimeRow
                 key={rule.title}
                 description={rule.title}
-                value={moment(data[rule.name]).format('hh:mm A')}
+                value={moment(+data[rule.name]).format('hh:mm A')}
                 color={Colors.lightOrange}
                 onPress={() =>
                   navigation.navigate(rule.view, {
-                    edit: true,
+                    edit,
                     timeOnly: true,
                   })
                 }
@@ -45,7 +46,7 @@ const EventSnapshotList = ({schema, data, navigation}) => {
                 description={rule.title}
                 value={data[rule.name].address}
                 color={Colors.backgroundBlue}
-                onPress={() => navigation.navigate(rule.view, {edit: true})}
+                onPress={() => navigation.navigate(rule.view, {edit})}
                 icon="ios-location"
               />
             );
@@ -55,9 +56,13 @@ const EventSnapshotList = ({schema, data, navigation}) => {
                 small
                 key={rule.title}
                 description={rule.title}
-                value={data[rule.name].substring(0, 23) + '...'}
+                value={
+                  data[rule.name]
+                    .substring(0, 23)
+                    .replace(/(<([^>]+)>)/gi, '') + '...'
+                }
                 color={Colors.lightRed}
-                onPress={() => navigation.navigate(rule.view, {edit: true})}
+                onPress={() => navigation.navigate(rule.view, {edit})}
                 icon="ios-book"
               />
             );
@@ -68,7 +73,7 @@ const EventSnapshotList = ({schema, data, navigation}) => {
                 description={rule.title}
                 value={`${data[rule.name]} ${rule.units}`}
                 color={Colors.lightGreen}
-                onPress={() => navigation.navigate(rule.view, {edit: true})}
+                onPress={() => navigation.navigate(rule.view, {edit})}
                 icon="ios-arrow-round-forward"
               />
             );
@@ -79,7 +84,7 @@ const EventSnapshotList = ({schema, data, navigation}) => {
                 description={rule.title}
                 value={data[rule.name]}
                 color={Colors.lightGreen}
-                onPress={() => navigation.navigate(rule.view, {edit: true})}
+                onPress={() => navigation.navigate(rule.view, {edit})}
                 icon="ios-information-circle"
               />
             );

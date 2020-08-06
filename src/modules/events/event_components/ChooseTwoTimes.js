@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import TimePicker from '../../../components/formfields/TimePicker';
 import {eventData} from './ChooseName';
-import {toTitleCase} from '../../../components/utils/toTitleCase';
 import moment from 'moment';
 
 const ChooseTwoTimes = ({navigation, route}) => {
@@ -10,19 +9,30 @@ const ChooseTwoTimes = ({navigation, route}) => {
   const formState = eventData();
 
   const [time1, setTime1] = useState(
-    formState?.[route.params.time1Name] || new Date('January 1, 2000 10:30:00')
+    moment(+eventData()?.[route.params.time1Name], 'MM-DD-YYYY').isValid()
+      ? moment(+eventData()?.[route.params.time1Name])
+      : new Date('January 1, 2020 10:30:00')
   );
   const [time2, setTime2] = useState(
-    formState?.[route.params.time2Name] || new Date('January 1, 2000 11:00:00')
+    moment(+eventData()?.[route.params.time2Name], 'MM-DD-YYYY').isValid()
+      ? moment(+eventData()?.[route.params.time2Name])
+      : new Date('January 1, 2020 11:00:00')
   );
 
-  const nextForm = (time2) => {
+  const nextForm = (timeParam) => {
+    const finalTime2 = timeParam || time2;
     eventData({
       ...formState,
       [route.params.time1Name]: time1,
-      [route.params.time2Name]: time2,
+      [route.params.time2Name]: finalTime2,
     });
-    navigation.navigate(route.params.edit ? 'ConfirmEventDetails' : nextView);
+    navigation.navigate(
+      route.params.edit === 'create'
+        ? 'ConfirmEventDetails'
+        : route.params.edit === 'edit'
+        ? 'EditEvent'
+        : nextView
+    );
   };
 
   return (

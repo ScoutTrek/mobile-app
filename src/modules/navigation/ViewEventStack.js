@@ -1,16 +1,14 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import {AntDesign} from '@expo/vector-icons';
 import AdventuresNav from '../home/UpcomingEvents';
 import HikeView from '../calendar/hikeViews/HikeView';
-import EditHikeDetails from '../calendar/hikeViews/EditHikeDetails';
 import ScoutMeetingView from '../calendar/scoutMeetingViews/ScoutMeetingView';
-import EditScoutMeeting from '../calendar/scoutMeetingViews/EditScoutMeetingDetails';
 import CampoutView from '../calendar/campoutViews/CampoutView';
-import EditCampoutDetails from '../calendar/campoutViews/EditCampoutDetails';
 import SummerCampView from '../calendar/summerCampViews/SummerCampView';
-import EditSummerCampView from '../calendar/summerCampViews/EditSummerCampView';
 import {ChatStack} from '../calendar/CalendarNav';
 import * as React from 'react';
+import SummerCampStackNavigator from '../events/summer_camp/SummerCampNavigator';
+import CampoutStackNavigator from '../events/campout/CampoutNavigator';
+import HikeStackNavigator from '../events/hike/HikeNavigator';
 
 const ViewEventStack = createStackNavigator();
 
@@ -23,24 +21,24 @@ const ViewEventStackNavigator = ({navigation}) => {
       <ViewEventStack.Screen name="Home" component={AdventuresNav} />
 
       <ViewEventStack.Screen name="Hike" component={HikeView} />
-      <ViewEventStack.Screen name="EditHike" component={EditHikeDetails} />
+      <ViewEventStack.Screen name="EditHike" component={HikeStackNavigator} />
 
-      <ViewEventStack.Screen name="ScoutMeeting" component={ScoutMeetingView} />
-      <ViewEventStack.Screen
-        name="EditScoutMeeting"
-        component={EditScoutMeeting}
-      />
+      {/*<ViewEventStack.Screen name="ScoutMeeting" component={ScoutMeetingView} />*/}
+      {/*<ViewEventStack.Screen*/}
+      {/*  name="EditScoutMeeting"*/}
+      {/*  component={EditScoutMeeting}*/}
+      {/*/>*/}
 
       <ViewEventStack.Screen name="Campout" component={CampoutView} />
       <ViewEventStack.Screen
         name="EditCampout"
-        component={EditCampoutDetails}
+        component={CampoutStackNavigator}
       />
 
       <ViewEventStack.Screen name="SummerCamp" component={SummerCampView} />
       <ViewEventStack.Screen
         name="EditSummerCamp"
-        component={EditSummerCampView}
+        component={SummerCampStackNavigator}
       />
 
       <ViewEventStack.Screen name="EventThread" component={ChatStack} />

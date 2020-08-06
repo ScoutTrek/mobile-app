@@ -64,7 +64,7 @@ const ConfirmSummerCampDetails = ({navigation}) => {
       .then(() => {
         navigation.popToTop();
         navigation.pop();
-        navigation.navigate('Calendar');
+        navigation.navigate('UpcomingEvents');
         eventData({});
       })
       .catch((err) => console.log(err));
@@ -83,6 +83,7 @@ const ConfirmSummerCampDetails = ({navigation}) => {
           <FormHeading title="Review Event Info" />
           <EventSnapshotList
             data={data.eventFormState}
+            edit="create"
             schema={summerCampSchema}
             navigation={navigation}
           />

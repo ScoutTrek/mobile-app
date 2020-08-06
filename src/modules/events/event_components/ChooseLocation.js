@@ -73,7 +73,11 @@ const ChooseLocation = ({navigation, route}) => {
       },
     });
     navigation.navigate(
-      route.params.edit ? 'ConfirmEventDetails' : route.params.nextView
+      route.params.edit === 'create'
+        ? 'ConfirmEventDetails'
+        : route.params.edit === 'edit'
+        ? 'EditEvent'
+        : route.params.nextView
     );
   };
 

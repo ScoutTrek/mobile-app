@@ -5,9 +5,15 @@ import moment from 'moment';
 import useStateCallback from '../../../hooks/useStateWithCallback';
 
 const ChooseDateTime = ({navigation, route}) => {
-  const [date, setDate] = useState();
+  const [date, setDate] = useState(
+    moment(+eventData()?.[route.params.valName], 'MM-DD-YYYY').isValid()
+      ? moment(+eventData()?.[route.params.valName])
+      : new Date()
+  );
   const [time, setTime] = useState(
-    eventData()?.[route.params.valName] || new Date('January 1, 2000 11:00:00')
+    moment(+eventData()?.[route.params.valName], 'MM-DD-YYYY').isValid()
+      ? moment(+eventData()?.[route.params.valName], 'MM-DD-YYYY')
+      : new Date()
   );
   const [showTimePicker, setShowTimePicker] = useState(Platform.OS === 'ios');
 
@@ -17,11 +23,15 @@ const ChooseDateTime = ({navigation, route}) => {
     eventData({
       ...prevData,
       [route.params.valName]: new Date(
-        `${date}T${time.toISOString().split('T')[1]}`
+        `${date}T${finalTime.toISOString().split('T')[1]}`
       ),
     });
     navigation.navigate(
-      route.params.edit ? 'ConfirmEventDetails' : route.params.nextView
+      route.params.edit === 'create'
+        ? 'ConfirmEventDetails'
+        : route.params.edit === 'edit'
+        ? 'EditEvent'
+        : route.params.nextView
     );
   };
 
