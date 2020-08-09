@@ -17,6 +17,8 @@ import Constants from 'expo-constants';
 import Description from '../../../components/EventInfoComponents/Description';
 import {eventData} from '../../events/event_components/ChooseName';
 import {cloneDeep} from 'lodash';
+import {GET_UPCOMING_EVENTS} from '../../home/UpcomingEvents';
+import {GET_EVENTS} from '../CalendarView';
 
 export const GET_HIKE = gql`
   query GetHike($id: ID!) {
@@ -47,27 +49,35 @@ export const GET_HIKE = gql`
   }
 `;
 
+export const deleteEventConfig = {
+  update(cache, {data: {deleteEvent}}) {
+    try {
+      const {events} = cache.readQuery({query: GET_EVENTS});
+      const updatedEvents = events.filter((t) => t.id !== deleteEvent.id);
+      cache.writeQuery({
+        query: GET_EVENTS,
+        data: {events: updatedEvents},
+      });
+    } catch (err) {}
+    const {upcomingEvents} = cache.readQuery({query: GET_UPCOMING_EVENTS});
+    const updatedUpcomingEvents = upcomingEvents.filter(
+      (t) => t.id !== deleteEvent.id
+    );
+
+    cache.writeQuery({
+      query: GET_UPCOMING_EVENTS,
+      data: {upcomingEvents: updatedUpcomingEvents},
+    });
+  },
+};
+
 const EventDetailsScreen = ({route, navigation}) => {
   const {currItem} = route.params;
   const {loading, error, data} = useQuery(GET_HIKE, {
     variables: {id: currItem},
   });
 
-  const [deleteEvent] = useMutation(DELETE_EVENT, {
-    update(cache, {data: {deleteEvent}}) {
-      cache.modify({
-        id: cache.identify(deleteEvent.id),
-        fields: {
-          events(_, {DELETE}) {
-            return DELETE;
-          },
-          upcomingEvents(_, {DELETE}) {
-            return DELETE;
-          },
-        },
-      });
-    },
-  });
+  const [deleteEvent] = useMutation(DELETE_EVENT, deleteEventConfig);
 
   const [address, setAddress] = useState('');
   const [meetAddress, setMeetAddress] = useState('');

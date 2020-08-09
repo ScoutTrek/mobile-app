@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {ActivityIndicator, Text, View} from 'react-native';
 import SubmitBtn from '../../../components/buttons/SubmitButton';
 import ShowChosenTimeRow from '../../../components/ShowChosenTimeRow';
 import Colors from '../../../../constants/Colors';
@@ -10,6 +10,7 @@ import {eventData} from '../event_components/ChooseName';
 import FormHeading from '../../../components/Headings/FormHeading';
 import EventSnapshotList from '../../../components/EventSnapshotList';
 import {campoutSchema} from '../../../../constants/DataSchema';
+import {updateEventCacheOptions} from '../hike/ConfirmHikeDetails';
 
 const ADD_CAMPOUT = gql`
   mutation AddCampout($campout: AddCampoutInput!) {
@@ -32,28 +33,14 @@ const ADD_CAMPOUT = gql`
 `;
 
 const ConfirmCampoutDetails = ({navigation}) => {
+  console.log(eventData());
   const {data, loading} = useQuery(gql`
     {
       eventFormState @client
     }
   `);
 
-  const [addCampout] = useMutation(ADD_CAMPOUT, {
-    update(cache, {data: {event}}) {
-      try {
-        const {events} = cache.readQuery({query: GET_EVENTS});
-        cache.writeQuery({
-          query: GET_EVENTS,
-          data: {events: events.concat([event])},
-        });
-      } catch {
-        cache.writeQuery({
-          query: GET_EVENTS,
-          data: {events: [event]},
-        });
-      }
-    },
-  });
+  const [addCampout] = useMutation(ADD_CAMPOUT, updateEventCacheOptions);
 
   const submit = () => {
     addCampout({
@@ -73,7 +60,9 @@ const ConfirmCampoutDetails = ({navigation}) => {
     navigation.goBack();
   };
 
-  if (loading) return <Text>Loading...</Text>;
+  if (loading) {
+    return <ActivityIndicator />;
+  }
 
   return (
     <RichInputContainer icon="back" back={back}>

@@ -1,19 +1,13 @@
-import React, {useState, useEffect} from 'react';
-import {
-  View,
-  SafeAreaView,
-  FlatList,
-  StyleSheet,
-  Text,
-  Vibration,
-} from 'react-native';
+import React, {useRef, useEffect} from 'react';
+import {View, SafeAreaView, FlatList, StyleSheet, Text} from 'react-native';
 import EventListItem from '../../components/EventListItem';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 
-import {Notifications} from 'expo';
-import {gql, useMutation, useQuery} from '@apollo/client';
+import * as Notifications from 'expo-notifications';
+import {gql, useApolloClient, useMutation, useQuery} from '@apollo/client';
 import Colors from '../../../constants/Colors';
+import {eventData} from '../events/event_components/ChooseName';
 
 export const GET_UPCOMING_EVENTS = gql`
   query UpcomingEvents {
@@ -47,6 +41,44 @@ export default function UpcomingEvents({navigation}) {
   const {loading, error, data} = useQuery(GET_UPCOMING_EVENTS);
 
   const [updateToken] = useMutation(UPDATE_EXPO_TOKEN);
+  const responseListener = useRef();
+
+  React.useEffect(() => {
+    eventData({});
+  });
+
+  useEffect(() => {
+    registerForPushNotificationsAsync();
+
+    Constants.isDevice && alertIfRemoteNotificationsDisabledAsync();
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(
+      (response) => {
+        const notificationType =
+          response.notification.request.content.data.type;
+        const eventType = response.notification.request.content.data?.eventType;
+        const ID = response.notification.request.content.data.ID;
+
+        switch (notificationType) {
+          case 'event':
+            navigation.navigate('ViewEvents', {
+              screen: eventType,
+              params: {currItem: ID},
+            });
+            break;
+          case 'message':
+            navigation.navigate('ViewEvents', {
+              screen: 'EventThread',
+              params: {id: ID, name: ''},
+            });
+            break;
+        }
+      }
+    );
+    return () => {
+      Notifications.removeNotificationSubscription(responseListener);
+    };
+  }, [navigation]);
 
   // Create Hook
   const viewEvent = (item) => {
@@ -100,22 +132,13 @@ export default function UpcomingEvents({navigation}) {
         await updateToken({
           variables: {
             token: {
-              expoNotificationToken: token,
+              expoNotificationToken: token.data,
             },
           },
         });
       }
     } else {
       alert('Must use physical device for Push Notifications');
-    }
-
-    if (Platform.OS === 'android') {
-      Notifications.createChannelAndroidAsync('default', {
-        name: 'default',
-        sound: true,
-        priority: 'max',
-        vibrate: [0, 250, 250, 250],
-      });
     }
   };
 
@@ -128,17 +151,37 @@ export default function UpcomingEvents({navigation}) {
     }
   }
 
-  useEffect(() => {
-    registerForPushNotificationsAsync();
-    Constants.isDevice && alertIfRemoteNotificationsDisabledAsync();
-  }, []);
-
   if (error) return <Text>Error: {error}</Text>;
   if (loading) return <Text>Loading...</Text>;
+  const currentEvents = data.upcomingEvents.filter(
+    ({datetime}) => new Date(+datetime) - new Date() < 0
+  );
   return (
     <SafeAreaView style={styles.screen}>
+      {!!currentEvents.length && (
+        <FlatList
+          ListHeaderComponent={() => (
+            <Text style={styles.heading}>Happening Now</Text>
+          )}
+          data={currentEvents}
+          renderItem={({item}) => (
+            <EventListItem
+              key={item.id}
+              id={item.id}
+              title={item.title}
+              type={item.type}
+              date={item.datetime}
+              creator={item.creator.name}
+              onSelect={viewEvent}
+            />
+          )}
+          keyExtractor={(item) => item.id}
+        />
+      )}
       <FlatList
-        data={data.upcomingEvents}
+        data={data.upcomingEvents.filter(
+          ({datetime}) => new Date(+datetime) - new Date() > 0
+        )}
         ListHeaderComponent={() => (
           <Text style={styles.heading}>Upcoming Events</Text>
         )}
@@ -166,9 +209,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.offWhite2,
   },
   heading: {
-    fontSize: 24,
+    fontSize: 20,
     fontFamily: 'raleway-bold',
-    padding: 18,
+    padding: 12,
     paddingBottom: 10,
   },
 });

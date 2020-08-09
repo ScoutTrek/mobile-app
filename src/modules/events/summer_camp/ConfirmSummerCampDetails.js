@@ -10,6 +10,7 @@ import {eventData} from '../event_components/ChooseName';
 import FormHeading from '../../../components/Headings/FormHeading';
 import EventSnapshotList from '../../../components/EventSnapshotList';
 import {summerCampSchema} from '../../../../constants/DataSchema';
+import {updateEventCacheOptions} from '../hike/ConfirmHikeDetails';
 
 const ADD_SUMMER_CAMP = gql`
   mutation AddSummerCamp($summer_camp: AddSummerCampInput!) {
@@ -38,22 +39,7 @@ const ConfirmSummerCampDetails = ({navigation}) => {
     }
   `);
 
-  const [addSummerCamp] = useMutation(ADD_SUMMER_CAMP, {
-    update(cache, {data: {event}}) {
-      try {
-        const {events} = cache.readQuery({query: GET_EVENTS});
-        cache.writeQuery({
-          query: GET_EVENTS,
-          data: {events: events.concat([event])},
-        });
-      } catch {
-        cache.writeQuery({
-          query: GET_EVENTS,
-          data: {events: [event]},
-        });
-      }
-    },
-  });
+  const [addSummerCamp] = useMutation(ADD_SUMMER_CAMP, updateEventCacheOptions);
 
   const submit = () => {
     addSummerCamp({
@@ -65,7 +51,6 @@ const ConfirmSummerCampDetails = ({navigation}) => {
         navigation.popToTop();
         navigation.pop();
         navigation.navigate('UpcomingEvents');
-        eventData({});
       })
       .catch((err) => console.log(err));
   };

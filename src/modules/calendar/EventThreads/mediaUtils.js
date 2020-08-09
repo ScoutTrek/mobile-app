@@ -6,7 +6,7 @@ import uuidv4 from 'uuid/v1';
 
 import {Alert} from 'react-native';
 
-const {ReactNativeFile} = require('apollo-upload-client');
+import {ReactNativeFile} from 'apollo-upload-client';
 
 export default async function getPermissionAsync(permission) {
   const {status} = await Permissions.askAsync(permission);
@@ -45,7 +45,7 @@ export async function uploadAssetAsync(uri) {
   return new ReactNativeFile({
     uri,
     name: `${uuidv4()}.${fileType}`,
-    type: 'image/jpeg', // Customize later
+    type: 'image/jpeg',
   });
 }
 
@@ -63,7 +63,7 @@ export async function pickImageAsync(uploadFileMutation) {
   }
 }
 
-export async function takePictureAsync(onSend, uploadFileMutation) {
+export async function takePictureAsync(uploadFileMutation) {
   if (await getPermissionAsync(Permissions.CAMERA)) {
     const result = await ImagePicker.launchCameraAsync({
       allowsEditing: true,

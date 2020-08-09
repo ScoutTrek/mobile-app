@@ -9,14 +9,18 @@ const ChooseTwoTimes = ({navigation, route}) => {
   const formState = eventData();
 
   const [time1, setTime1] = useState(
-    moment(+eventData()?.[route.params.time1Name], 'MM-DD-YYYY').isValid()
+    moment(+formState?.[route.params.time1Name], 'MM-DD-YYYY').isValid()
       ? moment(+eventData()?.[route.params.time1Name])
-      : new Date('January 1, 2020 10:30:00')
+      : new Date(
+          `${moment(+formState.datetime).format('MMMM D, YYYY')} 10:30:00`
+        )
   );
   const [time2, setTime2] = useState(
-    moment(+eventData()?.[route.params.time2Name], 'MM-DD-YYYY').isValid()
+    moment(+formState?.[route.params.time2Name], 'MM-DD-YYYY').isValid()
       ? moment(+eventData()?.[route.params.time2Name])
-      : new Date('January 1, 2020 11:00:00')
+      : new Date(
+          `${moment(+formState.datetime).format('MMMM D, YYYY')} 11:00:00`
+        )
   );
 
   const nextForm = (timeParam) => {

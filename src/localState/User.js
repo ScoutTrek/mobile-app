@@ -1,5 +1,5 @@
 import {gql} from '@apollo/client';
-import {Notifications} from 'expo';
+import * as Notifications from 'expo-notifications';
 
 export const typeDefs = gql`
   extend type User {
@@ -13,7 +13,7 @@ export const resolvers = {
       let token;
       try {
         token = await Notifications.getExpoPushTokenAsync();
-        console.log('Token ', token);
+        console.log('Token ', token.data);
       } catch (e) {
         console.log(e);
       }

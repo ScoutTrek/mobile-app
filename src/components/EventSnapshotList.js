@@ -59,7 +59,8 @@ const EventSnapshotList = ({schema, edit, data, navigation}) => {
                 value={
                   data[rule.name]
                     .substring(0, 23)
-                    .replace(/(<([^>]+)>)/gi, '') + '...'
+                    .replace(/(<([^>]+)>)/gi, '')
+                    .replace(/^(&nbsp;|<br>)+/, '') + '...'
                 }
                 color={Colors.lightRed}
                 onPress={() => navigation.navigate(rule.view, {edit})}

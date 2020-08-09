@@ -14,13 +14,14 @@ import {typeDefs, resolvers} from './src/localState/User';
 import {
   ApolloProvider,
   ApolloClient,
-  HttpLink,
   ApolloLink,
   InMemoryCache,
   from,
   useQuery,
   gql,
 } from '@apollo/client';
+
+import {createUploadLink} from 'apollo-upload-client';
 
 import {onError} from '@apollo/client/link/error';
 
@@ -41,7 +42,7 @@ Sentry.init({
   debug: true,
 });
 
-const httpLink = new HttpLink({
+const httpLink = new createUploadLink({
   uri: 'https://scouttrek-node-api.appspot.com/:4000',
 });
 
@@ -77,7 +78,7 @@ const GET_USER_TOKEN = gql`
   }
 `;
 
-const AppLoadingContainer = ({navigation}) => {
+const AppLoadingContainer = () => {
   const {data} = useQuery(GET_USER_TOKEN);
   const [loading, setLoading] = useState(true);
 
@@ -89,42 +90,17 @@ const AppLoadingContainer = ({navigation}) => {
     console.log(e);
   }
 
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+    }),
+  });
+
   useEffect(() => {
     loadResourcesAsync().then(() => setLoading(false));
   }, []);
-
-  React.useEffect(() => {
-    const subscription = Notifications.addNotificationResponseReceivedListener(
-      (response) => {
-        const notificationType =
-          response.notification.request.content.data.type;
-        const eventType = response.notification.request.content.data?.eventType;
-        const ID = response.notification.request.content.data.ID;
-
-        console.log('Notification received?');
-
-        switch (notificationType) {
-          case 'event':
-            return navigation.navigate('EventsView', {
-              screen: 'ViewEvents',
-              params: {
-                screen: eventType,
-                params: {currItem: ID},
-              },
-            });
-          case 'message':
-            return navigation.navigate('EventsView', {
-              screen: 'ViewEvents',
-              params: {
-                screen: 'EventThread',
-                params: {currItem: ID},
-              },
-            });
-        }
-      }
-    );
-    return () => subscription.remove();
-  }, [navigation]);
 
   if (loading)
     return (
@@ -193,6 +169,11 @@ export default function App() {
             eventFormState: {
               read() {
                 return eventData();
+              },
+            },
+            upcomingEvents: {
+              merge(_ignored, incoming) {
+                return incoming;
               },
             },
           },

@@ -1,5 +1,6 @@
 import {MaterialIcons} from '@expo/vector-icons';
 import React, {useEffect} from 'react';
+import {ReactNativeFile} from 'apollo-upload-client';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import {getLocationAsync, pickImageAsync, takePictureAsync} from './mediaUtils';

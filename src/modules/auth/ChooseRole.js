@@ -15,6 +15,7 @@ const ROLES = [
   'PATROL_LEADER',
   'SCOUT',
   'PARENT',
+  'ADULT_VOLUNTEER',
 ];
 
 const ChooseRole = ({navigation, route}) => {

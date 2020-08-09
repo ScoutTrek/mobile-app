@@ -53,12 +53,15 @@ const ADD_PATROL = gql`
 
 const JoinPatrol = ({navigation, route}) => {
   const [signUp, signUpData] = useMutation(SIGN_UP);
-  const [addPatrol, {data: patrolData}] = useMutation(ADD_PATROL, {
+  const [addPatrol] = useMutation(ADD_PATROL, {
     onCompleted: (data) => setPatrolId(data.addPatrol.id),
   });
 
+  console.log(userToken());
+
   const [patrolName, setPatrolName] = useState('');
-  const [patrolId, setPatrolId] = useState('');
+  const [patrolId, setPatrolId] = useState(null);
+  const [noPatrol, setNoPatrol] = useState(false);
   const [patrolIsValid, setPatrolIsValid] = useState(false);
   const [isValid, setIsValid] = useState(false);
 
@@ -99,7 +102,7 @@ const JoinPatrol = ({navigation, route}) => {
           'userToken',
           signUpData.data.signup.token
         );
-        userToken(token);
+        userToken(signUpData.data.signup.token);
       } catch (e) {
         console.log(e);
       }
@@ -158,15 +161,35 @@ const JoinPatrol = ({navigation, route}) => {
               },
             });
             setPatrolName('');
+            setIsValid(true);
             setPatrolIsValid(false);
           }}
           heading="Add your Patrol if you don't see yours listed above."
           placeholder="patrol name..."
         />
+        <TouchableOpacity
+          onPress={() => {
+            setNoPatrol(true);
+            setIsValid(true);
+          }}
+          style={[styles.patrol, noPatrol && styles.active]}>
+          {noPatrol && (
+            <Ionicons style={styles.check} name="ios-checkmark" size={32} />
+          )}
+          <Text
+            style={{
+              fontSize: 18,
+              fontWeight: 'bold',
+              fontFamily: Fonts.primaryTextBold,
+              color: '#fff',
+            }}>
+            N/A - I don't belong to a Patrol
+          </Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.btnContainer}>
-        {!!patrolId && (
+        {(!!patrolId || noPatrol) && (
           <GradientButton
             title={signUpData.loading ? `Loading...` : `Finish`}
             onPress={handleSignUp}

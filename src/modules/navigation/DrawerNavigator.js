@@ -19,9 +19,8 @@ import Fonts from '../../../constants/Fonts';
 
 import {AntDesign} from '@expo/vector-icons';
 import {gql, useApolloClient, useQuery} from '@apollo/client';
-
-import {Notifications} from 'expo';
 import {userToken} from '../auth/JoinPatrol';
+import TroopInfo from '../troopInfo/troopInfo';
 
 const GET_CURR_USER = gql`
   query GetCurrUser {
@@ -34,7 +33,7 @@ const GET_CURR_USER = gql`
       role
       troop {
         id
-        council
+        unitNumber
       }
       patrol {
         id
@@ -44,29 +43,17 @@ const GET_CURR_USER = gql`
   }
 `;
 
-function NotificationsScreen({navigation}) {
-  const [notifications, setNotifications] = React.useState({});
-  const client = useApolloClient();
-
-  const handleNotification = (notification) => {
-    Vibration.vibrate();
-    setNotifications(notification);
-  };
-
-  React.useEffect(() => {
-    Notifications.addListener(handleNotification);
-  }, []);
-
-  return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <View style={{alignItems: 'center', justifyContent: 'center'}}>
-        {/*<Text>Origin: {notifications.origin}</Text>*/}
-        {/*<Text>Data: {JSON.stringify(notifications)}</Text>*/}
-      </View>
-      <Button onPress={() => navigation.goBack()} title="Go back home" />
-    </View>
-  );
-}
+// function NotificationsScreen({navigation}) {
+//   return (
+//     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+//       <View style={{alignItems: 'center', justifyContent: 'center'}}>
+//         {/*<Text>Origin: {notifications.origin}</Text>*/}
+//         {/*<Text>Data: {JSON.stringify(notifications)}</Text>*/}
+//       </View>
+//       <Button onPress={() => navigation.goBack()} title="Go back home" />
+//     </View>
+//   );
+// }
 
 function CustomDrawerContent(props) {
   const {data, loading, error} = useQuery(GET_CURR_USER);
@@ -79,13 +66,21 @@ function CustomDrawerContent(props) {
     <DrawerContentScrollView {...props}>
       <View
         style={{
-          height: Dimensions.get('window').height - 150,
+          height: Dimensions.get('window').height - 140,
           justifyContent: 'space-between',
         }}>
         <View>
           <DrawerItemList {...props} />
+          <DrawerItem
+            label="Logout"
+            onPress={async () => {
+              userToken('');
+              await AsyncStorage.removeItem('userToken');
+              await client.clearStore();
+            }}
+          />
           {data.user.role && (
-            <View>
+            <View style={{marginTop: 10}}>
               <View style={{padding: 20}}>
                 <Text style={{fontSize: 18, fontFamily: Fonts.primaryTextBold}}>
                   {data.user.name}
@@ -107,13 +102,32 @@ function CustomDrawerContent(props) {
                   {data.user.role}
                 </Text>
               </View>
+              {data.user.patrol && (
+                <View style={{padding: 20, alignItems: 'flex-start'}}>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontFamily: Fonts.primaryTextBold,
+                    }}>
+                    Patrol
+                  </Text>
+                  <Text
+                    style={{
+                      fontSize: 16,
+                      fontFamily: Fonts.primaryText,
+                      marginTop: 10,
+                    }}>
+                    {data.user.patrol.name}
+                  </Text>
+                </View>
+              )}
               <View style={{padding: 20, alignItems: 'flex-start'}}>
                 <Text
                   style={{
                     fontSize: 16,
                     fontFamily: Fonts.primaryTextBold,
                   }}>
-                  Patrol
+                  Troop
                 </Text>
                 <Text
                   style={{
@@ -121,20 +135,12 @@ function CustomDrawerContent(props) {
                     fontFamily: Fonts.primaryText,
                     marginTop: 10,
                   }}>
-                  {data.user.patrol.name}
+                  {data.user.troop.unitNumber}
                 </Text>
               </View>
             </View>
           )}
         </View>
-        <DrawerItem
-          label="Logout"
-          onPress={async () => {
-            await userToken('');
-            await client.resetStore();
-            await AsyncStorage.removeItem('userToken');
-          }}
-        />
       </View>
     </DrawerContentScrollView>
   );
@@ -163,18 +169,38 @@ const HomeStackNavigator = ({navigation}) => {
   );
 };
 
+const TroopInfoStack = createStackNavigator();
+
+const TroopInfoStackNavigator = ({navigation}) => {
+  return (
+    <TroopInfoStack.Navigator
+      screenOptions={() => ({
+        title: "See who's in your Troop",
+        headerLeft: () => {
+          return (
+            <AntDesign
+              name="menufold"
+              size={23}
+              style={{paddingLeft: 25, paddingTop: 5}}
+              onPress={() => navigation.toggleDrawer()}
+            />
+          );
+        },
+      })}>
+      <TroopInfoStack.Screen name="Troop Info" component={TroopInfo} />
+    </TroopInfoStack.Navigator>
+  );
+};
+
 const Drawer = createDrawerNavigator();
 
 export default function UpcomingEvents() {
   return (
     <Drawer.Navigator
-      screenOptions={() => ({
-        headerShown: true,
-      })}
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       initialRouteName="UpcomingEvents">
       <Drawer.Screen name="Home" component={HomeStackNavigator} />
-      <Drawer.Screen name="Notifications" component={NotificationsScreen} />
+      <Drawer.Screen name="Troop Info" component={TroopInfoStackNavigator} />
     </Drawer.Navigator>
   );
 }

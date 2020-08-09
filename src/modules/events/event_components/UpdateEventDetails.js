@@ -59,9 +59,7 @@ const EditEventDetails = ({navigation, route}) => {
     const newPayload = JSON.parse(JSON.stringify(newData), omitTypename);
     updateEvent({
       variables: {id: route.params.id, updates: newPayload},
-    })
-      .then(() => eventData({}))
-      .catch((err) => console.log(err));
+    }).catch((err) => console.log(err));
     navigation.pop();
   };
 

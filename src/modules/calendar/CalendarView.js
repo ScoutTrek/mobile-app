@@ -15,6 +15,7 @@ import Fonts from '../../../constants/Fonts';
 import useFetchEvents from '../../hooks/useFetchEvents';
 import {gql, useQuery} from '@apollo/client';
 import moment from 'moment';
+import {eventData} from '../events/event_components/ChooseName';
 
 export const GET_EVENTS = gql`
   query ALL_EVENTS {
@@ -57,6 +58,10 @@ const CalendarView = ({navigation}) => {
   const {data, loading, error} = useQuery(GET_EVENTS, {pollInterval: 10000});
 
   const [events, setEvents] = useFetchEvents();
+
+  React.useEffect(() => {
+    eventData({});
+  }, [navigation]);
 
   const renderEmptyDate = () => {
     return (

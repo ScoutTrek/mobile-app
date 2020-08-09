@@ -1,5 +1,5 @@
-import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {View, Alert, ScrollView} from 'react-native';
 import {WebView} from 'react-native-webview';
 import EventHeader from '../components/EventHeader';
 import Colors from '../../../../constants/Colors';
@@ -8,11 +8,18 @@ import InlineButton from '../../../components/buttons/InlineButton';
 
 import {GOOGLE_MAPS_API_KEY} from '../../../../env';
 
-import {gql, useQuery} from '@apollo/client';
+import {gql, useMutation, useQuery} from '@apollo/client';
 import NoShadowPurpleBtn from '../../../components/buttons/NoShadowPurpleBtn';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
 import {cloneDeep} from 'lodash';
 import {eventData} from '../../events/event_components/ChooseName';
+import Constants from 'expo-constants';
+import Location from '../../../components/EventInfoComponents/Location';
+import Time from '../../../components/EventInfoComponents/Time';
+import Description from '../../../components/EventInfoComponents/Description';
+import FormHeading from '../../../components/Headings/FormHeading';
+import {DELETE_EVENT, getAddress} from '../campoutViews/CampoutView';
+import {deleteEventConfig} from '../hikeViews/HikeView';
 
 export const GET_SUMMER_CAMP = gql`
   query GetSummerCamp($id: ID!) {
@@ -50,6 +57,31 @@ const SummerCampDetailsScreen = ({route, navigation}) => {
     variables: {id: currItem},
   });
 
+  const [deleteEvent] = useMutation(DELETE_EVENT, deleteEventConfig);
+
+  const [address, setAddress] = useState('');
+  const [meetAddress, setMeetAddress] = useState('');
+
+  useEffect(() => {
+    const getAddresses = async () => {
+      const address = await getAddress(
+        +data.event.location.lat,
+        +data.event.location.lng
+      );
+      const meetAddress = await getAddress(
+        +data.event.meetLocation.lat,
+        +data.event.meetLocation.lng
+      );
+      Promise.all([address, meetAddress]).then((values) => {
+        setAddress(address);
+        setMeetAddress(meetAddress);
+      });
+    };
+    if (data && !address) {
+      getAddresses();
+    }
+  }, [data]);
+
   if (loading) return null;
   if (error) return `Error! ${error}`;
 
@@ -58,52 +90,37 @@ const SummerCampDetailsScreen = ({route, navigation}) => {
   if (data.event.location) {
     mapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${data.event.location.lat},${data.event.location.lng}&zoom=13&size=325x375&maptype=roadmap&markers=color:blue%7C${data.event.location.lat},${data.event.location.lng}&key=${GOOGLE_MAPS_API_KEY}`;
   }
+
   return (
-    <RichInputContainer back={() => navigation.goBack()}>
-      <View style={{flex: 1}}>
-        <EventHeader
-          navigation={navigation}
-          image_path={data.event.location ? mapUrl : null}
-          title={data.event.title}
-        />
-        <View style={styles.info}>
-          <View style={styles.leftInfoContainer}>
-            <Text style={styles.date}>
-              {new Date(+data.event.datetime).toLocaleDateString('en-US', {
-                month: 'long',
-                day: 'numeric',
-              })}
-            </Text>
-          </View>
-          <View style={styles.centerInfoContainer}>
-            <Text style={[styles.text, styles.eventType]}>Summer Camp</Text>
-          </View>
+    <ScrollView
+      style={{
+        marginTop: Constants.statusBarHeight,
+        backgroundColor: '#fff',
+      }}
+      contentContainerStyles={{
+        flexGrow: 1,
+      }}>
+      <EventHeader
+        navigation={navigation}
+        image_path={data.event.location ? mapUrl : null}
+        title={data.event.title}
+        date={+data.event.datetime}
+        name={data.event.creator.name}
+      />
+      <Location heading="Event location" address={address} />
+      <Location heading="Meet Place" address={meetAddress} />
+      <Time time={+data.event.meetTime} text="arrive at meet place" />
+      <Time time={+data.event.leaveTime} text="leave meet place" />
 
-          <View style={styles.rightInfoContainer}>
-            <Text style={styles.creator}>
-              {data.event.creator.name.split(' ')[0]}
-            </Text>
-          </View>
-        </View>
+      <Description description={data.event.description} />
 
-        <WebView
-          originWhitelist={['*']}
-          style={styles.description}
-          source={{
-            html: `<!DOCTYPE html>
-                    <html lang="en">
-                        <head>
-                            <meta charset="UTF-8">
-                            <meta name="viewport" content="width=device-width, initial-scale=0.99">
-                        </head>
-                        <body style="background-color: ${Colors.offWhite}">
-                            ${data.event.description}
-                        </body>
-                    </html>`,
-          }}
-        />
-      </View>
-      <View style={{margin: 15}}>
+      <FormHeading title="Message Board" />
+      <View
+        style={{
+          marginHorizontal: 15,
+          paddingBottom: 8,
+          marginBottom: 8,
+        }}>
         <NoShadowPurpleBtn
           onPress={() =>
             navigation.navigate('EventThread', {
@@ -113,106 +130,53 @@ const SummerCampDetailsScreen = ({route, navigation}) => {
             })
           }
         />
+      </View>
+
+      <View style={{marginHorizontal: 15, marginBottom: 12}}>
         <InlineButton
           title="Edit"
           onPress={() => {
-            const summerCampData = cloneDeep(data.event);
-            delete summerCampData.id;
-            delete summerCampData.creator;
-            eventData(summerCampData);
-            navigation.navigate('EditSummerCamp', {
+            const campoutData = cloneDeep(data.event);
+            delete campoutData.id;
+            delete campoutData.creator;
+            eventData(campoutData);
+            navigation.navigate('EditCampout', {
               screen: 'EditEvent',
               params: {
                 id: currItem,
-                type: 'SummerCamp',
+                type: 'Campout',
               },
             });
           }}
         />
+        <InlineButton
+          title="Cancel"
+          color={Colors.red}
+          onPress={() =>
+            Alert.alert(
+              'Are you sure you want to cancel this event?',
+              'This action cannot be undone.',
+              [
+                {text: 'Cancel', style: 'cancel'},
+                {
+                  text: 'Confirm',
+                  onPress: async () => {
+                    await deleteEvent({
+                      variables: {
+                        id: data.event.id,
+                      },
+                    });
+                    navigation.goBack();
+                  },
+                },
+              ],
+              {cancelable: true}
+            )
+          }
+        />
       </View>
-    </RichInputContainer>
+    </ScrollView>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.offWhite,
-    color: Colors.purple,
-    justifyContent: 'space-between',
-    paddingBottom: 15,
-  },
-  text: {
-    paddingVertical: 3,
-    fontSize: 15,
-  },
-  info: {
-    flexDirection: 'row',
-    fontFamily: Fonts.primaryTextBold,
-    marginVertical: 5,
-    height: 50,
-  },
-  leftInfoContainer: {
-    flex: 1.25,
-    alignItems: 'flex-end',
-    height: '100%',
-    justifyContent: 'center',
-  },
-  date: {
-    overflow: 'hidden',
-    color: Colors.offWhite,
-    backgroundColor: Colors.brown,
-    padding: 7,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-    textAlign: 'center',
-  },
-  centerInfoContainer: {
-    flex: 1.5,
-    alignItems: 'center',
-    height: '100%',
-    justifyContent: 'center',
-  },
-  eventType: {
-    textAlign: 'center',
-    fontSize: 18,
-    fontFamily: Fonts.primaryTextBold,
-  },
-  rightInfoContainer: {
-    flex: 1.25,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    height: '100%',
-  },
-  creator: {
-    fontFamily: Fonts.primaryTextBold,
-    overflow: 'hidden',
-    color: Colors.darkBrown,
-    backgroundColor: Colors.orange,
-    fontSize: 16,
-    paddingVertical: 7,
-    paddingHorizontal: 12,
-    marginLeft: 2,
-    borderRadius: 5,
-    textAlign: 'center',
-  },
-  description: {
-    margin: 20,
-    backgroundColor: Colors.offWhite,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  distance: {
-    fontFamily: Fonts.primaryText,
-    fontSize: 16,
-    paddingHorizontal: 30,
-  },
-  bold: {
-    fontFamily: Fonts.primaryTextBold,
-    fontSize: 18,
-  },
-});
 
 export default SummerCampDetailsScreen;

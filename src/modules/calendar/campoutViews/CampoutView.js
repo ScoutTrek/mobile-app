@@ -9,6 +9,7 @@ import InlineButton from '../../../components/buttons/InlineButton';
 import Constants from 'expo-constants';
 
 import {gql, useMutation, useQuery} from '@apollo/client';
+import {deleteEventConfig} from '../hikeViews/HikeView';
 import NoShadowPurpleBtn from '../../../components/buttons/NoShadowPurpleBtn';
 import FormHeading from '../../../components/Headings/FormHeading';
 
@@ -72,7 +73,7 @@ const CampoutDetailsScreen = ({route, navigation}) => {
     variables: {id: currItem},
   });
 
-  const [deleteEvent] = useMutation(DELETE_EVENT);
+  const [deleteEvent] = useMutation(DELETE_EVENT, deleteEventConfig);
 
   const [address, setAddress] = useState('');
   const [meetAddress, setMeetAddress] = useState('');
