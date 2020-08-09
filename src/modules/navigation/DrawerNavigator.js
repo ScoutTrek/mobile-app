@@ -19,8 +19,9 @@ import Fonts from '../../../constants/Fonts';
 
 import {AntDesign} from '@expo/vector-icons';
 import {gql, useApolloClient, useQuery} from '@apollo/client';
-import {userToken} from '../auth/JoinPatrol';
 import TroopInfo from '../troopInfo/troopInfo';
+import {useContext} from 'react';
+import {AuthContext} from '../../../App';
 
 const GET_CURR_USER = gql`
   query GetCurrUser {
@@ -58,6 +59,7 @@ const GET_CURR_USER = gql`
 function CustomDrawerContent(props) {
   const {data, loading, error} = useQuery(GET_CURR_USER);
   const client = useApolloClient();
+  const {setAuthToken} = useContext(AuthContext);
 
   if (loading) return <Text> </Text>;
   if (error) return <Text>`Error, ${error}`</Text>;
@@ -74,8 +76,9 @@ function CustomDrawerContent(props) {
           <DrawerItem
             label="Logout"
             onPress={async () => {
-              userToken('');
               await AsyncStorage.removeItem('userToken');
+              setAuthToken('');
+              client.stop();
               await client.clearStore();
             }}
           />

@@ -5,7 +5,7 @@ import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 
 import * as Notifications from 'expo-notifications';
-import {gql, useApolloClient, useMutation, useQuery} from '@apollo/client';
+import {gql, useMutation, useQuery} from '@apollo/client';
 import Colors from '../../../constants/Colors';
 import {eventData} from '../events/event_components/ChooseName';
 
@@ -43,15 +43,16 @@ export default function UpcomingEvents({navigation}) {
   const [updateToken] = useMutation(UPDATE_EXPO_TOKEN);
   const responseListener = useRef();
 
-  React.useEffect(() => {
+  useEffect(() => {
     eventData({});
   });
 
   useEffect(() => {
     registerForPushNotificationsAsync();
-
     Constants.isDevice && alertIfRemoteNotificationsDisabledAsync();
+  }, []);
 
+  useEffect(() => {
     responseListener.current = Notifications.addNotificationResponseReceivedListener(
       (response) => {
         const notificationType =

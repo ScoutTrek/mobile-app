@@ -1,4 +1,4 @@
-import React, {useReducer, useEffect, useState} from 'react';
+import React, {useReducer, useEffect, useState, useContext} from 'react';
 import {
   Image,
   StyleSheet,
@@ -16,7 +16,7 @@ import AuthInput from './components/Input';
 
 import {gql, useApolloClient, useMutation} from '@apollo/client';
 import Footer from './components/Footer';
-import {userToken} from './JoinPatrol';
+import {AuthContext} from '../../../App';
 
 const formReducer = (state, action) => {
   if (action.type === 'UPDATE_INPUT_FIELD') {
@@ -41,6 +41,8 @@ const LOG_IN = gql`
 const SignIn = ({navigation}) => {
   const [secure, setSecure] = useState(false);
   const [logIn, {data, loading}] = useMutation(LOG_IN);
+
+  const {setAuthToken} = useContext(AuthContext);
 
   const [formState, dispatchFormChange] = useReducer(formReducer, {
     inputValues: {
@@ -72,7 +74,7 @@ const SignIn = ({navigation}) => {
     const setToken = async () => {
       try {
         const token = await AsyncStorage.setItem('userToken', data.login.token);
-        userToken(data.login.token);
+        setAuthToken(data.login.token);
       } catch (e) {
         console.log(e);
       }

@@ -1,20 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import {
   StyleSheet,
   Text,
   View,
-  TextInput,
   AsyncStorage,
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import {
-  gql,
-  makeVar,
-  useApolloClient,
-  useMutation,
-  useQuery,
-} from '@apollo/client';
+import {gql, makeVar, useMutation, useQuery} from '@apollo/client';
 import GradientButton from '../../components/buttons/GradientButton';
 import Constants from 'expo-constants';
 import Colors from '../../../constants/Colors';
@@ -22,8 +15,7 @@ import Fonts from '../../../constants/Fonts';
 import {AntDesign, Ionicons} from '@expo/vector-icons';
 import RichInputContainer from '../../components/containers/RichInputContainer';
 import AddItemForm from './components/AddItemFormSmall';
-
-export const userToken = makeVar('');
+import {AuthContext} from '../../../App';
 
 const SIGN_UP = gql`
   mutation SignUp($userInfo: SignupInput!) {
@@ -57,8 +49,6 @@ const JoinPatrol = ({navigation, route}) => {
     onCompleted: (data) => setPatrolId(data.addPatrol.id),
   });
 
-  console.log(userToken());
-
   const [patrolName, setPatrolName] = useState('');
   const [patrolId, setPatrolId] = useState(null);
   const [noPatrol, setNoPatrol] = useState(false);
@@ -71,6 +61,8 @@ const JoinPatrol = ({navigation, route}) => {
       troopId: route.params.troop,
     },
   });
+
+  const {setAuthToken} = useContext(AuthContext);
 
   const back = () => {
     navigation.goBack();
@@ -102,7 +94,7 @@ const JoinPatrol = ({navigation, route}) => {
           'userToken',
           signUpData.data.signup.token
         );
-        userToken(signUpData.data.signup.token);
+        setAuthToken(signUpData.data.signup.token);
       } catch (e) {
         console.log(e);
       }

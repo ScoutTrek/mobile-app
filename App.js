@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 
 import {setCustomText} from 'react-native-global-props';
 import {ActivityIndicator, View, AsyncStorage} from 'react-native';
@@ -32,8 +32,15 @@ import ViewEventStackNavigator from './src/modules/navigation/ViewEventStack';
 import * as Sentry from 'sentry-expo';
 
 // Global Apollo Variable that determines if the user is signed in or not.
-import {userToken} from './src/modules/auth/JoinPatrol';
 import {eventData} from './src/modules/events/event_components/ChooseName';
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 Sentry.init({
   dsn:
@@ -72,31 +79,17 @@ const authMiddleware = new ApolloLink(async (operation, forward) => {
   return forward(operation);
 });
 
-const GET_USER_TOKEN = gql`
-  query UserToken {
-    userToken @client
-  }
-`;
-
 const AppLoadingContainer = () => {
-  const {data} = useQuery(GET_USER_TOKEN);
   const [loading, setLoading] = useState(true);
+  const [authToken, setAuthToken] = useState('');
 
   try {
     AsyncStorage.getItem('userToken').then((token) => {
-      userToken(token);
+      setAuthToken(token);
     });
   } catch (e) {
     console.log(e);
   }
-
-  Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowAlert: true,
-      shouldPlaySound: false,
-      shouldSetBadge: false,
-    }),
-  });
 
   useEffect(() => {
     loadResourcesAsync().then(() => setLoading(false));
@@ -110,25 +103,27 @@ const AppLoadingContainer = () => {
     );
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={() => ({
-          headerShown: false,
-        })}>
-        {!data.userToken ? (
-          <Stack.Screen
-            name="AuthNav"
-            component={AuthNavigator}
-            options={{
-              animationTypeForReplace: 'push',
-            }}
-          />
-        ) : (
-          <Stack.Screen name="Home" component={MainTabNavigator} />
-        )}
-        <Stack.Screen name="ViewEvents" component={ViewEventStackNavigator} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <AuthContext.Provider value={{authToken, setAuthToken}}>
+      <NavigationContainer>
+        <Stack.Navigator
+          screenOptions={() => ({
+            headerShown: false,
+          })}>
+          {!authToken ? (
+            <Stack.Screen
+              name="AuthNav"
+              component={AuthNavigator}
+              options={{
+                animationTypeForReplace: 'push',
+              }}
+            />
+          ) : (
+            <Stack.Screen name="Home" component={MainTabNavigator} />
+          )}
+          <Stack.Screen name="ViewEvents" component={ViewEventStackNavigator} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </AuthContext.Provider>
   );
 };
 
@@ -155,17 +150,17 @@ async function loadResourcesAsync() {
 
 const Stack = createStackNavigator();
 
+export const AuthContext = React.createContext({
+  authToken: '',
+  setAuthToken: () => {},
+});
+
 export default function App() {
   const client = new ApolloClient({
     cache: new InMemoryCache({
       typePolicies: {
         Query: {
           fields: {
-            userToken: {
-              read(_, {variables}) {
-                return userToken();
-              },
-            },
             eventFormState: {
               read() {
                 return eventData();

@@ -151,7 +151,7 @@ export default function ChatModule({navigation, route}) {
       onSend={onSend}
       // loadEarlier={loadEarlier}
       // onLoadEarlier={onLoadEarlier}
-      isLoadingEarlier={isLoadingEarlier}
+      // isLoadingEarlier={isLoadingEarlier}
       inverted={false}
       alignTop={false}
       user={{
