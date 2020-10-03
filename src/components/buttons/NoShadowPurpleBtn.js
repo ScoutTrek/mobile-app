@@ -15,7 +15,7 @@ const NoShadowPurpleBtn = ({onPress}) => {
           alignItems: 'center',
           flexDirection: 'row',
         }}>
-        <Text style={styles.title}>Questions & Updates</Text>
+        <Text style={styles.title}>Message Board</Text>
         <Ionicons
           style={{paddingTop: 5, paddingLeft: 5}}
           size={30}

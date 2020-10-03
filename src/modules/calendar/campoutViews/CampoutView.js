@@ -9,7 +9,7 @@ import InlineButton from '../../../components/buttons/InlineButton';
 import Constants from 'expo-constants';
 
 import {gql, useMutation, useQuery} from '@apollo/client';
-import {deleteEventConfig} from '../hikeViews/HikeView';
+import {deleteEventConfig, DELETE_EVENT} from '../hikeViews/HikeView';
 import NoShadowPurpleBtn from '../../../components/buttons/NoShadowPurpleBtn';
 import FormHeading from '../../../components/Headings/FormHeading';
 
@@ -20,27 +20,9 @@ import Description from '../../../components/EventInfoComponents/Description';
 import {cloneDeep} from 'lodash';
 import {eventData} from '../../events/event_components/ChooseName';
 
-export const getAddress = async (latitude, longitude) => {
-  const results = await ExpoLocation.reverseGeocodeAsync({
-    latitude,
-    longitude,
-  });
-  return Platform.OS === 'android'
-    ? `${results[0].name} ${results[0].street}, ${results[0].city}`
-    : `${results[0].name}, ${results[0].city}`;
-};
-
-export const DELETE_EVENT = gql`
-  mutation DeleteEvent($id: ID!) {
-    deleteEvent(id: $id) {
-      id
-    }
-  }
-`;
-
 export const GET_CAMPOUT = gql`
   query GetCampout($id: ID!) {
-    event: campout(id: $id) {
+    event(id: $id) {
       id
       title
       description
@@ -75,33 +57,10 @@ const CampoutDetailsScreen = ({route, navigation}) => {
 
   const [deleteEvent] = useMutation(DELETE_EVENT, deleteEventConfig);
 
-  const [address, setAddress] = useState('');
-  const [meetAddress, setMeetAddress] = useState('');
-
-  useEffect(() => {
-    const getAddresses = async () => {
-      const address = await getAddress(
-        +data.event.location.lat,
-        +data.event.location.lng
-      );
-      const meetAddress = await getAddress(
-        +data.event.meetLocation.lat,
-        +data.event.meetLocation.lng
-      );
-      Promise.all([address, meetAddress]).then((values) => {
-        setAddress(address);
-        setMeetAddress(meetAddress);
-      });
-    };
-    if (data && !address) {
-      getAddresses();
-    }
-  }, [data]);
-
   if (loading) return null;
   if (error) return `Error! ${error}`;
 
-  // Clear database and
+  // Clear database andi
   let mapUrl;
   if (data.event.location) {
     mapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${data.event.location.lat},${data.event.location.lng}&zoom=13&size=325x375&maptype=roadmap&markers=color:blue%7C${data.event.location.lat},${data.event.location.lng}&key=${GOOGLE_MAPS_API_KEY}`;
@@ -122,10 +81,18 @@ const CampoutDetailsScreen = ({route, navigation}) => {
         date={+data.event.datetime}
         name={data.event.creator.name}
       />
-      <Location heading="Event location" address={address} />
-      <Location heading="Meet Place" address={meetAddress} />
+      <Location
+        heading="Meet Place"
+        address={data.event.meetLocation.address}
+      />
       <Time time={+data.event.meetTime} text="arrive at meet place" />
       <Time time={+data.event.leaveTime} text="leave meet place" />
+
+      <Location
+        heading="Event location"
+        address={data.event.location.address}
+      />
+      <Time time={+data.event.datetime} text="event start time" />
 
       <Description description={data.event.description} />
 

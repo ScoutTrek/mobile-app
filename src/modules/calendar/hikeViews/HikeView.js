@@ -4,13 +4,11 @@ import EventHeader from '../components/EventHeader';
 import Colors from '../../../../constants/Colors';
 import Fonts from '../../../../constants/Fonts';
 import InlineButton from '../../../components/buttons/InlineButton';
-import {getAddress} from '../campoutViews/CampoutView';
 
 import {GOOGLE_MAPS_API_KEY} from '../../../../env';
 
 import {gql, useMutation, useQuery} from '@apollo/client';
 import NoShadowPurpleBtn from '../../../components/buttons/NoShadowPurpleBtn';
-import {DELETE_EVENT} from '../campoutViews/CampoutView';
 import Location from '../../../components/EventInfoComponents/Location';
 import Time from '../../../components/EventInfoComponents/Time';
 import Constants from 'expo-constants';
@@ -20,9 +18,17 @@ import {cloneDeep} from 'lodash';
 import {GET_UPCOMING_EVENTS} from '../../home/UpcomingEvents';
 import {GET_EVENTS} from '../CalendarView';
 
+export const DELETE_EVENT = gql`
+  mutation DeleteEvent($id: ID!) {
+    deleteEvent(id: $id) {
+      id
+    }
+  }
+`;
+
 export const GET_HIKE = gql`
   query GetHike($id: ID!) {
-    event: hike(id: $id) {
+    event(id: $id) {
       id
       title
       description
@@ -79,29 +85,6 @@ const EventDetailsScreen = ({route, navigation}) => {
 
   const [deleteEvent] = useMutation(DELETE_EVENT, deleteEventConfig);
 
-  const [address, setAddress] = useState('');
-  const [meetAddress, setMeetAddress] = useState('');
-
-  useEffect(() => {
-    const getAddresses = async () => {
-      const address = await getAddress(
-        +data.event.location.lat,
-        +data.event.location.lng
-      );
-      const meetAddress = await getAddress(
-        +data.event.meetLocation.lat,
-        +data.event.meetLocation.lng
-      );
-      Promise.all([address, meetAddress]).then((values) => {
-        setAddress(address);
-        setMeetAddress(meetAddress);
-      });
-    };
-    if (data && !address) {
-      getAddresses();
-    }
-  }, [data]);
-
   if (loading) return null;
   if (error) return `Error! ${error}`;
 
@@ -127,10 +110,16 @@ const EventDetailsScreen = ({route, navigation}) => {
         date={+data.event.datetime}
       />
 
-      <Location heading="Meet Place" address={meetAddress} />
+      <Location
+        heading="Meet Place"
+        address={data.event.meetLocation.address}
+      />
       <Time time={+data.event.meetTime} text="arrive at meet place" />
       <Time time={+data.event.leaveTime} text="leave meet place" />
-      <Location heading="Event location" address={address} />
+      <Location
+        heading="Event location"
+        address={data.event.location.address}
+      />
       <Time time={+data.event.datetime} text="event start time" />
 
       <Description description={data.event.description} />

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {View} from 'react-native';
 
 import {gql, useQuery, useMutation} from '@apollo/client';
@@ -8,10 +8,15 @@ import SubmitBtn from '../../../components/buttons/SubmitButton';
 import {eventData} from './ChooseName';
 import FormHeading from '../../../components/Headings/FormHeading';
 import EventSnapshotList from '../../../components/EventSnapshotList';
+
 import {
   hikeSchema,
   summerCampSchema,
   campoutSchema,
+  troopMeetingSchema,
+  bikeRideSchema,
+  canoeingSchema,
+  specialEventSchema,
 } from '../../../../constants/DataSchema';
 
 const getSchema = (type) => {
@@ -20,21 +25,33 @@ const getSchema = (type) => {
       return hikeSchema;
     case 'SummerCamp':
       return summerCampSchema;
+    case 'BikeRide':
+      return bikeRideSchema;
+    case 'Canoeing':
+      return canoeingSchema;
+    case 'SpecialEvent':
+      return specialEventSchema;
     case 'Campout':
       return campoutSchema;
+    case 'TroopMeeting':
+      return troopMeetingSchema.filter((item) => item?.constant !== true);
   }
 };
 
-const UPDATE_EVENT = gql`
+export const UPDATE_EVENT = gql`
   mutation UpdateEvent($id: ID!, $updates: UpdateEventInput!) {
     updateEvent(id: $id, input: $updates) {
       id
       type
       title
       description
-      date
-      time
       distance
+      day
+      location {
+        lat
+        lng
+        address
+      }
       creator {
         id
         name
@@ -60,7 +77,7 @@ const EditEventDetails = ({navigation, route}) => {
     updateEvent({
       variables: {id: route.params.id, updates: newPayload},
     }).catch((err) => console.log(err));
-    navigation.pop();
+    navigation.popToTop();
   };
 
   return (

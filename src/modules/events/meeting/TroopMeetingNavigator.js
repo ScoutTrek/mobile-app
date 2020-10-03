@@ -1,0 +1,57 @@
+import React from 'react';
+import {createStackNavigator} from '@react-navigation/stack';
+
+import ChooseLocationView from '../event_components/ChooseLocation';
+import TroopMeetingDetails from './TroopMeetingDetails';
+import UpdateEventDetails from '../event_components/UpdateEventDetails';
+import ChooseOneTime from '../event_components/ChooseOneTime';
+import ConfirmTroopMeetingDetails from './ConfirmTroopMeetingDetails';
+
+const ScoutMeeting = createStackNavigator();
+
+const ScoutMeetingStackNavigator = () => {
+  return (
+    <ScoutMeeting.Navigator
+      screenOptions={() => ({
+        headerShown: false,
+      })}>
+      <ScoutMeeting.Screen
+        name="EventDetails"
+        component={TroopMeetingDetails}
+        initialParams={{
+          nextView: 'ChooseMeetingTime',
+        }}
+      />
+
+      <ScoutMeeting.Screen
+        name="ChooseMeetingTime"
+        component={ChooseOneTime}
+        options={{
+          animationEnabled: false,
+        }}
+        initialParams={{
+          chooseTimeMsg: 'What time will the Troop meeting begin?',
+          nextView: 'ChooseLocation',
+          valName: 'datetime',
+          btn: 'Choose Meeting Time',
+        }}
+      />
+      <ScoutMeeting.Screen
+        name="ChooseLocation"
+        component={ChooseLocationView}
+        initialParams={{
+          placeholder: 'Where will this meeting take place?',
+          nextView: 'ConfirmEventDetails',
+          valName: 'location',
+        }}
+      />
+      <ScoutMeeting.Screen
+        name="ConfirmEventDetails"
+        component={ConfirmTroopMeetingDetails}
+      />
+      <ScoutMeeting.Screen name="EditEvent" component={UpdateEventDetails} />
+    </ScoutMeeting.Navigator>
+  );
+};
+
+export default ScoutMeetingStackNavigator;

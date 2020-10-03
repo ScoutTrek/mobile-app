@@ -33,7 +33,6 @@ const ADD_CAMPOUT = gql`
 `;
 
 const ConfirmCampoutDetails = ({navigation}) => {
-  console.log(eventData());
   const {data, loading} = useQuery(gql`
     {
       eventFormState @client

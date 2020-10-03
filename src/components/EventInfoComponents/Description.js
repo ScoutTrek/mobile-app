@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     borderColor: Colors.lightGray,
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    marginVertical: 40,
+    marginVertical: 30,
     marginHorizontal: 15,
     paddingVertical: 15,
     paddingHorizontal: 5,
@@ -44,7 +44,8 @@ const styles = StyleSheet.create({
     flex: 0,
     justifyContent: 'center',
     alignItems: 'center',
-    minHeight: 100,
+    height: '100%',
+    minHeight: 180,
   },
 });
 

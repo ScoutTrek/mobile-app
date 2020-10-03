@@ -11,7 +11,7 @@ import Slider from '../../../components/formfields/Slider';
 import NextButton from '../../../components/buttons/NextButton';
 import {eventData} from '../event_components/ChooseName';
 
-const HikeDetails = ({navigation, route}) => {
+const BikeRideDetails = ({navigation, route}) => {
   const {nextView} = route.params;
 
   const [description, setDescription] = useState(
@@ -43,14 +43,14 @@ const HikeDetails = ({navigation, route}) => {
   return (
     <RichInputContainer icon="back" back={back}>
       <Slider
-        title="Hike Distance (in miles)?"
+        title="Bike Ride Distance (in miles)?"
         distance={distance}
         setDistance={setDistance}
         min={1}
-        max={20}
+        max={30}
       />
       <RTE
-        heading="What additional information do you want people to know about this hike?"
+        heading="What additional information do you want people to know about this bike ride?"
         description={description}
         setDescription={setDescription}>
         <NextButton
@@ -64,4 +64,4 @@ const HikeDetails = ({navigation, route}) => {
   );
 };
 
-export default HikeDetails;
+export default BikeRideDetails;

@@ -3,14 +3,11 @@ import {Alert, Keyboard} from 'react-native';
 
 import RTE from '../../../components/RichTextEditor';
 
-import Colors from '../../../../constants/Colors';
-import Constants from 'expo-constants';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
-import SubmitBtn from '../../../components/buttons/SubmitButton';
 import {eventData} from '../event_components/ChooseName';
 import NextButton from '../../../components/buttons/NextButton';
 
-const SummerCampDetails = ({navigation, route}) => {
+const SpecialEventDetails = ({navigation, route}) => {
   const [description, setDescription] = useState('');
 
   const nextForm = () => {
@@ -39,7 +36,7 @@ const SummerCampDetails = ({navigation, route}) => {
   return (
     <RichInputContainer icon="back" back={navigation.goBack}>
       <RTE
-        heading="What additional information do you want people to know about this summer camp?"
+        heading="What additional information do you want people to know about this special event?"
         description={description}
         setDescription={setDescription}>
         <NextButton
@@ -53,4 +50,4 @@ const SummerCampDetails = ({navigation, route}) => {
   );
 };
 
-export default SummerCampDetails;
+export default SpecialEventDetails;

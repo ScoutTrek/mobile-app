@@ -19,15 +19,15 @@ const listData = [
         'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1582556921/ScoutTrek/hiking_trip.png',
     },
   },
-  // {
-  //   id: 1,
-  //   eventType: 'Troop Meeting',
-  //   subtitle: 'Plan your weekly meeting logistics in minutes.',
-  //   image: {
-  //     uri:
-  //       'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1582557266/ScoutTrek/ScoutBadgesImage.jpg',
-  //   },
-  // },
+  {
+    id: 1,
+    eventType: 'Troop Meeting',
+    subtitle: 'Plan your weekly meeting logistics in minutes.',
+    image: {
+      uri:
+        'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1582557266/ScoutTrek/ScoutBadgesImage.jpg',
+    },
+  },
   {
     id: 2,
     eventType: 'Campout',
@@ -40,10 +40,37 @@ const listData = [
   {
     id: 3,
     eventType: 'Summer Camp',
-    subtitle: 'A week of non-stop fun in the wild.',
+    subtitle: 'A week of non-stop fun away from home.',
     image: {
       uri:
         'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1590852981/ScoutTrek/ben-white-pV5ckb2HEVk-unsplash.jpg',
+    },
+  },
+  {
+    id: 4,
+    eventType: 'Bike Ride',
+    subtitle: 'Feel the wind in your face.',
+    image: {
+      uri:
+        'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1599596052/ScoutTrek/bikeride.jpg',
+    },
+  },
+  {
+    id: 5,
+    eventType: 'Canoeing',
+    subtitle: 'Spend some time at on the water, in style.',
+    image: {
+      uri:
+        'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1599596674/ScoutTrek/canoeing.jpg',
+    },
+  },
+  {
+    id: 6,
+    eventType: 'Special Event',
+    subtitle: "Plan an event that doesn't fit our templates above.",
+    image: {
+      uri:
+        'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1599241295/ScoutTrek/luke-porter-mGFJIUD9yiM-unsplash.jpg',
     },
   },
   // {

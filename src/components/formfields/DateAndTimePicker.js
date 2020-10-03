@@ -36,7 +36,7 @@ const DateAndTimePicker = ({
           </View>
           <Calendar
             style={{backgroundColor: '#fff'}}
-            current={moment(date).format('YYYY-MM-DD')}
+            current={date.format('YYYY-MM-DD')}
             markingType={'custom'}
             markedDates={{
               [moment().format('YYYY-MM-DD')]: {
@@ -50,13 +50,13 @@ const DateAndTimePicker = ({
                   },
                 },
               },
-              [moment(date).format('YYYY-MM-DD')]: {
+              [date.format('YYYY-MM-DD')]: {
                 selected: true,
                 disableTouchEvent: true,
               },
             }}
             onDayPress={(day) => {
-              setDate(day.dateString);
+              setDate(moment(day.dateString));
             }}
           />
           <TouchableOpacity
@@ -81,17 +81,17 @@ const DateAndTimePicker = ({
           </View>
           {showTimePicker && (
             <DateTimePicker
-              value={time}
+              value={new Date(time.format())}
               minuteInterval={5}
               mode="time"
               display="default"
               onChange={(_, time) => {
                 if (Platform.OS === 'android') {
                   setShowTimePicker(false);
-                  nextForm(new Date(time));
+                  nextForm(moment(time));
                   setShowFirstModal(true);
                 }
-                setTime(new Date(time));
+                setTime(moment(time));
               }}
             />
           )}

@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import {eventData} from './ChooseName';
-import {toTitleCase} from '../../../components/utils/toTitleCase';
 import moment from 'moment';
 import {Platform, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -9,12 +8,12 @@ import Fonts from '../../../../constants/Fonts';
 import CalModal from '../../../components/CalModal';
 
 const ChooseOneTime = ({navigation, route}) => {
-  const {nextView, chooseTimeMsg} = route.params;
+  const {nextView, chooseTimeMsg, btn} = route.params;
 
   const [time, setTime] = useState(
-    moment(+eventData()?.[route.params.valName], 'MM-DD-YYYY').isValid()
-      ? moment(+eventData()?.[route.params.valName])
-      : new Date('January 1, 2000 17:30:00')
+    moment(eventData()?.[route.params.valName], 'MM-DD-YYYY').isValid()
+      ? moment(eventData()?.[route.params.valName])
+      : new Date(`${moment().format('MMMM D, YYYY')} 17:30:00`)
   );
 
   const nextForm = () => {
@@ -61,7 +60,7 @@ const ChooseOneTime = ({navigation, route}) => {
             borderRadius: 4,
           }}>
           <Text style={{fontSize: 18, fontFamily: Fonts.primaryTextBold}}>
-            Choose End Time
+            {btn}
           </Text>
         </TouchableOpacity>
       </View>

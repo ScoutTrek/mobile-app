@@ -1,55 +1,54 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {View, Text, Button} from 'react-native';
 
 import ChooseName from '../event_components/ChooseName';
 import ChooseLocationView from '../event_components/ChooseLocation';
 import ChooseDateTime from '../event_components/ChooseDateTime';
-import HikeDetails from './HikeDetails';
+import BikeRideDetails from './BikeRideDetails';
 import ChooseTwoTimes from '../event_components/ChooseTwoTimes';
-import ConfirmHikeDetails from './ConfirmHikeDetails';
+import ConfirmBikeRideDetails from './ConfirmBikeRideDetails';
 import ChooseOneTime from '../event_components/ChooseOneTime';
 import UpdateEventDetails from '../event_components/UpdateEventDetails';
 
-const HikeStack = createStackNavigator();
+const Stack = createStackNavigator();
 
-const HikeStackNavigator = () => {
+const BikeRideStackNavigator = () => {
   return (
-    <HikeStack.Navigator
+    <Stack.Navigator
       screenOptions={() => ({
         headerShown: false,
       })}>
-      <HikeStack.Screen
+      <Stack.Screen
         name="ChooseName"
         component={ChooseName}
         initialParams={{
-          placeholder: 'What do you want to call your hike?',
+          placeholder: 'What do you want to call your bike ride?',
           nextView: 'ChooseLocation',
         }}
       />
-      <HikeStack.Screen
+      <Stack.Screen
         name="ChooseLocation"
         component={ChooseLocationView}
         initialParams={{
-          placeholder: 'Where do you want to hike?',
+          placeholder: 'Where do you want to start?',
           nextView: 'ChooseDateTime',
           valName: 'location',
         }}
       />
-      <HikeStack.Screen
+      <Stack.Screen
         name="ChooseDateTime"
         component={ChooseDateTime}
         options={{
           animationEnabled: false,
         }}
         initialParams={{
-          chooseDateMsg: 'What day is your hike?',
-          chooseTimeMsg: 'What time do you want to be at the trailhead?',
+          chooseDateMsg: 'What day is your bike ride?',
+          chooseTimeMsg: 'What time do you want to start riding?',
           valName: 'datetime',
           nextView: 'ChooseMeetPoint',
         }}
       />
-      <HikeStack.Screen
+      <Stack.Screen
         name="ChooseMeetPoint"
         component={ChooseLocationView}
         initialParams={{
@@ -58,7 +57,7 @@ const HikeStackNavigator = () => {
           valName: 'meetLocation',
         }}
       />
-      <HikeStack.Screen
+      <Stack.Screen
         name="ChooseMeetTime"
         component={ChooseTwoTimes}
         options={{
@@ -74,31 +73,31 @@ const HikeStackNavigator = () => {
           btn2: 'Confirm Leave Time',
         }}
       />
-      <HikeStack.Screen
+      <Stack.Screen
         name="EventDetails"
-        component={HikeDetails}
+        component={BikeRideDetails}
         initialParams={{nextView: 'ChooseEndTime'}}
       />
-      <HikeStack.Screen
+      <Stack.Screen
         name="ChooseEndTime"
         component={ChooseOneTime}
         options={{
           animationEnabled: false,
         }}
         initialParams={{
-          chooseTimeMsg: 'Around what time will you return from the hike?',
+          chooseTimeMsg: 'Around what time will you return from the bike ride?',
           nextView: 'ConfirmEventDetails',
           valName: 'endDatetime',
           btn: 'Choose End Time',
         }}
       />
-      <HikeStack.Screen
+      <Stack.Screen
         name="ConfirmEventDetails"
-        component={ConfirmHikeDetails}
+        component={ConfirmBikeRideDetails}
       />
-      <HikeStack.Screen name="EditEvent" component={UpdateEventDetails} />
-    </HikeStack.Navigator>
+      <Stack.Screen name="EditEvent" component={UpdateEventDetails} />
+    </Stack.Navigator>
   );
 };
 
-export default HikeStackNavigator;
+export default BikeRideStackNavigator;

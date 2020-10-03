@@ -15,7 +15,9 @@ const EventSnapshotList = ({schema, edit, data, navigation}) => {
               <ShowChosenTimeRow
                 key={rule.title}
                 description={rule.title}
-                value={moment(+data[rule.name]).format('MMM D, YYYY')}
+                value={moment(new Date(+data[rule.name]).toISOString()).format(
+                  'MMM D, YYYY'
+                )}
                 color={Colors.lightYellow}
                 onPress={() =>
                   navigation.navigate(rule.view, {edit, timeOnly: false})
@@ -28,7 +30,9 @@ const EventSnapshotList = ({schema, edit, data, navigation}) => {
               <ShowChosenTimeRow
                 key={rule.title}
                 description={rule.title}
-                value={moment(+data[rule.name]).format('hh:mm A')}
+                value={moment(new Date(+data[rule.name]).toISOString()).format(
+                  'hh:mm A'
+                )}
                 color={Colors.lightOrange}
                 onPress={() =>
                   navigation.navigate(rule.view, {
@@ -44,7 +48,7 @@ const EventSnapshotList = ({schema, edit, data, navigation}) => {
                 location
                 key={rule.title}
                 description={rule.title}
-                value={data[rule.name].address}
+                value={data[rule.name]?.address || 'No address'}
                 color={Colors.backgroundBlue}
                 onPress={() => navigation.navigate(rule.view, {edit})}
                 icon="ios-location"
@@ -58,7 +62,7 @@ const EventSnapshotList = ({schema, edit, data, navigation}) => {
                 description={rule.title}
                 value={
                   data[rule.name]
-                    .substring(0, 23)
+                    ?.substring(0, 23)
                     .replace(/(<([^>]+)>)/gi, '')
                     .replace(/^(&nbsp;|<br>)+/, '') + '...'
                 }

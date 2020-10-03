@@ -9,27 +9,33 @@ import {GOOGLE_MAPS_API_KEY} from '../../../../env';
 
 import {gql, useMutation, useQuery} from '@apollo/client';
 import NoShadowPurpleBtn from '../../../components/buttons/NoShadowPurpleBtn';
-import {cloneDeep} from 'lodash';
-import {eventData} from '../../events/event_components/ChooseName';
-import Constants from 'expo-constants';
 import Location from '../../../components/EventInfoComponents/Location';
 import Time from '../../../components/EventInfoComponents/Time';
+import Constants from 'expo-constants';
 import Description from '../../../components/EventInfoComponents/Description';
-import FormHeading from '../../../components/Headings/FormHeading';
-import {DELETE_EVENT} from '../hikeViews/HikeView';
+import {eventData} from '../../events/event_components/ChooseName';
+import {cloneDeep} from 'lodash';
 import {deleteEventConfig} from '../hikeViews/HikeView';
 
-export const GET_SUMMER_CAMP = gql`
-  query GetSummerCamp($id: ID!) {
+export const DELETE_EVENT = gql`
+  mutation DeleteEvent($id: ID!) {
+    deleteEvent(id: $id) {
+      id
+    }
+  }
+`;
+
+export const GET_BIKE_RIDE = gql`
+  query GetBikeRide($id: ID!) {
     event(id: $id) {
       id
       title
       description
       datetime
+      distance
       meetTime
       leaveTime
       endDatetime
-      pickupTime
       location {
         lat
         lng
@@ -48,10 +54,9 @@ export const GET_SUMMER_CAMP = gql`
   }
 `;
 
-const SummerCampView = ({route, navigation}) => {
+const EventDetailsScreen = ({route, navigation}) => {
   const {currItem} = route.params;
-  const {loading, error, data} = useQuery(GET_SUMMER_CAMP, {
-    fetchPolicy: 'network-only',
+  const {loading, error, data} = useQuery(GET_BIKE_RIDE, {
     variables: {id: currItem},
   });
 
@@ -65,7 +70,6 @@ const SummerCampView = ({route, navigation}) => {
   if (data.event.location) {
     mapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${data.event.location.lat},${data.event.location.lng}&zoom=13&size=325x375&maptype=roadmap&markers=color:blue%7C${data.event.location.lat},${data.event.location.lng}&key=${GOOGLE_MAPS_API_KEY}`;
   }
-
   return (
     <ScrollView
       style={{
@@ -79,23 +83,24 @@ const SummerCampView = ({route, navigation}) => {
         navigation={navigation}
         image_path={data.event.location ? mapUrl : null}
         title={data.event.title}
-        date={+data.event.datetime}
         name={data.event.creator.name}
+        date={+data.event.datetime}
       />
-      <Location
-        heading="Event location"
-        address={data.event.location.address}
-      />
+
       <Location
         heading="Meet Place"
         address={data.event.meetLocation.address}
       />
       <Time time={+data.event.meetTime} text="arrive at meet place" />
       <Time time={+data.event.leaveTime} text="leave meet place" />
+      <Location
+        heading="Event location"
+        address={data.event.location.address}
+      />
+      <Time time={+data.event.datetime} text="event start time" />
 
       <Description description={data.event.description} />
 
-      <FormHeading title="Message Board" />
       <View
         style={{
           marginHorizontal: 15,
@@ -112,20 +117,19 @@ const SummerCampView = ({route, navigation}) => {
           }
         />
       </View>
-
       <View style={{marginHorizontal: 15, marginBottom: 12}}>
         <InlineButton
           title="Edit"
           onPress={() => {
-            const campoutData = cloneDeep(data.event);
-            delete campoutData.id;
-            delete campoutData.creator;
-            eventData(campoutData);
-            navigation.navigate('EditCampout', {
+            const dataCopy = cloneDeep(data.event);
+            delete dataCopy.id;
+            delete dataCopy.creator;
+            eventData(dataCopy);
+            navigation.navigate('EditBikeRide', {
               screen: 'EditEvent',
               params: {
                 id: currItem,
-                type: 'Campout',
+                type: 'BikeRide',
               },
             });
           }}
@@ -160,4 +164,4 @@ const SummerCampView = ({route, navigation}) => {
   );
 };
 
-export default SummerCampView;
+export default EventDetailsScreen;

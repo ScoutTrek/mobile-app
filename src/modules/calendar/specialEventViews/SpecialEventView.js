@@ -1,26 +1,27 @@
-import React, {useEffect, useState} from 'react';
-import {View, Alert, ScrollView} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {View, ScrollView, Platform, Alert} from 'react-native';
+import * as ExpoLocation from 'expo-location';
 import EventHeader from '../components/EventHeader';
+import Location from '../../../components/EventInfoComponents/Location';
 import Colors from '../../../../constants/Colors';
 import Fonts from '../../../../constants/Fonts';
 import InlineButton from '../../../components/buttons/InlineButton';
+import Constants from 'expo-constants';
+
+import {gql, useMutation, useQuery} from '@apollo/client';
+import {deleteEventConfig, DELETE_EVENT} from '../hikeViews/HikeView';
+import NoShadowPurpleBtn from '../../../components/buttons/NoShadowPurpleBtn';
+import FormHeading from '../../../components/Headings/FormHeading';
 
 import {GOOGLE_MAPS_API_KEY} from '../../../../env';
 
-import {gql, useMutation, useQuery} from '@apollo/client';
-import NoShadowPurpleBtn from '../../../components/buttons/NoShadowPurpleBtn';
-import {cloneDeep} from 'lodash';
-import {eventData} from '../../events/event_components/ChooseName';
-import Constants from 'expo-constants';
-import Location from '../../../components/EventInfoComponents/Location';
 import Time from '../../../components/EventInfoComponents/Time';
 import Description from '../../../components/EventInfoComponents/Description';
-import FormHeading from '../../../components/Headings/FormHeading';
-import {DELETE_EVENT} from '../hikeViews/HikeView';
-import {deleteEventConfig} from '../hikeViews/HikeView';
+import {cloneDeep} from 'lodash';
+import {eventData} from '../../events/event_components/ChooseName';
 
-export const GET_SUMMER_CAMP = gql`
-  query GetSummerCamp($id: ID!) {
+export const GET_SPECIAL_EVENT = gql`
+  query GetSpecialEvent($id: ID!) {
     event(id: $id) {
       id
       title
@@ -29,7 +30,6 @@ export const GET_SUMMER_CAMP = gql`
       meetTime
       leaveTime
       endDatetime
-      pickupTime
       location {
         lat
         lng
@@ -48,9 +48,9 @@ export const GET_SUMMER_CAMP = gql`
   }
 `;
 
-const SummerCampView = ({route, navigation}) => {
+const SpecialEventView = ({route, navigation}) => {
   const {currItem} = route.params;
-  const {loading, error, data} = useQuery(GET_SUMMER_CAMP, {
+  const {loading, error, data} = useQuery(GET_SPECIAL_EVENT, {
     fetchPolicy: 'network-only',
     variables: {id: currItem},
   });
@@ -65,7 +65,6 @@ const SummerCampView = ({route, navigation}) => {
   if (data.event.location) {
     mapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${data.event.location.lat},${data.event.location.lng}&zoom=13&size=325x375&maptype=roadmap&markers=color:blue%7C${data.event.location.lat},${data.event.location.lng}&key=${GOOGLE_MAPS_API_KEY}`;
   }
-
   return (
     <ScrollView
       style={{
@@ -117,15 +116,15 @@ const SummerCampView = ({route, navigation}) => {
         <InlineButton
           title="Edit"
           onPress={() => {
-            const campoutData = cloneDeep(data.event);
-            delete campoutData.id;
-            delete campoutData.creator;
-            eventData(campoutData);
+            const specialEventData = cloneDeep(data.event);
+            delete specialEventData.id;
+            delete specialEventData.creator;
+            eventData(specialEventData);
             navigation.navigate('EditCampout', {
               screen: 'EditEvent',
               params: {
                 id: currItem,
-                type: 'Campout',
+                type: 'SpecialEvent',
               },
             });
           }}
@@ -160,4 +159,4 @@ const SummerCampView = ({route, navigation}) => {
   );
 };
 
-export default SummerCampView;
+export default SpecialEventView;

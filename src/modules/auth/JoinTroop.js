@@ -77,14 +77,18 @@ const JoinTroop = ({navigation, route}) => {
             </Text>
           </TouchableOpacity>
         ))}
-        {!isValid && <Text>Please select a troop or add one below</Text>}
+        {!isValid && (
+          <Text style={{marginTop: 10}}>
+            Please select a Troop or add one below
+          </Text>
+        )}
         <View style={styles.btnContainer}>
           <TouchableOpacity
             style={{
               justifyContent: 'center',
               width: '100%',
               borderRadius: 15,
-              backgroundColor: '#A0CD72',
+              backgroundColor: Colors.lightGreen,
               paddingHorizontal: 20,
               borderWidth: 1,
             }}
@@ -101,13 +105,13 @@ const JoinTroop = ({navigation, route}) => {
               <Text
                 style={{
                   fontSize: 19,
-                  paddingVertical: 10,
+                  paddingVertical: 8,
                   fontFamily: Fonts.primaryText,
                 }}>
                 Add Troop
               </Text>
               <AntDesign
-                style={{position: 'absolute', left: 15, top: 10}}
+                style={{position: 'absolute', left: 15, top: 8}}
                 name="pluscircleo"
                 size={24}
               />
@@ -117,7 +121,7 @@ const JoinTroop = ({navigation, route}) => {
       </View>
       {isValid && (
         <NextButton
-          text="Select your role"
+          text="Select your patrol"
           iconName="ios-arrow-round-forward"
           onClick={nextForm}
         />
@@ -131,11 +135,10 @@ const styles = StyleSheet.create({
     width: '100%',
     flex: 1,
     alignItems: 'center',
-    marginTop: 15 + Constants.statusBarHeight,
     paddingHorizontal: 15,
   },
   patrol: {
-    padding: 12,
+    padding: 11,
     margin: 10,
     width: '100%',
     paddingHorizontal: 22,

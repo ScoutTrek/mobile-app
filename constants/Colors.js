@@ -6,7 +6,7 @@ export default {
   lightGreen: '#c9dbbc',
   inactiveGreen: '#869B74',
   activeGreen: '#5C7F3F',
-  brightGreen: '#20FC8F',
+  brightGreen: '#25de8e',
   darkGreen: '#137C4E',
   yellow: '#FFCC00',
   lightYellow: '#e9d499',

@@ -21,7 +21,9 @@ import {AntDesign} from '@expo/vector-icons';
 import {gql, useApolloClient, useQuery} from '@apollo/client';
 import TroopInfo from '../troopInfo/troopInfo';
 import {useContext} from 'react';
-import {AuthContext} from '../../../App';
+import {AuthContext} from '../auth/JoinPatrol';
+
+import * as WebBrowser from 'expo-web-browser';
 
 const GET_CURR_USER = gql`
   query GetCurrUser {
@@ -60,6 +62,12 @@ function CustomDrawerContent(props) {
   const {data, loading, error} = useQuery(GET_CURR_USER);
   const client = useApolloClient();
   const {setAuthToken} = useContext(AuthContext);
+
+  const _handlePressButtonAsync = async () => {
+    let result = await WebBrowser.openBrowserAsync(
+      'https://scouttrek.com/#feedback'
+    );
+  };
 
   if (loading) return <Text> </Text>;
   if (error) return <Text>`Error, ${error}`</Text>;
@@ -143,6 +151,10 @@ function CustomDrawerContent(props) {
               </View>
             </View>
           )}
+          <DrawerItem
+            label="Suggest a feature."
+            onPress={_handlePressButtonAsync}
+          />
         </View>
       </View>
     </DrawerContentScrollView>

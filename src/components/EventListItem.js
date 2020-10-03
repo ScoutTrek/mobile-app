@@ -15,12 +15,18 @@ function getIcon(eventType) {
   switch (eventType) {
     case 'Hike':
       return <MaterialCommunityIcons name="hiking" size={27} />;
-    case 'ScoutMeeting':
+    case 'BikeRide':
+      return <MaterialCommunityIcons name="bike" size={25} />;
+    case 'Canoeing':
+      return <Ionicons name="ios-boat" size={27} />;
+    case 'TroopMeeting':
       return <Ionicons name="md-people" size={27} />;
     case 'Campout':
       return <Ionicons name="md-bonfire" size={27} />;
     case 'SummerCamp':
       return <MaterialCommunityIcons name="tent" size={24} color="black" />;
+    default:
+      return <Ionicons name="ios-compass" size={27} color="black" />;
   }
 }
 

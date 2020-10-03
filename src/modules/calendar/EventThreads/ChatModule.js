@@ -63,7 +63,7 @@ export default function ChatModule({navigation, route}) {
   } = useQuery(GET_CURR_USER_BRIEF);
 
   const {data: eventMessages, loading, error} = useQuery(GET_MESSAGES, {
-    pollInterval: 1000,
+    pollInterval: 2000,
     variables: {id: route.params.id},
   });
 

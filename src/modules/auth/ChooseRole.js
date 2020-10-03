@@ -11,6 +11,7 @@ import FormHeading from '../../components/Headings/FormHeading';
 
 const ROLES = [
   'SCOUTMASTER',
+  'ASST_SCOUTMASTER',
   'SENIOR_PATROL_LEADER',
   'PATROL_LEADER',
   'SCOUT',
@@ -52,7 +53,7 @@ const ChooseRole = ({navigation, route}) => {
         {ROLES.map((currRole) => (
           <TouchableOpacity
             onPress={() => {
-              setIsValid(currRole !== 'PARENT');
+              setIsValid(currRole !== 'PARENT' || !!children.length);
               setRole(currRole);
             }}
             style={[styles.role, currRole === role && styles.active]}
@@ -97,7 +98,7 @@ const ChooseRole = ({navigation, route}) => {
               setChildren([...children, childName]);
             }}
             heading="Please add the names of the Scouts who belong to you."
-            placeholder="child name..."
+            placeholder="Scout First name / Last Name"
           />
         )}
         {!!children.length && (
@@ -119,7 +120,7 @@ const ChooseRole = ({navigation, route}) => {
             }}>
             <NextButton
               inline
-              text="Select your patrol"
+              text="Select your Troop"
               iconName="ios-arrow-round-forward"
               onClick={nextForm}
             />

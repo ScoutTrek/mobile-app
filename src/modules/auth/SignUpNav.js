@@ -19,20 +19,6 @@ const SignUpNavigator = () => {
         name="SignUp"
         component={SignUp}
         initialParams={{
-          nextView: 'JoinTroop',
-        }}
-      />
-      <SignUpStack.Screen
-        name="JoinTroop"
-        component={JoinTroop}
-        initialParams={{
-          nextView: 'ChooseRole',
-        }}
-      />
-      <SignUpStack.Screen
-        name="CreateTroop"
-        component={CreateTroop}
-        initialParams={{
           nextView: 'ChooseRole',
         }}
       />
@@ -40,10 +26,23 @@ const SignUpNavigator = () => {
         name="ChooseRole"
         component={ChooseRole}
         initialParams={{
+          nextView: 'JoinTroop',
+        }}
+      />
+      <SignUpStack.Screen
+        name="JoinTroop"
+        component={JoinTroop}
+        initialParams={{
           nextView: 'JoinPatrol',
         }}
       />
-
+      <SignUpStack.Screen
+        name="CreateTroop"
+        component={CreateTroop}
+        initialParams={{
+          nextView: 'JoinPatrol',
+        }}
+      />
       <SignUpStack.Screen name="JoinPatrol" component={JoinPatrol} />
     </SignUpStack.Navigator>
   );

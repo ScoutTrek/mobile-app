@@ -41,21 +41,25 @@ const getColor = (label) => {
   switch (label) {
     case 'Hike':
       return Colors.blue;
+    case 'BikeRide':
+      return Colors.yellow;
+    case 'Canoeing':
+      return Colors.purple;
     case 'Meeting':
       return Colors.orange;
     case 'Campout':
       return Colors.yellow;
-    case 'SummerCamp':
+    case 'Camp':
       return Colors.green;
+    case 'Special Event':
+      return Colors.darkGreen;
     default:
       return Colors.brown;
   }
 };
 
-const currDate = new Date();
-
 const CalendarView = ({navigation}) => {
-  const {data, loading, error} = useQuery(GET_EVENTS, {pollInterval: 10000});
+  const {data, loading, error} = useQuery(GET_EVENTS);
 
   const [events, setEvents] = useFetchEvents();
 
@@ -74,31 +78,10 @@ const CalendarView = ({navigation}) => {
   };
 
   const viewEvent = (item) => {
-    if (item.type === 'Hike') {
-      navigation.navigate('ViewEvents', {
-        screen: 'Hike',
-        params: {currItem: item.id},
-      });
-    } else if (item.type === 'Meeting') {
-      navigation.navigate('ViewEvents', {
-        screen: 'ScoutMeeting',
-        params: {
-          currItem: item.id,
-        },
-      });
-    } else if (item.type === 'Campout') {
-      navigation.navigate('ViewEvents', {
-        screen: 'Campout',
-        params: {currItem: item.id},
-      });
-    } else if (item.type === 'SummerCamp') {
-      navigation.navigate('ViewEvents', {
-        screen: 'SummerCamp',
-        params: {
-          currItem: item.id,
-        },
-      });
-    }
+    navigation.navigate('ViewEvents', {
+      screen: item.type,
+      params: {currItem: item.id},
+    });
   };
 
   const renderItem = (item) => {

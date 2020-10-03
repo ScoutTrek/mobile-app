@@ -15,7 +15,10 @@ import Fonts from '../../../constants/Fonts';
 import {AntDesign, Ionicons} from '@expo/vector-icons';
 import RichInputContainer from '../../components/containers/RichInputContainer';
 import AddItemForm from './components/AddItemFormSmall';
-import {AuthContext} from '../../../App';
+export const AuthContext = React.createContext({
+  authToken: '',
+  setAuthToken: () => {},
+});
 
 const SIGN_UP = gql`
   mutation SignUp($userInfo: SignupInput!) {
@@ -200,7 +203,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
   },
   patrol: {
-    padding: 12,
+    padding: 11,
     margin: 10,
     width: '100%',
     paddingHorizontal: 22,

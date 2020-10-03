@@ -1,5 +1,12 @@
 import React, {useRef, useEffect} from 'react';
-import {View, SafeAreaView, FlatList, StyleSheet, Text} from 'react-native';
+import {
+  View,
+  SectionList,
+  SafeAreaView,
+  FlatList,
+  StyleSheet,
+  Text,
+} from 'react-native';
 import EventListItem from '../../components/EventListItem';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
@@ -37,10 +44,19 @@ export const UPDATE_EXPO_TOKEN = gql`
   }
 `;
 
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
 export default function UpcomingEvents({navigation}) {
   const {loading, error, data} = useQuery(GET_UPCOMING_EVENTS);
 
   const [updateToken] = useMutation(UPDATE_EXPO_TOKEN);
+  const notificationListener = useRef();
   const responseListener = useRef();
 
   useEffect(() => {
@@ -49,10 +65,13 @@ export default function UpcomingEvents({navigation}) {
 
   useEffect(() => {
     registerForPushNotificationsAsync();
-    Constants.isDevice && alertIfRemoteNotificationsDisabledAsync();
-  }, []);
 
-  useEffect(() => {
+    notificationListener.current = Notifications.addNotificationReceivedListener(
+      (notification) => {
+        console.log(notification);
+      }
+    );
+
     responseListener.current = Notifications.addNotificationResponseReceivedListener(
       (response) => {
         const notificationType =
@@ -76,64 +95,42 @@ export default function UpcomingEvents({navigation}) {
         }
       }
     );
+
     return () => {
+      Notifications.removeNotificationSubscription(notificationListener);
       Notifications.removeNotificationSubscription(responseListener);
     };
-  }, [navigation]);
+  }, []);
 
-  // Create Hook
   const viewEvent = (item) => {
-    if (item.type === 'Hike') {
-      navigation.navigate('ViewEvents', {
-        screen: 'Hike',
-        params: {currItem: item.id},
-      });
-    } else if (item.type === 'ScoutMeeting') {
-      navigation.navigate('ViewEvents', {
-        screen: 'ScoutMeeting',
-        params: {
-          currItem: item.id,
-        },
-      });
-    } else if (item.type === 'Campout') {
-      navigation.navigate('ViewEvents', {
-        screen: 'Campout',
-        params: {currItem: item.id},
-      });
-    } else if (item.type === 'SummerCamp') {
-      navigation.navigate('ViewEvents', {
-        screen: 'SummerCamp',
-        params: {
-          currItem: item.id,
-        },
-      });
-    }
+    navigation.navigate('ViewEvents', {
+      screen: item.type,
+      params: {currItem: item.id},
+    });
   };
 
   const registerForPushNotificationsAsync = async () => {
+    let token;
     if (Constants.isDevice) {
       const {status: existingStatus} = await Permissions.getAsync(
-        Permissions.NOTIFICATIONS,
-        Permissions.LOCATION
+        Permissions.NOTIFICATIONS
       );
       let finalStatus = existingStatus;
       if (existingStatus !== 'granted') {
         const {status} = await Permissions.askAsync(Permissions.NOTIFICATIONS);
-        const locationStatus = await Permissions.askAsync(Permissions.LOCATION);
         finalStatus = status;
       }
       if (finalStatus !== 'granted') {
         alert('Failed to get push token for push notification!');
         return;
       }
-
-      let token = await Notifications.getExpoPushTokenAsync();
+      token = (await Notifications.getExpoPushTokenAsync()).data;
 
       if (Constants.isDevice) {
         await updateToken({
           variables: {
             token: {
-              expoNotificationToken: token.data,
+              expoNotificationToken: token,
             },
           },
         });
@@ -141,52 +138,38 @@ export default function UpcomingEvents({navigation}) {
     } else {
       alert('Must use physical device for Push Notifications');
     }
-  };
 
-  async function alertIfRemoteNotificationsDisabledAsync() {
-    const {status} = await Permissions.getAsync(Permissions.NOTIFICATIONS);
-    if (status !== 'granted') {
-      alert(
-        'Hey! If you enable notifications for ScoutTrek it will help you stay updated about events.'
-      );
+    if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
     }
-  }
+  };
 
   if (error) return <Text>Error: {error}</Text>;
   if (loading) return <Text>Loading...</Text>;
-  const currentEvents = data.upcomingEvents.filter(
-    ({datetime}) => new Date(+datetime) - new Date() < 0
-  );
+  const eventListData = [
+    {
+      title: 'Happening Now',
+      data: data.upcomingEvents.filter(
+        ({datetime}) => new Date(+datetime) - new Date() < 0
+      ),
+    },
+    {
+      title: 'Upcoming Events',
+      data: data.upcomingEvents.filter(
+        ({datetime}) => new Date(+datetime) - new Date() >= 0
+      ),
+    },
+  ];
   return (
     <SafeAreaView style={styles.screen}>
-      {!!currentEvents.length && (
-        <FlatList
-          ListHeaderComponent={() => (
-            <Text style={styles.heading}>Happening Now</Text>
-          )}
-          data={currentEvents}
-          renderItem={({item}) => (
-            <EventListItem
-              key={item.id}
-              id={item.id}
-              title={item.title}
-              type={item.type}
-              date={item.datetime}
-              creator={item.creator.name}
-              onSelect={viewEvent}
-            />
-          )}
-          keyExtractor={(item) => item.id}
-        />
-      )}
-      <FlatList
-        data={data.upcomingEvents.filter(
-          ({datetime}) => new Date(+datetime) - new Date() > 0
-        )}
-        ListHeaderComponent={() => (
-          <Text style={styles.heading}>Upcoming Events</Text>
-        )}
-        ListFooterComponent={() => <View style={{margin: 30}} />}
+      <SectionList
+        sections={eventListData}
+        keyExtractor={(item) => item.id}
         renderItem={({item}) => (
           <EventListItem
             key={item.id}
@@ -198,7 +181,10 @@ export default function UpcomingEvents({navigation}) {
             onSelect={viewEvent}
           />
         )}
-        keyExtractor={(item) => item.id}
+        renderSectionHeader={({section: {title, data}}) =>
+          data.length > 0 ? <Text style={styles.heading}>{title}</Text> : null
+        }
+        ListFooterComponent={() => <View style={{margin: 10}} />}
       />
     </SafeAreaView>
   );

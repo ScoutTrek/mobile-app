@@ -1,20 +1,19 @@
 import React from 'react';
-import {View} from 'react-native';
+import {Text, View} from 'react-native';
 import SubmitBtn from '../../../components/buttons/SubmitButton';
 import ShowChosenTimeRow from '../../../components/ShowChosenTimeRow';
 import Colors from '../../../../constants/Colors';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
 import {gql, useMutation, useQuery} from '@apollo/client';
-import {GET_EVENTS} from '../../calendar/CalendarView';
 import {eventData} from '../event_components/ChooseName';
-import {updateEventCacheOptions} from '../hike/ConfirmHikeDetails';
 import FormHeading from '../../../components/Headings/FormHeading';
 import EventSnapshotList from '../../../components/EventSnapshotList';
-import {troopMeetingSchema} from '../../../../constants/DataSchema';
+import {summerCampSchema} from '../../../../constants/DataSchema';
+import {updateEventCacheOptions} from '../hike/ConfirmHikeDetails';
 
-const ADD_SCOUT_MEETING = gql`
-  mutation AddScoutMeeting($scoutMeeting: AddScoutMeetingInput!) {
-    event: addScoutMeeting(input: $scoutMeeting) {
+const ADD_SUMMER_CAMP = gql`
+  mutation AddSummerCamp($summer_camp: AddSummerCampInput!) {
+    event: addSummerCamp(input: $summer_camp) {
       id
       type
       title
@@ -32,44 +31,44 @@ const ADD_SCOUT_MEETING = gql`
   }
 `;
 
-const ConfirmTroopMeetingDetails = ({navigation, route}) => {
-  const {data} = useQuery(gql`
+const ConfirmSummerCampDetails = ({navigation}) => {
+  const {data, loading} = useQuery(gql`
     {
       eventFormState @client
     }
   `);
 
-  const [addScoutMeeting] = useMutation(
-    ADD_SCOUT_MEETING,
-    updateEventCacheOptions
-  );
+  const [addSummerCamp] = useMutation(ADD_SUMMER_CAMP, updateEventCacheOptions);
 
   const submit = () => {
-    addScoutMeeting({
+    addSummerCamp({
       variables: {
-        scoutMeeting: {...eventData()},
+        summer_camp: {...eventData()},
       },
     })
       .then(() => {
-        return new Promise((res, rej) => {
-          navigation.popToTop();
-          navigation.pop();
-          navigation.navigate('UpcomingEvents');
-          res();
-        });
+        navigation.popToTop();
+        navigation.pop();
+        navigation.navigate('UpcomingEvents');
       })
       .catch((err) => console.log(err));
   };
 
+  const back = () => {
+    navigation.goBack();
+  };
+
+  if (loading) return <Text>Loading...</Text>;
+
   return (
-    <RichInputContainer icon="back" back={navigation.goBack}>
+    <RichInputContainer icon="back" back={back}>
       <View style={{flex: 1, justifyContent: 'space-between'}}>
-        <View style={{marginVertical: 10}}>
+        <View style={{marginVertical: 8}}>
           <FormHeading title="Review Event Info" />
           <EventSnapshotList
             data={data.eventFormState}
             edit="create"
-            schema={troopMeetingSchema}
+            schema={summerCampSchema}
             navigation={navigation}
           />
         </View>
@@ -79,4 +78,4 @@ const ConfirmTroopMeetingDetails = ({navigation, route}) => {
   );
 };
 
-export default ConfirmTroopMeetingDetails;
+export default ConfirmSummerCampDetails;

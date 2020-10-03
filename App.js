@@ -2,14 +2,14 @@ import React, {useState, useEffect, useContext} from 'react';
 
 import {setCustomText} from 'react-native-global-props';
 import {ActivityIndicator, View, AsyncStorage} from 'react-native';
-import * as Notifications from 'expo-notifications';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import * as Font from 'expo-font';
+import Constants from 'expo-constants';
 import {Ionicons} from '@expo/vector-icons';
 
-import {typeDefs, resolvers} from './src/localState/User';
+import {AuthContext} from './src/modules/auth/JoinPatrol';
 
 import {
   ApolloProvider,
@@ -17,8 +17,6 @@ import {
   ApolloLink,
   InMemoryCache,
   from,
-  useQuery,
-  gql,
 } from '@apollo/client';
 
 import {createUploadLink} from 'apollo-upload-client';
@@ -34,14 +32,6 @@ import * as Sentry from 'sentry-expo';
 // Global Apollo Variable that determines if the user is signed in or not.
 import {eventData} from './src/modules/events/event_components/ChooseName';
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
-
 Sentry.init({
   dsn:
     'https://02780727dd3a4192a8b5014eee036ca1@o412271.ingest.sentry.io/5288757',
@@ -51,6 +41,7 @@ Sentry.init({
 
 const httpLink = new createUploadLink({
   uri: 'https://scouttrek-node-api.appspot.com/:4000',
+  // uri: 'http://localhost:4000/',
 });
 
 const errorMiddleware = onError(
@@ -150,11 +141,6 @@ async function loadResourcesAsync() {
 
 const Stack = createStackNavigator();
 
-export const AuthContext = React.createContext({
-  authToken: '',
-  setAuthToken: () => {},
-});
-
 export default function App() {
   const client = new ApolloClient({
     cache: new InMemoryCache({
@@ -176,8 +162,6 @@ export default function App() {
       },
     }),
     link: from([authMiddleware, errorMiddleware, httpLink]),
-    typeDefs,
-    resolvers,
   });
 
   return (

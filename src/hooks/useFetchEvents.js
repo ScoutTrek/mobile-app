@@ -35,8 +35,14 @@ const useFetchEvents = () => {
       if (eventsInMonth === []) return;
       eventsInMonth.forEach(({id, title, creator, datetime, type}) => {
         const name = creator.name.split(' ');
-        if (type === 'ScoutMeeting') {
+        if (type === 'TroopMeeting') {
           type = 'Meeting';
+        }
+        if (type === 'SpecialEvent') {
+          type = 'Special Event';
+        }
+        if (type === 'SummerCamp') {
+          type = 'Camp';
         }
         const strDate = moment(+datetime).format('YYYY-MM-DD');
         items[strDate].push({

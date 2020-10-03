@@ -15,6 +15,7 @@ import AuthInput from './components/Input';
 import Footer from './components/Footer';
 import GradientButton from '../../components/buttons/GradientButton';
 import {LinearGradient} from 'expo-linear-gradient';
+import Constants from 'expo-constants/src/Constants';
 
 export const formReducer = (state, action) => {
   if (action.type === 'UPDATE_INPUT_FIELD') {
@@ -113,9 +114,7 @@ const SignUp = ({navigation, route}) => {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.screen}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+    <View style={styles.screen} Ch>
       <LinearGradient
         colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)']}
         style={styles.gradientOverlay}
@@ -143,7 +142,9 @@ const SignUp = ({navigation, route}) => {
           </Text>
         </View>
 
-        <View style={styles.content}>
+        <KeyboardAvoidingView
+          style={styles.content}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <AuthInput
             autoCapitalize="words"
             onInputChange={(value) => handleInputChange('name', value)}
@@ -171,14 +172,14 @@ const SignUp = ({navigation, route}) => {
             secureTextEntry={true}
           />
           <GradientButton title="Sign Up" onPress={handleNext} />
-        </View>
+        </KeyboardAvoidingView>
       </View>
       <Footer
         footerText="Already have an account?"
         btnType="Sign In"
         onPress={() => navigation.navigate('SignIn')}
       />
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
@@ -187,6 +188,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     justifyContent: 'flex-end',
+    marginTop: Constants.statusBarHeight,
   },
   heading: {
     fontSize: 22,

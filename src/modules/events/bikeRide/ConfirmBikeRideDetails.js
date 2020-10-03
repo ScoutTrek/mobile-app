@@ -1,26 +1,28 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {View, ActivityIndicator} from 'react-native';
 import SubmitBtn from '../../../components/buttons/SubmitButton';
-import ShowChosenTimeRow from '../../../components/ShowChosenTimeRow';
+import EventSnapshotList from '../../../components/EventSnapshotList';
 import Colors from '../../../../constants/Colors';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
 import {gql, useMutation, useQuery} from '@apollo/client';
-import {GET_EVENTS} from '../../calendar/CalendarView';
 import {eventData} from '../event_components/ChooseName';
-import FormHeading from '../../../components/Headings/FormHeading';
-import EventSnapshotList from '../../../components/EventSnapshotList';
-import {summerCampSchema} from '../../../../constants/DataSchema';
 import {updateEventCacheOptions} from '../hike/ConfirmHikeDetails';
+import FormHeading from '../../../components/Headings/FormHeading';
+import {bikeRideSchema} from '../../../../constants/DataSchema';
 
-const ADD_SUMMER_CAMP = gql`
-  mutation AddSummerCamp($summer_camp: AddSummerCampInput!) {
-    event: addSummerCamp(input: $summer_camp) {
+const ADD_BIKE_RIDE = gql`
+  mutation AddBikeRide($bikeRide: AddBikeRideInput!) {
+    event: addBikeRide(input: $bikeRide) {
       id
       type
       title
       description
       datetime
       location {
+        lat
+        lng
+      }
+      meetLocation {
         lat
         lng
       }
@@ -32,25 +34,27 @@ const ADD_SUMMER_CAMP = gql`
   }
 `;
 
-const ConfirmSummerCampDetails = ({navigation}) => {
+const ConfirmEventDetails = ({navigation}) => {
   const {data, loading} = useQuery(gql`
     {
       eventFormState @client
     }
   `);
-
-  const [addSummerCamp] = useMutation(ADD_SUMMER_CAMP, updateEventCacheOptions);
+  const [addBikeRide] = useMutation(ADD_BIKE_RIDE, updateEventCacheOptions);
 
   const submit = () => {
-    addSummerCamp({
+    addBikeRide({
       variables: {
-        summer_camp: {...eventData()},
+        bikeRide: {...eventData()},
       },
     })
       .then(() => {
-        navigation.popToTop();
-        navigation.pop();
-        navigation.navigate('UpcomingEvents');
+        return new Promise((res, rej) => {
+          navigation.popToTop();
+          navigation.pop();
+          navigation.navigate('UpcomingEvents');
+          res();
+        });
       })
       .catch((err) => console.log(err));
   };
@@ -59,17 +63,19 @@ const ConfirmSummerCampDetails = ({navigation}) => {
     navigation.goBack();
   };
 
-  if (loading) return <Text>Loading...</Text>;
+  if (loading) {
+    return <ActivityIndicator />;
+  }
 
   return (
     <RichInputContainer icon="back" back={back}>
       <View style={{flex: 1, justifyContent: 'space-between'}}>
-        <View style={{marginVertical: 8}}>
+        <View style={{marginVertical: 10}}>
           <FormHeading title="Review Event Info" />
           <EventSnapshotList
             data={data.eventFormState}
             edit="create"
-            schema={summerCampSchema}
+            schema={bikeRideSchema}
             navigation={navigation}
           />
         </View>
@@ -79,4 +85,4 @@ const ConfirmSummerCampDetails = ({navigation}) => {
   );
 };
 
-export default ConfirmSummerCampDetails;
+export default ConfirmEventDetails;

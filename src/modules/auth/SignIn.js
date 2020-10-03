@@ -9,6 +9,7 @@ import {
   AsyncStorage,
   Platform,
 } from 'react-native';
+import Constants from 'expo-constants/src/Constants';
 import Fonts from '../../../constants/Fonts';
 import {LinearGradient} from 'expo-linear-gradient';
 import GradientButton from '../../components/buttons/GradientButton';
@@ -16,7 +17,7 @@ import AuthInput from './components/Input';
 
 import {gql, useApolloClient, useMutation} from '@apollo/client';
 import Footer from './components/Footer';
-import {AuthContext} from '../../../App';
+import {AuthContext} from './JoinPatrol';
 
 const formReducer = (state, action) => {
   if (action.type === 'UPDATE_INPUT_FIELD') {
@@ -143,6 +144,7 @@ const SignIn = ({navigation}) => {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+    marginTop: Constants.statusBarHeight,
     backgroundColor: 'white',
     justifyContent: 'flex-end',
   },

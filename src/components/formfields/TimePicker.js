@@ -5,6 +5,7 @@ import Fonts from '../../../constants/Fonts';
 
 import React, {useState} from 'react';
 import CalModal from '../CalModal';
+import moment from 'moment';
 
 const TimePicker = ({
   chooseTime1Msg,
@@ -30,14 +31,14 @@ const TimePicker = ({
           </View>
           {showTimePicker && (
             <DateTimePicker
-              value={time1}
+              value={new Date(time1.format())}
               minuteInterval={5}
               mode="time"
               is24Hour={false}
               display="default"
               onChange={(event, date) => {
                 setShowTimePicker(Platform.OS === 'ios');
-                setTime1(new Date(date));
+                setTime1(moment(date));
                 if (Platform.OS === 'android') {
                   setShowFirstModal(false);
                 }
@@ -69,7 +70,7 @@ const TimePicker = ({
           </View>
           {showTimePicker && (
             <DateTimePicker
-              value={time2}
+              value={new Date(time2.format())}
               minuteInterval={5}
               mode="time"
               is24Hour={false}
@@ -77,10 +78,10 @@ const TimePicker = ({
               onChange={(event, time) => {
                 if (Platform.OS === 'android') {
                   setShowTimePicker(false);
-                  nextForm(time);
+                  nextForm(moment(time));
                   setShowFirstModal(true);
                 }
-                setTime2(new Date(time));
+                setTime2(moment(time));
               }}
             />
           )}

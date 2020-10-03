@@ -8,19 +8,16 @@ const ChooseTwoTimes = ({navigation, route}) => {
 
   const formState = eventData();
 
+  // Need to handle if the date does not already exist in the form state.
   const [time1, setTime1] = useState(
-    moment(+formState?.[route.params.time1Name], 'MM-DD-YYYY').isValid()
-      ? moment(+eventData()?.[route.params.time1Name])
-      : new Date(
-          `${moment(+formState.datetime).format('MMMM D, YYYY')} 10:30:00`
-        )
+    moment(formState?.[route.params.time1Name], 'MM-DD-YYYY').isValid()
+      ? moment(formState?.[route.params.time1Name])
+      : moment(formState.datetime)
   );
   const [time2, setTime2] = useState(
-    moment(+formState?.[route.params.time2Name], 'MM-DD-YYYY').isValid()
-      ? moment(+eventData()?.[route.params.time2Name])
-      : new Date(
-          `${moment(+formState.datetime).format('MMMM D, YYYY')} 11:00:00`
-        )
+    moment(formState?.[route.params.time2Name], 'MM-DD-YYYY').isValid()
+      ? moment(formState?.[route.params.time2Name])
+      : moment(formState.datetime)
   );
 
   const nextForm = (timeParam) => {
