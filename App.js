@@ -61,10 +61,12 @@ const errorMiddleware = onError(
 
 const authMiddleware = new ApolloLink(async (operation, forward) => {
   // add the authorization to the headers
+  const curr_membership = await AsyncStorage.getItem('currMembershipID');
   const token = await AsyncStorage.getItem('userToken');
   operation.setContext({
     headers: {
       authorization: token,
+      curr_membership,
     },
   });
   return forward(operation);

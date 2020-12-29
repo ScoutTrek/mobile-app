@@ -1,5 +1,12 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, Dimensions} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  Button,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import {makeVar} from '@apollo/client';
 
 import NextButton from '../../../components/buttons/NextButton';
@@ -54,15 +61,11 @@ const ChooseName = ({navigation, route}) => {
             heading={route.params.placeholder}
           />
         </View>
-        {nameIsValid && (
-          <NextButton
-            inline
-            text={eventData() === {} ? `Choose Location` : `Confirm`}
-            iconName="ios-arrow-round-forward"
-            onClick={nextForm}
-          />
-        )}
       </View>
+      <NextButton
+        iconName="ios-checkmark"
+        onClick={() => navigation.goBack()}
+      />
     </RichInputContainer>
   );
 };

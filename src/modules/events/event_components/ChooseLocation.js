@@ -135,11 +135,7 @@ const ChooseLocation = ({navigation, route}) => {
         />
       </View>
       {locationCoords && (
-        <NextButton
-          text="Next"
-          iconName="ios-arrow-round-forward"
-          onClick={nextForm}
-        />
+        <NextButton iconName="ios-checkmark" onClick={nextForm} />
       )}
     </View>
   );

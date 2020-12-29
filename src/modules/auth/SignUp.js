@@ -114,7 +114,7 @@ const SignUp = ({navigation, route}) => {
   };
 
   return (
-    <View style={styles.screen} Ch>
+    <View style={styles.screen}>
       <LinearGradient
         colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)']}
         style={styles.gradientOverlay}

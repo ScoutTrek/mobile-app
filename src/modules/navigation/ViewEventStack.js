@@ -39,7 +39,7 @@ const ViewEventStackNavigator = ({navigation}) => {
       <ViewEventStack.Screen name="Hike" component={HikeView} />
       <ViewEventStack.Screen name="EditHike" component={HikeStackNavigator} />
 
-      <ViewEventStack.Screen name="TroopMeeting" component={TroopMeetingView} />
+      <ViewEventStack.Screen name="Meeting" component={TroopMeetingView} />
       <ViewEventStack.Screen
         name="EditTroopMeeting"
         component={TroopMeetingStackNavigator}

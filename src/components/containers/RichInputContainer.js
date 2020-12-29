@@ -18,7 +18,10 @@ const RichInputContainer = (props) => (
     keyboardVerticalOffset={0}
     style={styles.screen}>
     <ScrollView
-      contentContainerStyle={{flexGrow: 1}}
+      contentContainerStyle={[
+        {flexGrow: 1},
+        props.background && {backgroundColor: props.background},
+      ]}
       keyboardDismissMode="none"
       keyboardShouldPersistTaps="always">
       {props.icon === 'back' ? (

@@ -11,7 +11,7 @@ import FormHeading from '../../../components/Headings/FormHeading';
 import {hikeSchema} from '../../../../constants/DataSchema';
 import {GET_UPCOMING_EVENTS} from '../../home/UpcomingEvents';
 
-const ADD_HIKE = gql`
+const ADD_EVENT = gql`
   mutation AddHike($hike: AddHikeInput!) {
     event: addHike(input: $hike) {
       id

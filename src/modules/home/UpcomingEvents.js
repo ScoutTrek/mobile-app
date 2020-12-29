@@ -104,7 +104,7 @@ export default function UpcomingEvents({navigation}) {
 
   const viewEvent = (item) => {
     navigation.navigate('ViewEvents', {
-      screen: item.type,
+      screen: item.type === 'TroopMeeting' ? 'Meeting' : item.type,
       params: {currItem: item.id},
     });
   };
@@ -135,8 +135,6 @@ export default function UpcomingEvents({navigation}) {
           },
         });
       }
-    } else {
-      alert('Must use physical device for Push Notifications');
     }
 
     if (Platform.OS === 'android') {

@@ -2,6 +2,7 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {View, Text, Button} from 'react-native';
 
+import CreateEvent from '../createEvent/CreateEvent';
 import ChooseName from '../event_components/ChooseName';
 import ChooseLocationView from '../event_components/ChooseLocation';
 import ChooseDateTime from '../event_components/ChooseDateTime';
@@ -19,6 +20,14 @@ const HikeStackNavigator = () => {
       screenOptions={() => ({
         headerShown: false,
       })}>
+      <HikeStack.Screen
+        name="CreateEvent"
+        component={CreateEvent}
+        initialParams={{
+          placeholder: 'What do you want to call your hike?',
+          nextView: 'ChooseLocation',
+        }}
+      />
       <HikeStack.Screen
         name="ChooseName"
         component={ChooseName}
