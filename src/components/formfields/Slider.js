@@ -6,7 +6,9 @@ import FormHeading from '../Headings/FormHeading';
 const CustomSlider = ({title, distance, setDistance, min, max}) => {
   return (
     <View style={styles.sliderContainer}>
-      <FormHeading title={title} />
+      <Text style={{fontSize: 60, padding: 15}}>{distance}</Text>
+      {title ? <FormHeading title={title} /> : null}
+
       <View style={styles.sliderRow}>
         <Slider
           minimumValue={min}
@@ -16,7 +18,6 @@ const CustomSlider = ({title, distance, setDistance, min, max}) => {
           value={distance}
           onValueChange={setDistance}
         />
-        <Text style={styles.sliderText}>{distance}</Text>
       </View>
     </View>
   );
@@ -24,13 +25,14 @@ const CustomSlider = ({title, distance, setDistance, min, max}) => {
 
 const styles = StyleSheet.create({
   sliderContainer: {
-    marginVertical: 20,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   sliderRow: {
     flexDirection: 'row',
-    flex: 1,
-    marginLeft: 18,
-    marginRight: 8,
+    marginVertical: 18,
+    marginHorizontal: 28,
   },
   slider: {
     flex: 7,

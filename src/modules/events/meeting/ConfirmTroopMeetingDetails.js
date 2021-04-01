@@ -6,7 +6,7 @@ import Colors from '../../../../constants/Colors';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
 import {gql, useMutation, useQuery} from '@apollo/client';
 import {GET_EVENTS} from '../../calendar/CalendarView';
-import {eventData} from '../event_components/ChooseName';
+import {eventData} from '../../../../App';
 import {updateEventCacheOptions} from '../hike/ConfirmHikeDetails';
 import FormHeading from '../../../components/Headings/FormHeading';
 import EventSnapshotList from '../../../components/EventSnapshotList';
@@ -35,7 +35,7 @@ const ADD_SCOUT_MEETING = gql`
 const ConfirmTroopMeetingDetails = ({navigation, route}) => {
   const {data} = useQuery(gql`
     {
-      eventFormState @client
+      eventData @client
     }
   `);
 
@@ -67,7 +67,7 @@ const ConfirmTroopMeetingDetails = ({navigation, route}) => {
         <View style={{marginVertical: 10}}>
           <FormHeading title="Review Event Info" />
           <EventSnapshotList
-            data={data.eventFormState}
+            data={data.eventData}
             edit="create"
             schema={troopMeetingSchema}
             navigation={navigation}

@@ -11,10 +11,10 @@ import {gql, useMutation, useQuery} from '@apollo/client';
 import NoShadowPurpleBtn from '../../../components/buttons/NoShadowPurpleBtn';
 import Location from '../../../components/EventInfoComponents/Location';
 import Time from '../../../components/EventInfoComponents/Time';
-import {DELETE_EVENT} from '../hikeViews/HikeView';
+import {DELETE_EVENT} from '../EventView';
 import Description from '../../../components/EventInfoComponents/Description';
 import {cloneDeep} from 'lodash';
-import {eventData} from '../../events/event_components/ChooseName';
+import {eventData} from '../../../../App';
 import Constants from 'expo-constants';
 
 export const GET_SCOUT_MEETING = gql`

@@ -1,10 +1,9 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import ChooseLocationView from '../event_components/ChooseLocation';
+import ChooseLocationView from '../components/ChooseLocation';
 import TroopMeetingDetails from './TroopMeetingDetails';
-import UpdateEventDetails from '../event_components/UpdateEventDetails';
-import ChooseOneTime from '../event_components/ChooseOneTime';
+import ChooseOneTime from '../components/ChooseOneTime';
 import ConfirmTroopMeetingDetails from './ConfirmTroopMeetingDetails';
 
 const ScoutMeeting = createStackNavigator();
@@ -22,7 +21,6 @@ const ScoutMeetingStackNavigator = () => {
           nextView: 'ChooseMeetingTime',
         }}
       />
-
       <ScoutMeeting.Screen
         name="ChooseMeetingTime"
         component={ChooseOneTime}
@@ -49,7 +47,6 @@ const ScoutMeetingStackNavigator = () => {
         name="ConfirmEventDetails"
         component={ConfirmTroopMeetingDetails}
       />
-      <ScoutMeeting.Screen name="EditEvent" component={UpdateEventDetails} />
     </ScoutMeeting.Navigator>
   );
 };

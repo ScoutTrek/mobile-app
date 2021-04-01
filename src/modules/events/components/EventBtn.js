@@ -18,14 +18,20 @@ const EventBtn = ({item, onPress}) => {
       onPress={onPress}>
       <View style={styles.eventContent}>
         <View style={styles.textContainer}>
-          <Text style={styles.eventTitle}>{item.eventType}</Text>
+          <Text style={styles.eventTitle}>
+            {item.eventID
+              .replace('_', ' ')
+              .toLowerCase()
+              .replace(/\b[a-z](?=[a-z]{2})/g, (letter) =>
+                letter.toUpperCase()
+              )}
+          </Text>
           <Text style={styles.eventSubTitle}>{item.subtitle}</Text>
         </View>
         <LinearGradient
           colors={['rgba(32, 32, 32, 0.1)', 'rgba(32, 32, 32, 0.9)']}
           style={styles.gradient}
         />
-
         <ImageBackground
           style={styles.eventImage}
           source={item.image}

@@ -5,7 +5,7 @@ import Fonts from '../../../constants/Fonts';
 
 const FormHeading = ({title, indented}) => {
   return (
-    <Text style={[styles.formHeading, indented && {marginHorizontal: 0}]}>
+    <Text style={[styles.formHeading, indented && {marginHorizontal: 18}]}>
       {title}
     </Text>
   );
@@ -14,7 +14,7 @@ const FormHeading = ({title, indented}) => {
 const styles = StyleSheet.create({
   formHeading: {
     fontSize: 17,
-    marginHorizontal: 20,
+    fontFamily: Fonts.primaryTextBold,
     marginBottom: 6,
     marginTop: 3,
   },

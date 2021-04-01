@@ -13,9 +13,9 @@ import Location from '../../../components/EventInfoComponents/Location';
 import Time from '../../../components/EventInfoComponents/Time';
 import Constants from 'expo-constants';
 import Description from '../../../components/EventInfoComponents/Description';
-import {eventData} from '../../events/event_components/ChooseName';
+import {eventData} from '../../../../App';
 import {cloneDeep} from 'lodash';
-import {deleteEventConfig} from '../hikeViews/HikeView';
+import {deleteEventConfig} from '../EventView';
 
 export const DELETE_EVENT = gql`
   mutation DeleteEvent($id: ID!) {
@@ -25,8 +25,8 @@ export const DELETE_EVENT = gql`
   }
 `;
 
-export const GET_BIKE_RIDE = gql`
-  query GetBikeRide($id: ID!) {
+export const GET_EVENT = gql`
+  query GetEvent($id: ID!) {
     event(id: $id) {
       id
       title
@@ -56,7 +56,7 @@ export const GET_BIKE_RIDE = gql`
 
 const EventDetailsScreen = ({route, navigation}) => {
   const {currItem} = route.params;
-  const {loading, error, data} = useQuery(GET_BIKE_RIDE, {
+  const {loading, error, data} = useQuery(GET_EVENT, {
     variables: {id: currItem},
   });
 

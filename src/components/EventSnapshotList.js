@@ -15,7 +15,7 @@ const EventSnapshotList = ({schema, edit, data, navigation}) => {
               <ShowChosenTimeRow
                 key={rule.title}
                 description={rule.title}
-                value={moment(new Date(+data[rule.name]).toISOString()).format(
+                value={moment(new Date(data[rule.name]).toISOString()).format(
                   'MMM D, YYYY'
                 )}
                 color={Colors.lightYellow}
@@ -30,7 +30,7 @@ const EventSnapshotList = ({schema, edit, data, navigation}) => {
               <ShowChosenTimeRow
                 key={rule.title}
                 description={rule.title}
-                value={moment(new Date(+data[rule.name]).toISOString()).format(
+                value={moment(new Date(data[rule.name]).toISOString()).format(
                   'hh:mm A'
                 )}
                 color={Colors.lightOrange}

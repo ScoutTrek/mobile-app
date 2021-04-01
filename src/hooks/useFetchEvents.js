@@ -26,14 +26,17 @@ const useFetchEvents = () => {
     if (calData.month === prevRenderMonth) return;
     if (calData) {
       const eventsInMonth = data.events.filter(
-        ({datetime}) =>
-          new Date(+datetime).getMonth() + 1 === calData.month &&
-          new Date(+datetime).getFullYear() === 2020
+        ({date}) =>
+          new Date(+date).getMonth() + 1 === calData.month &&
+          new Date(+date).getFullYear() === 2021
       );
 
       const items = getMonthObject(calData.dateString);
-      if (eventsInMonth === []) return;
-      eventsInMonth.forEach(({id, title, creator, datetime, type}) => {
+      if (!eventsInMonth.length) {
+        setEvents(items);
+        return;
+      }
+      eventsInMonth.forEach(({id, title, creator, date, type}) => {
         const name = creator.name.split(' ');
         if (type === 'TroopMeeting') {
           type = 'Meeting';
@@ -44,12 +47,12 @@ const useFetchEvents = () => {
         if (type === 'SummerCamp') {
           type = 'Camp';
         }
-        const strDate = moment(+datetime).format('YYYY-MM-DD');
+        const strDate = moment(+date).format('YYYY-MM-DD');
         items[strDate].push({
           title,
           type,
           id,
-          datetime,
+          date,
           labels: [
             `${name[0]} ${name[1] ? name[1].substring(0, 1) : ''}`,
             type,

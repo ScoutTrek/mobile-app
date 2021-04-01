@@ -4,11 +4,11 @@ import Colors from '../../../constants/Colors';
 import Fonts from '../../../constants/Fonts';
 
 const Input = (props) => {
-  const {value, disabled, heading} = props;
+  const {disabled, heading} = props;
 
   return (
     <View style={styles.formControl}>
-      <Text style={styles.label}>{heading}</Text>
+      {heading && <Text style={styles.label}>{heading}</Text>}
       <TextInput
         {...props}
         editable={!disabled}
@@ -21,7 +21,7 @@ const Input = (props) => {
 const styles = StyleSheet.create({
   formControl: {
     width: '100%',
-    marginBottom: 15,
+    padding: 16,
   },
   label: {
     fontFamily: Fonts.primaryTextBold,
@@ -30,13 +30,14 @@ const styles = StyleSheet.create({
     marginBottom: 28,
   },
   input: {
-    padding: 18,
+    paddingHorizontal: 25,
+    paddingVertical: 18,
     fontSize: 18,
     borderTopRightRadius: 4,
     borderTopLeftRadius: 4,
     backgroundColor: '#fff',
     borderBottomWidth: 2,
-    borderBottomColor: Colors.purple,
+    borderColor: Colors.purple,
 
     shadowColor: '#000',
     shadowOffset: {

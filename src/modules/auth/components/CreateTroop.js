@@ -209,7 +209,7 @@ const CreateTroop = ({navigation, route}) => {
         {formState.formIsValid && (
           <NextButton
             text="Select your role"
-            iconName="ios-arrow-round-forward"
+            iconName="arrow-forward-outline"
             onClick={nextForm}
           />
         )}

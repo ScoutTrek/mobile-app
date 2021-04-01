@@ -19,7 +19,7 @@ const Description = ({description}) => {
                             <meta charset="UTF-8">
                             <meta name="viewport" content="width=device-width, initial-scale=0.99">
                         </head>
-                        <body style="background-color: #fff; font-size: 15px; font-family: Montserrat, Raleway, serif">
+                        <body style="background-color: ${Colors.offWhite}; padding: 10px; font-size: 15px; font-family: Montserrat, Raleway, serif">
                             ${description}
                         </body>
                     </html>`,
@@ -31,9 +31,8 @@ const Description = ({description}) => {
 
 const styles = StyleSheet.create({
   description: {
-    borderColor: Colors.lightGray,
-    borderTopWidth: 1,
-    borderBottomWidth: 1,
+    borderRadius: 4,
+    backgroundColor: Colors.offWhite,
     marginVertical: 30,
     marginHorizontal: 15,
     paddingVertical: 15,

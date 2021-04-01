@@ -17,6 +17,8 @@ import {
   ApolloLink,
   InMemoryCache,
   from,
+  makeVar,
+  gql,
 } from '@apollo/client';
 
 import {createUploadLink} from 'apollo-upload-client';
@@ -30,17 +32,16 @@ import ViewEventStackNavigator from './src/modules/navigation/ViewEventStack';
 import * as Sentry from 'sentry-expo';
 
 // Global Apollo Variable that determines if the user is signed in or not.
-import {eventData} from './src/modules/events/event_components/ChooseName';
 
-Sentry.init({
-  dsn:
-    'https://02780727dd3a4192a8b5014eee036ca1@o412271.ingest.sentry.io/5288757',
-  enableInExpoDevelopment: false,
-  debug: true,
-});
+// Sentry.init({
+//   dsn:
+//     'https://02780727dd3a4192a8b5014eee036ca1@o412271.ingest.sentry.io/5288757',
+//   enableInExpoDevelopment: false,
+//   debug: true,
+// });
 
 const httpLink = new createUploadLink({
-  uri: 'https://scouttrek-node-api.appspot.com/:4000',
+  uri: 'https://beta-dot-scouttrek-node-api.appspot.com/:4000',
   // uri: 'http://localhost:4000/',
 });
 
@@ -143,13 +144,15 @@ async function loadResourcesAsync() {
 
 const Stack = createStackNavigator();
 
+export const eventData = makeVar({});
+
 export default function App() {
   const client = new ApolloClient({
     cache: new InMemoryCache({
       typePolicies: {
         Query: {
           fields: {
-            eventFormState: {
+            eventData: {
               read() {
                 return eventData();
               },

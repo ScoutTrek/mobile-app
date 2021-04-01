@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {StyleSheet, View, FlatList} from 'react-native';
+import React from 'react';
+import {StyleSheet, View, ActivityIndicator, FlatList} from 'react-native';
 
 import Constants from 'expo-constants';
 
@@ -8,17 +8,15 @@ import NextButton from '../../components/buttons/NextButton';
 
 import EventBtn from './components/EventBtn';
 import Colors from '../../../constants/Colors';
+import {gql, useQuery} from '@apollo/client';
+
+export const GET_EVENT_SCHEMAS = gql`
+  query EventSchemas {
+    eventSchemas
+  }
+`;
 
 const listData = [
-  {
-    id: 0,
-    eventType: 'Hike',
-    subtitle: 'Plan a visit to the trail, let ScoutTrek take care of the rest.',
-    image: {
-      uri:
-        'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1582556921/ScoutTrek/hiking_trip.png',
-    },
-  },
   {
     id: 1,
     eventType: 'Troop Meeting',
@@ -26,33 +24,6 @@ const listData = [
     image: {
       uri:
         'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1582557266/ScoutTrek/ScoutBadgesImage.jpg',
-    },
-  },
-  {
-    id: 2,
-    eventType: 'Campout',
-    subtitle: 'Spend a few days in the wild outdoors.',
-    image: {
-      uri:
-        'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,e_contrast:-25,w_600/v1595086345/ScoutTrek/campfire.png',
-    },
-  },
-  {
-    id: 3,
-    eventType: 'Summer Camp',
-    subtitle: 'A week of non-stop fun away from home.',
-    image: {
-      uri:
-        'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1590852981/ScoutTrek/ben-white-pV5ckb2HEVk-unsplash.jpg',
-    },
-  },
-  {
-    id: 4,
-    eventType: 'Bike Ride',
-    subtitle: 'Feel the wind in your face.',
-    image: {
-      uri:
-        'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1599596052/ScoutTrek/bikeride.jpg',
     },
   },
   {
@@ -65,50 +36,47 @@ const listData = [
     },
   },
   {
-    id: 6,
-    eventType: 'Special Event',
-    subtitle: "Plan an event that doesn't fit our templates above.",
+    id: 3,
+    eventType: 'Backpacking',
+    title: 'CITIZEN ECO-DRIVE',
+    subtitle: "It's like hiking, but more Pro.",
+    badge: 'NEW',
+    badgeColor: 'green',
     image: {
       uri:
-        'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1599241295/ScoutTrek/luke-porter-mGFJIUD9yiM-unsplash.jpg',
+        'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1582556924/ScoutTrek/backpacking_trip.png',
     },
   },
-  // {
-  //   id: 3,
-  //   eventType: 'Backpacking',
-  //   title: 'CITIZEN ECO-DRIVE',
-  //   subtitle: "It's like hiking, but more Pro.",
-  //   badge: 'NEW',
-  //   badgeColor: 'green',
-  //   image: {
-  //     uri:
-  //       'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1582556924/ScoutTrek/backpacking_trip.png',
-  //   },
-  // },
 ];
 
 const EventTypesScreen = ({navigation}) => {
-  const [data, setData] = useState(listData);
+  const {loading, error, data} = useQuery(GET_EVENT_SCHEMAS);
 
-  const _openEventCreator = (route, data) => {
-    navigation.navigate(route, {...data});
-  };
+  if (loading) {
+    return <ActivityIndicator />;
+  }
+
+  const eventSchemasArr = Object.values(data['eventSchemas']);
 
   return (
     <View style={styles.container}>
       <ViewHeading title="New Event" />
       <FlatList
         contentContainerStyle={{flexGrow: 1, paddingBottom: 15}}
-        keyExtractor={(item) => item.id.toString()}
-        data={data}
-        renderItem={({item}) => (
-          <EventBtn
-            item={item}
-            onPress={() =>
-              _openEventCreator(item.eventType.replace(/\s/g, ''), item)
-            }
-          />
-        )}
+        keyExtractor={(item) => item.metaData.eventID}
+        data={eventSchemasArr}
+        renderItem={({item}) => {
+          return (
+            <EventBtn
+              item={item.metaData}
+              onPress={() =>
+                navigation.navigate('CreateEvent', {
+                  type: item.metaData.eventID,
+                })
+              }
+            />
+          );
+        }}
       />
       <NextButton
         text="Cancel"

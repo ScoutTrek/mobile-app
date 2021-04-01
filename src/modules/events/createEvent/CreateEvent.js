@@ -1,165 +1,146 @@
-import React, {useState, useEffect} from 'react';
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  Button,
-  TouchableOpacity,
-  Text,
-} from 'react-native';
-import {makeVar} from '@apollo/client';
-import {LinearGradient} from 'expo-linear-gradient';
-
-import Fonts from '../../../../constants/Fonts';
-
-import NextButton from '../../../components/buttons/NextButton';
-import Input from '../../../components/formfields/Input';
+import React from 'react';
+import {gql, useMutation, useQuery} from '@apollo/client';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
-import ViewHeading from '../../../components/Headings/ViewHeading';
-import FormHeading from '../../../components/Headings/FormHeading';
+import EventInputTemplate from '../../../components/EventInputs/EventInputTemplate';
+import {GET_EVENTS} from '../../calendar/CalendarView';
+import {EventFragment, GET_UPCOMING_EVENTS} from '../../home/UpcomingEvents';
+import SubmitBtn from '../../../components/buttons/SubmitButton';
+import {eventData, eventData as resetEventData} from '../../../../App';
 
-import TitleButtonFakeInput from '../../../components/formfields/TitleButtonFakeInput';
+const ADD_EVENT = gql`
+  ${EventFragment}
+  mutation AddEvent($event: AddEventInput!) {
+    event: addEvent(input: $event) {
+      ...EventFragment
+    }
+  }
+`;
 
-const Row = ({children, valid}) => {
-  return (
-    <View
-      style={[
-        {
-          flexDirection: 'row',
-          justifyContent: 'flex-start',
-          alignItems: 'center',
-          borderColor: '#FFCC00',
-          paddingLeft: 2,
-          marginVertical: 5,
-        },
-        valid && {
-          borderLeftWidth: 7.5,
-        },
-      ]}>
-      {children}
-    </View>
-  );
-};
+export const UPDATE_EVENT = gql`
+  ${EventFragment}
+  mutation UpdateEvent($id: ID!, $updates: UpdateEventInput!) {
+    updateEvent(id: $id, input: $updates) {
+      ...EventFragment
+    }
+  }
+`;
 
-export const eventData = makeVar({});
+export const GET_EVENT_DATA = gql`
+  query GetEventData {
+    eventData @client
+  }
+`;
+
+export const GET_EVENT_SCHEMAS = gql`
+  query EventSchemas {
+    eventSchemas
+  }
+`;
 
 const CreateEvent = ({navigation, route}) => {
-  const {nextView} = route.params;
-  const [name, setName] = useState(eventData()?.title || '');
-  const [nameIsValid, setNameIsValid] = useState(eventData() === {} || false);
+  const back = () => {
+    resetEventData({});
+    navigation.goBack();
+  };
+  const [addEvent] = useMutation(ADD_EVENT, {
+    update(cache, {data: {event}}) {
+      try {
+        const {events} = cache.readQuery({query: GET_EVENTS});
+        cache.writeQuery({
+          query: GET_EVENTS,
+          data: {events: events.concat([event])},
+        });
+        const {upcomingEvents} = cache.readQuery({query: GET_UPCOMING_EVENTS});
+        cache.writeQuery({
+          query: GET_UPCOMING_EVENTS,
+          data: {upcomingEvents: upcomingEvents.concat([event])},
+        });
+      } catch {
+        cache.writeQuery({
+          query: GET_EVENTS,
+          data: {events: [event]},
+        });
+      }
+    },
+  });
+  const {loading: schemaLoading, data} = useQuery(GET_EVENT_SCHEMAS);
 
-  const back = () => navigation.popToTop();
-  const nextForm = () => {
-    if (nameIsValid) {
-      eventData({
-        ...eventData(),
-        title: name,
-      });
-      navigation.navigate(
-        route.params.edit === 'create'
-          ? 'ConfirmEventDetails'
-          : route.params.edit === 'edit'
-          ? 'EditEvent'
-          : nextView
-      );
+  const {
+    loading,
+    error,
+    data: {eventData},
+  } = useQuery(GET_EVENT_DATA);
+  const [updateEvent] = useMutation(UPDATE_EVENT);
+
+  if (schemaLoading) return null;
+
+  const schema = data['eventSchemas'][route.params.type.toLowerCase()];
+
+  const createEvent = () => {
+    if (true) {
+      const eventDataCopy = {...eventData};
+      if (route.params.update) {
+        const omitTypename = (key, value) =>
+          key === '__typename' ? undefined : value;
+        const cleanedEventData = JSON.parse(
+          JSON.stringify(eventDataCopy),
+          omitTypename
+        );
+        updateEvent({
+          variables: {id: route.params.id, updates: cleanedEventData},
+        })
+          .then(() => {
+            return new Promise((res, rej) => {
+              navigation.goBack();
+              res();
+            });
+          })
+          .catch((err) => console.log(err));
+      } else {
+        addEvent({
+          variables: {
+            event: {
+              type: schema.metaData.eventID,
+              ...eventDataCopy,
+            },
+          },
+        })
+          .then(() => {
+            return new Promise((res, rej) => {
+              navigation.popToTop();
+              navigation.navigate('UpcomingEvents');
+              res();
+            });
+          })
+          .catch((err) => console.log(err));
+      }
     }
   };
 
+  const disabledFields = schema.options.reduce((accumulator, currentValue) => {
+    return eventData?.[currentValue.condition] === currentValue['shown']
+      ? [...accumulator]
+      : [...accumulator, ...currentValue.hiddenFields];
+  }, []);
+
   return (
     <RichInputContainer background={'#fff'} icon="back" back={back}>
-      <Row valid={true}>
-        <TitleButtonFakeInput
-          navigation={navigation}
-          onPress={() => navigation.navigate('ChooseName')}
-          heading="Hike Title"
-        />
-      </Row>
-      <Row valid={true}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('ChooseLocation')}
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <LinearGradient
-            colors={['rgba(104, 237, 180, 0.045)', 'rgba(23, 161, 101, 0.075)']}
-            start={{x: 0.6, y: 0}}
-            end={{x: 0.55, y: 1}}
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 19,
-              marginHorizontal: 16,
-              flexDirection: 'row',
-            }}>
-            <Text
-              style={{
-                fontSize: 24.5,
-                paddingLeft: 18,
-                fontFamily: Fonts.primaryTextBold,
-                color: '#138855',
-              }}>
-              +
-            </Text>
-            <Text
-              style={{
-                paddingRight: 18,
-                paddingLeft: 8,
-                paddingVertical: 8.5,
-                fontSize: 18.5,
-                fontFamily: Fonts.primaryTextBold,
-                color: '#138855',
-              }}>
-              Location
-            </Text>
-          </LinearGradient>
-        </TouchableOpacity>
-      </Row>
-      <Row valid={true}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('ChooseDateTime')}
-          style={{
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}>
-          <LinearGradient
-            colors={['rgba(104, 237, 180, 0.045)', 'rgba(23, 161, 101, 0.075)']}
-            start={{x: 0.6, y: 0}}
-            end={{x: 0.55, y: 1}}
-            style={{
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: 19,
-              marginHorizontal: 16,
-              flexDirection: 'row',
-            }}>
-            <Text
-              style={{
-                fontSize: 24.5,
-                paddingLeft: 18,
-                fontFamily: Fonts.primaryTextBold,
-                color: '#138855',
-              }}>
-              +
-            </Text>
-            <Text
-              style={{
-                paddingRight: 18,
-                paddingLeft: 8,
-                paddingVertical: 8.5,
-                fontSize: 18.5,
-                fontFamily: Fonts.primaryTextBold,
-                color: '#138855',
-              }}>
-              Date & time
-            </Text>
-          </LinearGradient>
-        </TouchableOpacity>
-      </Row>
+      {schema.form.map(
+        (field) =>
+          !disabledFields.includes(field.fieldID) && (
+            <EventInputTemplate
+              fieldType={field.fieldType}
+              key={field.fieldID}
+              id={field.fieldID}
+              fieldName={field.title}
+              questionText={field.questionText}
+              payload={field?.payload}
+            />
+          )
+      )}
+      <SubmitBtn title="Create Event" submit={createEvent} />
     </RichInputContainer>
   );
 };
-
-const styles = StyleSheet.create({});
 
 export default CreateEvent;

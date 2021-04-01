@@ -4,7 +4,7 @@ import {Image} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import CalendarNav from '../calendar/CalendarNav';
-import NewEventNav from './EventsNavigator';
+import EventsCreatorNavigator from './EventCreatorNavigator';
 import {AntDesign} from '@expo/vector-icons';
 import HomeNav from './DrawerNavigator';
 
@@ -40,7 +40,7 @@ const MainBottomTabNavigator = () => {
       />
       <MainBottomTab.Screen
         name="New Event"
-        component={NewEventNav}
+        component={EventsCreatorNavigator}
         options={{
           tabBarVisible: false,
           headerShown: true,

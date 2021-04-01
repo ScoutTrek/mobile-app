@@ -6,10 +6,10 @@ import {StyleSheet} from 'react-native';
 export default function BackIcon({back, white}) {
   return (
     <Ionicons
-      name="ios-arrow-round-back"
+      name="ios-chevron-back"
       color={white ? '#fff' : Colors.darkBrown}
       style={styles.backIcon}
-      size={40}
+      size={28}
       onPress={back}
     />
   );
@@ -19,8 +19,8 @@ const styles = StyleSheet.create({
   backIcon: {
     position: 'absolute',
     paddingHorizontal: 10,
-    top: 1,
-    left: '2.5%',
+    top: 5,
+    left: '2%',
     zIndex: 1,
   },
 });

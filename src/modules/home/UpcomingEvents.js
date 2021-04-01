@@ -14,24 +14,43 @@ import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
 import {gql, useMutation, useQuery} from '@apollo/client';
 import Colors from '../../../constants/Colors';
-import {eventData} from '../events/event_components/ChooseName';
+
+export const EventFragment = gql`
+  fragment EventFragment on Event {
+    id
+    type
+    title
+    description
+    date
+    startTime
+    distance
+    uniqueMeetLocation
+    meetTime
+    leaveTime
+    endTime
+    endDate
+    location {
+      lat
+      lng
+      address
+    }
+    meetLocation {
+      lat
+      lng
+      address
+    }
+    creator {
+      id
+      name
+    }
+  }
+`;
 
 export const GET_UPCOMING_EVENTS = gql`
+  ${EventFragment}
   query UpcomingEvents {
     upcomingEvents {
-      id
-      type
-      title
-      description
-      datetime
-      location {
-        lat
-        lng
-      }
-      creator {
-        id
-        name
-      }
+      ...EventFragment
     }
   }
 `;
@@ -53,48 +72,43 @@ Notifications.setNotificationHandler({
 });
 
 export default function UpcomingEvents({navigation}) {
-  const {loading, error, data} = useQuery(GET_UPCOMING_EVENTS);
+  const {loading, error, data} = useQuery(GET_UPCOMING_EVENTS, {
+    fetchPolicy: 'network-only',
+  });
 
   const [updateToken] = useMutation(UPDATE_EXPO_TOKEN);
   const notificationListener = useRef();
   const responseListener = useRef();
 
   useEffect(() => {
-    eventData({});
-  });
+    (async () => {
+      await registerForPushNotificationsAsync();
+      responseListener.current = Notifications.addNotificationResponseReceivedListener(
+        (response) => {
+          const notificationType =
+            response.notification.request.content.data.type;
+          const eventType =
+            response.notification.request.content.data?.eventType;
+          const ID = response.notification.request.content.data.ID;
 
-  useEffect(() => {
-    registerForPushNotificationsAsync();
-
-    notificationListener.current = Notifications.addNotificationReceivedListener(
-      (notification) => {
-        console.log(notification);
-      }
-    );
-
-    responseListener.current = Notifications.addNotificationResponseReceivedListener(
-      (response) => {
-        const notificationType =
-          response.notification.request.content.data.type;
-        const eventType = response.notification.request.content.data?.eventType;
-        const ID = response.notification.request.content.data.ID;
-
-        switch (notificationType) {
-          case 'event':
-            navigation.navigate('ViewEvents', {
-              screen: eventType,
-              params: {currItem: ID},
-            });
-            break;
-          case 'message':
-            navigation.navigate('ViewEvents', {
-              screen: 'EventThread',
-              params: {id: ID, name: ''},
-            });
-            break;
+          console.log('Notification ', ID, notificationType);
+          switch (notificationType) {
+            case 'event':
+              navigation.navigate('ViewEvents', {
+                screen: 'Event',
+                params: {currItem: ID},
+              });
+              break;
+            case 'message':
+              navigation.navigate('ViewEvents', {
+                screen: 'Threads',
+                params: {id: ID, name: ''},
+              });
+              break;
+          }
         }
-      }
-    );
+      );
+    })();
 
     return () => {
       Notifications.removeNotificationSubscription(notificationListener);
@@ -104,7 +118,7 @@ export default function UpcomingEvents({navigation}) {
 
   const viewEvent = (item) => {
     navigation.navigate('ViewEvents', {
-      screen: item.type === 'TroopMeeting' ? 'Meeting' : item.type,
+      screen: 'Event',
       params: {currItem: item.id},
     });
   };
@@ -153,13 +167,13 @@ export default function UpcomingEvents({navigation}) {
     {
       title: 'Happening Now',
       data: data.upcomingEvents.filter(
-        ({datetime}) => new Date(+datetime) - new Date() < 0
+        ({date}) => new Date(+date) - new Date() < 0
       ),
     },
     {
       title: 'Upcoming Events',
       data: data.upcomingEvents.filter(
-        ({datetime}) => new Date(+datetime) - new Date() >= 0
+        ({date}) => new Date(+date) - new Date() >= 0
       ),
     },
   ];
@@ -174,7 +188,7 @@ export default function UpcomingEvents({navigation}) {
             id={item.id}
             title={item.title}
             type={item.type}
-            date={item.datetime}
+            date={item.date}
             creator={item.creator.name}
             onSelect={viewEvent}
           />

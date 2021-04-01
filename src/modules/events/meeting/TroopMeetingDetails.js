@@ -6,7 +6,7 @@ import RichInputContainer from '../../../components/containers/RichInputContaine
 import FormHeading from '../../../components/Headings/FormHeading';
 import Slider from '../../../components/formfields/Slider';
 import NextButton from '../../../components/buttons/NextButton';
-import {eventData} from '../event_components/ChooseName';
+import {eventData} from '../../../../App';
 
 const TroopMeetingDetails = ({navigation, route}) => {
   const [numWeeksRepeat, setNumWeeksRepeat] = useState(5);
@@ -65,7 +65,7 @@ const TroopMeetingDetails = ({navigation, route}) => {
         <NextButton
           inline
           text="Next"
-          iconName="ios-arrow-round-forward"
+          iconName="arrow-forward-outline"
           onClick={nextForm}
         />
       </View>

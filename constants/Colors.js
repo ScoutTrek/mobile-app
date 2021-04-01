@@ -19,7 +19,7 @@ export default {
   blue: '#0864A3',
   lightBlue: '#7a92a5',
   backgroundBlue: '#a6ceee',
-  offWhite: '#EDEDEF',
+  offWhite: '#ededef',
   offWhite2: '#f9f4f1',
   lightGray: '#d7d7d7',
   darkGray: '#737373',

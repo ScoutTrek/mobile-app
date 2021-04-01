@@ -8,6 +8,7 @@ import {
   Dimensions,
   Alert,
   Platform,
+  ScrollView,
 } from 'react-native';
 import Fonts from '../../../constants/Fonts';
 import {Ionicons} from '@expo/vector-icons';
@@ -114,7 +115,9 @@ const SignUp = ({navigation, route}) => {
   };
 
   return (
-    <View style={styles.screen}>
+    <ScrollView
+      contentContainerStyle={{flex: 1, justifyContent: 'flex-end'}}
+      style={styles.screen}>
       <LinearGradient
         colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)']}
         style={styles.gradientOverlay}
@@ -129,7 +132,9 @@ const SignUp = ({navigation, route}) => {
         />
       </View>
 
-      <View style={styles.main}>
+      <ScrollView
+        contentContainerStyles={{justifyContent: 'flex-end'}}
+        style={styles.main}>
         <View style={styles.content}>
           <Ionicons
             name="ios-compass"
@@ -141,45 +146,46 @@ const SignUp = ({navigation, route}) => {
             Less time planning. More time exploring.
           </Text>
         </View>
-
-        <KeyboardAvoidingView
-          style={styles.content}
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-          <AuthInput
-            autoCapitalize="words"
-            onInputChange={(value) => handleInputChange('name', value)}
-            placeholder="First name & Last name"
-          />
-          <AuthInput
-            autoCapitalize="none"
-            onInputChange={(value) => handleInputChange('email', value)}
-            placeholder="Email"
-          />
-          <AuthInput
-            autoCapitalize="none"
-            onInputChange={(value) => handleInputChange('password', value)}
-            placeholder="Password"
-            textContentType="newPassword"
-            secureTextEntry={true}
-          />
-          <AuthInput
-            autoCapitalize="none"
-            onInputChange={(value) =>
-              handleInputChange('confirmPassword', value)
-            }
-            placeholder="Confirm Password"
-            textContentType="newPassword"
-            secureTextEntry={true}
-          />
-          <GradientButton title="Sign Up" onPress={handleNext} />
-        </KeyboardAvoidingView>
-      </View>
+        <View style={{flex: 1}}>
+          <KeyboardAvoidingView
+            style={styles.content}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+            <AuthInput
+              autoCapitalize="words"
+              onInputChange={(value) => handleInputChange('name', value)}
+              placeholder="First name & Last name"
+            />
+            <AuthInput
+              autoCapitalize="none"
+              onInputChange={(value) => handleInputChange('email', value)}
+              placeholder="Email"
+            />
+            <AuthInput
+              autoCapitalize="none"
+              onInputChange={(value) => handleInputChange('password', value)}
+              placeholder="Password"
+              textContentType="newPassword"
+              secureTextEntry={true}
+            />
+            <AuthInput
+              autoCapitalize="none"
+              onInputChange={(value) =>
+                handleInputChange('confirmPassword', value)
+              }
+              placeholder="Confirm Password"
+              textContentType="newPassword"
+              secureTextEntry={true}
+            />
+            <GradientButton title="Sign Up" onPress={handleNext} />
+          </KeyboardAvoidingView>
+        </View>
+      </ScrollView>
       <Footer
         footerText="Already have an account?"
         btnType="Sign In"
         onPress={() => navigation.navigate('SignIn')}
       />
-    </View>
+    </ScrollView>
   );
 };
 
@@ -187,7 +193,6 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: 'white',
-    justifyContent: 'flex-end',
     marginTop: Constants.statusBarHeight,
   },
   heading: {
@@ -223,10 +228,8 @@ const styles = StyleSheet.create({
   },
   main: {
     flex: 1,
-    justifyContent: 'flex-end',
   },
   content: {
-    justifyContent: 'flex-end',
     paddingHorizontal: 12,
     paddingVertical: 7,
   },

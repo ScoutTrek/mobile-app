@@ -1,10 +1,12 @@
 import React, {useState} from 'react';
 import {
   View,
+  ScrollView,
   Text,
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import {Ionicons} from '@expo/vector-icons';
 import {GOOGLE_MAPS_API_KEY} from '../../env';
@@ -12,7 +14,7 @@ import {GOOGLE_MAPS_API_KEY} from '../../env';
 import Colors from '../../constants/Colors';
 import Fonts from '../../constants/Fonts';
 
-const SearchBar = ({
+const MapSearch = ({
   locationToken,
   textValue,
   back,
@@ -59,12 +61,12 @@ const SearchBar = ({
           onPress={back}
         />
       </View>
-      <View>
+      <ScrollView style={{flex: 1, maxHeight: Dimensions.get('window').width}}>
         {suggestedPlaces &&
           suggestedPlaces.map((place) => {
             return (
               <TouchableOpacity
-                key={place.place_id}
+                key={place?.['place_id']}
                 onPress={() => {
                   setSearchText('');
                   setSuggestedPlaces(null);
@@ -79,7 +81,7 @@ const SearchBar = ({
               </TouchableOpacity>
             );
           })}
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -128,4 +130,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SearchBar;
+export default MapSearch;

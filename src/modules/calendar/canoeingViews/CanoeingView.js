@@ -13,9 +13,9 @@ import Location from '../../../components/EventInfoComponents/Location';
 import Time from '../../../components/EventInfoComponents/Time';
 import Constants from 'expo-constants';
 import Description from '../../../components/EventInfoComponents/Description';
-import {eventData} from '../../events/event_components/ChooseName';
+import {eventData} from '../../../../App';
 import {cloneDeep} from 'lodash';
-import {deleteEventConfig} from '../hikeViews/HikeView';
+import {deleteEventConfig} from '../EventView';
 
 export const DELETE_EVENT = gql`
   mutation DeleteEvent($id: ID!) {

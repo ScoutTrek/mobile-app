@@ -121,7 +121,7 @@ const ChooseRole = ({navigation, route}) => {
             <NextButton
               inline
               text="Select your Troop"
-              iconName="ios-arrow-round-forward"
+              iconName="arrow-forward-outline"
               onClick={nextForm}
             />
           </View>

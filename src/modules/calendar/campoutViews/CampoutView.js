@@ -9,7 +9,7 @@ import InlineButton from '../../../components/buttons/InlineButton';
 import Constants from 'expo-constants';
 
 import {gql, useMutation, useQuery} from '@apollo/client';
-import {deleteEventConfig, DELETE_EVENT} from '../hikeViews/HikeView';
+import {deleteEventConfig, DELETE_EVENT} from '../EventView';
 import NoShadowPurpleBtn from '../../../components/buttons/NoShadowPurpleBtn';
 import FormHeading from '../../../components/Headings/FormHeading';
 
@@ -18,7 +18,7 @@ import {GOOGLE_MAPS_API_KEY} from '../../../../env';
 import Time from '../../../components/EventInfoComponents/Time';
 import Description from '../../../components/EventInfoComponents/Description';
 import {cloneDeep} from 'lodash';
-import {eventData} from '../../events/event_components/ChooseName';
+import {eventData} from '../../../../App';
 
 export const GET_CAMPOUT = gql`
   query GetCampout($id: ID!) {

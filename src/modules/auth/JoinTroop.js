@@ -122,7 +122,7 @@ const JoinTroop = ({navigation, route}) => {
       {isValid && (
         <NextButton
           text="Select your patrol"
-          iconName="ios-arrow-round-forward"
+          iconName="arrow-forward-outline"
           onClick={nextForm}
         />
       )}

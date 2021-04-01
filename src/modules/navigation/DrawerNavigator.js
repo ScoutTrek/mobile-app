@@ -31,17 +31,6 @@ const GET_CURR_USER = gql`
       id
       name
       email
-      phone
-      birthday
-      role
-      troop {
-        id
-        unitNumber
-      }
-      patrol {
-        id
-        name
-      }
     }
   }
 `;

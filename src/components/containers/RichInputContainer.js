@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.offWhite2,
   },
   inputContainer: {
-    marginTop: 30,
+    marginTop: 40,
     flex: 1,
   },
 });

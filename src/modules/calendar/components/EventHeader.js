@@ -7,7 +7,6 @@ import {
   View,
 } from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
-import Constants from 'expo-constants';
 
 import {Ionicons} from '@expo/vector-icons';
 import Colors from '../../../../constants/Colors';
@@ -15,12 +14,25 @@ import Fonts from '../../../../constants/Fonts';
 import BackIcon from '../../../components/buttons/BackIcon';
 import moment from 'moment';
 
-const EventHeader = ({navigation, image_path, title, date, name}) => {
+const EventHeader = ({navigation, onPress, image_path, title, date, name}) => {
   return (
     <ImageBackground
       style={styles.container}
       source={image_path && {uri: image_path}}>
       <BackIcon back={() => navigation.goBack()} />
+      <Ionicons
+        name="chatbubbles"
+        size={32}
+        style={{
+          position: 'absolute',
+          paddingHorizontal: 12,
+          top: '2.5%',
+          right: '2.5%',
+          zIndex: 1,
+        }}
+        color={Colors.blue}
+        onPress={onPress}
+      />
       <LinearGradient
         style={styles.overlay}
         colors={['transparent', 'rgba(229, 252, 255, 0.2)', '#fff']}

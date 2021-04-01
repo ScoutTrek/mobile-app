@@ -17,21 +17,21 @@ import Fonts from '../../../constants/Fonts';
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
 const NextButton = ({inline, text, color, iconName, onClick}) => {
-  let scaleValue = new Animated.Value(0);
-  const cardScale = scaleValue.interpolate({
-    inputRange: [0, 0.5, 1],
-    outputRange: [1, 5, 40],
-  });
+  // let scaleValue = new Animated.Value(0);
+  // const cardScale = scaleValue.interpolate({
+  //   inputRange: [0, 0.5, 1],
+  //   outputRange: [1, 5, 40],
+  // });
   return (
-    <AnimatedTouchable
+    <TouchableOpacity
       onPress={() => {
-        scaleValue.setValue(0);
-        Animated.timing(scaleValue, {
-          toValue: 1,
-          duration: 250,
-          easing: Easing.linear,
-          useNativeDriver: true,
-        }).start();
+        // scaleValue.setValue(0);
+        // Animated.timing(scaleValue, {
+        //   toValue: 1,
+        //   duration: 250,
+        //   easing: Easing.linear,
+        //   useNativeDriver: true,
+        // }).start();
 
         onClick();
       }}
@@ -39,14 +39,14 @@ const NextButton = ({inline, text, color, iconName, onClick}) => {
         styles.nextBtn,
         {
           height: 42,
-          transform: [{scale: cardScale}],
+          // transform: [{scale: cardScale}],
         },
         color && {backgroundColor: color},
         !inline && {position: 'absolute', bottom: 24, right: 30},
       ]}>
       {text && <Text style={styles.text}>{text}</Text>}
       <Ionicons size={35} name={iconName} color="white" style={{height: 35}} />
-    </AnimatedTouchable>
+    </TouchableOpacity>
   );
 };
 

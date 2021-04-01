@@ -3,119 +3,60 @@ import CalModal from '../CalModal';
 import {Platform, Text, TouchableOpacity, View, StyleSheet} from 'react-native';
 import {Calendar} from 'react-native-calendars';
 import Colors from '../../../constants/Colors';
-import DateTimePicker from '@react-native-community/datetimepicker';
 import Fonts from '../../../constants/Fonts';
 import moment from 'moment';
 
 const DateAndTimePicker = ({
   chooseDayMsg,
-  chooseTimeMsg,
-  nextForm,
+  handleSubmit,
   date,
   setDate,
-  timeOnly,
-  time,
-  setTime,
-  navigation,
+  goBack,
 }) => {
-  const [showFirstModal, setShowFirstModal] = useState(true);
-  const [showTimePicker, setShowTimePicker] = useState(Platform.OS === 'ios');
-
-  useEffect(() => {
-    if (timeOnly) {
-      setShowFirstModal(false);
-    }
-  });
-
   return (
-    <CalModal goBack={navigation.goBack}>
-      {!date || showFirstModal ? (
-        <View>
-          <View style={styles.heading}>
-            <Text style={styles.headingText}>{chooseDayMsg}</Text>
-          </View>
-          <Calendar
-            style={{backgroundColor: '#fff'}}
-            current={date.format('YYYY-MM-DD')}
-            markingType={'custom'}
-            markedDates={{
-              [moment().format('YYYY-MM-DD')]: {
-                customStyles: {
-                  container: {
-                    backgroundColor: Colors.lightGray,
-                    elevation: 2,
-                  },
-                  text: {
-                    color: 'black',
-                  },
+    <CalModal goBack={goBack}>
+      <View>
+        <View style={styles.heading}>
+          <Text style={styles.headingText}>{chooseDayMsg}</Text>
+        </View>
+        <Calendar
+          style={{backgroundColor: '#fff'}}
+          current={date.format('YYYY-MM-DD')}
+          markingType={'custom'}
+          markedDates={{
+            [moment().format('YYYY-MM-DD')]: {
+              customStyles: {
+                container: {
+                  backgroundColor: Colors.lightGray,
+                  elevation: 2,
+                },
+                text: {
+                  color: 'black',
                 },
               },
-              [date.format('YYYY-MM-DD')]: {
-                selected: true,
-                disableTouchEvent: true,
-              },
-            }}
-            onDayPress={(day) => {
-              setDate(moment(day.dateString));
-            }}
-          />
-          <TouchableOpacity
-            onPress={() => {
-              setShowFirstModal(false);
-            }}
-            style={{
-              padding: 12,
-              alignItems: 'center',
-              backgroundColor: Colors.lightGreen,
-              borderRadius: 4,
-            }}>
-            <Text style={{fontSize: 18, fontFamily: Fonts.primaryTextBold}}>
-              Confirm
-            </Text>
-          </TouchableOpacity>
-        </View>
-      ) : (
-        <View>
-          <View style={styles.heading}>
-            <Text style={styles.headingText}>{chooseTimeMsg}</Text>
-          </View>
-          {showTimePicker && (
-            <DateTimePicker
-              value={new Date(time.format())}
-              minuteInterval={5}
-              mode="time"
-              display="default"
-              onChange={(_, time) => {
-                if (Platform.OS === 'android') {
-                  setShowTimePicker(false);
-                  nextForm(moment(time));
-                  setShowFirstModal(true);
-                }
-                setTime(moment(time));
-              }}
-            />
-          )}
-          <TouchableOpacity
-            onPress={() => {
-              if (Platform.OS === 'ios') {
-                nextForm();
-                setShowFirstModal(true);
-              } else {
-                setShowTimePicker(true);
-              }
-            }}
-            style={{
-              padding: 12,
-              alignItems: 'center',
-              backgroundColor: Colors.lightGreen,
-              borderRadius: 4,
-            }}>
-            <Text style={{fontSize: 18, fontFamily: Fonts.primaryTextBold}}>
-              Choose Time
-            </Text>
-          </TouchableOpacity>
-        </View>
-      )}
+            },
+            [date.format('YYYY-MM-DD')]: {
+              selected: true,
+              disableTouchEvent: true,
+            },
+          }}
+          onDayPress={(day) => {
+            setDate(moment(day.dateString));
+          }}
+        />
+        <TouchableOpacity
+          onPress={handleSubmit}
+          style={{
+            padding: 12,
+            alignItems: 'center',
+            backgroundColor: Colors.lightGreen,
+            borderRadius: 4,
+          }}>
+          <Text style={{fontSize: 18, fontFamily: Fonts.primaryTextBold}}>
+            Confirm
+          </Text>
+        </TouchableOpacity>
+      </View>
     </CalModal>
   );
 };

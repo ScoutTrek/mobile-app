@@ -4,7 +4,7 @@ import {Ionicons} from '@expo/vector-icons';
 
 import CalendarView from './CalendarView';
 
-import ChatModule from './EventThreads/ChatModule';
+import ChatModule from '../threads/ChatModule';
 
 const Stack = createStackNavigator();
 
@@ -20,12 +20,10 @@ export function ChatStack({navigation, route}) {
           backButtonInCustomView: true,
           headerLeft: () => (
             <Ionicons
-              name="ios-arrow-back"
-              size={30}
+              name="arrow-back"
+              size={26}
               style={{paddingHorizontal: 20}}
-              onPress={() => {
-                navigation.pop();
-              }}
+              onPress={navigation.goBack}
             />
           ),
         }}

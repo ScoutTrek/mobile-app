@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {
   StyleSheet,
   View,
@@ -14,17 +14,16 @@ import Fonts from '../../../constants/Fonts';
 
 import useFetchEvents from '../../hooks/useFetchEvents';
 import {gql, useQuery} from '@apollo/client';
-import moment from 'moment';
-import {eventData} from '../events/event_components/ChooseName';
+import {eventData} from '../../../App';
 
 export const GET_EVENTS = gql`
   query ALL_EVENTS {
     events {
       id
       type
+      date
       title
       description
-      datetime
       location {
         lat
         lng
@@ -37,25 +36,16 @@ export const GET_EVENTS = gql`
   }
 `;
 
-const getColor = (label) => {
-  switch (label) {
-    case 'Hike':
-      return Colors.blue;
-    case 'BikeRide':
-      return Colors.yellow;
-    case 'Canoeing':
-      return Colors.purple;
-    case 'Meeting':
-      return Colors.orange;
-    case 'Campout':
-      return Colors.yellow;
-    case 'Camp':
-      return Colors.green;
-    case 'Special Event':
-      return Colors.darkGreen;
-    default:
-      return Colors.brown;
-  }
+const getColor = () => {
+  const allColors = [
+    Colors.blue,
+    Colors.yellow,
+    Colors.purple,
+    Colors.orange,
+    Colors.green,
+    Colors.darkGreen,
+  ];
+  return allColors[Math.floor(Math.random() * allColors.length)];
 };
 
 const CalendarView = ({navigation}) => {
@@ -79,7 +69,7 @@ const CalendarView = ({navigation}) => {
 
   const viewEvent = (item) => {
     navigation.navigate('ViewEvents', {
-      screen: item.type,
+      screen: 'Event',
       params: {currItem: item.id},
     });
   };
@@ -87,20 +77,40 @@ const CalendarView = ({navigation}) => {
   const renderItem = (item) => {
     const labels =
       item.labels &&
-      item.labels.map((label) => (
-        <View
-          key={`label-${label}`}
-          style={{
-            padding: 3,
-            paddingHorizontal: 5,
-            margin: 2,
-            fontSize: 10,
-            backgroundColor: getColor(label),
-            borderRadius: 3,
-          }}>
-          <Text style={{color: 'white', textAlign: 'center'}}>{label}</Text>
-        </View>
-      ));
+      item.labels.map((label, index) => {
+        if (!index) {
+          return (
+            <View
+              key={`label-${label}`}
+              style={{
+                padding: 3,
+                paddingHorizontal: 5,
+                marginTop: 2,
+                fontSize: 10,
+                backgroundColor: Colors.brown,
+                borderRadius: 3,
+              }}>
+              <Text style={{color: 'white', textAlign: 'center'}}>{label}</Text>
+            </View>
+          );
+        }
+        return (
+          <View
+            key={`label-${label}`}
+            style={{
+              padding: 3,
+              paddingHorizontal: 5,
+              margin: 2,
+              fontSize: 10,
+              backgroundColor: getColor(label),
+              borderRadius: 3,
+            }}>
+            <Text style={{color: 'white', textAlign: 'center'}}>
+              {label.toLowerCase().replace('_', ' ')}
+            </Text>
+          </View>
+        );
+      });
 
     return (
       <TouchableOpacity
@@ -124,14 +134,14 @@ const CalendarView = ({navigation}) => {
               fontFamily: Fonts.primaryText,
               marginBottom: 5,
             }}>
-            {new Date(+item.datetime).toLocaleDateString('en-US', {
+            {new Date(+item.date).toLocaleDateString('en-US', {
               month: 'long',
               day: 'numeric',
             })}
           </Text>
         </View>
 
-        <View styleName="horizontal h-start">{labels}</View>
+        <View styleName="horizontal d-start">{labels}</View>
       </TouchableOpacity>
     );
   };
@@ -166,7 +176,6 @@ const CalendarView = ({navigation}) => {
 const styles = StyleSheet.create({
   container: {
     marginTop: Constants.statusBarHeight,
-    flex: 1,
   },
   calendarEvent: {
     flexDirection: 'row',
