@@ -1,12 +1,5 @@
 import React, {useRef, useEffect} from 'react';
-import {
-  View,
-  SectionList,
-  SafeAreaView,
-  FlatList,
-  StyleSheet,
-  Text,
-} from 'react-native';
+import {View, SectionList, SafeAreaView, StyleSheet, Text} from 'react-native';
 import EventListItem from '../../components/EventListItem';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
@@ -15,7 +8,7 @@ import * as Notifications from 'expo-notifications';
 import {gql, useMutation, useQuery} from '@apollo/client';
 import Colors from '../../../constants/Colors';
 
-export const EventFragment = gql`
+export const EVENT_FIELDS = gql`
   fragment EventFragment on Event {
     id
     type
@@ -47,12 +40,12 @@ export const EventFragment = gql`
 `;
 
 export const GET_UPCOMING_EVENTS = gql`
-  ${EventFragment}
   query UpcomingEvents {
     upcomingEvents {
       ...EventFragment
     }
   }
+  ${EVENT_FIELDS}
 `;
 
 export const UPDATE_EXPO_TOKEN = gql`

@@ -1,7 +1,7 @@
 import React, {useState, useEffect, useContext} from 'react';
 
 import {setCustomText} from 'react-native-global-props';
-import {ActivityIndicator, View, AsyncStorage} from 'react-native';
+import {ActivityIndicator, View, Text, AsyncStorage} from 'react-native';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -29,16 +29,7 @@ import AuthNavigator from './src/modules/auth/AuthNavigator';
 import MainTabNavigator from './src/modules/navigation/MainTabNavigator';
 import ViewEventStackNavigator from './src/modules/navigation/ViewEventStack';
 
-import * as Sentry from 'sentry-expo';
-
 // Global Apollo Variable that determines if the user is signed in or not.
-
-// Sentry.init({
-//   dsn:
-//     'https://02780727dd3a4192a8b5014eee036ca1@o412271.ingest.sentry.io/5288757',
-//   enableInExpoDevelopment: false,
-//   debug: true,
-// });
 
 const httpLink = new createUploadLink({
   uri: 'https://beta-dot-scouttrek-node-api.appspot.com/:4000',

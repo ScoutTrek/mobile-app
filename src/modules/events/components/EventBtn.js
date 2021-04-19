@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   eventContent: {
     position: 'relative',
     marginHorizontal: 12,
-    height: 165,
+    height: 160,
     borderRadius: 5,
     overflow: 'hidden',
   },

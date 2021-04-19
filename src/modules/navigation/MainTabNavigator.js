@@ -74,9 +74,9 @@ const MainBottomTabConfig = ({route}) => ({
         ) : (
           <AntDesign name="calendar" color={Colors.purple} size={size} />
         );
-      // case 'Memories':
-      //   iconSource = iconGrids
-      //   break
+      case 'Memories':
+        iconSource = iconGrids;
+        break;
       case 'New Event':
         return (
           <AntDesign

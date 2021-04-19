@@ -3,12 +3,12 @@ import {gql, useMutation, useQuery} from '@apollo/client';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
 import EventInputTemplate from '../../../components/EventInputs/EventInputTemplate';
 import {GET_EVENTS} from '../../calendar/CalendarView';
-import {EventFragment, GET_UPCOMING_EVENTS} from '../../home/UpcomingEvents';
+import {EVENT_FIELDS, GET_UPCOMING_EVENTS} from '../../home/UpcomingEvents';
 import SubmitBtn from '../../../components/buttons/SubmitButton';
 import {eventData, eventData as resetEventData} from '../../../../App';
 
 const ADD_EVENT = gql`
-  ${EventFragment}
+  ${EVENT_FIELDS}
   mutation AddEvent($event: AddEventInput!) {
     event: addEvent(input: $event) {
       ...EventFragment
@@ -17,12 +17,12 @@ const ADD_EVENT = gql`
 `;
 
 export const UPDATE_EVENT = gql`
-  ${EventFragment}
   mutation UpdateEvent($id: ID!, $updates: UpdateEventInput!) {
     updateEvent(id: $id, input: $updates) {
       ...EventFragment
     }
   }
+  ${EVENT_FIELDS}
 `;
 
 export const GET_EVENT_DATA = gql`

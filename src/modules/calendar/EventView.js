@@ -1,24 +1,25 @@
-import React, {useEffect, useState} from 'react';
-import {View, Text, Alert, ScrollView, Dimensions} from 'react-native';
+import React from 'react';
+import {Text, Alert, ScrollView} from 'react-native';
 import EventHeader from './components/EventHeader';
-import Colors from '../../../constants/Colors';
-import Fonts from '../../../constants/Fonts';
-import InlineButton from '../../components/buttons/InlineButton';
 
 import {GOOGLE_MAPS_API_KEY} from '../../../env';
+import Constants from 'expo-constants';
 
 import {gql, useMutation, useQuery} from '@apollo/client';
-import NoShadowPurpleBtn from '../../components/buttons/NoShadowPurpleBtn';
 import Location from '../../components/EventInfoComponents/Location';
 import Time from '../../components/EventInfoComponents/Time';
-import Constants from 'expo-constants';
+
 import Description from '../../components/EventInfoComponents/Description';
 import {eventData} from '../../../App';
 import {cloneDeep} from 'lodash';
 import {GET_UPCOMING_EVENTS} from '../home/UpcomingEvents';
 import {GET_EVENTS} from './CalendarView';
+import {EVENT_FIELDS} from '../home/UpcomingEvents';
 import ConfirmCircle from '../../components/buttons/ConfirmCircle';
-import {Octicons} from '@expo/vector-icons';
+import {Octicons, Ionicons} from '@expo/vector-icons';
+import Colors from '../../../constants/Colors';
+import InlineButton from '../../components/buttons/InlineButton';
+import InfoRowSmall from '../../components/LayoutComponents/InfoRowSmall';
 
 export const DELETE_EVENT = gql`
   mutation DeleteEvent($id: ID!) {
@@ -31,34 +32,10 @@ export const DELETE_EVENT = gql`
 export const GET_EVENT = gql`
   query GetEvent($id: ID!) {
     event(id: $id) {
-      id
-      type
-      title
-      description
-      date
-      startTime
-      distance
-      uniqueMeetLocation
-      meetTime
-      leaveTime
-      endTime
-      endDate
-      location {
-        lat
-        lng
-        address
-      }
-      meetLocation {
-        lat
-        lng
-        address
-      }
-      creator {
-        id
-        name
-      }
+      ...EventFragment
     }
   }
+  ${EVENT_FIELDS}
 `;
 
 export const deleteEventConfig = {
@@ -90,6 +67,28 @@ const EventDetailsScreen = ({route, navigation}) => {
   });
   const [deleteEvent] = useMutation(DELETE_EVENT, deleteEventConfig);
 
+  const handleDeleteEvent = () => {
+    Alert.alert(
+      'Are you sure you want to cancel this event?',
+      'This action cannot be undone.',
+      [
+        {text: 'Cancel', style: 'cancel'},
+        {
+          text: 'Confirm',
+          onPress: async () => {
+            await deleteEvent({
+              variables: {
+                id: data.event.id,
+              },
+            });
+            navigation.goBack();
+          },
+        },
+      ],
+      {cancelable: true}
+    );
+  };
+
   const addEventToCache = () => {
     const localEventData = cloneDeep(data.event);
     delete localEventData.id;
@@ -114,6 +113,7 @@ const EventDetailsScreen = ({route, navigation}) => {
       }}
       contentContainerStyles={{
         flexGrow: 1,
+        backgroundColor: 'green',
       }}>
       <EventHeader
         navigation={navigation}
@@ -158,6 +158,13 @@ const EventDetailsScreen = ({route, navigation}) => {
           });
         }}
       />
+      <InfoRowSmall>
+        <InlineButton
+          title="Cancel event"
+          color={Colors.red}
+          onPress={handleDeleteEvent}
+        />
+      </InfoRowSmall>
     </ScrollView>
   );
 };

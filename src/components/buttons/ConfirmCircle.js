@@ -20,8 +20,8 @@ const ConfirmCircle = ({color, icon, onClick, primaryView, toolbar}) => {
           transform: [{scale: cardScale}],
           backgroundColor: Colors.green,
           position: 'absolute',
-          bottom: toolbar ? 55 : 30,
-          right: 20,
+          bottom: toolbar ? 55 : 15,
+          right: 15,
         }}
       />
       <AnimatedTouchable
@@ -46,7 +46,7 @@ const ConfirmCircle = ({color, icon, onClick, primaryView, toolbar}) => {
             alignItems: 'center',
           },
           color && {backgroundColor: color},
-          {position: 'absolute', bottom: toolbar ? 55 : 30, right: 20},
+          {position: 'absolute', bottom: toolbar ? 55 : 15, right: 15},
         ]}>
         {icon ? (
           icon

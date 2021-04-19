@@ -1,11 +1,10 @@
 import {createStackNavigator} from '@react-navigation/stack';
-import {ChatStack} from '../calendar/CalendarNav';
 import * as React from 'react';
 
 import AdventuresNav from '../home/UpcomingEvents';
-
 import EventView from '../calendar/EventView';
 import CreateEvent from '../events/createEvent/CreateEvent';
+import {ChatStack} from '../calendar/CalendarNav';
 
 const ViewEventStack = createStackNavigator();
 

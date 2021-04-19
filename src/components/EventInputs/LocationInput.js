@@ -1,11 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import {eventData} from '../../../App';
 import {Dimensions, Keyboard, StyleSheet, View} from 'react-native';
-import Input from '../formfields/Input';
 import LocationLineItem from '../LocationLineItem';
 import DefaultInputButton from '../buttons/DefaultInputButton';
-import Fonts from '../../../constants/Fonts';
-import Colors from '../../../constants/Colors';
 import * as Permissions from 'expo-permissions';
 import * as Location from 'expo-location';
 import {GOOGLE_MAPS_API_KEY} from '../../../env';
@@ -18,13 +15,7 @@ import ConfirmCircle from '../buttons/ConfirmCircle';
 
 const locationToken = uuidv4();
 
-const ChooseLocation = ({
-  id,
-  setModalVisible,
-  questionText,
-  primary,
-  goToSecondary,
-}) => {
+const ChooseLocation = ({id, setModalVisible, questionText}) => {
   const initialLocation = eventData()?.[id];
   const [location, setLocation] = useState(
     initialLocation
@@ -82,19 +73,6 @@ const ChooseLocation = ({
     setModalVisible(false);
   };
 
-  const selectLocationHandler = async (event) => {
-    const tappedLocation = {
-      latitude: event.nativeEvent.coordinate.latitude,
-      longitude: event.nativeEvent.coordinate.longitude,
-    };
-    setLocationCoords(tappedLocation);
-    const locationDetails = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${tappedLocation.latitude},${tappedLocation.longitude}&key=${GOOGLE_MAPS_API_KEY}`
-    );
-    const locationData = await locationDetails.json();
-    setLocationString(locationData.results[0].formatted_address);
-  };
-
   useEffect(() => {
     _getLocationAsync();
   }, []);
@@ -107,7 +85,6 @@ const ChooseLocation = ({
     <View style={styles.container}>
       <MapView
         style={styles.mapStyle}
-        onPress={selectLocationHandler}
         initialRegion={{
           latitude: location.latitude,
           longitude: location.longitude,
@@ -134,12 +111,7 @@ const ChooseLocation = ({
           style={styles.searchBar}
         />
       </View>
-      {locationCoords && (
-        <ConfirmCircle
-          onClick={goToSecondary || nextView}
-          primaryView={primary}
-        />
-      )}
+      {locationCoords && <ConfirmCircle onClick={nextView} />}
     </View>
   );
 };
@@ -147,23 +119,8 @@ const ChooseLocation = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  heading: {
-    margin: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.tabIconDefault,
-  },
-  headingText: {
-    fontFamily: Fonts.primaryTextBold,
-    fontSize: 19,
-    lineHeight: 28,
-    padding: 5,
-    paddingBottom: 14,
   },
   mapStyle: {
-    flex: 1,
     width: Dimensions.get('window').width,
     height: Dimensions.get('window').height,
   },
