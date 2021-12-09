@@ -1,11 +1,5 @@
 {
   "extends": "expo/tsconfig.base",
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@ScoutDesign": ["./ScoutDesign"],
-    }
-  },
-  "exclude": ["node_modules", "dist", "./ScoutDesign/src"]
+  "exclude": ["node_modules", "dist"]
 
 }

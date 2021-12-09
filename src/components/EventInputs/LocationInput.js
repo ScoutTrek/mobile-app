@@ -12,7 +12,7 @@ import Constants from 'expo-constants';
 import {Ionicons} from '@expo/vector-icons';
 
 import uuidv4 from 'uuid/v1';
-import {ConfirmButton} from '@ScoutDesign';
+// import {ConfirmButton} from '@ScoutDesign';
 
 const locationToken = uuidv4();
 
@@ -117,12 +117,12 @@ const ChooseLocation = ({id, setModalVisible, questionText}) => {
           style={styles.searchBar}
         />
       </View>
-      {locationCoords && (
+      {/* {locationCoords && (
         <ConfirmButton
           icon={<Ionicons size={27} name="arrow-forward" color="white" />}
           onClick={nextView}
         />
-      )}
+      )} */}
     </View>
   );
 };

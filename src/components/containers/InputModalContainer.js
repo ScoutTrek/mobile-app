@@ -1,9 +1,9 @@
 import React from 'react';
-import {View, KeyboardAvoidingView, Alert, Platform} from 'react-native';
-import {Text, ConfirmButton} from '@ScoutDesign';
+import {Platform} from 'react-native';
+// import {Text, ConfirmButton} from '@ScoutDesign';
 import Constants from 'expo-constants';
 import Colors from '../../../constants/Colors';
-import {Ionicons} from '@expo/vector-icons';
+// import {Ionicons} from '@expo/vector-icons';
 
 const InputModalContainer = ({
   title,

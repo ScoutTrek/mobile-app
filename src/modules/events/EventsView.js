@@ -4,7 +4,7 @@ import {StyleSheet, View, ActivityIndicator, FlatList} from 'react-native';
 import Constants from 'expo-constants';
 
 import ViewHeading from '../../components/Headings/ViewHeading';
-import {ConfirmButton} from '@ScoutDesign';
+// import {ConfirmButton} from '@ScoutDesign';
 import {Ionicons} from '@expo/vector-icons';
 
 import EventBtn from './components/EventBtn';
@@ -23,8 +23,7 @@ const listData = [
     eventType: 'Troop Meeting',
     subtitle: 'Plan your weekly meeting logistics in minutes.',
     image: {
-      uri:
-        'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1582557266/ScoutTrek/ScoutBadgesImage.jpg',
+      uri: 'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1582557266/ScoutTrek/ScoutBadgesImage.jpg',
     },
   },
   {
@@ -32,8 +31,7 @@ const listData = [
     eventType: 'Canoeing',
     subtitle: 'Spend some time at on the water, in style.',
     image: {
-      uri:
-        'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1599596674/ScoutTrek/canoeing.jpg',
+      uri: 'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1599596674/ScoutTrek/canoeing.jpg',
     },
   },
   {
@@ -44,8 +42,7 @@ const listData = [
     badge: 'NEW',
     badgeColor: 'green',
     image: {
-      uri:
-        'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1582556924/ScoutTrek/backpacking_trip.png',
+      uri: 'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1582556924/ScoutTrek/backpacking_trip.png',
     },
   },
 ];

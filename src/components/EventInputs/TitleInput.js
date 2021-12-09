@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {eventData} from '../../../App';
-import {Dimensions, TouchableOpacity, View} from 'react-native';
-import {Text} from '@ScoutDesign';
+import {Text, TouchableOpacity, View} from 'react-native';
+// import {Text} from '@ScoutDesign';
 import Input from '../formfields/Input';
 import BasicLineItem from '../BasicLineItem';
 import {LinearGradient} from 'expo-linear-gradient';

@@ -15,7 +15,7 @@ import {cloneDeep} from 'lodash';
 import {GET_UPCOMING_EVENTS} from '../home/UpcomingEvents';
 import {GET_EVENTS} from './CalendarView';
 import {EVENT_FIELDS} from '../home/UpcomingEvents';
-import {ConfirmButton} from '@ScoutDesign';
+// import {ConfirmButton} from '@ScoutDesign';
 import {Octicons, Ionicons} from '@expo/vector-icons';
 import Colors from '../../../constants/Colors';
 import InlineButton from '../../components/buttons/InlineButton';
