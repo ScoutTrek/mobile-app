@@ -51,7 +51,6 @@ const MapSearch = ({
           onChangeText={searchUpdateHandler}
           placeholder={placeholder}
           placeholderTextColor={Colors.placeholderTextColor}
-          autoFocus
         />
         <Ionicons
           name="ios-arrow-back"

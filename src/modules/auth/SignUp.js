@@ -46,13 +46,13 @@ const SignUp = ({navigation, route}) => {
       name: '',
       email: '',
       password: '',
-      confirmPassword: '',
+      passwordConfirm: '',
     },
     inputValidities: {
       name: false,
       email: false,
       password: false,
-      confirmPassword: false,
+      passwordConfirm: false,
     },
     formIsValid: false,
   });
@@ -65,7 +65,7 @@ const SignUp = ({navigation, route}) => {
         'It is helpful to use one capital letter and one symbol.'
       );
     } else if (
-      formState.inputValues.password !== formState.inputValues.confirmPassword
+      formState.inputValues.password !== formState.inputValues.passwordConfirm
     ) {
       Alert.alert(
         'Whoops, the passwords you entered do not match.',
@@ -81,7 +81,7 @@ const SignUp = ({navigation, route}) => {
         name: formState.inputValues.name,
         email: formState.inputValues.email,
         password: formState.inputValues.password,
-        passwordConfirm: formState.inputValues.confirmPassword,
+        passwordConfirm: formState.inputValues.passwordConfirm,
       };
       navigation.navigate(route.params.nextView, signUpData);
     } else {
@@ -97,7 +97,7 @@ const SignUp = ({navigation, route}) => {
     if (value.trim().length > 0) {
       isValid = true;
     }
-    if (inputIdentifier === 'confirmPassword') {
+    if (inputIdentifier === 'passwordConfirm') {
       if (formState.inputValues.password.length < 8) {
         isValid = false;
       }
@@ -170,7 +170,7 @@ const SignUp = ({navigation, route}) => {
             <AuthInput
               autoCapitalize="none"
               onInputChange={(value) =>
-                handleInputChange('confirmPassword', value)
+                handleInputChange('passwordConfirm', value)
               }
               placeholder="Confirm Password"
               textContentType="newPassword"

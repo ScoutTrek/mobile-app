@@ -17,11 +17,11 @@ import Fonts from '../../../constants/Fonts';
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 
 const NextButton = ({inline, text, color, iconName, onClick}) => {
-  // let scaleValue = new Animated.Value(0);
-  // const cardScale = scaleValue.interpolate({
-  //   inputRange: [0, 0.5, 1],
-  //   outputRange: [1, 5, 40],
-  // });
+  let scaleValue = new Animated.Value(0);
+  const cardScale = scaleValue.interpolate({
+    inputRange: [0, 0.25, 0.5, 0.99, 1],
+    outputRange: [1, 3, 25, 40, 1],
+  });
   return (
     <TouchableOpacity
       onPress={() => {

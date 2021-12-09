@@ -29,11 +29,9 @@ import AuthNavigator from './src/modules/auth/AuthNavigator';
 import MainTabNavigator from './src/modules/navigation/MainTabNavigator';
 import ViewEventStackNavigator from './src/modules/navigation/ViewEventStack';
 
-// Global Apollo Variable that determines if the user is signed in or not.
-
 const httpLink = new createUploadLink({
+  // uri: 'http://localhost:4000',
   uri: 'https://beta-dot-scouttrek-node-api.appspot.com/:4000',
-  // uri: 'http://localhost:4000/',
 });
 
 const errorMiddleware = onError(
@@ -53,12 +51,12 @@ const errorMiddleware = onError(
 
 const authMiddleware = new ApolloLink(async (operation, forward) => {
   // add the authorization to the headers
-  const curr_membership = await AsyncStorage.getItem('currMembershipID');
+  const membership = await AsyncStorage.getItem('currMembershipID');
   const token = await AsyncStorage.getItem('userToken');
   operation.setContext({
     headers: {
+      membership: membership ? membership : undefined,
       authorization: token,
-      curr_membership,
     },
   });
   return forward(operation);
@@ -66,7 +64,7 @@ const authMiddleware = new ApolloLink(async (operation, forward) => {
 
 const AppLoadingContainer = () => {
   const [loading, setLoading] = useState(true);
-  const [authToken, setAuthToken] = useState('');
+  const [authToken, setAuthToken] = useState<any>();
 
   try {
     AsyncStorage.getItem('userToken').then((token) => {
@@ -89,6 +87,7 @@ const AppLoadingContainer = () => {
 
   return (
     <AuthContext.Provider value={{authToken, setAuthToken}}>
+
       <NavigationContainer>
         <Stack.Navigator
           screenOptions={() => ({
@@ -105,7 +104,7 @@ const AppLoadingContainer = () => {
           ) : (
             <Stack.Screen name="Home" component={MainTabNavigator} />
           )}
-          <Stack.Screen name="ViewEvents" component={ViewEventStackNavigator} />
+          {/*<Stack.Screen name="ViewEvents" component={ViewEventStackNavigator} />*/}
         </Stack.Navigator>
       </NavigationContainer>
     </AuthContext.Provider>
@@ -137,31 +136,32 @@ const Stack = createStackNavigator();
 
 export const eventData = makeVar({});
 
-export default function App() {
-  const client = new ApolloClient({
-    cache: new InMemoryCache({
-      typePolicies: {
-        Query: {
-          fields: {
-            eventData: {
-              read() {
-                return eventData();
-              },
+export const ScoutTrekApolloClient = new ApolloClient({
+  cache: new InMemoryCache({
+    typePolicies: {
+      Query: {
+        fields: {
+          eventData: {
+            read() {
+              return eventData();
             },
-            upcomingEvents: {
-              merge(_ignored, incoming) {
-                return incoming;
-              },
+          },
+          upcomingEvents: {
+            merge(_ignored, incoming) {
+              return incoming;
             },
           },
         },
       },
-    }),
-    link: from([authMiddleware, errorMiddleware, httpLink]),
-  });
+    },
+  }),
+  link: from([authMiddleware, errorMiddleware, httpLink]),
+});
+
+export default function App() {
 
   return (
-    <ApolloProvider client={client}>
+    <ApolloProvider client={ScoutTrekApolloClient}>
       <AppLoadingContainer />
     </ApolloProvider>
   );

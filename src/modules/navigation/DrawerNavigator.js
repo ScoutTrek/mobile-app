@@ -1,12 +1,12 @@
 import * as React from 'react';
 import {
-  Button,
   Text,
   View,
   Dimensions,
+  TouchableOpacity,
   AsyncStorage,
-  Vibration,
 } from 'react-native';
+import {CommonActions} from '@react-navigation/native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
 import {createStackNavigator} from '@react-navigation/stack';
 import AdventuresNav from '../home/UpcomingEvents';
@@ -21,16 +21,55 @@ import {AntDesign} from '@expo/vector-icons';
 import {gql, useApolloClient, useQuery} from '@apollo/client';
 import TroopInfo from '../troopInfo/troopInfo';
 import {useContext} from 'react';
-import {AuthContext} from '../auth/JoinPatrol';
+import JoinPatrol, {AuthContext} from '../auth/JoinPatrol';
 
 import * as WebBrowser from 'expo-web-browser';
+import AppLoading from 'expo-app-loading';
+import SimpleLineItem from '../../components/widgets/SimpleLineItem';
+import ChooseRole from '../auth/ChooseRole';
+import JoinTroop from '../auth/JoinTroop';
+import CreateTroop from '../auth/components/CreateTroop';
+import Colors from '../../../constants/Colors';
+import {ScoutTrekApolloClient} from '../../../App';
 
-const GET_CURR_USER = gql`
+export const _updateCurrentGroup = async (groupID, navigation) => {
+  await AsyncStorage.setItem('currMembershipID', groupID);
+  navigation.dispatch(
+    CommonActions.reset({
+      index: 1,
+      routes: [{name: 'Home'}],
+    })
+  );
+  await ScoutTrekApolloClient.resetStore();
+};
+
+export const GET_CURR_USER = gql`
   query GetCurrUser {
-    user: currUser {
+    currUser {
       id
       name
       email
+      role
+      patrol {
+        id
+        name
+      }
+      troop {
+        id
+        unitNumber
+        patrols {
+          id
+          name
+          members {
+            id
+            name
+          }
+        }
+      }
+      otherGroups {
+        id
+        troopNum
+      }
     }
   }
 `;
@@ -48,7 +87,7 @@ const GET_CURR_USER = gql`
 // }
 
 function CustomDrawerContent(props) {
-  const {data, loading, error} = useQuery(GET_CURR_USER);
+  const {data, loading} = useQuery(GET_CURR_USER);
   const client = useApolloClient();
   const {setAuthToken} = useContext(AuthContext);
 
@@ -58,8 +97,7 @@ function CustomDrawerContent(props) {
     );
   };
 
-  if (loading) return <Text> </Text>;
-  if (error) return <Text>`Error, ${error}`</Text>;
+  if (loading) return <AppLoading />;
 
   return (
     <DrawerContentScrollView {...props}>
@@ -70,20 +108,11 @@ function CustomDrawerContent(props) {
         }}>
         <View>
           <DrawerItemList {...props} />
-          <DrawerItem
-            label="Logout"
-            onPress={async () => {
-              await AsyncStorage.removeItem('userToken');
-              setAuthToken('');
-              client.stop();
-              await client.clearStore();
-            }}
-          />
-          {data.user.role && (
+          {!!data.currUser.role && (
             <View style={{marginTop: 10}}>
               <View style={{padding: 20}}>
                 <Text style={{fontSize: 18, fontFamily: Fonts.primaryTextBold}}>
-                  {data.user.name}
+                  {data.currUser.name}
                 </Text>
                 <Text
                   style={{
@@ -91,7 +120,7 @@ function CustomDrawerContent(props) {
                     fontFamily: Fonts.primaryText,
                     marginTop: 12,
                   }}>
-                  {data.user.email}
+                  {data.currUser.email}
                 </Text>
                 <Text
                   style={{
@@ -99,10 +128,10 @@ function CustomDrawerContent(props) {
                     fontFamily: Fonts.primaryText,
                     marginTop: 18,
                   }}>
-                  {data.user.role}
+                  {data.currUser.role}
                 </Text>
               </View>
-              {data.user.patrol && (
+              {data.currUser.patrol && (
                 <View style={{padding: 20, alignItems: 'flex-start'}}>
                   <Text
                     style={{
@@ -117,32 +146,50 @@ function CustomDrawerContent(props) {
                       fontFamily: Fonts.primaryText,
                       marginTop: 10,
                     }}>
-                    {data.user.patrol.name}
+                    {data.currUser.patrol.name}
                   </Text>
                 </View>
               )}
-              <View style={{padding: 20, alignItems: 'flex-start'}}>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontFamily: Fonts.primaryTextBold,
-                  }}>
-                  Troop
-                </Text>
-                <Text
-                  style={{
-                    fontSize: 16,
-                    fontFamily: Fonts.primaryText,
-                    marginTop: 10,
-                  }}>
-                  {data.user.troop.unitNumber}
-                </Text>
-              </View>
+              {!!data.currUser.otherGroups?.length ? (
+                <SimpleLineItem
+                  troopName={data.currUser.troop.unitNumber}
+                  accordionComponent={
+                    <>
+                      {data.currUser.otherGroups.map((group) => (
+                        <TouchableOpacity
+                          style={{
+                            marginVertical: 4,
+                            marginHorizontal: -8,
+                            padding: 8,
+                            backgroundColor: Colors.offWhite2,
+                            borderRadius: 4,
+                          }}
+                          key={group.id}
+                          onPress={() =>
+                            _updateCurrentGroup(group.id, props.navigation)
+                          }>
+                          <Text>Switch to Troop</Text>
+                          <Text style={{fontSize: 18}}>{group.troopNum}</Text>
+                        </TouchableOpacity>
+                      ))}
+                    </>
+                  }
+                />
+              ) : null}
             </View>
           )}
           <DrawerItem
             label="Suggest a feature."
             onPress={_handlePressButtonAsync}
+          />
+          <DrawerItem
+            label="Logout"
+            onPress={async () => {
+              await AsyncStorage.removeItem('userToken');
+              setAuthToken('');
+              client.stop();
+              await client.clearStore();
+            }}
           />
         </View>
       </View>
@@ -170,6 +217,46 @@ const HomeStackNavigator = ({navigation}) => {
       })}>
       <HomeStack.Screen name="Home" component={AdventuresNav} />
     </HomeStack.Navigator>
+  );
+};
+
+const JoinAdditionalTroopStack = createStackNavigator();
+
+const JoinAdditionalTroopStackNavigator = () => {
+  return (
+    <JoinAdditionalTroopStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <JoinAdditionalTroopStack.Screen
+        name="ChooseRole"
+        component={ChooseRole}
+        initialParams={{
+          nextView: 'JoinTroop',
+        }}
+      />
+      <JoinAdditionalTroopStack.Screen
+        name="JoinTroop"
+        component={JoinTroop}
+        initialParams={{
+          nextView: 'JoinPatrol',
+        }}
+      />
+      <JoinAdditionalTroopStack.Screen
+        name="CreateTroop"
+        component={CreateTroop}
+        initialParams={{
+          nextView: 'JoinPatrol',
+        }}
+      />
+      <TroopInfoStack.Screen
+        name="JoinPatrol"
+        component={JoinPatrol}
+        initialParams={{
+          shouldAddGroup: true,
+        }}
+      />
+    </JoinAdditionalTroopStack.Navigator>
   );
 };
 
@@ -205,6 +292,10 @@ export default function UpcomingEvents() {
       initialRouteName="UpcomingEvents">
       <Drawer.Screen name="Home" component={HomeStackNavigator} />
       <Drawer.Screen name="Troop Info" component={TroopInfoStackNavigator} />
+      <Drawer.Screen
+        name="Add Another Troop"
+        component={JoinAdditionalTroopStackNavigator}
+      />
     </Drawer.Navigator>
   );
 }

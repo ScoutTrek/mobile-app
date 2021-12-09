@@ -15,7 +15,7 @@ import {cloneDeep} from 'lodash';
 import {GET_UPCOMING_EVENTS} from '../home/UpcomingEvents';
 import {GET_EVENTS} from './CalendarView';
 import {EVENT_FIELDS} from '../home/UpcomingEvents';
-import ConfirmCircle from '../../components/buttons/ConfirmCircle';
+import {ConfirmButton} from '@ScoutDesign';
 import {Octicons, Ionicons} from '@expo/vector-icons';
 import Colors from '../../../constants/Colors';
 import InlineButton from '../../components/buttons/InlineButton';
@@ -145,9 +145,13 @@ const EventDetailsScreen = ({route, navigation}) => {
         address={data.event.location.address}
       />
       <Time time={+data.event.startTime} text="event start time" />
+      {!data.event.endTime ? null : (
+        <Time time={+data.event.endTime} text="estimated return" />
+      )}
+
       <Description description={data.event.description} />
 
-      <ConfirmCircle
+      <ConfirmButton
         icon={<Octicons name="pencil" size={24} color="#fff" />}
         onClick={() => {
           addEventToCache();

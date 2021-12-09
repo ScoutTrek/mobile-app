@@ -1,7 +1,6 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import ChooseLocationView from '../components/ChooseLocation';
 import TroopMeetingDetails from './TroopMeetingDetails';
 import ChooseOneTime from '../components/ChooseOneTime';
 import ConfirmTroopMeetingDetails from './ConfirmTroopMeetingDetails';

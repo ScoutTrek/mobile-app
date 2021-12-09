@@ -1,6 +1,7 @@
 import React, {useRef, useEffect} from 'react';
-import {View, SectionList, SafeAreaView, StyleSheet, Text} from 'react-native';
+import {SectionList, SafeAreaView, StyleSheet, Text} from 'react-native';
 import EventListItem from '../../components/EventListItem';
+import NoEvents from '../../components/widgets/NoEvents';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
 
@@ -15,13 +16,17 @@ export const EVENT_FIELDS = gql`
     title
     description
     date
+    day
     startTime
     distance
     uniqueMeetLocation
     meetTime
     leaveTime
+    pickupTime
+    checkoutTime
     endTime
     endDate
+    recurring
     location {
       lat
       lng
@@ -84,7 +89,6 @@ export default function UpcomingEvents({navigation}) {
             response.notification.request.content.data?.eventType;
           const ID = response.notification.request.content.data.ID;
 
-          console.log('Notification ', ID, notificationType);
           switch (notificationType) {
             case 'event':
               navigation.navigate('ViewEvents', {
@@ -119,12 +123,12 @@ export default function UpcomingEvents({navigation}) {
   const registerForPushNotificationsAsync = async () => {
     let token;
     if (Constants.isDevice) {
-      const {status: existingStatus} = await Permissions.getAsync(
-        Permissions.NOTIFICATIONS
-      );
+      const {
+        status: existingStatus,
+      } = await Notifications.getPermissionsAsync();
       let finalStatus = existingStatus;
       if (existingStatus !== 'granted') {
-        const {status} = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+        const {status} = await Notifications.requestPermissionsAsync();
         finalStatus = status;
       }
       if (finalStatus !== 'granted') {
@@ -173,7 +177,7 @@ export default function UpcomingEvents({navigation}) {
   return (
     <SafeAreaView style={styles.screen}>
       <SectionList
-        sections={eventListData}
+        sections={!data?.upcomingEvents?.length ? [] : eventListData}
         keyExtractor={(item) => item.id}
         renderItem={({item}) => (
           <EventListItem
@@ -189,7 +193,7 @@ export default function UpcomingEvents({navigation}) {
         renderSectionHeader={({section: {title, data}}) =>
           data.length > 0 ? <Text style={styles.heading}>{title}</Text> : null
         }
-        ListFooterComponent={() => <View style={{margin: 10}} />}
+        ListEmptyComponent={<NoEvents navigation={navigation} />}
       />
     </SafeAreaView>
   );

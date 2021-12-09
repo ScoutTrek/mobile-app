@@ -24,13 +24,15 @@ const JoinTroop = ({navigation, route}) => {
     fetchPolicy: 'network-only',
   });
   const [troopId, setTroopId] = useState('');
+  const [troopNum, setTroopNum] = useState('');
   const [isValid, setIsValid] = useState(false);
 
   const nextForm = () => {
     if (isValid) {
       const signUpData = {
         ...route.params,
-        troop: troopId,
+        troopID: troopId,
+        troopNum,
       };
       delete signUpData.nextView;
       navigation.navigate(route.params.nextView, signUpData);
@@ -54,6 +56,7 @@ const JoinTroop = ({navigation, route}) => {
             onPress={() => {
               setIsValid(true);
               setTroopId(troop.id);
+              setTroopNum(troop.unitNumber.toString());
             }}
             style={
               troop.id === troopId

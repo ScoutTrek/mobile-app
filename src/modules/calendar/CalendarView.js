@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import {
   StyleSheet,
   View,
@@ -14,24 +14,15 @@ import Fonts from '../../../constants/Fonts';
 
 import useFetchEvents from '../../hooks/useFetchEvents';
 import {gql, useQuery} from '@apollo/client';
+import {EVENT_FIELDS} from '../home/UpcomingEvents';
 import {eventData} from '../../../App';
+import NoEvents from '../../components/widgets/NoEvents';
 
 export const GET_EVENTS = gql`
+  ${EVENT_FIELDS}
   query ALL_EVENTS {
     events {
-      id
-      type
-      date
-      title
-      description
-      location {
-        lat
-        lng
-      }
-      creator {
-        id
-        name
-      }
+      ...EventFragment
     }
   }
 `;
@@ -52,6 +43,8 @@ const CalendarView = ({navigation}) => {
   const {data, loading, error} = useQuery(GET_EVENTS);
 
   const [events, setEvents] = useFetchEvents();
+
+  const itemColor = useRef(getColor());
 
   React.useEffect(() => {
     eventData({});
@@ -102,7 +95,7 @@ const CalendarView = ({navigation}) => {
               paddingHorizontal: 5,
               margin: 2,
               fontSize: 10,
-              backgroundColor: getColor(label),
+              backgroundColor: itemColor,
               borderRadius: 3,
             }}>
             <Text style={{color: 'white', textAlign: 'center'}}>
@@ -148,6 +141,9 @@ const CalendarView = ({navigation}) => {
 
   if (error) return <Text>Error: {error}</Text>;
   if (loading) return <Text>Loading...</Text>;
+  if (!events.length) {
+    return <NoEvents navigation={navigation} />;
+  }
   return (
     <Agenda
       current={new Date()}

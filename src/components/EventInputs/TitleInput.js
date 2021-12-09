@@ -1,42 +1,36 @@
 import React, {useState} from 'react';
 import {eventData} from '../../../App';
-import {Dimensions, Text, TouchableOpacity, View} from 'react-native';
+import {Dimensions, TouchableOpacity, View} from 'react-native';
+import {Text} from '@ScoutDesign';
 import Input from '../formfields/Input';
 import BasicLineItem from '../BasicLineItem';
 import {LinearGradient} from 'expo-linear-gradient';
 import Fonts from '../../../constants/Fonts';
 import Colors from '../../../constants/Colors';
-import ConfirmCircle from '../buttons/ConfirmCircle';
 import InputModalContainer from '../containers/InputModalContainer';
 
 const TitleInputButton = ({fieldName, onPress}) => {
   return (
-    <View style={{flexDirection: 'row', alignItems: 'center'}}>
+    <TouchableOpacity
+      onPress={onPress}
+      style={{flexDirection: 'row', alignItems: 'center'}}>
       <View
         style={{
           borderRadius: 20,
           zIndex: 10,
           alignItems: 'center',
+          justifyContent: 'center',
           width: 19,
           height: 19,
           overflow: 'hidden',
           backgroundColor: '#fff',
           marginLeft: 16,
-          marginTop: -1.5,
         }}>
-        <Text
-          style={{
-            fontSize: 20,
-            marginTop: -3,
-            marginRight: -1,
-            fontFamily: Fonts.primaryTextBold,
-            color: '#138855',
-          }}>
+        <Text preset="lg" color="brand">
           +
         </Text>
       </View>
-      <TouchableOpacity
-        onPress={onPress}
+      <View
         style={{
           flex: 1,
           backgroundColor: 'rgba(255, 255, 255, 0.9)',
@@ -44,7 +38,7 @@ const TitleInputButton = ({fieldName, onPress}) => {
           fontSize: 15,
           borderColor: Colors.green,
           marginVertical: 5,
-          marginLeft: -33,
+          marginLeft: -32,
           marginRight: 16,
         }}>
         <LinearGradient
@@ -57,19 +51,19 @@ const TitleInputButton = ({fieldName, onPress}) => {
             flex: 1,
           }}>
           <Text
+            preset="heading"
             style={{
-              fontFamily: Fonts.primaryTextBold,
               fontSize: 18,
               marginHorizontal: 32,
               paddingVertical: 9,
               paddingHorizontal: 8,
-              color: Colors.darkGreen,
-            }}>
+            }}
+            color="brand">
             {fieldName}
           </Text>
         </LinearGradient>
-      </TouchableOpacity>
-    </View>
+      </View>
+    </TouchableOpacity>
   );
 };
 

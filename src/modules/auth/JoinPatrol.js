@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import {gql, makeVar, useMutation, useQuery} from '@apollo/client';
+import {gql, useApolloClient, useMutation, useQuery} from '@apollo/client';
 import GradientButton from '../../components/buttons/GradientButton';
 import Constants from 'expo-constants';
 import Colors from '../../../constants/Colors';
@@ -15,15 +15,25 @@ import Fonts from '../../../constants/Fonts';
 import {AntDesign, Ionicons} from '@expo/vector-icons';
 import RichInputContainer from '../../components/containers/RichInputContainer';
 import AddItemForm from './components/AddItemFormSmall';
+import {_updateCurrentGroup} from '../navigation/DrawerNavigator';
 export const AuthContext = React.createContext({
   authToken: '',
   setAuthToken: () => {},
 });
 
+const ADD_GROUP = gql`
+  mutation AddGroup($membershipInfo: AddMembershipInput!) {
+    addGroup(input: $membershipInfo) {
+      groupID
+    }
+  }
+`;
+
 const SIGN_UP = gql`
   mutation SignUp($userInfo: SignupInput!) {
     signup(input: $userInfo) {
       token
+      groupID
     }
   }
 `;
@@ -48,6 +58,12 @@ const ADD_PATROL = gql`
 
 const JoinPatrol = ({navigation, route}) => {
   const [signUp, signUpData] = useMutation(SIGN_UP);
+  const [addGroup] = useMutation(ADD_GROUP, {
+    onCompleted: (data) => {
+      console.log('Data ', data);
+      _updateCurrentGroup(data?.addGroup?.groupID, navigation);
+    },
+  });
   const [addPatrol] = useMutation(ADD_PATROL, {
     onCompleted: (data) => setPatrolId(data.addPatrol.id),
   });
@@ -61,7 +77,7 @@ const JoinPatrol = ({navigation, route}) => {
   const {data, error, loading} = useQuery(GET_PATROLS, {
     pollInterval: 500,
     variables: {
-      troopId: route.params.troop,
+      troopId: route.params.troopID,
     },
   });
 
@@ -72,7 +88,18 @@ const JoinPatrol = ({navigation, route}) => {
   };
 
   const handleSignUp = async () => {
-    if (isValid) {
+    if (route.params?.shouldAddGroup) {
+      const {shouldAddGroup, ...newGroup} = route.params;
+      await addGroup({
+        variables: {
+          membershipInfo: {
+            ...newGroup,
+            patrolID: patrolId,
+          },
+        },
+      });
+      navigation.navigate('UpcomingEvents');
+    } else if (isValid) {
       await signUp({
         variables: {
           userInfo: {
@@ -96,6 +123,10 @@ const JoinPatrol = ({navigation, route}) => {
         const token = await AsyncStorage.setItem(
           'userToken',
           signUpData.data.signup.token
+        );
+        await AsyncStorage.setItem(
+          'currMembershipID',
+          signUpData.data.signup.groupID
         );
         setAuthToken(signUpData.data.signup.token);
       } catch (e) {
@@ -149,7 +180,7 @@ const JoinPatrol = ({navigation, route}) => {
           onPress={async () => {
             await addPatrol({
               variables: {
-                troopId: route.params.troop,
+                troopId: route.params.troopID,
                 patrolInfo: {
                   name: patrolName,
                 },

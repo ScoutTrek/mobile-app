@@ -35,6 +35,7 @@ const LOG_IN = gql`
   mutation Login($userInfo: LoginInput!) {
     login(input: $userInfo) {
       token
+      groupID
     }
   }
 `;
@@ -75,6 +76,10 @@ const SignIn = ({navigation}) => {
     const setToken = async () => {
       try {
         const token = await AsyncStorage.setItem('userToken', data.login.token);
+        const groupID = await AsyncStorage.setItem(
+          'currMembershipID',
+          data?.login?.groupID || undefined
+        );
         setAuthToken(data.login.token);
       } catch (e) {
         console.log(e);

@@ -9,9 +9,10 @@ import {GOOGLE_MAPS_API_KEY} from '../../../env';
 import MapView, {Marker} from 'react-native-maps';
 import MapSearch from '../MapSearch';
 import Constants from 'expo-constants';
+import {Ionicons} from '@expo/vector-icons';
 
 import uuidv4 from 'uuid/v1';
-import ConfirmCircle from '../buttons/ConfirmCircle';
+import {ConfirmButton} from '@ScoutDesign';
 
 const locationToken = uuidv4();
 
@@ -22,6 +23,7 @@ const ChooseLocation = ({id, setModalVisible, questionText}) => {
       ? {latitude: initialLocation.lat, longitude: initialLocation.lng}
       : null
   );
+  const [errorMsg, setErrorMsg] = useState('');
   const [locationCoords, setLocationCoords] = useState(
     initialLocation
       ? {latitude: initialLocation.lat, longitude: initialLocation.lng}
@@ -32,11 +34,15 @@ const ChooseLocation = ({id, setModalVisible, questionText}) => {
   );
 
   const _getLocationAsync = async () => {
-    let {status} = await Permissions.askAsync(Permissions.LOCATION);
+    let {status} = await Location.requestForegroundPermissionsAsync();
+
     if (status !== 'granted') {
-      // setError('Permission to access location was denied');
+      setErrorMsg('Permission to access location was denied');
+      return;
     }
-    const userLocation = await Location.getCurrentPositionAsync({});
+
+    const userLocation = await Location.getCurrentPositionAsync({accuracy: 7});
+
     setLocation({
       latitude: userLocation.coords.latitude,
       longitude: userLocation.coords.longitude,
@@ -111,7 +117,12 @@ const ChooseLocation = ({id, setModalVisible, questionText}) => {
           style={styles.searchBar}
         />
       </View>
-      {locationCoords && <ConfirmCircle onClick={nextView} />}
+      {locationCoords && (
+        <ConfirmButton
+          icon={<Ionicons size={27} name="arrow-forward" color="white" />}
+          onClick={nextView}
+        />
+      )}
     </View>
   );
 };

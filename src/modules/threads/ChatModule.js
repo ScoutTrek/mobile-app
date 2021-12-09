@@ -2,16 +2,13 @@ import React, {useState, useEffect, useCallback} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {gql, useMutation, useQuery} from '@apollo/client';
 
-import {GiftedChat, Actions, Bubble} from 'react-native-gifted-chat';
-import {GET_EVENTS} from '../calendar/CalendarView';
+import {GiftedChat, Bubble} from 'react-native-gifted-chat';
 import Colors from '../../../constants/Colors';
 import AccessoryBtn from './AccessoryBtn';
-// import CustomActions from './CustomActions';
-// import CustomView from './CustomView';
 
 const GET_CURR_USER_BRIEF = gql`
   query GetCurrUserBrief {
-    user: currUser {
+    currUser {
       id
       name
     }
@@ -58,7 +55,7 @@ const GET_MESSAGES = gql`
 
 export default function ChatModule({navigation, route}) {
   const {
-    data: {user},
+    data: {currUser},
   } = useQuery(GET_CURR_USER_BRIEF);
 
   const {data: eventMessages, loading, error} = useQuery(GET_MESSAGES, {
@@ -149,8 +146,8 @@ export default function ChatModule({navigation, route}) {
       inverted={false}
       alignTop={false}
       user={{
-        _id: parseInt(user.id, 16),
-        name: user.name,
+        _id: parseInt(currUser.id, 16),
+        name: currUser.name,
       }}
       renderAccessory={() => <AccessoryBtn onSend={onSend} />} // renderActions={this.renderCustomActions}
       renderBubble={renderBubble}

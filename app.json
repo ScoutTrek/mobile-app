@@ -1,5 +1,7 @@
 {
+  "name": "ScoutTrek",
   "expo": {
+    "entryPoint": "node_modules/expo/AppEntry.js",
     "name": "ScoutTrek",
     "slug": "scout-trek-native",
     "privacy": "unlisted",
@@ -7,18 +9,6 @@
       "ios",
       "android"
     ],
-    "hooks": {
-      "postPublish": [
-        {
-          "file": "sentry-expo/upload-sourcemaps",
-          "config": {
-            "organization": "scouttrek",
-            "project": "scouttrek",
-            "authToken": "aee5440c28cd4466a32e2d29c61724ebcddffb3172d0491fb3d481b038519af5"
-          }
-        }
-      ]
-    },
     "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/ScoutTrekIcon.png",
@@ -31,11 +21,11 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.scouttrek.kalebdavenport",
-      "buildNumber": "1.0.50"
+      "buildNumber": "1.0.60"
     },
     "android": {
       "useNextNotificationsApi": true,
-      "versionCode": 16,
+      "versionCode": 19,
       "permissions": [
         "NOTIFICATIONS",
         "ACCESS_FINE_LOCATION",

@@ -4,7 +4,8 @@ import {StyleSheet, View, ActivityIndicator, FlatList} from 'react-native';
 import Constants from 'expo-constants';
 
 import ViewHeading from '../../components/Headings/ViewHeading';
-import NextButton from '../../components/buttons/NextButton';
+import {ConfirmButton} from '@ScoutDesign';
+import {Ionicons} from '@expo/vector-icons';
 
 import EventBtn from './components/EventBtn';
 import Colors from '../../../constants/Colors';
@@ -78,12 +79,12 @@ const EventTypesScreen = ({navigation}) => {
           );
         }}
       />
-      <NextButton
-        text="Cancel"
-        iconName="ios-close"
-        color={Colors.darkOrange}
-        onClick={() => navigation.navigate('UpcomingEvents')}
-      />
+      {/*<ConfirmButton*/}
+      {/*  text="Cancel"*/}
+      {/*  icon={<Ionicons size={27} name="arrow-forward" color="white" />}*/}
+      {/*  color={Colors.darkOrange}*/}
+      {/*  onClick={() => navigation.navigate('UpcomingEvents')}*/}
+      {/*/>*/}
     </View>
   );
 };

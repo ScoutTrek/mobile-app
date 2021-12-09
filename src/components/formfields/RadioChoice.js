@@ -1,6 +1,6 @@
 import React from 'react';
 import {Dimensions, View} from 'react-native';
-import {Text} from '../../../ui-kit';
+import {Text} from '@ScoutDesign';
 import RadioForm from 'react-native-simple-radio-button';
 import Colors from '../../../constants/Colors';
 
@@ -12,7 +12,7 @@ const RadioChoice = ({text, a, b, onPress}) => {
         justifyContent: 'center',
         marginHorizontal: 4,
       }}>
-      <Text preset="lg" color="gray">
+      <Text preset="lg" color="brand">
         {text}
       </Text>
 

@@ -1,7 +1,6 @@
 import React from 'react';
-import {View, KeyboardAvoidingView, Platform} from 'react-native';
-import {Text} from '../../../ui-kit';
-import ConfirmCircle from '../buttons/ConfirmCircle';
+import {View, KeyboardAvoidingView, Alert, Platform} from 'react-native';
+import {Text, ConfirmButton} from '@ScoutDesign';
 import Constants from 'expo-constants';
 import Colors from '../../../constants/Colors';
 import {Ionicons} from '@expo/vector-icons';
@@ -41,7 +40,12 @@ const InputModalContainer = ({
         </View>
         <View style={{flex: 1}}>{children}</View>
         {!invalid ? (
-          <ConfirmCircle onClick={onPress} toolbar={toolbar} />
+          <ConfirmButton
+            ID="titleConfirm"
+            icon={<Ionicons size={27} name="arrow-forward" color="white" />}
+            onPress={onPress}
+            toolbar={toolbar}
+          />
         ) : null}
       </View>
       <Ionicons
