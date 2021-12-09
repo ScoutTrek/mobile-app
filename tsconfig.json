@@ -1,5 +1,10 @@
 {
+  "compilerOptions": {
+    "allowJs": true,
+    "jsx": "react",
+    "strict": true,
+    "esModuleInterop": true
+},
   "extends": "expo/tsconfig.base",
   "exclude": ["node_modules", "dist"]
-
 }
