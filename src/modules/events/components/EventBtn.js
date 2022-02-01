@@ -44,15 +44,13 @@ const EventBtn = ({item, onPress}) => {
 
 const styles = StyleSheet.create({
   eventContainer: {
-    margin: 5,
-    marginBottom: 15,
+    margin: 2,
+    marginBottom: 0,
     backgroundColor: 'white',
   },
   eventContent: {
     position: 'relative',
-    marginHorizontal: 12,
-    height: 160,
-    borderRadius: 5,
+    height: 155,
     overflow: 'hidden',
   },
   textContainer: {
@@ -73,7 +71,7 @@ const styles = StyleSheet.create({
   eventSubTitle: {
     height: '50%',
     color: 'white',
-    paddingTop: 10,
+    paddingTop: 6,
     fontSize: 18,
     textShadowColor: '#000',
     textShadowOffset: {width: 0, height: 0},
@@ -83,7 +81,7 @@ const styles = StyleSheet.create({
   eventImage: {
     position: 'absolute',
     width: '100%',
-    height: 165,
+    height: 155,
     top: 0,
     left: 0,
     bottom: 0,
@@ -92,7 +90,7 @@ const styles = StyleSheet.create({
   gradient: {
     position: 'absolute',
     width: '100%',
-    height: 165,
+    height: 155,
     top: 0,
     left: 0,
     bottom: 0,

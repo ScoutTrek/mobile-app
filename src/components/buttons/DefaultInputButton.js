@@ -12,9 +12,9 @@ const DefaultInputButton = ({fieldName, onPress}) => {
         justifyContent: 'center',
       }}>
       <LinearGradient
-        colors={['rgba(104, 237, 180, 0.045)', 'rgba(23, 161, 101, 0.095)']}
-        start={{x: 0.6, y: 0}}
-        end={{x: 0.525, y: 1}}
+        colors={['rgba(23, 161, 101, 0.095)', 'rgba(104, 237, 180, 0.045)']}
+        start={{x: 0.525, y: 1}}
+        end={{x: 0.6, y: 0}}
         style={{
           alignItems: 'center',
           justifyContent: 'center',

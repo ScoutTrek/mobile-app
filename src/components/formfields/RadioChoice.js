@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text} from 'react-native';
+import {View, Text} from 'react-native';
 // import {Text} from '@ScoutDesign';
 import RadioForm from 'react-native-simple-radio-button';
 import Colors from '../../../constants/Colors';

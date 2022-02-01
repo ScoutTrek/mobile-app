@@ -1,9 +1,9 @@
 import React from 'react';
-import {Platform} from 'react-native';
+import {Platform, View, Text, KeyboardAvoidingView, Button} from 'react-native';
 // import {Text, ConfirmButton} from '@ScoutDesign';
 import Constants from 'expo-constants';
 import Colors from '../../../constants/Colors';
-// import {Ionicons} from '@expo/vector-icons';
+import {Ionicons} from '@expo/vector-icons';
 
 const InputModalContainer = ({
   title,
@@ -40,11 +40,12 @@ const InputModalContainer = ({
         </View>
         <View style={{flex: 1}}>{children}</View>
         {!invalid ? (
-          <ConfirmButton
-            ID="titleConfirm"
-            icon={<Ionicons size={27} name="arrow-forward" color="white" />}
+          <Button
+            // ID="titleConfirm"
+            // icon={<Ionicons size={27} name="arrow-forward" color="white" />}
+            title=">"
             onPress={onPress}
-            toolbar={toolbar}
+            // toolbar={toolbar}
           />
         ) : null}
       </View>

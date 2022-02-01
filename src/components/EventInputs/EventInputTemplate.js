@@ -6,13 +6,13 @@ import Row from './Row';
 import TapToEditContainer from '../containers/TapToEditContainer';
 
 // Component Types
-import TitleInput from '../../components/EventInputs/TitleInput';
-import LocationInput from '../../components/EventInputs/LocationInput';
-import DateInput from '../../components/EventInputs/DateInput';
-import TimeInput from '../../components/EventInputs/TimeInput';
-import DescriptionInput from '../../components/EventInputs/DescriptionInput';
-import NumberSliderInput from '../../components/EventInputs/NumberSliderInput';
-import OptionsInput from '../../components/EventInputs/OptionsInput';
+import TitleInput from './TitleInput';
+import LocationInput from './LocationInput';
+import DateInput from './DateInput';
+import TimeInput from './TimeInput';
+import DescriptionInput from './DescriptionInput';
+import NumberSliderInput from './NumberSliderInput';
+import OptionsInput from './OptionsInput';
 
 const eventComponents = {
   shortText: TitleInput,
@@ -25,9 +25,8 @@ const eventComponents = {
 };
 
 export default ({fieldType, id, fieldName, questionText, payload}) => {
-  const {InitialButton, EditingComponent, CompletedComponent} = eventComponents[
-    fieldType
-  ];
+  const {InitialButton, EditingComponent, CompletedComponent} =
+    eventComponents[fieldType];
   const {
     loading,
     error,

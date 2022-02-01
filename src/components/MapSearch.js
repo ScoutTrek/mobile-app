@@ -87,7 +87,7 @@ const MapSearch = ({
 
 const styles = StyleSheet.create({
   container: {
-    borderRadius: 10,
+    borderRadius: 8,
     backgroundColor: '#ffffff',
     textAlign: 'center',
   },

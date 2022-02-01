@@ -87,7 +87,6 @@ const AppLoadingContainer = () => {
 
   return (
     <AuthContext.Provider value={{authToken, setAuthToken}}>
-
       <NavigationContainer>
         <Stack.Navigator
           screenOptions={() => ({
@@ -159,7 +158,6 @@ export const ScoutTrekApolloClient = new ApolloClient({
 });
 
 export default function App() {
-
   return (
     <ApolloProvider client={ScoutTrekApolloClient}>
       <AppLoadingContainer />

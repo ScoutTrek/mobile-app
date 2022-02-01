@@ -3,7 +3,6 @@ import {StyleSheet, View, ActivityIndicator, FlatList} from 'react-native';
 
 import Constants from 'expo-constants';
 
-import ViewHeading from '../../components/Headings/ViewHeading';
 // import {ConfirmButton} from '@ScoutDesign';
 import {Ionicons} from '@expo/vector-icons';
 
@@ -17,36 +16,6 @@ export const GET_EVENT_SCHEMAS = gql`
   }
 `;
 
-const listData = [
-  {
-    id: 1,
-    eventType: 'Troop Meeting',
-    subtitle: 'Plan your weekly meeting logistics in minutes.',
-    image: {
-      uri: 'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1582557266/ScoutTrek/ScoutBadgesImage.jpg',
-    },
-  },
-  {
-    id: 5,
-    eventType: 'Canoeing',
-    subtitle: 'Spend some time at on the water, in style.',
-    image: {
-      uri: 'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1599596674/ScoutTrek/canoeing.jpg',
-    },
-  },
-  {
-    id: 3,
-    eventType: 'Backpacking',
-    title: 'CITIZEN ECO-DRIVE',
-    subtitle: "It's like hiking, but more Pro.",
-    badge: 'NEW',
-    badgeColor: 'green',
-    image: {
-      uri: 'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_600/v1582556924/ScoutTrek/backpacking_trip.png',
-    },
-  },
-];
-
 const EventTypesScreen = ({navigation}) => {
   const {loading, error, data} = useQuery(GET_EVENT_SCHEMAS);
 
@@ -58,9 +27,8 @@ const EventTypesScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <ViewHeading title="New Event" />
       <FlatList
-        contentContainerStyle={{flexGrow: 1, paddingBottom: 15}}
+        contentContainerStyle={{flexGrow: 1, paddingBottom: 2}}
         keyExtractor={(item) => item.metaData.eventID}
         data={eventSchemasArr}
         renderItem={({item}) => {

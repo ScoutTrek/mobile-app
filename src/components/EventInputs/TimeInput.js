@@ -19,6 +19,7 @@ const ChooseTime = ({
 
   const back = () => setModalVisible(false);
   const nextView = (androidTime) => {
+    console.log('Android time ', androidTime);
     eventData({
       ...eventData(),
       [id]: androidTime || time,
@@ -63,7 +64,11 @@ const ChooseTime = ({
                 mode="time"
                 display="inline"
                 onChange={(_, newDateString) => {
-                  setTime(new Date(newDateString));
+                  console.log(newDateString);
+                  // const date = new Date(newDateString);
+                  // if (!isNaN(date.valueOf())) {
+                  //   setTime(date);
+                  // }
                 }}
                 textColor={Colors.orange}
                 style={{
@@ -84,6 +89,7 @@ const ChooseTime = ({
       mode="time"
       display="default"
       onChange={(_, newDateString) => {
+        console.log('Date string ', newDateString);
         nextView(new Date(newDateString));
         setShowAndroidClock(false);
       }}

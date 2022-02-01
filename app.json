@@ -9,11 +9,11 @@
       "ios",
       "android"
     ],
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "portrait",
     "icon": "./assets/images/ScoutTrekIcon.png",
     "updates": {
-      "enabled": false
+      "enabled": true
     },
     "assetBundlePatterns": [
       "**/*"
@@ -45,9 +45,7 @@
       "googleServicesFile": "./google-services.json"
     },
     "splash": {
-      "backgroundColor": "#2C3148",
-      "resizeMode": "cover",
-      "image": "./assets/images/loadingImage.png"
+      "backgroundColor": "#34A86C",
     },
     "description": "Testing the publishing feature of Expo",
     "notification": {

@@ -1,6 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {eventData} from '../../../App';
-import {Dimensions, Keyboard, StyleSheet, View} from 'react-native';
+import {
+  Dimensions,
+  Keyboard,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Text,
+} from 'react-native';
 import LocationLineItem from '../LocationLineItem';
 import DefaultInputButton from '../buttons/DefaultInputButton';
 import * as Permissions from 'expo-permissions';
@@ -117,12 +124,17 @@ const ChooseLocation = ({id, setModalVisible, questionText}) => {
           style={styles.searchBar}
         />
       </View>
-      {/* {locationCoords && (
-        <ConfirmButton
-          icon={<Ionicons size={27} name="arrow-forward" color="white" />}
-          onClick={nextView}
-        />
-      )} */}
+      {locationCoords && (
+        <TouchableOpacity
+          onPress={nextView}
+          style={{position: 'absolute', bottom: 15, right: 15}}>
+          <Text>Next</Text>
+        </TouchableOpacity>
+        // <ConfirmButton
+        //   icon={<Ionicons size={27} name="arrow-forward" color="white" />}
+        //   onClick={nextView}
+        // />
+      )}
     </View>
   );
 };
