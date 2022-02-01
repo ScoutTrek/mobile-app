@@ -1,14 +1,8 @@
-import React from "react";
-import { Animated, Easing, TouchableOpacity, View } from "react-native";
-import theme from "../../../theme";
-import { IconPayload } from "../../../../icons";
-import Icon from "../Assets/Icon/Icon";
-import {
-  Floatable,
-  PressableProps,
-  FloatableProps,
-  Color,
-} from "../../utility";
+import {Animated, Easing, TouchableOpacity, View} from 'react-native';
+import theme from '../../../theme';
+import {IconPayload} from '../../../../icons';
+import Icon from '../Assets/Icon/Icon';
+import {Floatable, PressableProps, FloatableProps, Color} from '../../utility';
 
 interface CircleButtonProps extends PressableProps, FloatableProps {
   accessibilityLabel: string;
@@ -20,7 +14,7 @@ interface CircleButtonProps extends PressableProps, FloatableProps {
 
 const CircleButton = ({
   accessibilityLabel,
-  backgroundColor = "brandPrimary",
+  backgroundColor = 'brandPrimary',
   icon,
   onPress,
   animated,
@@ -40,17 +34,16 @@ const CircleButton = ({
       <View
         nativeID={accessibilityLabel}
         style={{
-          position: "relative",
-          alignSelf: "flex-start",
+          position: 'relative',
+          alignSelf: 'flex-start',
           marginVertical: theme.spacing.xs,
-        }}
-      >
+        }}>
         <AnimatedTouchable
           style={{
             height: 50,
             width: 50,
             borderRadius: 25,
-            transform: [{ scale: cardScale }],
+            transform: [{scale: cardScale}],
             backgroundColor: theme.colors[backgroundColor],
           }}
         />
@@ -74,15 +67,14 @@ const CircleButton = ({
               width: 50,
               borderRadius: 25,
               backgroundColor: backgroundColor,
-              justifyContent: "center",
-              alignItems: "center",
-              position: "absolute",
+              justifyContent: 'center',
+              alignItems: 'center',
+              position: 'absolute',
               left: 0,
               top: 0,
               right: 0,
             },
-          ]}
-        >
+          ]}>
           <Icon icon={icon} color="white" size="m" />
         </AnimatedTouchable>
       </View>

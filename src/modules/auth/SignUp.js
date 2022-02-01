@@ -11,6 +11,7 @@ import {
   ScrollView,
 } from 'react-native';
 import Fonts from '../../../constants/Fonts';
+import {Stack, TextInput} from '../../../ScoutDesign/library';
 import {Ionicons} from '@expo/vector-icons';
 import AuthInput from './components/Input';
 import Footer from './components/Footer';
@@ -126,8 +127,7 @@ const SignUp = ({navigation, route}) => {
         <Image
           style={{height: '100%'}}
           source={{
-            uri:
-              'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_1000/v1581475803/ScoutTrek/nurhadi-cahyono-3-gjm36-dYg-unsplash.jpg',
+            uri: 'https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_1000/v1581475803/ScoutTrek/nurhadi-cahyono-3-gjm36-dYg-unsplash.jpg',
           }}
         />
       </View>
@@ -150,7 +150,7 @@ const SignUp = ({navigation, route}) => {
           <KeyboardAvoidingView
             style={styles.content}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            <AuthInput
+            {/* <AuthInput
               autoCapitalize="words"
               onInputChange={(value) => handleInputChange('name', value)}
               placeholder="First name & Last name"
@@ -175,6 +175,48 @@ const SignUp = ({navigation, route}) => {
               placeholder="Confirm Password"
               textContentType="newPassword"
               secureTextEntry={true}
+            /> */}
+            <Stack
+              type="Pressable"
+              accessibilityLabel="test-stack"
+              radius="l"
+              borderColor="mediumGrey"
+              backgroundColor="white"
+              everyItemProps={{
+                backgroundColor: 'white',
+                onValueChange: (value) => {},
+              }}
+              items={[
+                {
+                  id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+                  text: 'First and Last Name',
+                },
+                {
+                  id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+                  text: 'Email Address',
+                },
+                {
+                  id: '58694a0f-3da1-471f-bd96-145571e29d72',
+                  text: 'Password',
+                },
+                {
+                  id: '58694a0f-3da1-471f-bd96-145571e29d73',
+                  text: 'Confirm Password',
+                },
+              ]}
+              RenderItem={({item, onValueChange, ...rest}) => {
+                return (
+                  <TextInput
+                    placeholder={item.text}
+                    valid={item?.valid}
+                    disabled={item?.disabled}
+                    error={item?.error}
+                    noStyles
+                    onValueChange={onValueChange}
+                    {...rest}
+                  />
+                );
+              }}
             />
             <GradientButton title="Sign Up" onPress={handleNext} />
           </KeyboardAvoidingView>

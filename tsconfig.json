@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
+    "module": "esnext",
+    "target": "es2015",
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
-    "jsx": "react-native",
+    "jsx": "react-jsx",
     "lib": [
       "dom",
       "esnext"
@@ -15,6 +17,5 @@
     "strict": true
   },
   "extends": "expo/tsconfig.base",
-  "exclude": ["node_modules", "dist"]
 }
 

@@ -1,12 +1,14 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect} from 'react';
 
-import {setCustomText} from 'react-native-global-props';
+import 'react-native-gesture-handler';
+import {ThemeProvider} from '@shopify/restyle';
+import theme from './ScoutDesign/library/theme';
+import {useFonts} from 'expo-font';
+
 import {ActivityIndicator, View, Text, AsyncStorage} from 'react-native';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
-import * as Font from 'expo-font';
-import Constants from 'expo-constants';
 import {Ionicons} from '@expo/vector-icons';
 
 import {AuthContext} from './src/modules/auth/JoinPatrol';
@@ -63,22 +65,28 @@ const authMiddleware = new ApolloLink(async (operation, forward) => {
 });
 
 const AppLoadingContainer = () => {
-  const [loading, setLoading] = useState(true);
   const [authToken, setAuthToken] = useState<any>();
 
-  try {
-    AsyncStorage.getItem('userToken').then((token) => {
-      setAuthToken(token);
-    });
-  } catch (e) {
-    console.log(e);
-  }
+  const [loaded] = useFonts({
+    ...Ionicons.font,
+    montserrat: require('./assets/fonts/Montserrat/Montserrat-Regular.ttf'),
+    'montserrat-med': require('./assets/fonts/Montserrat/Montserrat-Medium.ttf'),
+    'montserrat-light': require('./assets/fonts/Montserrat/Montserrat-Light.ttf'),
+    'montserrat-bold': require('./assets/fonts/Montserrat/Montserrat-Bold.ttf'),
+    'raleway-bold': require('./assets/fonts/Raleway/Raleway-Bold.ttf'),
+    'raleway-black': require('./assets/fonts/Raleway/Raleway-Black.ttf'),
+    'open-sans-bold': require('./assets/fonts/OpenSans/OpenSans-Bold.ttf'),
+    'open-sans-semibold': require('./assets/fonts/OpenSans/OpenSans-SemiBold.ttf'),
+    'open-sans-regular': require('./assets/fonts/OpenSans/OpenSans-Regular.ttf'),
+    'open-sans-light': require('./assets/fonts/OpenSans/OpenSans-Light.ttf'),
+    'metropolis-black': require('./assets/fonts/metropolis/Metropolis-Black.otf'),
+    'metropolis-bold': require('./assets/fonts/metropolis/Metropolis-Bold.otf'),
+    'metropolis-medium': require('./assets/fonts/metropolis/Metropolis-Medium.otf'),
+    'metropolis-regular': require('./assets/fonts/metropolis/Metropolis-Regular.otf'),
+    'metropolis-light': require('./assets/fonts/metropolis/Metropolis-Light.otf'),
+  });
 
-  useEffect(() => {
-    loadResourcesAsync().then(() => setLoading(false));
-  }, []);
-
-  if (loading)
+  if (!loaded)
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <ActivityIndicator />
@@ -110,27 +118,6 @@ const AppLoadingContainer = () => {
   );
 };
 
-async function loadResourcesAsync() {
-  await Promise.all([
-    Font.loadAsync({
-      ...Ionicons.font,
-      montserrat: require('./assets/fonts/Montserrat/Montserrat-Regular.ttf'),
-      'montserrat-med': require('./assets/fonts/Montserrat/Montserrat-Medium.ttf'),
-      'montserrat-light': require('./assets/fonts/Montserrat/Montserrat-Light.ttf'),
-      'montserrat-bold': require('./assets/fonts/Montserrat/Montserrat-Bold.ttf'),
-      'raleway-bold': require('./assets/fonts/Raleway/Raleway-Bold.ttf'),
-      'raleway-black': require('./assets/fonts/Raleway/Raleway-Black.ttf'),
-    }),
-  ]);
-
-  const customTextProps = {
-    style: {
-      fontFamily: 'montserrat-med',
-    },
-  };
-  setCustomText(customTextProps);
-}
-
 const Stack = createStackNavigator();
 
 export const eventData = makeVar({});
@@ -160,7 +147,9 @@ export const ScoutTrekApolloClient = new ApolloClient({
 export default function App() {
   return (
     <ApolloProvider client={ScoutTrekApolloClient}>
-      <AppLoadingContainer />
+      <ThemeProvider theme={theme}>
+        <AppLoadingContainer />
+      </ThemeProvider>
     </ApolloProvider>
   );
 }

@@ -1,11 +1,11 @@
-import React from "react";
-import { Pressable, Box, StandardRadius, Color } from "../../Atoms/utility";
+import React from 'react';
+import {Pressable, Box, StandardRadius, Color} from '../../Atoms/utility';
 import {
   FormFieldProps,
   InputFieldStates,
-} from "../../Atoms/FormFields/formTypes";
+} from '../../Atoms/FormFields/formTypes';
 
-import { IconPayload } from "../../../icons";
+import {IconPayload} from '../../../icons';
 
 export interface StackableProps {
   key?: string;
@@ -24,6 +24,7 @@ interface StackItemSchema extends InputFieldStates {
 
 interface EveryStackItemProps extends FormFieldProps {
   textColor?: Color;
+  backgroundColor?: Color;
   leftComponent?: React.ReactNode;
   placeholderColor?: Color;
   onPress?: () => void;
@@ -33,17 +34,17 @@ type StackProps = {
   accessibilityLabel: string;
   borderColor?: Color;
   backgroundColor?: Color;
-  radius: StandardRadius | "none";
+  radius: StandardRadius | 'none';
   RenderItem: React.ElementType;
-  type: "Pressable" | "FormField";
+  type: 'Pressable' | 'FormField';
   everyItemProps: EveryStackItemProps;
   items: StackItemSchema[];
 };
 
 const Stack = ({
   accessibilityLabel,
-  borderColor = "mintGrey",
-  backgroundColor = "white",
+  borderColor = 'mintGrey',
+  backgroundColor = 'white',
   radius,
   RenderItem,
   items,
@@ -54,8 +55,8 @@ const Stack = ({
       accessibilityLabel={accessibilityLabel}
       borderWidth={1}
       borderColor={borderColor}
-      radius={radius === "none" ? undefined : radius}
-    >
+      backgroundColor={backgroundColor}
+      radius={radius === 'none' ? undefined : radius}>
       {items.map((item: StackItemSchema, index: number) => {
         const firstItem = index === 0;
         const lastItem = index === items.length - 1;
@@ -72,7 +73,7 @@ const Stack = ({
             )}
             <RenderItem
               backgroundColor={backgroundColor}
-              stackRadius={radius === "none" ? undefined : radius}
+              stackRadius={radius === 'none' ? undefined : radius}
               isStackTop={firstItem}
               isStackBottom={lastItem}
               item={item}
