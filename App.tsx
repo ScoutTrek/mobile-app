@@ -58,24 +58,26 @@ const loadKeysFromAsyncStorage = async (
   asyncDataKeys: string[]
 ): Promise<AsyncStorageData> => {
   let asyncData: AsyncStorageData = {};
-  asyncDataKeys.forEach(async (key) => {
+  for (const key of asyncDataKeys) {
     const value = await AsyncStorage.getItem(key);
     asyncData[key] = value;
-  });
+  }
   return asyncData;
 };
 
 const authMiddleware = new ApolloLink((operation, forward) => {
-  loadKeysFromAsyncStorage(['userToken', 'currMembershipID']).then((data) => {
-    const {userToken, currMembershipID} = data;
-    operation.setContext({
-      headers: {
-        membership: currMembershipID ? currMembershipID : undefined,
-        authorization: userToken,
-      },
-    });
-    return forward(operation);
-  });
+  return loadKeysFromAsyncStorage(['userToken', 'currMembershipID']).then(
+    ({userToken, currMembershipID}) => {
+      console.log('User token ', userToken);
+      operation.setContext({
+        headers: {
+          membership: currMembershipID ? currMembershipID : undefined,
+          authorization: userToken,
+        },
+      });
+      return forward(operation);
+    }
+  );
 });
 
 const AppLoadingContainer = () => {

@@ -2,8 +2,7 @@ import {useRef, useEffect} from 'react';
 import {SectionList, SafeAreaView, StyleSheet} from 'react-native';
 import EventListItem from '../../components/EventListItem';
 import NoEvents from '../../components/widgets/NoEvents';
-import * as Permissions from 'expo-permissions';
-import Constants from 'expo-constants';
+import * as Device from 'expo-device';
 import {Text} from 'ScoutDesign/library';
 
 import * as Notifications from 'expo-notifications';
@@ -114,7 +113,7 @@ export default function UpcomingEvents({navigation}) {
 
   const registerForPushNotificationsAsync = async () => {
     let token;
-    if (Constants.isDevice) {
+    if (Device.isDevice) {
       const {status: existingStatus} =
         await Notifications.getPermissionsAsync();
       let finalStatus = existingStatus;
@@ -128,7 +127,7 @@ export default function UpcomingEvents({navigation}) {
       }
       token = (await Notifications.getExpoPushTokenAsync()).data;
 
-      if (Constants.isDevice) {
+      if (Device.isDevice) {
         await updateToken({
           variables: {
             token: {
