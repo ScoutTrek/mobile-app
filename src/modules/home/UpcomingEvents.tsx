@@ -3,7 +3,8 @@ import {SectionList, SafeAreaView, StyleSheet} from 'react-native';
 import EventListItem from '../../components/EventListItem';
 import NoEvents from '../../components/widgets/NoEvents';
 import * as Device from 'expo-device';
-import {Text} from 'ScoutDesign/library';
+import {plusThin} from 'ScoutDesign/icons';
+import {LargeFloatingButton, Text} from 'ScoutDesign/library';
 
 import * as Notifications from 'expo-notifications';
 import {gql, useMutation, useQuery} from '@apollo/client';
@@ -148,8 +149,6 @@ export default function UpcomingEvents({navigation}) {
     }
   };
 
-  console.log('Error ', error);
-  console.log('Loading ', loading);
   if (error) return <Text>Error: {error}</Text>;
   if (loading) return <Text>Loading...</Text>;
   const eventListData = [
@@ -186,6 +185,14 @@ export default function UpcomingEvents({navigation}) {
           data.length > 0 ? <Text preset="h2">{title}</Text> : null
         }
         ListEmptyComponent={<NoEvents navigation={navigation} />}
+      />
+      <LargeFloatingButton
+        accessibilityLabel="add event button"
+        text="New Event"
+        icon={plusThin}
+        onPress={() => navigation.navigate('CreateEvent')}
+        corner="bottom-right"
+        distanceFromCorner="l"
       />
     </SafeAreaView>
   );

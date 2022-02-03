@@ -4,7 +4,7 @@ import {useQuery, useMutation} from '@apollo/client';
 import RTE from '../../../components/RichTextEditor';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
 import SubmitBtn from '../../../components/buttons/SubmitButton';
-import {UPDATE_EVENT} from '../../events/components/UpdateEventDetails';
+import {UPDATE_EVENT} from '../../createEvent/components/UpdateEventDetails';
 import {GET_SCOUT_MEETING} from './TroopMeetingView';
 
 const AddTroopMeetingDetails = ({navigation, route}) => {

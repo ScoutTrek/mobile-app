@@ -28,6 +28,11 @@ export class IconPayload {
   }
 }
 
+export const backArrow = new IconPayload({
+  name: 'arrow-back',
+  library: Ionicons,
+});
+
 export const bonfire = new IconPayload({
   name: 'bonfire',
   library: Ionicons,

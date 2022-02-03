@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useQuery} from '@apollo/client';
-import {GET_EVENT_DATA} from '../../modules/events/createEvent/CreateEvent';
+import {GET_EVENT_DATA} from '../../modules/createEvent/createEvent/CreateEvent';
 import {Modal} from 'react-native';
 import Row from './Row';
 import TapToEditContainer from '../containers/TapToEditContainer';

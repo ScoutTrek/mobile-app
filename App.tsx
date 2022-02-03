@@ -28,9 +28,8 @@ import {createUploadLink} from 'apollo-upload-client';
 
 import {onError} from '@apollo/client/link/error';
 
-import AuthNavigator from './src/modules/auth/AuthNavigator';
-import MainTabNavigator from './src/modules/navigation/MainTabNavigator';
-import ViewEventStackNavigator from './src/modules/navigation/ViewEventStack';
+import AuthNavigator from './src/modules/navigation/AuthNavigator';
+import MainStackNavigator from './src/modules/navigation/MainStackNavigator';
 
 const httpLink = new createUploadLink({
   // uri: 'http://localhost:4000',
@@ -68,7 +67,6 @@ const loadKeysFromAsyncStorage = async (
 const authMiddleware = new ApolloLink((operation, forward) => {
   return loadKeysFromAsyncStorage(['userToken', 'currMembershipID']).then(
     ({userToken, currMembershipID}) => {
-      console.log('User token ', userToken);
       operation.setContext({
         headers: {
           membership: currMembershipID ? currMembershipID : undefined,
@@ -133,9 +131,8 @@ const AppLoadingContainer = () => {
               }}
             />
           ) : (
-            <Stack.Screen name="Home" component={MainTabNavigator} />
+            <Stack.Screen name="Home" component={MainStackNavigator} />
           )}
-          <Stack.Screen name="ViewEvents" component={ViewEventStackNavigator} />
         </Stack.Navigator>
       </NavigationContainer>
     </AuthContext.Provider>
