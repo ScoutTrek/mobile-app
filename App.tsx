@@ -1,11 +1,12 @@
-import React, {useState, useEffect} from 'react';
+import {useState} from 'react';
 
 import 'react-native-gesture-handler';
 import {ThemeProvider} from '@shopify/restyle';
 import theme from './ScoutDesign/library/theme';
 import {useFonts} from 'expo-font';
 
-import {ActivityIndicator, View, Text, AsyncStorage} from 'react-native';
+import {ActivityIndicator, View} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -40,32 +41,53 @@ const errorMiddleware = onError(
   ({graphQLErrors, networkError, operation, forward}) => {
     if (graphQLErrors) {
       graphQLErrors.map(({message, locations, path}) =>
-        console.log(
+        console.error(
           `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
         )
       );
       return forward(operation);
     }
 
-    if (networkError) console.log(`[Network error]: ${networkError}`);
+    if (networkError) console.error(`[Network error]: ${networkError}`);
   }
 );
 
-const authMiddleware = new ApolloLink(async (operation, forward) => {
-  // add the authorization to the headers
-  const membership = await AsyncStorage.getItem('currMembershipID');
-  const token = await AsyncStorage.getItem('userToken');
-  operation.setContext({
-    headers: {
-      membership: membership ? membership : undefined,
-      authorization: token,
-    },
+type AsyncStorageData = {[key: string]: string | null};
+
+const loadKeysFromAsyncStorage = async (
+  asyncDataKeys: string[]
+): Promise<AsyncStorageData> => {
+  let asyncData: AsyncStorageData = {};
+  asyncDataKeys.forEach(async (key) => {
+    const value = await AsyncStorage.getItem(key);
+    asyncData[key] = value;
   });
-  return forward(operation);
+  return asyncData;
+};
+
+const authMiddleware = new ApolloLink((operation, forward) => {
+  loadKeysFromAsyncStorage(['userToken', 'currMembershipID']).then((data) => {
+    const {userToken, currMembershipID} = data;
+    operation.setContext({
+      headers: {
+        membership: currMembershipID ? currMembershipID : undefined,
+        authorization: userToken,
+      },
+    });
+    return forward(operation);
+  });
 });
 
 const AppLoadingContainer = () => {
-  const [authToken, setAuthToken] = useState<any>();
+  const [authToken, setAuthToken] = useState<string | null>();
+
+  try {
+    AsyncStorage.getItem('userToken').then((token) => {
+      setAuthToken(token);
+    });
+  } catch (e) {
+    console.log(e);
+  }
 
   const [loaded] = useFonts({
     ...Ionicons.font,
@@ -111,7 +133,7 @@ const AppLoadingContainer = () => {
           ) : (
             <Stack.Screen name="Home" component={MainTabNavigator} />
           )}
-          {/*<Stack.Screen name="ViewEvents" component={ViewEventStackNavigator} />*/}
+          {/* <Stack.Screen name="ViewEvents" component={ViewEventStackNavigator} /> */}
         </Stack.Navigator>
       </NavigationContainer>
     </AuthContext.Provider>

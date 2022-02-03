@@ -2,7 +2,7 @@ import React from 'react';
 import {View, Text, ScrollView} from 'react-native';
 import {gql, useQuery} from '@apollo/client';
 import ViewHeading from '../../components/Headings/ViewHeading';
-import {GET_CURR_USER} from '../navigation/DrawerNavigator';
+import {GET_CURR_USER} from '../home/HomeNavigator';
 import Fonts from '../../../constants/Fonts';
 import Colors from '../../../constants/Colors';
 import Constants from 'expo-constants';

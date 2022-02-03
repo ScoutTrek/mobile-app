@@ -1,4 +1,3 @@
-import React from 'react';
 import {gql, useMutation, useQuery} from '@apollo/client';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
 import EventInputTemplate from '../../../components/EventInputs/EventInputTemplate';

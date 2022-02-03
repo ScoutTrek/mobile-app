@@ -1,4 +1,4 @@
-import React, {useRef, useEffect} from 'react';
+import {useRef, useEffect} from 'react';
 import {SectionList, SafeAreaView, StyleSheet, Text} from 'react-native';
 import EventListItem from '../../components/EventListItem';
 import NoEvents from '../../components/widgets/NoEvents';
@@ -81,8 +81,8 @@ export default function UpcomingEvents({navigation}) {
   useEffect(() => {
     (async () => {
       await registerForPushNotificationsAsync();
-      responseListener.current = Notifications.addNotificationResponseReceivedListener(
-        (response) => {
+      responseListener.current =
+        Notifications.addNotificationResponseReceivedListener((response) => {
           const notificationType =
             response.notification.request.content.data.type;
           const eventType =
@@ -103,8 +103,7 @@ export default function UpcomingEvents({navigation}) {
               });
               break;
           }
-        }
-      );
+        });
     })();
 
     return () => {
@@ -123,9 +122,8 @@ export default function UpcomingEvents({navigation}) {
   const registerForPushNotificationsAsync = async () => {
     let token;
     if (Constants.isDevice) {
-      const {
-        status: existingStatus,
-      } = await Notifications.getPermissionsAsync();
+      const {status: existingStatus} =
+        await Notifications.getPermissionsAsync();
       let finalStatus = existingStatus;
       if (existingStatus !== 'granted') {
         const {status} = await Notifications.requestPermissionsAsync();

@@ -14,7 +14,11 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "strict": true
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "ScoutDesign": ["./ScoutDesign"]
+    }
   },
   "extends": "expo/tsconfig.base",
 }

@@ -30,7 +30,7 @@ const MapSearch = ({
         / /g,
         '+'
       )}&key=${GOOGLE_MAPS_API_KEY}&sessiontoken=${locationToken}`
-    ).catch((err) => console.log(err));
+    ).catch((err) => console.error(err));
     const placesData = await places.json();
     setSuggestedPlaces(placesData.predictions);
   };

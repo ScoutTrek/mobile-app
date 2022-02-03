@@ -6,9 +6,9 @@ import {
   View,
   KeyboardAvoidingView,
   Dimensions,
-  AsyncStorage,
   Platform,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants/src/Constants';
 import Fonts from '../../../constants/Fonts';
 import {LinearGradient} from 'expo-linear-gradient';
@@ -101,8 +101,7 @@ const SignIn = ({navigation}) => {
       <Image
         style={styles.jumboImage}
         source={{
-          uri:
-            'https://res.cloudinary.com/wow-your-client/image/upload/v1581455286/ScoutTrek/adventure-alps-backpack_2x.png',
+          uri: 'https://res.cloudinary.com/wow-your-client/image/upload/v1581455286/ScoutTrek/adventure-alps-backpack_2x.png',
         }}
       />
 

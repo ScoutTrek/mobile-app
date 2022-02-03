@@ -6,7 +6,8 @@ import {
   EvilIcons,
   Entypo,
   Octicons,
-} from "@expo/vector-icons";
+  AntDesign,
+} from '@expo/vector-icons';
 
 export type IconPayloadType = {
   name: string;
@@ -28,71 +29,81 @@ export class IconPayload {
 }
 
 export const bonfire = new IconPayload({
-  name: "bonfire",
+  name: 'bonfire',
   library: Ionicons,
 });
 
+export const calendar = new IconPayload({
+  name: 'calendar',
+  library: AntDesign,
+});
+
 export const checkmark = new IconPayload({
-  name: "checkmark-sharp",
+  name: 'checkmark-sharp',
   library: Ionicons,
 });
 
 export const close = new IconPayload({
-  name: "close",
+  name: 'close',
   library: Ionicons,
 });
 
 export const compass = new IconPayload({
-  name: "compass-sharp",
+  name: 'compass-sharp',
   library: Ionicons,
 });
 
 export const downCaret = new IconPayload({
-  name: "chevron-thin-down",
+  name: 'chevron-thin-down',
   library: Entypo,
 });
 
 export const dot = new IconPayload({
-  name: "primitive-dot",
+  name: 'primitive-dot',
   library: Octicons,
 });
 
 export const forwardArrow = new IconPayload({
-  name: "arrow-forward",
+  name: 'arrow-forward',
   library: Ionicons,
 });
 
 export const gearThin = new IconPayload({
-  name: "gear",
+  name: 'gear',
   library: EvilIcons,
 });
 
+export const home = new IconPayload({
+  name: 'home',
+  library: AntDesign,
+});
+
 export const light = new IconPayload({
-  name: "light-up",
+  name: 'light-up',
   library: Entypo,
 });
 
 export const plusBold = new IconPayload({
-  name: "plus",
+  name: 'plus',
   library: Foundation,
 });
 
 export const plusThin = new IconPayload({
-  name: "plus",
+  name: 'plus',
   library: MaterialCommunityIcons,
 });
 
 export const searchThin = new IconPayload({
-  name: "search",
+  name: 'search',
   library: EvilIcons,
 });
 
 export const trash = new IconPayload({
-  name: "trash",
+  name: 'trash',
   library: Ionicons,
 });
 
 export const upCaret = new IconPayload({
-  name: "chevron-thin-up",
+  name: 'chevron-thin-up',
   library: Entypo,
 });

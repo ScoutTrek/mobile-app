@@ -11,7 +11,7 @@ import {
   ScrollView,
 } from 'react-native';
 import Fonts from '../../../constants/Fonts';
-import {Stack, TextInput} from '../../../ScoutDesign/library';
+import {Stack, TextInput} from 'ScoutDesign/library';
 import {Ionicons} from '@expo/vector-icons';
 import AuthInput from './components/Input';
 import Footer from './components/Footer';
@@ -118,7 +118,7 @@ const SignUp = ({navigation, route}) => {
   return (
     <ScrollView
       contentContainerStyle={{flex: 1, justifyContent: 'flex-end'}}
-      style={styles.screen}>
+      style={{backgroundColor: '#fff'}}>
       <LinearGradient
         colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 1)']}
         style={styles.gradientOverlay}
@@ -132,25 +132,19 @@ const SignUp = ({navigation, route}) => {
         />
       </View>
 
-      <ScrollView
-        contentContainerStyles={{justifyContent: 'flex-end'}}
-        style={styles.main}>
-        <View style={styles.content}>
-          <Ionicons
-            name="ios-compass"
-            size={45}
-            style={{color: '#382B14', marginBottom: 18, textAlign: 'center'}}
-          />
-          <Text style={styles.heading}>Welcome to ScoutTrek.</Text>
-          <Text style={styles.text}>
-            Less time planning. More time exploring.
-          </Text>
-        </View>
-        <View style={{flex: 1}}>
-          <KeyboardAvoidingView
-            style={styles.content}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-            {/* <AuthInput
+      <KeyboardAvoidingView
+        style={styles.content}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <Ionicons
+          name="ios-compass"
+          size={45}
+          style={{color: '#382B14', marginBottom: 18, textAlign: 'center'}}
+        />
+        <Text style={styles.heading}>Welcome to ScoutTrek!</Text>
+        <Text style={styles.text}>
+          Spend less time planning and more time exploring.
+        </Text>
+        {/* <AuthInput
               autoCapitalize="words"
               onInputChange={(value) => handleInputChange('name', value)}
               placeholder="First name & Last name"
@@ -176,52 +170,50 @@ const SignUp = ({navigation, route}) => {
               textContentType="newPassword"
               secureTextEntry={true}
             /> */}
-            <Stack
-              type="Pressable"
-              accessibilityLabel="test-stack"
-              radius="l"
-              borderColor="mediumGrey"
-              backgroundColor="white"
-              everyItemProps={{
-                backgroundColor: 'white',
-                onValueChange: (value) => {},
-              }}
-              items={[
-                {
-                  id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-                  text: 'First and Last Name',
-                },
-                {
-                  id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-                  text: 'Email Address',
-                },
-                {
-                  id: '58694a0f-3da1-471f-bd96-145571e29d72',
-                  text: 'Password',
-                },
-                {
-                  id: '58694a0f-3da1-471f-bd96-145571e29d73',
-                  text: 'Confirm Password',
-                },
-              ]}
-              RenderItem={({item, onValueChange, ...rest}) => {
-                return (
-                  <TextInput
-                    placeholder={item.text}
-                    valid={item?.valid}
-                    disabled={item?.disabled}
-                    error={item?.error}
-                    noStyles
-                    onValueChange={onValueChange}
-                    {...rest}
-                  />
-                );
-              }}
-            />
-            <GradientButton title="Sign Up" onPress={handleNext} />
-          </KeyboardAvoidingView>
-        </View>
-      </ScrollView>
+        <Stack
+          type="Pressable"
+          accessibilityLabel="test-stack"
+          radius="l"
+          borderColor="mediumGrey"
+          backgroundColor="white"
+          everyItemProps={{
+            backgroundColor: 'white',
+            onValueChange: (value) => {},
+          }}
+          items={[
+            {
+              id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+              text: 'First and Last Name',
+            },
+            {
+              id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
+              text: 'Email Address',
+            },
+            {
+              id: '58694a0f-3da1-471f-bd96-145571e29d72',
+              text: 'Password',
+            },
+            {
+              id: '58694a0f-3da1-471f-bd96-145571e29d73',
+              text: 'Confirm Password',
+            },
+          ]}
+          RenderItem={({item, onValueChange, ...rest}) => {
+            return (
+              <TextInput
+                placeholder={item.text}
+                valid={item?.valid}
+                disabled={item?.disabled}
+                error={item?.error}
+                noStyles
+                onValueChange={onValueChange}
+                {...rest}
+              />
+            );
+          }}
+        />
+        <GradientButton title="Sign Up" onPress={handleNext} />
+      </KeyboardAvoidingView>
       <Footer
         footerText="Already have an account?"
         btnType="Sign In"
@@ -232,11 +224,6 @@ const SignUp = ({navigation, route}) => {
 };
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: 'white',
-    marginTop: Constants.statusBarHeight,
-  },
   heading: {
     fontSize: 22,
     fontFamily: Fonts.primaryTextBold,
@@ -272,6 +259,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
+    flex: 1,
+    justifyContent: 'flex-end',
     paddingHorizontal: 12,
     paddingVertical: 7,
   },

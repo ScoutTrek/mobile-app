@@ -1,12 +1,6 @@
 import React, {useEffect, useState, useContext} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  AsyncStorage,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
+import {StyleSheet, Text, View, TouchableOpacity, Alert} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {gql, useApolloClient, useMutation, useQuery} from '@apollo/client';
 import GradientButton from '../../components/buttons/GradientButton';
 import Constants from 'expo-constants';
@@ -15,8 +9,14 @@ import Fonts from '../../../constants/Fonts';
 import {AntDesign, Ionicons} from '@expo/vector-icons';
 import RichInputContainer from '../../components/containers/RichInputContainer';
 import AddItemForm from './components/AddItemFormSmall';
-import {_updateCurrentGroup} from '../navigation/DrawerNavigator';
-export const AuthContext = React.createContext({
+import {_updateCurrentGroup} from '../profile/ProfileScreen';
+
+type AuthContextType = {
+  authToken?: string | null;
+  setAuthToken?: React.Dispatch<any>;
+};
+
+export const AuthContext = React.createContext<AuthContextType>({
   authToken: '',
   setAuthToken: () => {},
 });

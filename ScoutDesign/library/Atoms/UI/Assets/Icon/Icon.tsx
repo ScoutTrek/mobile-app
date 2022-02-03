@@ -1,14 +1,14 @@
-import theme, { Theme } from "../../../../theme";
+import theme, {Theme} from '../../../../theme';
 import {
   Pressable,
   SizeProps,
   PressableProps,
   mapRadius,
   Color,
-} from "../../../utility";
-import { SpacingProps } from "@shopify/restyle";
+} from '../../../utility';
+import {SpacingProps} from '@shopify/restyle';
 
-import { IconPayload } from "../../../../../icons";
+import {IconPayload} from '../../../../../icons';
 
 interface IconProps extends SizeProps, PressableProps {
   icon: IconPayload;
@@ -18,16 +18,9 @@ interface IconProps extends SizeProps, PressableProps {
 
 type Props = IconProps & SpacingProps<Theme>;
 
-const Icon = ({
-  radius,
-  icon,
-  size,
-  color,
-  backgroundColor,
-  ...rest
-}: Props) => {
-  if (typeof size !== "string") {
-    console.error("Icon can only use size presets, not custom dimensions.");
+const Icon = ({radius, icon, size, color, backgroundColor, ...rest}: Props) => {
+  if (typeof size !== 'string') {
+    console.error('Icon can only use size presets, not custom dimensions.');
     return null;
   } else {
     return (
@@ -36,9 +29,8 @@ const Icon = ({
         borderRadius={mapRadius(radius, size)}
         overflow="hidden"
         borderWidth={backgroundColor ? 0.25 : undefined}
-        borderColor={backgroundColor ? "mediumGrey" : undefined}
-        {...rest}
-      >
+        borderColor={backgroundColor ? 'mediumGrey' : undefined}
+        {...rest}>
         <icon.component
           style={[
             backgroundColor

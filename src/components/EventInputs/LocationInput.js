@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {eventData} from '../../../App';
 import {
   Dimensions,
@@ -16,7 +16,6 @@ import {GOOGLE_MAPS_API_KEY} from '../../../env';
 import MapView, {Marker} from 'react-native-maps';
 import MapSearch from '../MapSearch';
 import Constants from 'expo-constants';
-import {Ionicons} from '@expo/vector-icons';
 
 import uuidv4 from 'uuid/v1';
 // import {ConfirmButton} from '@ScoutDesign';
@@ -59,7 +58,7 @@ const ChooseLocation = ({id, setModalVisible, questionText}) => {
   const _getPlaceDetails = async (id) => {
     const locationDetails = await fetch(
       `https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=${GOOGLE_MAPS_API_KEY}`
-    ).catch((err) => console.log(err));
+    ).catch((err) => console.error(err));
     const locationData = await locationDetails.json();
 
     const chosenPlace = {
