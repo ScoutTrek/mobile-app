@@ -1,9 +1,10 @@
 import {useRef, useEffect} from 'react';
-import {SectionList, SafeAreaView, StyleSheet, Text} from 'react-native';
+import {SectionList, SafeAreaView, StyleSheet} from 'react-native';
 import EventListItem from '../../components/EventListItem';
 import NoEvents from '../../components/widgets/NoEvents';
 import * as Permissions from 'expo-permissions';
 import Constants from 'expo-constants';
+import {Text} from 'ScoutDesign/library';
 
 import * as Notifications from 'expo-notifications';
 import {gql, useMutation, useQuery} from '@apollo/client';
@@ -85,8 +86,6 @@ export default function UpcomingEvents({navigation}) {
         Notifications.addNotificationResponseReceivedListener((response) => {
           const notificationType =
             response.notification.request.content.data.type;
-          const eventType =
-            response.notification.request.content.data?.eventType;
           const ID = response.notification.request.content.data.ID;
 
           switch (notificationType) {
@@ -94,12 +93,6 @@ export default function UpcomingEvents({navigation}) {
               navigation.navigate('ViewEvents', {
                 screen: 'Event',
                 params: {currItem: ID},
-              });
-              break;
-            case 'message':
-              navigation.navigate('ViewEvents', {
-                screen: 'Threads',
-                params: {id: ID, name: ''},
               });
               break;
           }
@@ -156,6 +149,8 @@ export default function UpcomingEvents({navigation}) {
     }
   };
 
+  console.log('Error ', error);
+  console.log('Loading ', loading);
   if (error) return <Text>Error: {error}</Text>;
   if (loading) return <Text>Loading...</Text>;
   const eventListData = [
@@ -189,7 +184,7 @@ export default function UpcomingEvents({navigation}) {
           />
         )}
         renderSectionHeader={({section: {title, data}}) =>
-          data.length > 0 ? <Text style={styles.heading}>{title}</Text> : null
+          data.length > 0 ? <Text preset="h2">{title}</Text> : null
         }
         ListEmptyComponent={<NoEvents navigation={navigation} />}
       />
@@ -201,11 +196,5 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: Colors.offWhite2,
-  },
-  heading: {
-    fontSize: 20,
-    fontFamily: 'raleway-bold',
-    padding: 12,
-    paddingBottom: 10,
   },
 });

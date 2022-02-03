@@ -2,7 +2,7 @@ import {Image} from 'react-native';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import CalendarNav from '../calendar/CalendarNav';
+import CalendarNav from '../calendar/CalendarNavigator';
 import ProfileScreen from '../profile/ProfileScreen';
 import EventsCreatorNavigator from './EventCreatorNavigator';
 

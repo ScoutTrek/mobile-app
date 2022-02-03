@@ -115,20 +115,6 @@ const EventDetailsScreen = ({route, navigation}) => {
         flexGrow: 1,
         backgroundColor: 'green',
       }}>
-      <EventHeader
-        navigation={navigation}
-        image_path={data.event.location ? mapUrl : null}
-        title={data.event.title}
-        name={data.event.creator.name}
-        date={+data.event.date}
-        onPress={() => {
-          navigation.navigate('Threads', {
-            id: data.event.id,
-            name: data.event.title,
-            messages: data.event.messages,
-          });
-        }}
-      />
       {data.event.meetLocation ? (
         <>
           <Location

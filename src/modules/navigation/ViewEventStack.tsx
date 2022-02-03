@@ -4,7 +4,6 @@ import * as React from 'react';
 import AdventuresNav from '../home/UpcomingEvents';
 import EventView from '../calendar/EventView';
 import CreateEvent from '../events/createEvent/CreateEvent';
-import {ChatStack} from '../calendar/CalendarNav';
 
 const ViewEventStack = createStackNavigator();
 
@@ -18,8 +17,6 @@ const ViewEventStackNavigator = () => {
       <ViewEventStack.Screen name="CreateEvent" component={CreateEvent} />
 
       <ViewEventStack.Screen name="Event" component={EventView} />
-
-      <ViewEventStack.Screen name="Threads" component={ChatStack} />
     </ViewEventStack.Navigator>
   );
 };

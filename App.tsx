@@ -133,7 +133,7 @@ const AppLoadingContainer = () => {
           ) : (
             <Stack.Screen name="Home" component={MainTabNavigator} />
           )}
-          {/* <Stack.Screen name="ViewEvents" component={ViewEventStackNavigator} /> */}
+          <Stack.Screen name="ViewEvents" component={ViewEventStackNavigator} />
         </Stack.Navigator>
       </NavigationContainer>
     </AuthContext.Provider>
