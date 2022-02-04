@@ -6,7 +6,7 @@
       "root": ["."],
       "alias": {
         "ScoutDesign": "./ScoutDesign",
-        "data": "./src/data",
+        "data": "./src/data"
       }
     }]
   ]

@@ -39,7 +39,8 @@ const MainBottomTabNavigator = () => {
 };
 
 const MainBottomTabConfig = ({route}) => ({
-  tabBarIcon: ({focused, size}: {focused: boolean; size: number}) => {
+  tabBarIcon: ({focused}: {focused: boolean}) => {
+    const size = 23;
     switch (route.name) {
       case 'UpcomingEvents':
         return focused ? (

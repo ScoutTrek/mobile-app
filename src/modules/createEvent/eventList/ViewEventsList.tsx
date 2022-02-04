@@ -14,7 +14,11 @@ export const GET_EVENT_SCHEMAS = gql`
   }
 `;
 
-const ViewEventsList = ({navigation}) => {
+type Props = {
+  navigation: any;
+};
+
+const ViewEventsList = ({navigation}: Props) => {
   const {loading, error, data} = useQuery(GET_EVENT_SCHEMAS);
 
   if (loading) {
@@ -23,14 +27,14 @@ const ViewEventsList = ({navigation}) => {
 
   const eventSchemasArr = Object.values(data['eventSchemas']);
   const tiles = eventSchemasArr.map((item) =>
-    item
+    typeof item === 'object'
       ? {
           id: item?.metaData?.eventID,
           source: item?.metaData?.image,
           title: convertEventIDToText(item?.metaData?.eventID),
           onPress: () =>
             navigation.navigate('CreateEvent', {
-              type: item.metaData.eventID,
+              type: item?.metaData?.eventID,
             }),
         }
       : undefined
