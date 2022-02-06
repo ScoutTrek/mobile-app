@@ -1,9 +1,9 @@
-import React from 'react';
-import {Platform, View, Text, KeyboardAvoidingView, Button} from 'react-native';
-// import {Text, ConfirmButton} from '@ScoutDesign';
+import {Platform, View, KeyboardAvoidingView, Button} from 'react-native';
+import {Text, CircleButton} from 'ScoutDesign/library';
 import Constants from 'expo-constants';
 import Colors from '../../../constants/Colors';
 import {Ionicons} from '@expo/vector-icons';
+import {forwardArrow} from 'ScoutDesign/icons';
 
 const InputModalContainer = ({
   title,
@@ -34,18 +34,16 @@ const InputModalContainer = ({
             flexDirection: 'row',
             justifyContent: 'center',
           }}>
-          <Text preset="heading-alt" color="white">
+          <Text preset="h2" color="white">
             {title}
           </Text>
         </View>
         <View style={{flex: 1}}>{children}</View>
         {!invalid ? (
-          <Button
-            // ID="titleConfirm"
-            // icon={<Ionicons size={27} name="arrow-forward" color="white" />}
-            title=">"
+          <CircleButton
+            accessibilityLabel="titleConfirm"
+            icon={forwardArrow}
             onPress={onPress}
-            // toolbar={toolbar}
           />
         ) : null}
       </View>

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Pressable, Box, StandardRadius, Color} from '../../Atoms/utility';
+import {Container, Box, StandardRadius, Color} from '../../Atoms/utility';
 import {
   FormFieldProps,
   InputFieldStates,
@@ -36,9 +36,10 @@ type StackProps = {
   backgroundColor?: Color;
   radius: StandardRadius | 'none';
   RenderItem: React.ElementType;
-  type: 'Pressable' | 'FormField';
   everyItemProps: EveryStackItemProps;
   items: StackItemSchema[];
+  HeaderComponent: React.ReactNode;
+  FooterComponent: React.ReactNode;
 };
 
 const Stack = ({
@@ -49,9 +50,11 @@ const Stack = ({
   RenderItem,
   items,
   everyItemProps,
+  HeaderComponent,
+  FooterComponent,
 }: StackProps) => {
   return (
-    <Pressable
+    <Container
       accessibilityLabel={accessibilityLabel}
       borderWidth={1}
       borderColor={borderColor}
@@ -82,7 +85,7 @@ const Stack = ({
           </React.Fragment>
         );
       })}
-    </Pressable>
+    </Container>
   );
 };
 

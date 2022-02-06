@@ -9,24 +9,22 @@ import Colors from '../../../constants/Colors';
 import Fonts from '../../../constants/Fonts';
 import {CalendarList} from 'react-native-calendars';
 
-const ChooseDate = ({id, setModalVisible, questionText}) => {
+const ChooseDate = ({id, Modal, modalProps, questionText}) => {
   const [date, setDate] = useState(
     moment(+eventData()?.[id], 'MM-DD-YYYY').isValid()
       ? moment(+eventData()?.[id])
       : moment()
   );
 
-  const back = () => setModalVisible(false);
   const nextForm = () => {
     eventData({
       ...eventData(),
       [id]: date,
     });
-    setModalVisible(false);
   };
 
   return (
-    <InputModalContainer title={questionText} onPress={nextForm} cancel={back}>
+    <Modal title={questionText} onNext={nextForm}>
       <CalendarList
         current={date.format('YYYY-MM-DD')}
         theme={{
@@ -56,7 +54,7 @@ const ChooseDate = ({id, setModalVisible, questionText}) => {
           setDate(moment(day.dateString));
         }}
       />
-    </InputModalContainer>
+    </Modal>
   );
 };
 

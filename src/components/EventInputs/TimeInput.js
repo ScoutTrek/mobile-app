@@ -9,16 +9,15 @@ import InputModalContainer from '../containers/InputModalContainer';
 
 const ChooseTime = ({
   id,
-  setModalVisible,
-  editing,
+  Modal,
+  modalProps,
+  questionText,
   showAndroidClock,
   setShowAndroidClock,
-  questionText,
 }) => {
   const [time, setTime] = useState(+eventData()?.[id] || new Date());
 
-  const back = () => setModalVisible(false);
-  const nextView = (androidTime) => {
+  const onNext = (androidTime) => {
     console.log('Android time ', androidTime);
     eventData({
       ...eventData(),
@@ -29,56 +28,51 @@ const ChooseTime = ({
 
   if (Platform.OS === 'ios') {
     return (
-      <Modal animationType="fade" transparent={true} visible={editing}>
-        <InputModalContainer
-          onPress={nextView}
-          cancel={back}
-          title={questionText}>
+      <Modal onNext={onNext} title={questionText} {...modalProps}>
+        <View
+          style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
           <View
             style={{
-              flex: 1,
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                width: 218,
-                height: 64,
-                paddingHorizontal: 10,
-                paddingVertical: 5,
-                borderRadius: 40,
-                backgroundColor: '#fff',
-                shadowColor: '#000',
-                shadowOffset: {
-                  width: 0,
-                  height: 0,
-                },
-                shadowOpacity: 0.08,
-                shadowRadius: 6,
+              width: 218,
+              height: 64,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
+              borderRadius: 40,
+              backgroundColor: '#fff',
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 0,
+              },
+              shadowOpacity: 0.08,
+              shadowRadius: 6,
 
-                elevation: 3,
-              }}>
-              <DateTimePicker
-                value={time}
-                minuteInterval={5}
-                mode="time"
-                display="inline"
-                onChange={(_, newDateString) => {
-                  console.log(newDateString);
-                  // const date = new Date(newDateString);
-                  // if (!isNaN(date.valueOf())) {
-                  //   setTime(date);
-                  // }
-                }}
-                textColor={Colors.orange}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                }}
-              />
-            </View>
+              elevation: 3,
+            }}>
+            <DateTimePicker
+              value={time}
+              minuteInterval={5}
+              mode="time"
+              display="inline"
+              onChange={(_, newDateString) => {
+                console.log(newDateString);
+                // const date = new Date(newDateString);
+                // if (!isNaN(date.valueOf())) {
+                //   setTime(date);
+                // }
+              }}
+              textColor={Colors.orange}
+              style={{
+                width: '100%',
+                height: '100%',
+              }}
+            />
           </View>
-        </InputModalContainer>
+        </View>
       </Modal>
     );
   }

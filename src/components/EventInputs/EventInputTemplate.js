@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {useQuery} from '@apollo/client';
 import {GET_EVENT_DATA} from '../../modules/createEvent/createEvent/CreateEvent';
-import {Modal} from 'react-native';
+import {useModal} from 'ScoutDesign/library';
 import Row from './Row';
 import TapToEditContainer from '../containers/TapToEditContainer';
 
@@ -32,8 +32,9 @@ export default ({fieldType, id, fieldName, questionText, payload}) => {
     error,
     data: {eventData},
   } = useQuery(GET_EVENT_DATA);
-  const [editing, setEditing] = useState(false);
   const [showAndroidClock, setShowAndroidClock] = useState(false);
+
+  const {modalProps, openModal, Modal} = useModal();
 
   switch (fieldType) {
     case 'setting':
@@ -52,8 +53,8 @@ export default ({fieldType, id, fieldName, questionText, payload}) => {
         <React.Fragment key={id}>
           <EditingComponent
             id={id}
-            setModalVisible={setEditing}
-            editing={editing}
+            Modal={Modal}
+            modalProps={modalProps}
             showAndroidClock={showAndroidClock}
             setShowAndroidClock={setShowAndroidClock}
             questionText={questionText}
@@ -63,7 +64,7 @@ export default ({fieldType, id, fieldName, questionText, payload}) => {
               <InitialButton
                 onPress={() =>
                   Platform.OS === 'ios'
-                    ? setEditing(true)
+                    ? openModal()
                     : setShowAndroidClock(true)
                 }
                 fieldName={fieldName}
@@ -72,7 +73,7 @@ export default ({fieldType, id, fieldName, questionText, payload}) => {
               <TapToEditContainer
                 edit={() =>
                   Platform.OS === 'ios'
-                    ? setEditing(true)
+                    ? openModal()
                     : setShowAndroidClock(true)
                 }>
                 <CompletedComponent data={+eventData?.[id]} />
@@ -84,21 +85,19 @@ export default ({fieldType, id, fieldName, questionText, payload}) => {
     case 'date':
       return (
         <React.Fragment key={id}>
-          <Modal animationType="fade" transparent={true} visible={editing}>
+          <Modal animationType="fade" transparent={true} {...modalProps}>
             <EditingComponent
               id={id}
-              setModalVisible={setEditing}
+              Modal={Modal}
+              modalProps={modalProps}
               questionText={questionText}
             />
           </Modal>
           <Row valid={!!eventData?.[id]} fieldName={fieldName}>
             {!eventData?.[id] ? (
-              <InitialButton
-                onPress={() => setEditing(true)}
-                fieldName={fieldName}
-              />
+              <InitialButton onPress={openModal} fieldName={fieldName} />
             ) : (
-              <TapToEditContainer edit={() => setEditing(true)}>
+              <TapToEditContainer edit={openModal}>
                 <CompletedComponent data={+eventData?.[id]} />
               </TapToEditContainer>
             )}
@@ -108,21 +107,19 @@ export default ({fieldType, id, fieldName, questionText, payload}) => {
     default:
       return (
         <React.Fragment key={id}>
-          <Modal animationType="fade" transparent={true} visible={editing}>
+          <Modal {...modalProps}>
             <EditingComponent
               id={id}
-              setModalVisible={setEditing}
+              Modal={Modal}
+              modalProps={modalProps}
               questionText={questionText}
             />
           </Modal>
           <Row valid={!!eventData?.[id]} fieldName={fieldName}>
             {!eventData?.[id] ? (
-              <InitialButton
-                onPress={() => setEditing(true)}
-                fieldName={fieldName}
-              />
+              <InitialButton onPress={openModal} fieldName={fieldName} />
             ) : (
-              <TapToEditContainer edit={() => setEditing(true)}>
+              <TapToEditContainer edit={openModal}>
                 <CompletedComponent data={eventData?.[id]} />
               </TapToEditContainer>
             )}
