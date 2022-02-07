@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {eventData} from '../../../App';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import DefaultInputButton from '../buttons/DefaultInputButton';
+import DefaultInputButton from './components/DefaultInputButton';
 import DateTimeLineItem from '../DateTimeLineItem';
 import Colors from '../../../constants/Colors';
 import {View, Platform, Modal} from 'react-native';
@@ -28,7 +28,7 @@ const ChooseTime = ({
 
   if (Platform.OS === 'ios') {
     return (
-      <Modal onNext={onNext} title={questionText} {...modalProps}>
+      <Modal {...modalProps} onNext={onNext} title={questionText}>
         <View
           style={{
             flex: 1,

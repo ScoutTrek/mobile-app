@@ -2,14 +2,15 @@ import React, {useState} from 'react';
 import moment from 'moment';
 import {eventData} from '../../../App';
 import DateAndTimePicker from '../formfields/DateAndTimePicker';
-import DefaultInputButton from '../buttons/DefaultInputButton';
+import DefaultInputButton from './components/DefaultInputButton';
 import DateTimeLineItem from '../DateTimeLineItem';
 import InputModalContainer from '../containers/InputModalContainer';
 import Colors from '../../../constants/Colors';
 import Fonts from '../../../constants/Fonts';
 import {CalendarList} from 'react-native-calendars';
+import {EventInputProps} from './EventInputTypes';
 
-const ChooseDate = ({id, Modal, modalProps, questionText}) => {
+const ChooseDate = ({id, Modal, modalProps, questionText}: EventInputProps) => {
   const [date, setDate] = useState(
     moment(+eventData()?.[id], 'MM-DD-YYYY').isValid()
       ? moment(+eventData()?.[id])
@@ -24,7 +25,7 @@ const ChooseDate = ({id, Modal, modalProps, questionText}) => {
   };
 
   return (
-    <Modal title={questionText} onNext={nextForm}>
+    <Modal {...modalProps} title={questionText} onNext={nextForm}>
       <CalendarList
         current={date.format('YYYY-MM-DD')}
         theme={{

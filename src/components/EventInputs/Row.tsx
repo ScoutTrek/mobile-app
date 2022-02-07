@@ -1,15 +1,19 @@
-import {Text, View, StyleSheet} from 'react-native';
-import React from 'react';
-import Fonts from '../../../constants/Fonts';
-import Colors from '../../../constants/Colors';
+import {View, StyleSheet} from 'react-native';
+import {Text} from 'ScoutDesign/library';
 
-const Row = ({children, valid, fieldName}) => {
+type Props = {
+  fieldName: string;
+  valid: boolean;
+  children: any;
+};
+
+const Row = ({fieldName, valid, children}: Props) => {
   return (
     <View
       style={[
         styles.container,
         {
-          borderColor: valid ? Colors.green : '#FFCC00',
+          borderColor: valid ? '#34A86C' : '#F5D03D',
           borderLeftWidth: 12,
         },
       ]}>
@@ -24,7 +28,9 @@ const Row = ({children, valid, fieldName}) => {
             },
           ]}>
           {fieldName ? (
-            <Text style={styles.heading}>{fieldName.toUpperCase()}</Text>
+            <Text preset="micro" paddingTop="xs" padding="s">
+              {fieldName.toUpperCase()}
+            </Text>
           ) : null}
         </View>
       )}
@@ -44,20 +50,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-  },
-  heading: {
-    fontFamily: Fonts.headingBold,
-    fontSize: 14,
-    padding: 3,
-    paddingTop: 7,
-    color: Colors.darkGreen,
-  },
-  label: {
-    marginLeft: 15,
-    fontFamily: Fonts.primaryTextBold,
-    color: Colors.darkGreen,
-    fontSize: 18,
-    marginVertical: 10,
   },
 });
 

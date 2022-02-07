@@ -9,7 +9,7 @@ import {
   Text,
 } from 'react-native';
 import LocationLineItem from '../LocationLineItem';
-import DefaultInputButton from '../buttons/DefaultInputButton';
+import DefaultInputButton from './components/DefaultInputButton';
 import * as Permissions from 'expo-permissions';
 import * as Location from 'expo-location';
 import {GOOGLE_MAPS_API_KEY} from '../../../env';
@@ -22,7 +22,7 @@ import uuidv4 from 'uuid/v1';
 
 const locationToken = uuidv4();
 
-const ChooseLocation = ({id, setModalVisible, questionText}) => {
+const ChooseLocation = ({id, Modal, modalProps, questionText}) => {
   const initialLocation = eventData()?.[id];
   const [location, setLocation] = useState(
     initialLocation
@@ -72,8 +72,7 @@ const ChooseLocation = ({id, setModalVisible, questionText}) => {
     Keyboard.dismiss();
   };
 
-  const back = () => setModalVisible(false);
-  const nextView = () => {
+  const next = () => {
     eventData({
       ...eventData(),
       [id]: {
@@ -82,7 +81,6 @@ const ChooseLocation = ({id, setModalVisible, questionText}) => {
         lng: location.longitude,
       },
     });
-    setModalVisible(false);
   };
 
   useEffect(() => {
@@ -94,7 +92,7 @@ const ChooseLocation = ({id, setModalVisible, questionText}) => {
   }
 
   return (
-    <View style={styles.container}>
+    <Modal onNext={next} {...modalProps} title={questionText}>
       <MapView
         style={styles.mapStyle}
         initialRegion={{
@@ -116,31 +114,24 @@ const ChooseLocation = ({id, setModalVisible, questionText}) => {
       <View style={styles.searchContainer}>
         <MapSearch
           locationToken={locationToken}
-          back={back}
+          back={modalProps.escape}
           placeholder={locationString || questionText}
           textValue={initialLocation?.address}
           _getPlaceDetails={_getPlaceDetails}
           style={styles.searchBar}
         />
       </View>
-      {locationCoords && (
-        <TouchableOpacity
-          onPress={nextView}
-          style={{position: 'absolute', bottom: 15, right: 15}}>
-          <Text>Next</Text>
-        </TouchableOpacity>
-        // <ConfirmButton
-        //   icon={<Ionicons size={27} name="arrow-forward" color="white" />}
-        //   onClick={nextView}
-        // />
-      )}
-    </View>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
   },
   mapStyle: {
     width: Dimensions.get('window').width,

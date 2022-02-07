@@ -1,7 +1,10 @@
-import React from 'react';
 import RadioChoice from '../formfields/RadioChoice';
 
-const DifferentStartLocationInput = ({onPress}) => {
+type Props = {
+  onPress: () => void;
+};
+
+const DifferentStartLocationInput = ({onPress}: Props) => {
   return (
     <RadioChoice
       text="Do you want every to meet"

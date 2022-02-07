@@ -85,16 +85,17 @@ const ModalBase = ({
   );
 };
 
-const Modal = ({visible, children, escape, onNext, ...props}: ModalProps) => {
+const Modal = ({visible, escape, onNext, children, ...rest}: ModalProps) => {
   let next = onNext
     ? useCallback(() => {
         onNext();
         escape();
       }, [escape])
     : undefined;
+
   return (
     <RNModal animationType="fade" transparent={true} visible={visible}>
-      <ModalBase escape={escape} visible={visible} {...props}>
+      <ModalBase escape={escape} onNext={next} visible={visible} {...rest}>
         {children}
       </ModalBase>
     </RNModal>

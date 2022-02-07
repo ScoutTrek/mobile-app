@@ -64,12 +64,11 @@ const DescriptionInputButton = ({fieldName, onPress}) => {
   );
 };
 
-const DescriptionInput = ({id, setModalVisible, questionText}) => {
+const DescriptionInput = ({id, Modal, modalProps, questionText}) => {
   const [description, setDescription] = useState(
     eventData()?.description || ''
   );
 
-  const back = () => setModalVisible(false);
   const nextForm = () => {
     eventData({
       ...eventData(),
@@ -79,17 +78,13 @@ const DescriptionInput = ({id, setModalVisible, questionText}) => {
   };
 
   return (
-    <InputModalContainer
-      title={questionText}
-      onPress={nextForm}
-      cancel={back}
-      toolbar>
+    <Modal {...modalProps} title={questionText} onNext={nextForm}>
       <RTE
         description={description}
         setDescription={setDescription}
         fullHeight
       />
-    </InputModalContainer>
+    </Modal>
   );
 };
 

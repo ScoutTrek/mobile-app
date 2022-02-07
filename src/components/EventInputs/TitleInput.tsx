@@ -1,26 +1,15 @@
 import {useState} from 'react';
 import {eventData} from '../../../App';
-import BasicLineItem from '../BasicLineItem';
-import {Button, ColorfulTextInput} from 'ScoutDesign/library';
-import {plusBold} from 'ScoutDesign/icons';
+import BasicLineItem from './components/BasicLineItem';
+import {ColorfulTextInput} from 'ScoutDesign/library';
+import {EventInputProps} from './EventInputTypes';
+import DefaultInputButton from './components/DefaultInputButton';
 
-const TitleInputButton = ({fieldName, onPress}) => {
-  return (
-    <Button
-      accessibilityLabel="add-title"
-      icon={plusBold}
-      backgroundColor="gradient"
-      text={fieldName}
-      onPress={onPress}
-    />
-  );
-};
-
-const ChooseName = ({id, Modal, modalProps, questionText}) => {
+const ChooseName = ({id, Modal, modalProps, questionText}: EventInputProps) => {
   const [title, setTitle] = useState(eventData()?.[id] || '');
   const [nameIsValid, setNameIsValid] = useState(!!eventData()?.[id] || false);
 
-  const nextForm = () => {
+  const next = () => {
     if (nameIsValid) {
       eventData({
         ...eventData(),
@@ -31,8 +20,8 @@ const ChooseName = ({id, Modal, modalProps, questionText}) => {
 
   return (
     <Modal
-      onNext={nextForm}
       {...modalProps}
+      onNext={next}
       title={questionText}
       valid={nameIsValid}>
       <ColorfulTextInput
@@ -40,8 +29,11 @@ const ChooseName = ({id, Modal, modalProps, questionText}) => {
         autoCompleteType="off"
         autoCorrect={false}
         onValueChange={(value) => {
+          if (typeof value === 'number') {
+            value = value.toString();
+          }
           setTitle(value);
-          setNameIsValid(title.length > 2);
+          setNameIsValid(value.length > 2);
         }}
       />
     </Modal>
@@ -49,7 +41,7 @@ const ChooseName = ({id, Modal, modalProps, questionText}) => {
 };
 
 export default {
-  InitialButton: TitleInputButton,
+  InitialButton: DefaultInputButton,
   EditingComponent: ChooseName,
   CompletedComponent: BasicLineItem,
 };

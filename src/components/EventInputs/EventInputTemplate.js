@@ -85,14 +85,12 @@ export default ({fieldType, id, fieldName, questionText, payload}) => {
     case 'date':
       return (
         <React.Fragment key={id}>
-          <Modal animationType="fade" transparent={true} {...modalProps}>
-            <EditingComponent
-              id={id}
-              Modal={Modal}
-              modalProps={modalProps}
-              questionText={questionText}
-            />
-          </Modal>
+          <EditingComponent
+            id={id}
+            Modal={Modal}
+            modalProps={modalProps}
+            questionText={questionText}
+          />
           <Row valid={!!eventData?.[id]} fieldName={fieldName}>
             {!eventData?.[id] ? (
               <InitialButton onPress={openModal} fieldName={fieldName} />
@@ -107,14 +105,12 @@ export default ({fieldType, id, fieldName, questionText, payload}) => {
     default:
       return (
         <React.Fragment key={id}>
-          <Modal {...modalProps}>
-            <EditingComponent
-              id={id}
-              Modal={Modal}
-              modalProps={modalProps}
-              questionText={questionText}
-            />
-          </Modal>
+          <EditingComponent
+            id={id}
+            Modal={Modal}
+            modalProps={modalProps}
+            questionText={questionText}
+          />
           <Row valid={!!eventData?.[id]} fieldName={fieldName}>
             {!eventData?.[id] ? (
               <InitialButton onPress={openModal} fieldName={fieldName} />

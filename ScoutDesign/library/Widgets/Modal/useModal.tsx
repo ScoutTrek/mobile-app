@@ -1,7 +1,11 @@
 import {useState, useCallback} from 'react';
 import Modal, {ModalProps} from './Modal';
 
-export function useModal(): UseModalResult {
+export const MyModal = ({children, ...rest}: ModalProps) => {
+  return <Modal {...rest}>{children}</Modal>;
+};
+
+export const useModal = (): UseModalResult => {
   let [visible, setVisible] = useState(false);
   let openModal = useCallback(() => {
     setVisible(true);
@@ -13,7 +17,7 @@ export function useModal(): UseModalResult {
 
   let modalProps = {
     visible,
-    escape: escape,
+    escape,
     openModal,
   };
 
@@ -24,15 +28,12 @@ export function useModal(): UseModalResult {
     modalProps,
     Modal: MyModal,
   };
-}
-
-export const MyModal = ({children, ...modalProps}: ModalProps) => {
-  return <Modal {...modalProps}>{children}</Modal>;
 };
+
 export interface UseModalResult {
   visible: boolean;
   openModal: () => void;
   escape: () => void;
   modalProps: ModalProps;
-  Modal?: typeof MyModal;
+  Modal: React.FC<ModalProps>;
 }
