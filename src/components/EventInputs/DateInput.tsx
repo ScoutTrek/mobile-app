@@ -1,6 +1,9 @@
 import React, {useState} from 'react';
 import moment from 'moment';
-import {eventData} from '../../../App';
+import {
+  useEventForm,
+  addEventFieldOfType,
+} from 'CreateEvent/CreateEventFormStore';
 import DateAndTimePicker from '../formfields/DateAndTimePicker';
 import DefaultInputButton from './components/DefaultInputButton';
 import DateTimeLineItem from '../DateTimeLineItem';
@@ -11,17 +14,15 @@ import {CalendarList} from 'react-native-calendars';
 import {EventInputProps} from './EventInputTypes';
 
 const ChooseDate = ({id, Modal, modalProps, questionText}: EventInputProps) => {
+  const [{fields}, dispatch] = useEventForm();
   const [date, setDate] = useState(
-    moment(+eventData()?.[id], 'MM-DD-YYYY').isValid()
-      ? moment(+eventData()?.[id])
+    moment(+fields?.[id], 'MM-DD-YYYY').isValid()
+      ? moment(+fields?.[id])
       : moment()
   );
 
   const nextForm = () => {
-    eventData({
-      ...eventData(),
-      [id]: date,
-    });
+    dispatch(addEventFieldOfType(id, date));
   };
 
   return (

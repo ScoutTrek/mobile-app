@@ -1,10 +1,10 @@
 import {gql, useMutation, useQuery} from '@apollo/client';
-import RichInputContainer from '../../../components/containers/RichInputContainer';
-import EventInputTemplate from '../../../components/EventInputs/EventInputTemplate';
-import {GET_EVENTS} from '../../calendar/CalendarView';
-import {EVENT_FIELDS, GET_UPCOMING_EVENTS} from '../../home/UpcomingEvents';
-import SubmitBtn from '../../../components/buttons/SubmitButton';
-import {eventData, eventData as resetEventData} from '../../../../App';
+import RichInputContainer from '../../components/containers/RichInputContainer';
+import EventInputTemplate from '../../components/EventInputs/EventInputTemplate';
+import {GET_EVENTS} from '../calendar/CalendarView';
+import {EVENT_FIELDS, GET_UPCOMING_EVENTS} from '../home/UpcomingEvents';
+import SubmitBtn from '../../components/buttons/SubmitButton';
+import {eventData as resetEventData} from '../../../App';
 
 const ADD_EVENT = gql`
   ${EVENT_FIELDS}
@@ -37,10 +37,6 @@ export const GET_EVENT_SCHEMAS = gql`
 `;
 
 const CreateEvent = ({navigation, route}) => {
-  const back = () => {
-    resetEventData({});
-    navigation.goBack();
-  };
   const [addEvent] = useMutation(ADD_EVENT, {
     update(cache, {data: {event}}) {
       try {
@@ -123,7 +119,10 @@ const CreateEvent = ({navigation, route}) => {
   }, []);
 
   return (
-    <RichInputContainer background={'#fff'} icon="back" back={back}>
+    <RichInputContainer
+      background={'#fff'}
+      icon="back"
+      back={navigation.goBack}>
       {schema.form.map(
         (field) =>
           !disabledFields.includes(field.fieldID) && (

@@ -1,16 +1,11 @@
 import {useEffect, useState} from 'react';
-import {eventData} from '../../../App';
-import {
-  Dimensions,
-  Keyboard,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Text,
-} from 'react-native';
+import {Dimensions, Keyboard, StyleSheet, View} from 'react-native';
 import LocationLineItem from '../LocationLineItem';
 import DefaultInputButton from './components/DefaultInputButton';
-import * as Permissions from 'expo-permissions';
+import {
+  useEventForm,
+  addEventFieldOfType,
+} from 'CreateEvent/CreateEventFormStore';
 import * as Location from 'expo-location';
 import {GOOGLE_MAPS_API_KEY} from '../../../env';
 import MapView, {Marker} from 'react-native-maps';
@@ -18,12 +13,12 @@ import MapSearch from '../MapSearch';
 import Constants from 'expo-constants';
 
 import uuidv4 from 'uuid/v1';
-// import {ConfirmButton} from '@ScoutDesign';
 
 const locationToken = uuidv4();
 
 const ChooseLocation = ({id, Modal, modalProps, questionText}) => {
-  const initialLocation = eventData()?.[id];
+  const [{fields}, dispatch] = useEventForm();
+  const initialLocation = fields?.[id];
   const [location, setLocation] = useState(
     initialLocation
       ? {latitude: initialLocation.lat, longitude: initialLocation.lng}
@@ -73,14 +68,13 @@ const ChooseLocation = ({id, Modal, modalProps, questionText}) => {
   };
 
   const next = () => {
-    eventData({
-      ...eventData(),
-      [id]: {
+    dispatch(
+      addEventFieldOfType(id, {
         address: locationString,
         lat: location.latitude,
         lng: location.longitude,
-      },
-    });
+      })
+    );
   };
 
   useEffect(() => {

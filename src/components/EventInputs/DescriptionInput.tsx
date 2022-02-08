@@ -1,14 +1,17 @@
-import React, {useState} from 'react';
-import {eventData} from '../../../App';
-import {Dimensions, Keyboard, Text, TouchableOpacity, View} from 'react-native';
-import NextButton from '../buttons/NextButton';
+import {useState} from 'react';
+import {Text, TouchableOpacity, View} from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 import Fonts from '../../../constants/Fonts';
 import Colors from '../../../constants/Colors';
+import {
+  useEventForm,
+  addEventFieldOfType,
+} from 'CreateEvent/CreateEventFormStore';
 import RichInputContainer from '../containers/RichInputContainer';
 import RTE from '../RichTextEditor';
 import PreviewTextBlock from '../PreviewTextBlock';
 import InputModalContainer from '../containers/InputModalContainer';
+import {EventInputProps} from './EventInputTypes';
 
 const DescriptionInputButton = ({fieldName, onPress}) => {
   return (
@@ -64,17 +67,17 @@ const DescriptionInputButton = ({fieldName, onPress}) => {
   );
 };
 
-const DescriptionInput = ({id, Modal, modalProps, questionText}) => {
-  const [description, setDescription] = useState(
-    eventData()?.description || ''
-  );
+const DescriptionInput = ({
+  id,
+  Modal,
+  modalProps,
+  questionText,
+}: EventInputProps) => {
+  const [{fields}, dispatch] = useEventForm();
+  const [description, setDescription] = useState(fields?.description || '');
 
   const nextForm = () => {
-    eventData({
-      ...eventData(),
-      [id]: description,
-    });
-    setModalVisible(false);
+    dispatch(addEventFieldOfType(id, description));
   };
 
   return (

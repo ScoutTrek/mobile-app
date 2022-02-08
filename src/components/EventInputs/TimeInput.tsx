@@ -1,5 +1,8 @@
-import React, {useEffect, useState} from 'react';
-import {eventData} from '../../../App';
+import {useState} from 'react';
+import {
+  useEventForm,
+  addEventFieldOfType,
+} from 'CreateEvent/CreateEventFormStore';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DefaultInputButton from './components/DefaultInputButton';
 import DateTimeLineItem from '../DateTimeLineItem';
@@ -15,20 +18,16 @@ const ChooseTime = ({
   showAndroidClock,
   setShowAndroidClock,
 }) => {
-  const [time, setTime] = useState(+eventData()?.[id] || new Date());
+  const [{fields}, dispatch] = useEventForm();
+  const [time, setTime] = useState(+fields?.[id] || new Date());
 
-  const onNext = (androidTime) => {
-    console.log('Android time ', androidTime);
-    eventData({
-      ...eventData(),
-      [id]: androidTime || time,
-    });
-    setModalVisible(false);
+  const next = (androidTime) => {
+    dispatch(addEventFieldOfType(id, androidTime || time));
   };
 
   if (Platform.OS === 'ios') {
     return (
-      <Modal {...modalProps} onNext={onNext} title={questionText}>
+      <Modal {...modalProps} onNext={next} title={questionText}>
         <View
           style={{
             flex: 1,
@@ -84,8 +83,7 @@ const ChooseTime = ({
       display="default"
       onChange={(_, newDateString) => {
         console.log('Date string ', newDateString);
-        nextView(new Date(newDateString));
-        setShowAndroidClock(false);
+        next(new Date(newDateString));
       }}
       textColor={Colors.orange}
       style={{flex: 1}}

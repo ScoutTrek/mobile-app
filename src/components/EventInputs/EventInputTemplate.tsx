@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {useQuery} from '@apollo/client';
-import {GET_EVENT_DATA} from '../../modules/createEvent/createEvent/CreateEvent';
+import {GET_EVENT_DATA} from '../../modules/createEvent/CreateEvent';
+import {useEventForm} from 'CreateEvent/CreateEventFormStore';
 import {useModal} from 'ScoutDesign/library';
 import Row from './Row';
 import TapToEditContainer from '../containers/TapToEditContainer';
@@ -27,11 +28,9 @@ const eventComponents = {
 export default ({fieldType, id, fieldName, questionText, payload}) => {
   const {InitialButton, EditingComponent, CompletedComponent} =
     eventComponents[fieldType];
-  const {
-    loading,
-    error,
-    data: {eventData},
-  } = useQuery(GET_EVENT_DATA);
+
+  const [{fields}] = useEventForm();
+
   const [showAndroidClock, setShowAndroidClock] = useState(false);
 
   const {modalProps, openModal, Modal} = useModal();
@@ -39,7 +38,7 @@ export default ({fieldType, id, fieldName, questionText, payload}) => {
   switch (fieldType) {
     case 'setting':
       return (
-        <Row valid={!!eventData?.[id]} key={id} fieldName={fieldName}>
+        <Row valid={!!fields?.[id]} key={id} fieldName={fieldName}>
           <InitialButton
             id={id}
             questionText={questionText}
@@ -59,8 +58,8 @@ export default ({fieldType, id, fieldName, questionText, payload}) => {
             setShowAndroidClock={setShowAndroidClock}
             questionText={questionText}
           />
-          <Row valid={!!eventData?.[id]} fieldName={fieldName}>
-            {!eventData?.[id] ? (
+          <Row valid={!!fields?.[id]} fieldName={fieldName}>
+            {!fields?.[id] ? (
               <InitialButton
                 onPress={() =>
                   Platform.OS === 'ios'
@@ -76,7 +75,7 @@ export default ({fieldType, id, fieldName, questionText, payload}) => {
                     ? openModal()
                     : setShowAndroidClock(true)
                 }>
-                <CompletedComponent data={+eventData?.[id]} />
+                <CompletedComponent data={+fields?.[id]} />
               </TapToEditContainer>
             )}
           </Row>
@@ -91,12 +90,12 @@ export default ({fieldType, id, fieldName, questionText, payload}) => {
             modalProps={modalProps}
             questionText={questionText}
           />
-          <Row valid={!!eventData?.[id]} fieldName={fieldName}>
-            {!eventData?.[id] ? (
+          <Row valid={!!fields?.[id]} fieldName={fieldName}>
+            {!fields?.[id] ? (
               <InitialButton onPress={openModal} fieldName={fieldName} />
             ) : (
               <TapToEditContainer edit={openModal}>
-                <CompletedComponent data={+eventData?.[id]} />
+                <CompletedComponent data={+fields?.[id]} />
               </TapToEditContainer>
             )}
           </Row>
@@ -111,12 +110,12 @@ export default ({fieldType, id, fieldName, questionText, payload}) => {
             modalProps={modalProps}
             questionText={questionText}
           />
-          <Row valid={!!eventData?.[id]} fieldName={fieldName}>
-            {!eventData?.[id] ? (
+          <Row valid={!!fields?.[id]} fieldName={fieldName}>
+            {!fields?.[id] ? (
               <InitialButton onPress={openModal} fieldName={fieldName} />
             ) : (
               <TapToEditContainer edit={openModal}>
-                <CompletedComponent data={eventData?.[id]} />
+                <CompletedComponent data={fields?.[id]} />
               </TapToEditContainer>
             )}
           </Row>

@@ -1,20 +1,21 @@
 import {useState} from 'react';
-import {eventData} from '../../../App';
+import {
+  useEventForm,
+  addEventFieldOfType,
+} from 'CreateEvent/CreateEventFormStore';
 import BasicLineItem from './components/BasicLineItem';
 import {ColorfulTextInput} from 'ScoutDesign/library';
 import {EventInputProps} from './EventInputTypes';
 import DefaultInputButton from './components/DefaultInputButton';
 
 const ChooseName = ({id, Modal, modalProps, questionText}: EventInputProps) => {
-  const [title, setTitle] = useState(eventData()?.[id] || '');
-  const [nameIsValid, setNameIsValid] = useState(!!eventData()?.[id] || false);
+  const [{fields}, dispatch] = useEventForm();
+  const [title, setTitle] = useState(fields?.[id] || '');
+  const [nameIsValid, setNameIsValid] = useState(!!fields?.[id] || false);
 
   const next = () => {
     if (nameIsValid) {
-      eventData({
-        ...eventData(),
-        [id]: title,
-      });
+      dispatch(addEventFieldOfType(id, title));
     }
   };
 

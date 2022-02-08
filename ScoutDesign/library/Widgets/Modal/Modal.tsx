@@ -87,10 +87,10 @@ const ModalBase = ({
 
 const Modal = ({visible, escape, onNext, children, ...rest}: ModalProps) => {
   let next = onNext
-    ? useCallback(() => {
+    ? () => {
         onNext();
         escape();
-      }, [escape])
+      }
     : undefined;
 
   return (
