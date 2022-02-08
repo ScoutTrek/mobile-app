@@ -4,10 +4,8 @@ import {
   useEventForm,
   addEventFieldOfType,
 } from 'CreateEvent/CreateEventFormStore';
-import DateAndTimePicker from '../../../components/formfields/DateAndTimePicker';
 import DefaultInputButton from './components/DefaultInputButton';
 import DateTimeLineItem from '../../../components/DateTimeLineItem';
-import InputModalContainer from '../../../components/containers/InputModalContainer';
 import Colors from '../../../../constants/Colors';
 import Fonts from '../../../../constants/Fonts';
 import {CalendarList} from 'react-native-calendars';
