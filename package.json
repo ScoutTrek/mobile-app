@@ -58,7 +58,7 @@
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
     "react-native-calendars": "1.1276.0",
-    "react-native-cn-richtext-editor": "^2.0.0-rc3",
+    "react-native-cn-richtext-editor": "^1.0.43",
     "react-native-gesture-handler": "^2.2.0",
     "react-native-global-props": "^1.1.5",
     "react-native-gradient-buttons": "^2.0.1",

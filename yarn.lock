@@ -7462,10 +7462,10 @@ react-native-calendars@1.1276.0:
   optionalDependencies:
     moment "^2.24.0"
 
-react-native-cn-richtext-editor@^2.0.0-rc3:
-  version "2.0.0-rc3"
-  resolved "https://registry.yarnpkg.com/react-native-cn-richtext-editor/-/react-native-cn-richtext-editor-2.0.0-rc3.tgz#e92412fed0d60e283904e73b23d96dbea1b6ec59"
-  integrity sha512-dsikJrVHwo9JJUIYXLWYfTuOKHMLQY4nibinijd0TqYmxe63u4ZrtPDB6fg5G04NFOEn6TgzpvGkCIh1VYjUoA==
+react-native-cn-richtext-editor@^1.0.43:
+  version "1.0.43"
+  resolved "https://registry.yarnpkg.com/react-native-cn-richtext-editor/-/react-native-cn-richtext-editor-1.0.43.tgz#f544c5b2f422299b5cda789ef84884a030e14c4c"
+  integrity sha512-CT7DP9Y1RmpY5I408anBEsSjnbJc+ejpnbDL5ZLOX0MUmajSWAqzhzj0Vj5sIWs7eXtys9E3sDNWlphKSqQi8A==
   dependencies:
     diff-match-patch "^1.0.4"
     immutability-helper "^2.8.1"
