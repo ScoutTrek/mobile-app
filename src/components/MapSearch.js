@@ -16,13 +16,13 @@ import Fonts from '../../constants/Fonts';
 
 const MapSearch = ({
   locationToken,
-  textValue,
+  searchText,
+  setSearchText,
   back,
   placeholder,
   _getPlaceDetails,
 }) => {
   const [suggestedPlaces, setSuggestedPlaces] = useState();
-  const [searchText, setSearchText] = useState(textValue || '');
 
   const getSuggestedPlaces = async () => {
     const places = await fetch(

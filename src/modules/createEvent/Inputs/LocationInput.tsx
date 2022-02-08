@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react';
 import {Dimensions, Keyboard, StyleSheet, View} from 'react-native';
-import LocationLineItem from '../../../components/LocationLineItem';
+import {Text} from 'ScoutDesign/library';
 import DefaultInputButton from './components/DefaultInputButton';
 import {
   useEventForm,
@@ -33,6 +33,8 @@ const ChooseLocation = ({id, Modal, modalProps, questionText}) => {
   const [locationString, setLocationString] = useState(
     initialLocation?.address || ''
   );
+
+  const [searchText, setSearchText] = useState(initialLocation?.address || '');
 
   const _getLocationAsync = async () => {
     let {status} = await Location.requestForegroundPermissionsAsync();
@@ -86,7 +88,12 @@ const ChooseLocation = ({id, Modal, modalProps, questionText}) => {
   }
 
   return (
-    <Modal onNext={next} {...modalProps} title={questionText}>
+    <Modal
+      onNext={next}
+      noStyles
+      {...modalProps}
+      title={questionText}
+      valid={location && !searchText}>
       <MapView
         style={styles.mapStyle}
         initialRegion={{
@@ -110,7 +117,8 @@ const ChooseLocation = ({id, Modal, modalProps, questionText}) => {
           locationToken={locationToken}
           back={modalProps.escape}
           placeholder={locationString || questionText}
-          textValue={initialLocation?.address}
+          searchText={searchText}
+          setSearchText={setSearchText}
           _getPlaceDetails={_getPlaceDetails}
           style={styles.searchBar}
         />
@@ -138,6 +146,20 @@ const styles = StyleSheet.create({
     left: 10,
   },
 });
+
+// @todo - create more scalable type for data display completed components
+const LocationLineItem = ({data}: {data: any}) => {
+  return (
+    <Text
+      size="m"
+      weight="bold"
+      color="brandPrimaryDark"
+      paddingHorizontal="m"
+      marginRight="s">
+      {data.address}
+    </Text>
+  );
+};
 
 export default {
   InitialButton: DefaultInputButton,

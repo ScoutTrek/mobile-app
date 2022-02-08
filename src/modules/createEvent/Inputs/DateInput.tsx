@@ -26,14 +26,17 @@ const ChooseDate = ({id, Modal, modalProps, questionText}: EventInputProps) => {
   };
 
   return (
-    <Modal {...modalProps} title={questionText} onNext={nextForm}>
+    <Modal
+      {...modalProps}
+      title={questionText}
+      onNext={nextForm}
+      valid={!!date}>
       <CalendarList
         current={date.format('YYYY-MM-DD')}
         theme={{
           textDayFontFamily: Fonts.primaryText,
           textMonthFontFamily: Fonts.primaryTextBold,
         }}
-        headerStyle={{fontSize: 30, fontFamily: Fonts.primaryTextBold}}
         markingType={'custom'}
         markedDates={{
           [moment().format('YYYY-MM-DD')]: {

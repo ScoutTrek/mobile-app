@@ -21,6 +21,7 @@ export interface ModalProps extends SimpleFormStates {
   backgroundColor?: Color;
   title?: string;
   visible: boolean;
+  noStyles?: boolean;
   children?: any;
 }
 
@@ -30,6 +31,7 @@ const ModalBase = ({
   backgroundColor = 'brandPrimary',
   title,
   valid,
+  noStyles,
   children,
 }: ModalProps) => {
   return (
@@ -41,45 +43,61 @@ const ModalBase = ({
         justifyContent: 'center',
         backgroundColor: 'rgba(155, 155, 155, 0.88)',
       }}>
-      <Box
-        width={Dimensions.get('window').width * 0.89}
-        height={Dimensions.get('window').height * 0.86}
-        borderRadius={mapRadius('m')}
-        backgroundColor="white">
-        <DismissButton
-          onDismiss={escape}
-          corner="top-right"
-          distanceFromCorner="edge"
-        />
-        <LineItem
-          accessibilityLabel="modal-header"
-          bottomBorder={true}
-          backgroundColor={backgroundColor}
-          type="simpleRow"
-          topLeftRadius="m"
-          topRightRadius="m">
-          <Text
-            color="white"
-            paddingHorizontal="s"
-            paddingVertical="m"
-            preset="h1">
-            {title}
-          </Text>
-        </LineItem>
-        <Box paddingHorizontal="l" paddingVertical="m">
+      {noStyles ? (
+        <>
           {children}
-        </Box>
-        {valid && onNext ? (
-          <CircleButton
-            accessibilityLabel="next"
-            icon={forwardArrow}
-            onPress={onNext}
-            animated
-            corner="bottom-right"
-            distanceFromCorner="s"
+          {valid && onNext ? (
+            <CircleButton
+              accessibilityLabel="next"
+              icon={forwardArrow}
+              onPress={onNext}
+              animated
+              corner="bottom-right"
+              distanceFromCorner="l"
+            />
+          ) : undefined}
+        </>
+      ) : (
+        <Box
+          width={noStyles ? undefined : Dimensions.get('window').width * 0.89}
+          height={Dimensions.get('window').height * 0.86}
+          borderRadius={mapRadius('m')}
+          backgroundColor="white">
+          <DismissButton
+            onDismiss={escape}
+            corner="top-right"
+            distanceFromCorner="edge"
           />
-        ) : undefined}
-      </Box>
+          <LineItem
+            accessibilityLabel="modal-header"
+            bottomBorder={true}
+            backgroundColor={backgroundColor}
+            type="simpleRow"
+            topLeftRadius="m"
+            topRightRadius="m">
+            <Text
+              color="white"
+              paddingHorizontal="s"
+              paddingVertical="m"
+              preset="h1">
+              {title}
+            </Text>
+          </LineItem>
+          <Box paddingHorizontal="l" paddingVertical="m">
+            {children}
+          </Box>
+          {valid && onNext ? (
+            <CircleButton
+              accessibilityLabel="next"
+              icon={forwardArrow}
+              onPress={onNext}
+              animated
+              corner="bottom-right"
+              distanceFromCorner="s"
+            />
+          ) : undefined}
+        </Box>
+      )}
     </KeyboardAvoidingView>
   );
 };
