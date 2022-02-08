@@ -2,7 +2,7 @@ import {
   useEventForm,
   addEventFieldOfType,
 } from 'CreateEvent/CreateEventFormStore';
-import RadioChoice from '../formfields/RadioChoice';
+import RadioChoice from '../../../components/formfields/RadioChoice';
 
 const OptionsInput = ({questionText, option1, option2, id}) => {
   const [_, dispatch] = useEventForm();

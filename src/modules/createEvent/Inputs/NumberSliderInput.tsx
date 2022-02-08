@@ -1,4 +1,4 @@
-import Slider from '../formfields/Slider';
+import Slider from '../../../components/formfields/Slider';
 import {useEffect, useState} from 'react';
 import {
   useEventForm,
@@ -6,7 +6,7 @@ import {
 } from 'CreateEvent/CreateEventFormStore';
 import BasicLineItem from './components/BasicLineItem';
 import DefaultInputButton from './components/DefaultInputButton';
-import {EventInputProps} from './EventInputTypes';
+import {EventInputProps} from './InputTypes';
 
 const ChooseDistance = ({
   id,

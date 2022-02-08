@@ -1,12 +1,12 @@
-import theme from "../../../theme";
-import { Radius } from "../types";
+import theme from '../../../theme';
+import {Radius} from '../types';
 
 export type Dimensions = {
   width?: number;
   height: number;
 };
 
-export type SizePresets = "fill" | "micro" | "xs" | "s" | "m" | "l" | "xl";
+export type SizePresets = 'fill' | 'micro' | 'xs' | 's' | 'm' | 'l' | 'xl';
 
 export const mapRadius = (
   radius?: Radius,
@@ -17,15 +17,15 @@ export const mapRadius = (
   }
 
   // If a radius preset is passed to the function apply it
-  if (radius !== "circle" && radius !== "default") {
+  if (radius !== 'circle' && radius !== 'default') {
     return theme.radii[radius];
   }
 
   // If size is a preset that evaluates to a number (not fill)
-  else if (typeof size === "string" && size !== "fill") {
-    if (radius === "default") {
+  else if (typeof size === 'string' && size !== 'fill') {
+    if (radius === 'default') {
       return theme.radii[size];
-    } else if (radius === "circle") {
+    } else if (radius === 'circle') {
       return theme.assetSizes[size];
     }
   }
@@ -40,8 +40,8 @@ export const mapRadius = (
   }
 
   // If size is type fill
-  else if (size === "fill") {
-    if (radius === "circle") {
+  else if (size === 'fill') {
+    if (radius === 'circle') {
       return theme.radii.xl;
     } else {
       return theme.radii.m;
@@ -50,7 +50,7 @@ export const mapRadius = (
 
   // If size is type Dimensions
   else {
-    if (radius === "circle") {
+    if (radius === 'circle') {
       if (size.height === size.width) {
         return size.height / 2;
       } else {

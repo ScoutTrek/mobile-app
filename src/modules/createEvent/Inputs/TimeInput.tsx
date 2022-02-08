@@ -5,10 +5,10 @@ import {
 } from 'CreateEvent/CreateEventFormStore';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DefaultInputButton from './components/DefaultInputButton';
-import DateTimeLineItem from '../DateTimeLineItem';
-import Colors from '../../../constants/Colors';
+import DateTimeLineItem from '../../../components/DateTimeLineItem';
+import Colors from '../../../../constants/Colors';
 import {View, Platform, Modal} from 'react-native';
-import InputModalContainer from '../containers/InputModalContainer';
+import InputModalContainer from '../../../components/containers/InputModalContainer';
 
 const ChooseTime = ({
   id,

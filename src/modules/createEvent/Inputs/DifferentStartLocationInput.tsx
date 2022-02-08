@@ -1,4 +1,4 @@
-import RadioChoice from '../formfields/RadioChoice';
+import RadioChoice from '../../../components/formfields/RadioChoice';
 
 type Props = {
   onPress: () => void;

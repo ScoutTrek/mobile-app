@@ -1,10 +1,10 @@
 import {gql, useMutation, useQuery} from '@apollo/client';
 import RichInputContainer from '../../components/containers/RichInputContainer';
-import EventInputTemplate from '../../components/EventInputs/EventInputTemplate';
+import EventInputTemplate from './Inputs/EventInputTemplate';
 import {GET_EVENTS} from '../calendar/CalendarView';
 import {EVENT_FIELDS, GET_UPCOMING_EVENTS} from '../home/UpcomingEvents';
 import SubmitBtn from '../../components/buttons/SubmitButton';
-import {eventData as resetEventData} from '../../../App';
+import {useEventForm} from 'CreateEvent/CreateEventFormStore';
 
 const ADD_EVENT = gql`
   ${EVENT_FIELDS}
@@ -60,11 +60,8 @@ const CreateEvent = ({navigation, route}) => {
   });
   const {loading: schemaLoading, data} = useQuery(GET_EVENT_SCHEMAS);
 
-  const {
-    loading,
-    error,
-    data: {eventData},
-  } = useQuery(GET_EVENT_DATA);
+  const [{fields}] = useEventForm();
+
   const [updateEvent] = useMutation(UPDATE_EVENT);
 
   if (schemaLoading) return null;
@@ -73,7 +70,7 @@ const CreateEvent = ({navigation, route}) => {
 
   const createEvent = () => {
     if (true) {
-      const eventDataCopy = {...eventData};
+      const eventDataCopy = {...fields};
       if (route.params.update) {
         const omitTypename = (key, value) =>
           key === '__typename' ? undefined : value;
@@ -113,7 +110,7 @@ const CreateEvent = ({navigation, route}) => {
   };
 
   const disabledFields = schema.options.reduce((accumulator, currentValue) => {
-    return eventData?.[currentValue.condition] === currentValue['shown']
+    return fields?.[currentValue.condition] === currentValue['shown']
       ? [...accumulator]
       : [...accumulator, ...currentValue.hiddenFields];
   }, []);

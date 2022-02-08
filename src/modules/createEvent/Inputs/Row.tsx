@@ -28,7 +28,11 @@ const Row = ({fieldName, valid, children}: Props) => {
             },
           ]}>
           {fieldName ? (
-            <Text preset="micro" paddingTop="xs" padding="s">
+            <Text
+              preset="micro"
+              color="brandPrimaryDark"
+              paddingHorizontal="micro"
+              paddingVertical="s">
               {fieldName.toUpperCase()}
             </Text>
           ) : null}

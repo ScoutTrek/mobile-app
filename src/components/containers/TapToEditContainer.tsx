@@ -1,10 +1,10 @@
 import {Platform, TouchableOpacity, StyleSheet, View, Text} from 'react-native';
-import React from 'react';
-import Constants from 'expo-constants';
 import {MaterialIcons} from '@expo/vector-icons';
 import Colors from '../../../constants/Colors';
 import Fonts from '../../../constants/Fonts';
 import {LinearGradient} from 'expo-linear-gradient';
+import {pencil} from 'ScoutDesign/icons';
+import {Icon} from 'ScoutDesign/library';
 
 const TapToEditContainer = ({text, edit, children}) => (
   <View style={styles.screen}>
@@ -17,9 +17,14 @@ const TapToEditContainer = ({text, edit, children}) => (
         borderRadius: 19,
         flexDirection: 'row',
       }}>
-      <TouchableOpacity onPress={edit} style={styles.editBtn}>
-        <MaterialIcons name="edit" size={23} color={Colors.green} />
-      </TouchableOpacity>
+      <Icon
+        icon={pencil}
+        color="brandPrimaryDark"
+        backgroundColor="lightMintGrey"
+        size="s"
+        radius="circle"
+        onPress={edit}
+      />
     </LinearGradient>
     {children}
   </View>
@@ -31,10 +36,6 @@ const styles = StyleSheet.create({
     marginVertical: 2,
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  editBtn: {
-    padding: 6,
-    borderRadius: 19,
   },
 });
 

@@ -4,14 +4,14 @@ import {
   useEventForm,
   addEventFieldOfType,
 } from 'CreateEvent/CreateEventFormStore';
-import DateAndTimePicker from '../formfields/DateAndTimePicker';
+import DateAndTimePicker from '../../../components/formfields/DateAndTimePicker';
 import DefaultInputButton from './components/DefaultInputButton';
-import DateTimeLineItem from '../DateTimeLineItem';
-import InputModalContainer from '../containers/InputModalContainer';
-import Colors from '../../../constants/Colors';
-import Fonts from '../../../constants/Fonts';
+import DateTimeLineItem from '../../../components/DateTimeLineItem';
+import InputModalContainer from '../../../components/containers/InputModalContainer';
+import Colors from '../../../../constants/Colors';
+import Fonts from '../../../../constants/Fonts';
 import {CalendarList} from 'react-native-calendars';
-import {EventInputProps} from './EventInputTypes';
+import {EventInputProps} from './InputTypes';
 
 const ChooseDate = ({id, Modal, modalProps, questionText}: EventInputProps) => {
   const [{fields}, dispatch] = useEventForm();

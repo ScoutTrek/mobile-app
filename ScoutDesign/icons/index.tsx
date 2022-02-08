@@ -7,6 +7,7 @@ import {
   Entypo,
   Octicons,
   AntDesign,
+  MaterialIcons,
 } from '@expo/vector-icons';
 
 export type IconPayloadType = {
@@ -86,6 +87,11 @@ export const home = new IconPayload({
 export const light = new IconPayload({
   name: 'light-up',
   library: Entypo,
+});
+
+export const pencil = new IconPayload({
+  name: 'edit',
+  library: MaterialIcons,
 });
 
 export const plusBold = new IconPayload({

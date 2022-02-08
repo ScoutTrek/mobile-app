@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {useQuery} from '@apollo/client';
-import {GET_EVENT_DATA} from '../../modules/createEvent/CreateEvent';
+import {GET_EVENT_DATA} from '../CreateEvent';
 import {useEventForm} from 'CreateEvent/CreateEventFormStore';
 import {useModal} from 'ScoutDesign/library';
 import Row from './Row';
-import TapToEditContainer from '../containers/TapToEditContainer';
+import TapToEditContainer from '../../../components/containers/TapToEditContainer';
 
 // Component Types
 import TitleInput from './TitleInput';

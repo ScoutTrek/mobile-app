@@ -5,7 +5,7 @@ import {
 } from 'CreateEvent/CreateEventFormStore';
 import BasicLineItem from './components/BasicLineItem';
 import {ColorfulTextInput} from 'ScoutDesign/library';
-import {EventInputProps} from './EventInputTypes';
+import {EventInputProps} from './InputTypes';
 import DefaultInputButton from './components/DefaultInputButton';
 
 const ChooseName = ({id, Modal, modalProps, questionText}: EventInputProps) => {

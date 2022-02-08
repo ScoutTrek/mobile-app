@@ -1,17 +1,18 @@
 import {useState} from 'react';
-import {Text, TouchableOpacity, View} from 'react-native';
+import {TouchableOpacity, View} from 'react-native';
+import {Text} from 'ScoutDesign/library';
 import {LinearGradient} from 'expo-linear-gradient';
-import Fonts from '../../../constants/Fonts';
-import Colors from '../../../constants/Colors';
+import Fonts from '../../../../constants/Fonts';
+import Colors from '../../../../constants/Colors';
 import {
   useEventForm,
   addEventFieldOfType,
 } from 'CreateEvent/CreateEventFormStore';
-import RichInputContainer from '../containers/RichInputContainer';
-import RTE from '../RichTextEditor';
-import PreviewTextBlock from '../PreviewTextBlock';
-import InputModalContainer from '../containers/InputModalContainer';
-import {EventInputProps} from './EventInputTypes';
+import RichInputContainer from '../../../components/containers/RichInputContainer';
+import RTE from '../../../components/RichTextEditor';
+import PreviewTextBlock from '../../../components/PreviewTextBlock';
+import InputModalContainer from '../../../components/containers/InputModalContainer';
+import {EventInputProps} from './InputTypes';
 
 const DescriptionInputButton = ({fieldName, onPress}) => {
   return (
@@ -20,15 +21,7 @@ const DescriptionInputButton = ({fieldName, onPress}) => {
         marginHorizontal: 4,
         flex: 1,
       }}>
-      <Text
-        style={{
-          fontFamily: Fonts.headingBold,
-          fontSize: 14,
-          paddingTop: 7,
-          paddingBottom: 5,
-          paddingHorizontal: 7,
-          color: Colors.darkGreen,
-        }}>
+      <Text size="s" color="brandPrimaryDark">
         {fieldName.toUpperCase()}
       </Text>
       <TouchableOpacity
@@ -36,8 +29,7 @@ const DescriptionInputButton = ({fieldName, onPress}) => {
         style={{
           backgroundColor: 'rgba(255, 255, 255, 0.9)',
           borderBottomWidth: 2,
-          fontSize: 15,
-          borderColor: Colors.green,
+          borderColor: '#34A86C',
           marginVertical: 10,
           borderRadius: 1,
         }}>
@@ -50,15 +42,7 @@ const DescriptionInputButton = ({fieldName, onPress}) => {
             flexDirection: 'row',
             flex: 1,
           }}>
-          <Text
-            style={{
-              fontFamily: Fonts.primaryText,
-              lineHeight: 25,
-              fontSize: 18,
-              paddingVertical: 18,
-              paddingHorizontal: 12,
-              color: Colors.darkGreen,
-            }}>
+          <Text size="l" padding="m" color="brandPrimaryDark">
             Add a description or any additional info...
           </Text>
         </LinearGradient>

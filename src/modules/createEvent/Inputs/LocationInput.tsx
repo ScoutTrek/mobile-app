@@ -1,15 +1,15 @@
 import {useEffect, useState} from 'react';
 import {Dimensions, Keyboard, StyleSheet, View} from 'react-native';
-import LocationLineItem from '../LocationLineItem';
+import LocationLineItem from '../../../components/LocationLineItem';
 import DefaultInputButton from './components/DefaultInputButton';
 import {
   useEventForm,
   addEventFieldOfType,
 } from 'CreateEvent/CreateEventFormStore';
 import * as Location from 'expo-location';
-import {GOOGLE_MAPS_API_KEY} from '../../../env';
+import {GOOGLE_MAPS_API_KEY} from '../../../../env';
 import MapView, {Marker} from 'react-native-maps';
-import MapSearch from '../MapSearch';
+import MapSearch from '../../../components/MapSearch';
 import Constants from 'expo-constants';
 
 import uuidv4 from 'uuid/v1';
