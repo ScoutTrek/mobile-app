@@ -1,4 +1,8 @@
 import {StyleSheet, View, ActivityIndicator} from 'react-native';
+import {
+  useEventForm,
+  initializeEventForm,
+} from 'CreateEvent/CreateEventFormStore';
 
 import Constants from 'expo-constants';
 
@@ -19,6 +23,7 @@ type Props = {
 };
 
 const ViewEventsList = ({navigation}: Props) => {
+  const [_, dispatch] = useEventForm();
   const {loading, error, data} = useQuery(GET_EVENT_SCHEMAS);
 
   if (loading) {
@@ -32,10 +37,12 @@ const ViewEventsList = ({navigation}: Props) => {
           id: item?.metaData?.eventID,
           source: item?.metaData?.image,
           title: convertEventIDToText(item?.metaData?.eventID),
-          onPress: () =>
+          onPress: () => {
+            dispatch(initializeEventForm(item?.metaData?.eventID));
             navigation.navigate('CreateEvent', {
               type: item?.metaData?.eventID,
-            }),
+            });
+          },
         }
       : undefined
   );

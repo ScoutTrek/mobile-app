@@ -1,6 +1,4 @@
 import React, {useState} from 'react';
-import {useQuery} from '@apollo/client';
-import {GET_EVENT_DATA} from '../CreateEvent';
 import {useEventForm} from 'CreateEvent/CreateEventFormStore';
 import {useModal} from 'ScoutDesign/library';
 import Row from './Row';
