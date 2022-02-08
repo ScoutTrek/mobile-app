@@ -4,7 +4,7 @@ import EventInputTemplate from './Inputs/EventInputTemplate';
 import {GET_EVENTS} from '../calendar/CalendarView';
 import {EVENT_FIELDS, GET_UPCOMING_EVENTS} from '../home/UpcomingEvents';
 import SubmitBtn from '../../components/buttons/SubmitButton';
-import {useEventForm} from 'CreateEvent/CreateEventFormStore';
+import {useEventForm, clearEventForm} from 'CreateEvent/CreateEventFormStore';
 
 const ADD_EVENT = gql`
   ${EVENT_FIELDS}
@@ -60,7 +60,8 @@ const CreateEvent = ({navigation, route}) => {
   });
   const {loading: schemaLoading, data} = useQuery(GET_EVENT_SCHEMAS);
 
-  const [{fields}] = useEventForm();
+  const [state, dispatch] = useEventForm();
+  const {fields} = state;
 
   const [updateEvent] = useMutation(UPDATE_EVENT);
 
@@ -83,6 +84,7 @@ const CreateEvent = ({navigation, route}) => {
         })
           .then(() => {
             return new Promise((res, rej) => {
+              dispatch(clearEventForm());
               navigation.goBack();
               res();
             });
@@ -119,7 +121,10 @@ const CreateEvent = ({navigation, route}) => {
     <RichInputContainer
       background={'#fff'}
       icon="back"
-      back={navigation.goBack}>
+      back={() => {
+        dispatch(clearEventForm());
+        navigation.goBack();
+      }}>
       {schema.form.map(
         (field) =>
           !disabledFields.includes(field.fieldID) && (
