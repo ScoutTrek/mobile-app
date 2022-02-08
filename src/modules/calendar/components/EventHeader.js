@@ -6,12 +6,12 @@ import {
   Dimensions,
   View,
 } from 'react-native';
+import {backChevron} from 'ScoutDesign/icons';
+import {Icon} from 'ScoutDesign/library';
 import {LinearGradient} from 'expo-linear-gradient';
 
-import {Ionicons} from '@expo/vector-icons';
 import Colors from '../../../../constants/Colors';
 import Fonts from '../../../../constants/Fonts';
-import BackIcon from '../../../components/buttons/BackIcon';
 import moment from 'moment';
 
 const EventHeader = ({navigation, onPress, image_path, title, date, name}) => {
@@ -19,7 +19,12 @@ const EventHeader = ({navigation, onPress, image_path, title, date, name}) => {
     <ImageBackground
       style={styles.container}
       source={image_path && {uri: image_path}}>
-      <BackIcon back={() => navigation.goBack()} />
+      <Icon
+        size="m"
+        color="informationDark"
+        icon={backChevron}
+        onPress={() => navigation.goBack()}
+      />
       <Ionicons
         name="chatbubbles"
         size={32}

@@ -1,7 +1,7 @@
 import theme, {Theme} from '../../../../theme';
 import {
   Pressable,
-  SizeProps,
+  IconSizePresets,
   PressableProps,
   mapRadius,
   Color,
@@ -10,8 +10,9 @@ import {SpacingProps} from '@shopify/restyle';
 
 import {IconPayload} from '../../../../../icons';
 
-interface IconProps extends SizeProps, PressableProps {
+interface IconProps extends PressableProps {
   icon: IconPayload;
+  size: IconSizePresets;
   color: Color;
   backgroundColor?: Color;
 }
@@ -26,22 +27,21 @@ const Icon = ({radius, icon, size, color, backgroundColor, ...rest}: Props) => {
     return (
       <Pressable
         accessibilityLabel={icon.name}
-        borderRadius={mapRadius(radius, size)}
-        overflow="hidden"
-        borderWidth={backgroundColor ? 0.25 : undefined}
+        borderRadius={30}
         borderColor={backgroundColor ? 'mediumGrey' : undefined}
+        borderWidth={backgroundColor ? 0.25 : undefined}
+        backgroundColor={backgroundColor ? backgroundColor : undefined}
+        padding={backgroundColor ? 's' : undefined}
+        justifyContent="center"
+        alignItems="center"
         {...rest}>
         <icon.component
-          style={[
-            backgroundColor
-              ? {
-                  padding: 6,
-                  backgroundColor: theme.colors[backgroundColor],
-                }
-              : undefined,
-          ]}
           name={icon.name}
-          size={theme.assetSizes[size]}
+          size={
+            backgroundColor
+              ? theme.assetSizes[size] - 8
+              : theme.assetSizes[size]
+          }
           color={color ? theme.colors?.[color] : undefined}
         />
       </Pressable>

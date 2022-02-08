@@ -5,7 +5,6 @@ import {
   KeyboardAvoidingView,
   Dimensions,
   Modal as RNModal,
-  Pressable,
 } from 'react-native';
 import CircleButton from '../../Atoms/UI/Buttons/CircleButton';
 import DismissButton from '../../Atoms/UI/Buttons/DismissButton';

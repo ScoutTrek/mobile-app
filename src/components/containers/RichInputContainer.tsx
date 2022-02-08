@@ -5,31 +5,41 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
-import React from 'react';
 import Constants from 'expo-constants';
 import CancelIcon from '../buttons/CancelIcon';
-import BackIcon from '../buttons/BackIcon';
 import Colors from '../../../constants/Colors';
+import {DismissButton, Icon} from 'ScoutDesign/library';
+import {backChevron, close} from 'ScoutDesign/icons';
 
-const RichInputContainer = (props) => (
+type Props = {
+  background: string;
+  icon?: 'back' | 'close';
+  back: () => void;
+  children: any;
+};
+
+const RichInputContainer = ({background, back, icon, children}: Props) => (
   <KeyboardAvoidingView
     behavior="padding"
     enabled={Platform.OS === 'ios'}
     keyboardVerticalOffset={0}
     style={styles.screen}>
     <ScrollView
-      contentContainerStyle={[
-        {flexGrow: 1},
-        props.background && {backgroundColor: props.background},
-      ]}
+      contentContainerStyle={{flexGrow: 1}}
+      style={background ? {backgroundColor: background} : undefined}
       keyboardDismissMode="none"
       keyboardShouldPersistTaps="always">
-      {props.icon === 'back' ? (
-        <BackIcon back={props.back} />
+      {icon === 'back' ? (
+        <Icon
+          size="m"
+          color="informationDark"
+          icon={backChevron}
+          onPress={back}
+        />
       ) : (
-        <CancelIcon back={props.back} />
+        <DismissButton corner="top-right" onDismiss={back} />
       )}
-      <View style={styles.inputContainer}>{props.children}</View>
+      <View style={styles.inputContainer}>{children}</View>
     </ScrollView>
   </KeyboardAvoidingView>
 );

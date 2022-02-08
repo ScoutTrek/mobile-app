@@ -34,6 +34,11 @@ export const backArrow = new IconPayload({
   library: Ionicons,
 });
 
+export const backChevron = new IconPayload({
+  name: 'ios-chevron-back',
+  library: Ionicons,
+});
+
 export const bonfire = new IconPayload({
   name: 'bonfire',
   library: Ionicons,

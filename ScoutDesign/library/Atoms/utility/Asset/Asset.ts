@@ -6,6 +6,8 @@ export type Dimensions = {
   height: number;
 };
 
+export type IconSizePresets = 'micro' | 'xs' | 's' | 'm' | 'l' | 'xl';
+
 export type SizePresets = 'fill' | 'micro' | 'xs' | 's' | 'm' | 'l' | 'xl';
 
 export const mapRadius = (
