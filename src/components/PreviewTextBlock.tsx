@@ -1,8 +1,6 @@
-import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import Colors from '../../constants/Colors';
 import {WebView} from 'react-native-webview';
-import FormHeading from './Headings/FormHeading';
 
 export default ({data}) => {
   return (
