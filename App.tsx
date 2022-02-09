@@ -31,8 +31,8 @@ import AuthNavigator from './src/modules/navigation/AuthNavigator';
 import MainStackNavigator from './src/modules/navigation/MainStackNavigator';
 
 const httpLink = new createUploadLink({
-  // uri: 'http://localhost:4000',
-  uri: 'https://beta-dot-scouttrek-node-api.appspot.com/:4000',
+  uri: 'http://localhost:4000',
+  // uri: 'https://beta-dot-scouttrek-node-api.appspot.com/:4000',
 });
 
 const errorMiddleware = onError(

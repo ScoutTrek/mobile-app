@@ -6,9 +6,7 @@ import {
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DefaultInputButton from './components/DefaultInputButton';
 import DateTimeLineItem from '../../../components/DateTimeLineItem';
-import Colors from '../../../../constants/Colors';
 import {View, Platform, Modal} from 'react-native';
-import InputModalContainer from '../../../components/containers/InputModalContainer';
 
 const ChooseTime = ({
   id,
@@ -27,7 +25,7 @@ const ChooseTime = ({
 
   if (Platform.OS === 'ios') {
     return (
-      <Modal {...modalProps} onNext={next} title={questionText}>
+      <Modal {...modalProps} onNext={next} title={questionText} valid={!!time}>
         <View
           style={{
             flex: 1,
@@ -42,15 +40,17 @@ const ChooseTime = ({
               paddingVertical: 5,
               borderRadius: 40,
               backgroundColor: '#fff',
+              borderColor: '#B3CCC8',
+              borderWidth: 0.5,
               shadowColor: '#000',
               shadowOffset: {
                 width: 0,
                 height: 0,
               },
-              shadowOpacity: 0.08,
-              shadowRadius: 6,
+              shadowOpacity: 0.075,
+              shadowRadius: 3.5,
 
-              elevation: 3,
+              elevation: 2,
             }}>
             <DateTimePicker
               value={time}
@@ -59,12 +59,15 @@ const ChooseTime = ({
               display="inline"
               onChange={(_, newDateString) => {
                 console.log(newDateString);
-                // const date = new Date(newDateString);
-                // if (!isNaN(date.valueOf())) {
-                //   setTime(date);
-                // }
+                if (!newDateString) {
+                  return;
+                }
+                const date = new Date(newDateString);
+                if (!isNaN(date.valueOf())) {
+                  setTime(date);
+                }
               }}
-              textColor={Colors.orange}
+              textColor="#E98D01"
               style={{
                 width: '100%',
                 height: '100%',
@@ -85,7 +88,6 @@ const ChooseTime = ({
         console.log('Date string ', newDateString);
         next(new Date(newDateString));
       }}
-      textColor={Colors.orange}
       style={{flex: 1}}
     />
   ) : null;

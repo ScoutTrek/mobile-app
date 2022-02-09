@@ -91,6 +91,7 @@ const theme = createTheme({
   spacing: {
     micro: 2,
     xs: 4,
+    icon: 6,
     s: 8,
     m: 16,
     l: 24,
@@ -108,7 +109,7 @@ const theme = createTheme({
   },
   assetSizes: {
     micro: 9,
-    xs: 15,
+    xs: 16,
     s: 21,
     m: 24,
     l: 30,
@@ -121,13 +122,13 @@ const theme = createTheme({
   },
   textVariants: {
     h1: {
-      fontSize: 36,
-      lineHeight: 45,
+      fontSize: 28,
+      lineHeight: 42,
       fontFamily: 'metropolis-black',
       fontWeight: '900',
     },
     h2: {
-      fontSize: 30,
+      fontSize: 26,
       lineHeight: 34,
       fontFamily: 'metropolis-bold',
       fontWeight: '800',

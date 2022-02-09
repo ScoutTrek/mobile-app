@@ -31,7 +31,7 @@ const Icon = ({radius, icon, size, color, backgroundColor, ...rest}: Props) => {
         borderColor={backgroundColor ? 'mediumGrey' : undefined}
         borderWidth={backgroundColor ? 0.25 : undefined}
         backgroundColor={backgroundColor ? backgroundColor : undefined}
-        padding={backgroundColor ? 's' : undefined}
+        padding={backgroundColor ? 'icon' : undefined}
         justifyContent="center"
         alignItems="center"
         {...rest}>
@@ -39,7 +39,7 @@ const Icon = ({radius, icon, size, color, backgroundColor, ...rest}: Props) => {
           name={icon.name}
           size={
             backgroundColor
-              ? theme.assetSizes[size] - 8
+              ? theme.assetSizes[size] - theme.spacing.icon
               : theme.assetSizes[size]
           }
           color={color ? theme.colors?.[color] : undefined}

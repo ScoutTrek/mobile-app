@@ -90,8 +90,7 @@ export default function UpcomingEvents({navigation}) {
 
           switch (notificationType) {
             case 'event':
-              navigation.navigate('ViewEvents', {
-                screen: 'Event',
+              navigation.navigate('ViewEvent', {
                 params: {currItem: ID},
               });
               break;
@@ -106,10 +105,7 @@ export default function UpcomingEvents({navigation}) {
   }, []);
 
   const viewEvent = (item) => {
-    navigation.navigate('ViewEvents', {
-      screen: 'Event',
-      params: {currItem: item.id},
-    });
+    navigation.navigate('ViewEvent', {currItem: item.id});
   };
 
   const registerForPushNotificationsAsync = async () => {

@@ -1772,6 +1772,11 @@
   dependencies:
     invariant "^2.2.4"
 
+"@react-native-community/hooks@^2.8.1":
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/@react-native-community/hooks/-/hooks-2.8.1.tgz#6e785431db49318048fdd14b601998437b6cc200"
+  integrity sha512-DCmCIC0Gn9m6K0Mlg2MwNmTxMEpBu5lTLsI6b/XUAv/vLGa6o+X7RhCai4FWeqkjCU36+ZOwaLzDo4NBWMXaoQ==
+
 "@react-native-community/masked-view@0.1.10":
   version "0.1.10"
   resolved "https://registry.yarnpkg.com/@react-native-community/masked-view/-/masked-view-0.1.10.tgz#5dda643e19e587793bc2034dd9bf7398ad43d401"
@@ -2073,6 +2078,11 @@
   integrity sha512-WwB53ikYudh9pIorgxrkHKrQZcCqNM/Q/bDzZBffEaGUKGuHrRb3zZUT9Sh2qw9yogC7SsdRmQ1ER0pqvd3bfw==
   dependencies:
     tslib "^2.3.0"
+
+"@wxik/core@^0.5.3":
+  version "0.5.3"
+  resolved "https://registry.yarnpkg.com/@wxik/core/-/core-0.5.3.tgz#be73c25665d641452f5d671891c262c21370effb"
+  integrity sha512-YdzeuYf3KhiBNw0l2gnT/e4TDrNgx90l4iqNYqU4uXv3CQ1JVDUIhy6Lzdg2fT34Xpf99yk2eq4OrD8fAdsZnQ==
 
 "@xmldom/xmldom@~0.7.0":
   version "0.7.5"
@@ -7151,6 +7161,11 @@ react-native-calendars@1.1276.0:
   optionalDependencies:
     moment "^2.24.0"
 
+react-native-cn-quill@^0.7.15:
+  version "0.7.15"
+  resolved "https://registry.yarnpkg.com/react-native-cn-quill/-/react-native-cn-quill-0.7.15.tgz#f32270dcd9ff31aae69172ecb599ecb65bc1ed34"
+  integrity sha512-JX32hXVP0vqwxLwn0v6LIr3x2l0dHmjyH/+c8//3fFVc+Bvqrn04mfgNB1ieF3vXsJnJiskFwr4aaS+M33Dctw==
+
 react-native-cn-richtext-editor@^1.0.43:
   version "1.0.43"
   resolved "https://registry.yarnpkg.com/react-native-cn-richtext-editor/-/react-native-cn-richtext-editor-1.0.43.tgz#f544c5b2f422299b5cda789ef84884a030e14c4c"
@@ -7220,6 +7235,11 @@ react-native-maps@~0.30.1:
   integrity sha512-VDgGygFcXwKLFNmdGb5DVy3DJhjP3qCe3txzDfeO6kQyNELj875ZbZMTYW84XsLUBFNpAWXKffWvMKHMQKv2Gg==
   dependencies:
     "@types/geojson" "^7946.0.7"
+
+react-native-pell-rich-editor@^1.8.8:
+  version "1.8.8"
+  resolved "https://registry.yarnpkg.com/react-native-pell-rich-editor/-/react-native-pell-rich-editor-1.8.8.tgz#c6299635de49d8facfded7175d064c0ff89dbc7d"
+  integrity sha512-pPpj3rVEbmOcGbUMiutuQhpxp5HzOQlhVGhZ6B7aWlsliWWDtsi+lu3RXNV+g62PcQ07qDDtZwKOx1fSzff6HQ==
 
 react-native-platform-touchable@^1.1.1:
   version "1.1.1"

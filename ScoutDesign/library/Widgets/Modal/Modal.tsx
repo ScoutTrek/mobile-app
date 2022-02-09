@@ -1,11 +1,12 @@
-import {useState, useCallback} from 'react';
-
 import {
   Platform,
   KeyboardAvoidingView,
+  View,
   Dimensions,
   Modal as RNModal,
 } from 'react-native';
+import {useKeyboard} from '@react-native-community/hooks';
+import Constants from 'expo-constants';
 import CircleButton from '../../Atoms/UI/Buttons/CircleButton';
 import DismissButton from '../../Atoms/UI/Buttons/DismissButton';
 import Text from '../../Atoms/UI/Text/Text';
@@ -34,15 +35,18 @@ const ModalBase = ({
   noStyles,
   children,
 }: ModalProps) => {
+  const keyboard = useKeyboard();
   return (
     <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      contentContainerStyle={{flexGrow: 1}}
       style={{
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'rgba(155, 155, 155, 0.88)',
-      }}>
+      }}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Dimensions.get('window').height * 0.1}>
       {noStyles ? (
         <>
           {children}
@@ -59,8 +63,10 @@ const ModalBase = ({
         </>
       ) : (
         <Box
-          width={noStyles ? undefined : Dimensions.get('window').width * 0.89}
-          height={Dimensions.get('window').height * 0.86}
+          width={Dimensions.get('window').width * 0.89}
+          height={
+            Dimensions.get('window').height * 0.87 - keyboard.keyboardHeight / 2
+          }
           borderRadius={mapRadius('m')}
           backgroundColor="white">
           <DismissButton
@@ -83,9 +89,11 @@ const ModalBase = ({
               {title}
             </Text>
           </LineItem>
-          <Box paddingHorizontal="l" paddingVertical="m">
+
+          <Box flex={1} paddingHorizontal="l" marginVertical="m">
             {children}
           </Box>
+
           {valid && onNext ? (
             <CircleButton
               accessibilityLabel="next"

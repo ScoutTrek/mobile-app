@@ -15,7 +15,9 @@ import {cloneDeep} from 'lodash';
 import {GET_UPCOMING_EVENTS} from '../home/UpcomingEvents';
 import {GET_EVENTS} from './CalendarView';
 import {EVENT_FIELDS} from '../home/UpcomingEvents';
-// import {ConfirmButton} from '@ScoutDesign';
+
+import {CircleButton} from 'ScoutDesign/library';
+import {pencil} from 'ScoutDesign/icons';
 import {Octicons, Ionicons} from '@expo/vector-icons';
 import Colors from '../../../constants/Colors';
 import InlineButton from '../../components/buttons/InlineButton';
@@ -137,9 +139,10 @@ const EventDetailsScreen = ({route, navigation}) => {
 
       <Description description={data.event.description} />
 
-      <ConfirmButton
-        icon={<Octicons name="pencil" size={24} color="#fff" />}
-        onClick={() => {
+      <CircleButton
+        accessibilityLabel="edit-event"
+        icon={pencil}
+        onPress={() => {
           addEventToCache();
           navigation.navigate('CreateEvent', {
             type: data.event.type,

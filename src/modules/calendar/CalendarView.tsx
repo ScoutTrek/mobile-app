@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {
   StyleSheet,
   View,
@@ -15,7 +15,6 @@ import Fonts from '../../../constants/Fonts';
 import useFetchEvents from '../../hooks/useFetchEvents';
 import {gql, useQuery} from '@apollo/client';
 import {EVENT_FIELDS} from '../home/UpcomingEvents';
-import {eventData} from '../../../App';
 import NoEvents from '../../components/widgets/NoEvents';
 
 export const GET_EVENTS = gql`
@@ -45,10 +44,6 @@ const CalendarView = ({navigation}) => {
   const [events, setEvents] = useFetchEvents();
 
   const itemColor = useRef(getColor());
-
-  React.useEffect(() => {
-    eventData({});
-  }, [navigation]);
 
   const renderEmptyDate = () => {
     return (

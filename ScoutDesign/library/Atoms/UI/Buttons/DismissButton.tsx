@@ -1,4 +1,3 @@
-import React from 'react';
 import Icon from '../Assets/Icon/Icon';
 import {close, IconPayload} from '../../../../icons';
 import {Floatable, FloatableProps} from '../../utility';
@@ -23,7 +22,7 @@ const DismissButton = ({
         backgroundColor="lightMintGrey"
         icon={dismissComponent ? dismissComponent : close}
         color="darkGrey"
-        size="xs"
+        size="s"
         onPress={onDismiss}
       />
     </Floatable>

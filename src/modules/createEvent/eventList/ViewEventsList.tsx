@@ -53,7 +53,7 @@ const ViewEventsList = ({navigation}: Props) => {
       <LargeFloatingButton
         accessibilityLabel="cancel new event"
         icon={backArrow}
-        text="Cancel"
+        text="Back"
         corner="bottom-right"
         distanceFromCorner="l"
         onPress={navigation.goBack}

@@ -2,14 +2,12 @@ import {useState} from 'react';
 import {TouchableOpacity, View} from 'react-native';
 import {Text} from 'ScoutDesign/library';
 import {LinearGradient} from 'expo-linear-gradient';
-import Fonts from '../../../../constants/Fonts';
-import Colors from '../../../../constants/Colors';
 import {
   useEventForm,
   addEventFieldOfType,
 } from 'CreateEvent/CreateEventFormStore';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
-import RTE from '../../../components/RichTextEditor';
+import RTE from '../../../components/RichTextEditor/RichTextEditor';
 import PreviewTextBlock from '../../../components/PreviewTextBlock';
 import InputModalContainer from '../../../components/containers/InputModalContainer';
 import {EventInputProps} from './InputTypes';
@@ -65,12 +63,12 @@ const DescriptionInput = ({
   };
 
   return (
-    <Modal {...modalProps} title={questionText} onNext={nextForm}>
-      <RTE
-        description={description}
-        setDescription={setDescription}
-        fullHeight
-      />
+    <Modal
+      {...modalProps}
+      title={questionText}
+      onNext={nextForm}
+      valid={!!description}>
+      <RTE description={description} setDescription={setDescription} />
     </Modal>
   );
 };

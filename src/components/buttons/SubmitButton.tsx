@@ -1,5 +1,4 @@
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
-import React from 'react';
 import Colors from '../../../constants/Colors';
 import Fonts from '../../../constants/Fonts';
 
@@ -13,7 +12,7 @@ export default function SubmitBtn({submit, title}) {
 
 const styles = StyleSheet.create({
   submitBtn: {
-    backgroundColor: Colors.green,
+    backgroundColor: 'green',
     flexDirection: 'row',
     width: '100%',
     justifyContent: 'center',

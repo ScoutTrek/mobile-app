@@ -90,8 +90,8 @@ const ChooseLocation = ({id, Modal, modalProps, questionText}) => {
   return (
     <Modal
       onNext={next}
-      noStyles
       {...modalProps}
+      noStyles
       title={questionText}
       valid={location && !searchText}>
       <MapView

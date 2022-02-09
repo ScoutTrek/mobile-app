@@ -3,8 +3,8 @@ import RichInputContainer from '../../components/containers/RichInputContainer';
 import EventInputTemplate from './Inputs/EventInputTemplate';
 import {GET_EVENTS} from '../calendar/CalendarView';
 import {EVENT_FIELDS, GET_UPCOMING_EVENTS} from '../home/UpcomingEvents';
-import SubmitBtn from '../../components/buttons/SubmitButton';
 import {useEventForm, clearEventForm} from 'CreateEvent/CreateEventFormStore';
+import {Button} from 'ScoutDesign/library';
 
 const ADD_EVENT = gql`
   ${EVENT_FIELDS}
@@ -100,6 +100,7 @@ const CreateEvent = ({navigation, route}) => {
           },
         })
           .then(() => {
+            console.log('Got here!');
             return new Promise((res, rej) => {
               navigation.popToTop();
               navigation.navigate('UpcomingEvents');
@@ -138,7 +139,11 @@ const CreateEvent = ({navigation, route}) => {
             />
           )
       )}
-      <SubmitBtn title="Create Event" submit={createEvent} />
+      <Button
+        accessibilityLabel="submit"
+        text="Create Event"
+        onPress={createEvent}
+      />
     </RichInputContainer>
   );
 };
