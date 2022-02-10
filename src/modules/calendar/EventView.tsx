@@ -18,7 +18,6 @@ import {EVENT_FIELDS} from '../home/UpcomingEvents';
 
 import {CircleButton} from 'ScoutDesign/library';
 import {pencil} from 'ScoutDesign/icons';
-import {Octicons, Ionicons} from '@expo/vector-icons';
 import Colors from '../../../constants/Colors';
 import InlineButton from '../../components/buttons/InlineButton';
 import InfoRowSmall from '../../components/LayoutComponents/InfoRowSmall';

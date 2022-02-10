@@ -1,4 +1,4 @@
-import React, {useReducer} from 'react';
+import {useReducer} from 'react';
 import {
   StyleSheet,
   Text,
@@ -11,13 +11,10 @@ import {
   ScrollView,
 } from 'react-native';
 import Fonts from '../../../constants/Fonts';
-import {Stack, TextInput} from 'ScoutDesign/library';
+import {Button, Stack, TextInput} from 'ScoutDesign/library';
 import {Ionicons} from '@expo/vector-icons';
-import AuthInput from './components/Input';
 import Footer from './components/Footer';
-import GradientButton from '../../components/buttons/GradientButton';
 import {LinearGradient} from 'expo-linear-gradient';
-import Constants from 'expo-constants/src/Constants';
 
 export const formReducer = (state, action) => {
   if (action.type === 'UPDATE_INPUT_FIELD') {
@@ -144,32 +141,6 @@ const SignUp = ({navigation, route}) => {
         <Text style={styles.text}>
           Spend less time planning and more time exploring.
         </Text>
-        {/* <AuthInput
-              autoCapitalize="words"
-              onInputChange={(value) => handleInputChange('name', value)}
-              placeholder="First name & Last name"
-            />
-            <AuthInput
-              autoCapitalize="none"
-              onInputChange={(value) => handleInputChange('email', value)}
-              placeholder="Email"
-            />
-            <AuthInput
-              autoCapitalize="none"
-              onInputChange={(value) => handleInputChange('password', value)}
-              placeholder="Password"
-              textContentType="newPassword"
-              secureTextEntry={true}
-            />
-            <AuthInput
-              autoCapitalize="none"
-              onInputChange={(value) =>
-                handleInputChange('passwordConfirm', value)
-              }
-              placeholder="Confirm Password"
-              textContentType="newPassword"
-              secureTextEntry={true}
-            /> */}
         <Stack
           type="Pressable"
           accessibilityLabel="test-stack"
@@ -178,41 +149,59 @@ const SignUp = ({navigation, route}) => {
           backgroundColor="white"
           everyItemProps={{
             backgroundColor: 'white',
-            onValueChange: (value) => {},
           }}
           items={[
             {
               id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
-              text: 'First and Last Name',
+              autoCapitalize: 'words',
+              onInputChange: (value) => handleInputChange('name', value),
+              placeholder: 'First name & Last name',
             },
             {
               id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
-              text: 'Email Address',
+              autoCapitalize: 'none',
+              onInputChange: (value) => handleInputChange('email', value),
+              placeholder: 'Email',
             },
             {
               id: '58694a0f-3da1-471f-bd96-145571e29d72',
-              text: 'Password',
+              autoCapitalize: 'none',
+              onInputChange: (value) => handleInputChange('password', value),
+              placeholder: 'Password',
+              textContentType: 'newPassword',
+              secureTextEntry: true,
             },
             {
               id: '58694a0f-3da1-471f-bd96-145571e29d73',
-              text: 'Confirm Password',
+              autoCapitalize: 'none',
+              onInputChange: (value) =>
+                handleInputChange('passwordConfirm', value),
+              placeholder: 'Confirm Password',
+              textContentType: 'newPassword',
+              secureTextEntry: true,
             },
           ]}
           RenderItem={({item, onValueChange, ...rest}) => {
             return (
               <TextInput
-                placeholder={item.text}
-                valid={item?.valid}
-                disabled={item?.disabled}
-                error={item?.error}
                 noStyles
                 onValueChange={onValueChange}
+                {...item}
                 {...rest}
               />
             );
           }}
+          FooterComponent={(props) => (
+            <Button
+              {...props}
+              onPress={handleNext}
+              accessibilityLabel="sign-up"
+              text="Sign Up"
+              color="brandPrimary"
+              fullWidth
+            />
+          )}
         />
-        <GradientButton title="Sign Up" onPress={handleNext} />
       </KeyboardAvoidingView>
       <Footer
         footerText="Already have an account?"

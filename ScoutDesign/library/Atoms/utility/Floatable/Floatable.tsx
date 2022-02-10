@@ -1,13 +1,13 @@
-import Box from "../Box/Box";
+import Box from '../Box/Box';
 
-type Corner = "top-right" | "top-left" | "bottom-right" | "bottom-left";
-type DistanceFromCorner = "l" | "s" | "edge";
+type Corner = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left';
+type DistanceFromCorner = 'l' | 's' | 'edge';
 
 type Position = {
   top?: number;
-  right?: number;
+  right?: number | string;
   bottom?: number;
-  left?: number;
+  left?: number | string;
 };
 
 type PositionFromDistance = {
@@ -17,10 +17,10 @@ type PositionFromDistance = {
 };
 
 type PositionObj = {
-  "top-right": PositionFromDistance;
-  "top-left": PositionFromDistance;
-  "bottom-right": PositionFromDistance;
-  "bottom-left": PositionFromDistance;
+  'top-right': PositionFromDistance;
+  'top-left': PositionFromDistance;
+  'bottom-right': PositionFromDistance;
+  'bottom-left': PositionFromDistance;
 };
 
 export interface FloatableProps {
@@ -29,35 +29,35 @@ export interface FloatableProps {
 }
 
 const positions: PositionObj = {
-  "top-right": {
+  'top-right': {
     l: {
       top: 35,
       right: 25,
     },
     s: {
-      top: 5,
-      right: 5,
+      top: 7,
+      right: '2.5%',
     },
     edge: {
       top: -7,
       right: -7,
     },
   },
-  "top-left": {
+  'top-left': {
     l: {
       top: 35,
       left: 25,
     },
     s: {
-      top: 5,
-      left: 5,
+      top: 7,
+      left: '2.5%',
     },
     edge: {
       top: -7,
       left: -7,
     },
   },
-  "bottom-right": {
+  'bottom-right': {
     l: {
       bottom: 35,
       right: 25,
@@ -71,7 +71,7 @@ const positions: PositionObj = {
       right: -7,
     },
   },
-  "bottom-left": {
+  'bottom-left': {
     l: {
       bottom: 35,
       left: 25,
@@ -87,17 +87,16 @@ const positions: PositionObj = {
   },
 };
 
-type Props = FloatableProps & { children?: any };
+type Props = FloatableProps & {children?: any};
 
-const Float = ({ corner, distanceFromCorner, children, ...rest }: Props) => {
+const Float = ({corner, distanceFromCorner, children, ...rest}: Props) => {
   if (corner && distanceFromCorner) {
     return (
       <Box
         position="absolute"
         zIndex={1000}
         {...positions[corner][distanceFromCorner]}
-        {...rest}
-      >
+        {...rest}>
         {children}
       </Box>
     );

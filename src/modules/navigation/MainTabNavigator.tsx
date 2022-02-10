@@ -12,7 +12,6 @@ import {home, calendar} from 'ScoutDesign/icons';
 import HomeNav from '../home/HomeNavigator';
 
 // Global Styles
-
 const MainBottomTab = createBottomTabNavigator();
 
 // Icons

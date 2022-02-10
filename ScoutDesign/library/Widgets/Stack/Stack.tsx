@@ -34,12 +34,12 @@ type StackProps = {
   accessibilityLabel: string;
   borderColor?: Color;
   backgroundColor?: Color;
-  radius: StandardRadius | 'none';
+  radius?: StandardRadius;
   RenderItem: React.ElementType;
   everyItemProps: EveryStackItemProps;
   items: StackItemSchema[];
-  HeaderComponent: React.ReactNode;
-  FooterComponent: React.ReactNode;
+  HeaderComponent?: React.FC<any>;
+  FooterComponent?: React.FC<any>;
 };
 
 const Stack = ({
@@ -54,38 +54,55 @@ const Stack = ({
   FooterComponent,
 }: StackProps) => {
   return (
-    <Container
-      accessibilityLabel={accessibilityLabel}
-      borderWidth={1}
-      borderColor={borderColor}
-      backgroundColor={backgroundColor}
-      radius={radius === 'none' ? undefined : radius}>
-      {items.map((item: StackItemSchema, index: number) => {
-        const firstItem = index === 0;
-        const lastItem = index === items.length - 1;
-        return (
-          <React.Fragment key={item.id}>
-            {!firstItem && !item.disabled && !item?.error && (
-              <Box backgroundColor={backgroundColor} height={1}>
-                <Box
-                  flex={1}
-                  marginHorizontal="l"
-                  backgroundColor={borderColor}
-                />
-              </Box>
-            )}
-            <RenderItem
-              backgroundColor={backgroundColor}
-              stackRadius={radius === 'none' ? undefined : radius}
-              isStackTop={firstItem}
-              isStackBottom={lastItem}
-              item={item}
-              {...everyItemProps}
-            />
-          </React.Fragment>
-        );
-      })}
-    </Container>
+    <>
+      <Container
+        accessibilityLabel={accessibilityLabel}
+        borderWidth={1}
+        borderColor={borderColor}
+        borderTopWidth={HeaderComponent ? 0 : undefined}
+        borderBottomWidth={FooterComponent ? 0 : undefined}
+        backgroundColor={backgroundColor}
+        topLeftRadius={HeaderComponent ? undefined : radius}
+        topRightRadius={HeaderComponent ? undefined : radius}
+        bottomLeftRadius={FooterComponent ? undefined : radius}
+        bottomRightRadius={FooterComponent ? undefined : radius}>
+        {HeaderComponent ? (
+          <HeaderComponent
+            isStackTop
+            stackRadius={radius}
+            paddingVertical="m"
+          />
+        ) : null}
+        {items.map((item: StackItemSchema, index: number) => {
+          const firstItem = index === 0 && !HeaderComponent;
+          const lastItem = index === items.length - 1 && !FooterComponent;
+          return (
+            <React.Fragment key={item.id}>
+              {!firstItem && !item.disabled && !item?.error && (
+                <Box backgroundColor={backgroundColor} height={1}>
+                  <Box
+                    flex={1}
+                    marginHorizontal="l"
+                    backgroundColor={borderColor}
+                  />
+                </Box>
+              )}
+              <RenderItem
+                backgroundColor={backgroundColor}
+                stackRadius={radius}
+                isStackTop={firstItem}
+                isStackBottom={lastItem}
+                item={item}
+                {...everyItemProps}
+              />
+            </React.Fragment>
+          );
+        })}
+      </Container>
+      {FooterComponent ? (
+        <FooterComponent isStackBottom stackRadius={radius} />
+      ) : null}
+    </>
   );
 };
 

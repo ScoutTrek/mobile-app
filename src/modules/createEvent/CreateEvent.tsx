@@ -100,7 +100,6 @@ const CreateEvent = ({navigation, route}) => {
           },
         })
           .then(() => {
-            console.log('Got here!');
             return new Promise((res, rej) => {
               navigation.popToTop();
               navigation.navigate('UpcomingEvents');

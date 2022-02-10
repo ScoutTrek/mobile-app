@@ -4,6 +4,7 @@ export {default as Button} from './Atoms/UI/Buttons/Button';
 export {default as LargeFloatingButton} from './Atoms/UI/Buttons/LargeFloatingButton';
 export {default as CircleButton} from './Atoms/UI/Buttons/CircleButton';
 export {default as DismissButton} from './Atoms/UI/Buttons/DismissButton';
+export {default as BackButton} from './Atoms/UI/Buttons/BackButton';
 export {default as Text} from './Atoms/UI/Text/Text';
 export {default as Icon} from './Atoms/UI/Assets/Icon/Icon';
 export {default as Image} from './Atoms/UI/Assets/Image/Image';

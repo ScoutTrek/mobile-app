@@ -6,10 +6,8 @@ import {
   View,
 } from 'react-native';
 import Constants from 'expo-constants';
-import CancelIcon from '../buttons/CancelIcon';
 import Colors from '../../../constants/Colors';
-import {DismissButton, Icon} from 'ScoutDesign/library';
-import {backChevron, close} from 'ScoutDesign/icons';
+import {BackButton, DismissButton} from 'ScoutDesign/library';
 
 type Props = {
   background: string;
@@ -30,14 +28,13 @@ const RichInputContainer = ({background, back, icon, children}: Props) => (
       keyboardDismissMode="none"
       keyboardShouldPersistTaps="always">
       {icon === 'back' ? (
-        <Icon
-          size="m"
-          color="informationDark"
-          icon={backChevron}
-          onPress={back}
-        />
+        <BackButton corner="top-left" distanceFromCorner="s" onDismiss={back} />
       ) : (
-        <DismissButton corner="top-right" onDismiss={back} />
+        <DismissButton
+          corner="top-right"
+          distanceFromCorner="s"
+          onDismiss={back}
+        />
       )}
       <View style={styles.inputContainer}>{children}</View>
     </ScrollView>
