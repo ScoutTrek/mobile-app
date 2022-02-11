@@ -1,4 +1,3 @@
-import React from 'react';
 import {StyleSheet} from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 
@@ -54,7 +53,7 @@ const Button = ({
   const bgColor = gradient
     ? undefined
     : disabled
-    ? 'morningGrey'
+    ? 'mediumGrey'
     : backgroundColor;
 
   return (

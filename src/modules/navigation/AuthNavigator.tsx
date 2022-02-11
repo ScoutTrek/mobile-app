@@ -12,9 +12,9 @@ const AuthNavigator = () => {
       screenOptions={() => ({
         headerShown: false,
       })}>
+      <AuthStack.Screen name="JoinGroup" component={JoinGroupNavigator} />
       <AuthStack.Screen name="SignUp" component={SignUp} />
       <AuthStack.Screen name="SignIn" component={SignIn} />
-      <AuthStack.Screen name="JoinGroup" component={JoinGroupNavigator} />
     </AuthStack.Navigator>
   );
 };

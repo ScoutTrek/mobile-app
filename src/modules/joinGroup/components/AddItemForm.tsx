@@ -14,8 +14,10 @@ const AddItemForm = ({
   placeholder,
 }) => {
   return (
-    <Container>
-      <Text preset="h2">{heading}</Text>
+    <Container paddingHorizontal="s">
+      <Text paddingTop="s" preset="label">
+        {heading}
+      </Text>
 
       <TextInputWithButton
         placeholder={placeholder}

@@ -1,10 +1,9 @@
 import {useContext} from 'react';
-import {View} from 'react-native';
+import {View, ActivityIndicator} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CommonActions} from '@react-navigation/native';
 import {Button, Text, LineItem, Stack} from 'ScoutDesign/library';
 import {ScoutTrekApolloClient} from '../../../App';
-import AppLoading from 'expo-app-loading';
 import * as WebBrowser from 'expo-web-browser';
 
 import JoinPatrol, {AuthContext} from '../joinGroup/JoinPatrol';
@@ -64,7 +63,7 @@ const ProfileScreen = ({navigation}) => {
     );
   };
 
-  if (loading) return <AppLoading />;
+  if (loading) return <ActivityIndicator />;
 
   return (
     <View

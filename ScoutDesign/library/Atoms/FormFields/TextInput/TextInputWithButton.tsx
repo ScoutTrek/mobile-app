@@ -36,7 +36,7 @@ const TextInputWithButton = ({
         radius={undefined}
         topLeftRadius="l"
         bottomLeftRadius="l"
-        style={{flex: 1}}
+        style={{flex: 1, fontSize: 17}}
         {...props}
       />
       <Button

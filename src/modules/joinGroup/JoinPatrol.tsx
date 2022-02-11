@@ -1,15 +1,11 @@
 import React, {useEffect, useState, useContext} from 'react';
-import {StyleSheet, Text, View, TouchableOpacity, Alert} from 'react-native';
+import {ActivityIndicator} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {gql, useApolloClient, useMutation, useQuery} from '@apollo/client';
-import GradientButton from '../../components/buttons/GradientButton';
-import Constants from 'expo-constants';
-import Colors from '../../../constants/Colors';
-import Fonts from '../../../constants/Fonts';
-import {AntDesign, Ionicons} from '@expo/vector-icons';
 import RichInputContainer from '../../components/containers/RichInputContainer';
 import AddItemForm from './components/AddItemForm';
 import {_updateCurrentGroup} from '../profile/ProfileScreen';
+import {Container, Text, Button, Stack} from 'ScoutDesign/library';
 
 type AuthContextType = {
   authToken?: string | null;
@@ -83,37 +79,33 @@ const JoinPatrol = ({navigation, route}) => {
 
   const {setAuthToken} = useContext(AuthContext);
 
-  const back = () => {
-    navigation.goBack();
-  };
-
-  const handleSignUp = async () => {
+  const handleSignUp = async (patrolID: string) => {
     if (route.params?.shouldAddGroup) {
       const {shouldAddGroup, ...newGroup} = route.params;
       await addGroup({
         variables: {
           membershipInfo: {
             ...newGroup,
-            patrolID: patrolId,
+            patrolID: patrolID,
           },
         },
       });
       navigation.navigate('UpcomingEvents');
-    } else if (isValid) {
-      await signUp({
-        variables: {
-          userInfo: {
-            ...route.params,
-            patrol: patrolId,
-            expoNotificationToken: '',
-          },
-        },
-      });
     } else {
-      Alert.alert(
-        'No patrol selected.',
-        'please select the patrol that you belong to or add a new one.'
-      );
+      console.log({
+        ...route.params,
+        patrol: patrolID,
+        expoNotificationToken: '',
+      });
+      // await signUp({
+      //   variables: {
+      //     userInfo: {
+      //       ...route.params,
+      //       patrol: patrolId,
+      //       expoNotificationToken: '',
+      //     },
+      //   },
+      // });
     }
   };
 
@@ -139,39 +131,35 @@ const JoinPatrol = ({navigation, route}) => {
     }
   }, [signUpData.data]);
 
-  if (loading) return null;
+  if (loading || signUpData.loading) return <ActivityIndicator />;
   if (error) return <Text>`Error! ${error}`</Text>;
 
   return (
-    <RichInputContainer icon="back" back={back}>
-      <View style={styles.inputContainer}>
-        <Text style={styles.formHeading}>Select your patrol.</Text>
-        {data.patrols.map((patrol) => (
-          <TouchableOpacity
-            onPress={() => {
-              setPatrolId(patrol.id);
-              setIsValid(true);
-            }}
-            style={
-              patrol.id === patrolId
-                ? [styles.patrol, styles.active]
-                : styles.patrol
-            }
-            key={patrol.id}>
-            {patrol.id === patrolId && (
-              <Ionicons style={styles.check} name="ios-checkmark" size={32} />
-            )}
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: 'bold',
-                fontFamily: Fonts.primaryTextBold,
-                color: '#fff',
-              }}>
-              {patrol.name}
-            </Text>
-          </TouchableOpacity>
-        ))}
+    <RichInputContainer icon="back" back={navigation.goBack}>
+      <Container>
+        <Text preset="h2" textAlign="center" padding="m">
+          Choose your patrol.
+        </Text>
+        <Stack
+          accessibilityLabel="test-stack"
+          radius="l"
+          items={data.patrols}
+          everyItemProps={{
+            fullWidth: true,
+            paddingVertical: 'm',
+          }}
+          RenderItem={({item, ...rest}) => {
+            return (
+              <Button
+                accessibilityLabel={item.id}
+                onPress={() => handleSignUp(item.id)}
+                text={item.name}
+                {...rest}
+              />
+            );
+          }}
+        />
+
         <AddItemForm
           value={patrolName}
           setValue={setPatrolName}
@@ -193,109 +181,15 @@ const JoinPatrol = ({navigation, route}) => {
           heading="Add your Patrol if you don't see yours listed above."
           placeholder="patrol name..."
         />
-        <TouchableOpacity
-          onPress={() => {
-            setNoPatrol(true);
-            setIsValid(true);
-          }}
-          style={[styles.patrol, noPatrol && styles.active]}>
-          {noPatrol && (
-            <Ionicons style={styles.check} name="ios-checkmark" size={32} />
-          )}
-          <Text
-            style={{
-              fontSize: 18,
-              fontWeight: 'bold',
-              fontFamily: Fonts.primaryTextBold,
-              color: '#fff',
-            }}>
-            N/A - I don't belong to a Patrol
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.btnContainer}>
-        {(!!patrolId || noPatrol) && (
-          <GradientButton
-            title={signUpData.loading ? `Loading...` : `Finish`}
-            onPress={handleSignUp}
-          />
-        )}
-      </View>
+        <Button
+          accessibilityLabel="don't-belong-to-a-patrol"
+          text="I don't belong to a Patrol"
+          onPress={() => handleSignUp('')}
+          fullWidth
+        />
+      </Container>
     </RichInputContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  inputContainer: {
-    width: '100%',
-    flex: 1,
-    alignItems: 'center',
-    paddingHorizontal: 15,
-  },
-  patrol: {
-    padding: 11,
-    margin: 10,
-    width: '100%',
-    paddingHorizontal: 22,
-    backgroundColor: Colors.green,
-    borderRadius: 40,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    color: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 1,
-      height: 3,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  active: {
-    backgroundColor: Colors.darkGreen,
-  },
-  input: {
-    padding: 12,
-    width: '100%',
-    paddingHorizontal: 22,
-    borderWidth: 1,
-    borderColor: Colors.purple,
-    borderRadius: 10,
-    fontSize: 17,
-    flexDirection: 'row',
-    fontFamily: Fonts.primaryText,
-    backgroundColor: '#fff',
-  },
-  troopNumber: {
-    padding: 16,
-    alignItems: 'flex-start',
-    width: 100,
-    height: 50,
-    borderWidth: 1,
-    borderRadius: 10,
-    borderColor: Colors.purple,
-    fontSize: 15,
-    flexDirection: 'row',
-    fontFamily: Fonts.primaryText,
-    backgroundColor: '#fff',
-  },
-  formHeading: {
-    borderColor: Colors.secondary,
-    fontSize: 15,
-    fontFamily: Fonts.primaryTextBold,
-    margin: 18,
-  },
-  btnContainer: {
-    paddingVertical: 22,
-    paddingHorizontal: 20,
-  },
-  check: {
-    position: 'absolute',
-    top: 5,
-    left: 15,
-    color: '#fff',
-  },
-});
 
 export default JoinPatrol;

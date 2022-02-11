@@ -18,22 +18,16 @@ import {
   ApolloProvider,
   ApolloClient,
   ApolloLink,
+  HttpLink,
   InMemoryCache,
   from,
   makeVar,
 } from '@apollo/client';
 
-import {createUploadLink} from 'apollo-upload-client';
-
 import {onError} from '@apollo/client/link/error';
 
 import AuthNavigator from './src/modules/navigation/AuthNavigator';
 import MainStackNavigator from './src/modules/navigation/MainStackNavigator';
-
-const httpLink = new createUploadLink({
-  uri: 'http://localhost:4000',
-  // uri: 'https://beta-dot-scouttrek-node-api.appspot.com/:4000',
-});
 
 const errorMiddleware = onError(
   ({graphQLErrors, networkError, operation, forward}) => {
@@ -161,7 +155,14 @@ export const ScoutTrekApolloClient = new ApolloClient({
       },
     },
   }),
-  link: from([authMiddleware, errorMiddleware, httpLink]),
+  link: from([
+    authMiddleware,
+    errorMiddleware,
+    new HttpLink({
+      // uri: 'http://localhost:4000/graphql',
+      uri: 'https://beta-dot-scouttrek-node-api.appspot.com/:4000',
+    }),
+  ]),
 });
 
 export default function App() {
