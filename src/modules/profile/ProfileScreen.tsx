@@ -7,7 +7,7 @@ import {ScoutTrekApolloClient} from '../../../App';
 import AppLoading from 'expo-app-loading';
 import * as WebBrowser from 'expo-web-browser';
 
-import JoinPatrol, {AuthContext} from '../auth/JoinPatrol';
+import JoinPatrol, {AuthContext} from '../joinGroup/JoinPatrol';
 
 import {gql, useApolloClient, useQuery} from '@apollo/client';
 

@@ -57,6 +57,7 @@
     "postinstall-postinstall": "^2.1.0",
     "react": "17.0.1",
     "react-dom": "17.0.1",
+    "react-hook-form": "^7.26.1",
     "react-native": "0.64.3",
     "react-native-calendars": "1.1276.0",
     "react-native-cn-quill": "^0.7.15",

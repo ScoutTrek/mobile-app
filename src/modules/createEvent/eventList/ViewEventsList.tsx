@@ -10,7 +10,7 @@ import {gql, useQuery} from '@apollo/client';
 import {backArrow} from 'ScoutDesign/icons';
 import {ImageTileGrid, LargeFloatingButton} from 'ScoutDesign/library';
 
-import {convertEventIDToText} from 'data/utils/convertEventIDToText';
+import {convertEventIDToText} from 'data/utils/convertIDsToStrings';
 
 export const GET_EVENT_SCHEMAS = gql`
   query EventSchemas {

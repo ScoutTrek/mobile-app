@@ -22,21 +22,13 @@ interface StackItemSchema extends InputFieldStates {
   updateText?: () => void;
 }
 
-interface EveryStackItemProps extends FormFieldProps {
-  textColor?: Color;
-  backgroundColor?: Color;
-  leftComponent?: React.ReactNode;
-  placeholderColor?: Color;
-  onPress?: () => void;
-}
-
 type StackProps = {
   accessibilityLabel: string;
   borderColor?: Color;
   backgroundColor?: Color;
   radius?: StandardRadius;
   RenderItem: React.ElementType;
-  everyItemProps: EveryStackItemProps;
+  everyItemProps?: any;
   items: StackItemSchema[];
   HeaderComponent?: React.FC<any>;
   FooterComponent?: React.FC<any>;
@@ -44,8 +36,8 @@ type StackProps = {
 
 const Stack = ({
   accessibilityLabel,
-  borderColor = 'mintGrey',
-  backgroundColor = 'white',
+  borderColor,
+  backgroundColor,
   radius,
   RenderItem,
   items,
@@ -54,10 +46,10 @@ const Stack = ({
   FooterComponent,
 }: StackProps) => {
   return (
-    <>
+    <Box>
       <Container
         accessibilityLabel={accessibilityLabel}
-        borderWidth={1}
+        borderWidth={borderColor ? 1 : undefined}
         borderColor={borderColor}
         borderTopWidth={HeaderComponent ? 0 : undefined}
         borderBottomWidth={FooterComponent ? 0 : undefined}
@@ -78,7 +70,7 @@ const Stack = ({
           const lastItem = index === items.length - 1 && !FooterComponent;
           return (
             <React.Fragment key={item.id}>
-              {!firstItem && !item.disabled && !item?.error && (
+              {!firstItem && (
                 <Box backgroundColor={backgroundColor} height={1}>
                   <Box
                     flex={1}
@@ -102,7 +94,7 @@ const Stack = ({
       {FooterComponent ? (
         <FooterComponent isStackBottom stackRadius={radius} />
       ) : null}
-    </>
+    </Box>
   );
 };
 

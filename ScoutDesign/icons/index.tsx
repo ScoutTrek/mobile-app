@@ -119,6 +119,11 @@ export const trash = new IconPayload({
   library: Ionicons,
 });
 
+export const upArrow = new IconPayload({
+  name: 'arrow-up',
+  library: Ionicons,
+});
+
 export const upCaret = new IconPayload({
   name: 'chevron-thin-up',
   library: Entypo,

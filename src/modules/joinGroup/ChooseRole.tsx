@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Button, Stack, Text} from 'ScoutDesign/library';
 import Colors from '../../../constants/Colors';
 import Fonts from '../../../constants/Fonts';
 import Constants from 'expo-constants';
@@ -8,6 +9,7 @@ import {Ionicons} from '@expo/vector-icons';
 import NextButton from '../../components/buttons/NextButton';
 import AddItemForm from './components/AddItemFormSmall';
 import FormHeading from '../../components/Headings/FormHeading';
+import {convertRoleToText} from '../../data/utils/convertIDsToStrings';
 
 const ROLES = [
   'SCOUTMASTER',
@@ -46,42 +48,28 @@ const ChooseRole = ({navigation, route}) => {
 
   return (
     <RichInputContainer icon="back" back={navigation.goBack}>
-      <View style={styles.inputContainer}>
-        <Text style={styles.formHeading}>
-          What is your role within the Troop?
-        </Text>
-        {ROLES.map((currRole) => (
-          <TouchableOpacity
-            onPress={() => {
-              setIsValid(currRole !== 'PARENT' || !!children.length);
-              setRole(currRole);
-            }}
-            style={[styles.role, currRole === role && styles.active]}
-            key={currRole}>
-            {currRole === role && (
-              <Ionicons style={styles.check} name="ios-checkmark" size={32} />
-            )}
-            <Text
-              numberOfLines={1}
-              style={{
-                fontSize: 15,
-                fontWeight: 'bold',
-                fontFamily: Fonts.primaryTextBold,
-                color: '#fff',
-                paddingHorizontal: 10,
-              }}>
-              {currRole
-                .replace(/_/g, ' ')
-                .toLowerCase()
-                .replace(/\w\S*/g, function (txt) {
-                  return (
-                    txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
-                  );
-                })}
-            </Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      <Text preset="h2" textAlign="center" padding="m">
+        What is your role within the Troop?
+      </Text>
+      <Stack
+        accessibilityLabel="test-stack"
+        radius="l"
+        items={ROLES.map((role) => ({
+          id: role,
+          text: convertRoleToText(role),
+        }))}
+        everyItemProps={{
+          fullWidth: true,
+          paddingVertical: 'm',
+          onPress: () => {},
+        }}
+        RenderItem={({item, ...rest}) => {
+          return (
+            <Button accessibilityLabel={item.id} text={item.text} {...rest} />
+          );
+        }}
+      />
+
       <View
         style={{
           padding: 15,
@@ -135,7 +123,6 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: '100%',
     flex: 1,
-    alignItems: 'center',
     marginTop: 15 + Constants.statusBarHeight,
     paddingHorizontal: 15,
   },

@@ -1,7 +1,7 @@
 export interface InputFieldStates {
   disabled?: boolean;
   valid?: boolean;
-  error?: string;
+  error?: any;
 }
 
 export interface SimpleFormStates {

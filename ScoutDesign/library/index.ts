@@ -16,6 +16,7 @@ export {default as Card} from './Widgets/Card/Card';
 export {useModal} from './Widgets/Modal/useModal';
 export {default as Modal} from './Widgets/Modal/Modal';
 export {default as Stack} from './Widgets/Stack/Stack';
+export {default as Form} from './Widgets/Form/Form';
 export {default as ImageTileGrid} from './Widgets/ImageTileGrid/ImageTileGrid';
 
 // Form Fields

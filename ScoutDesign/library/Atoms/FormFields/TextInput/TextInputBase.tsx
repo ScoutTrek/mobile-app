@@ -1,12 +1,12 @@
-import { TextInputProps as RNTextInputProps } from "react-native";
-import React from "react";
-import { StyleSheet } from "react-native";
+import {TextInputProps as RNTextInputProps} from 'react-native';
+import React from 'react';
+import {StyleSheet} from 'react-native';
 import TextInput, {
   TextInputUtilityProps,
-} from "../../utility/TextInput/TextInput";
-import { FormFieldProps } from "../formTypes";
-import { StackableProps } from "../../../Widgets/Stack/Stack";
-import theme from "../../../theme";
+} from '../../utility/TextInput/TextInput';
+import {FormFieldProps} from '../formTypes';
+import {StackableProps} from '../../../Widgets/Stack/Stack';
+import theme from '../../../theme';
 
 export interface TextInputProps
   extends FormFieldProps,
@@ -31,18 +31,17 @@ const BaseTextInput = ({
   ...props
 }: BaseTextInputProps) => {
   const backgroundColor = disabled
-    ? "lightMintGrey"
+    ? 'lightMintGrey'
     : error
-    ? "lightRedGrey"
+    ? 'lightRedGrey'
     : noStyles
     ? undefined
-    : "white";
+    : 'white';
 
-  const borderColor = disabled ? "mediumGrey" : error ? "danger" : "mintGrey";
+  const borderColor = disabled ? 'mediumGrey' : error ? 'danger' : 'mintGrey';
 
   return (
     <TextInput
-      {...props}
       borderRadius={theme.radii.m}
       topRightRadius={isStackTop ? stackRadius : undefined}
       topLeftRadius={isStackTop ? stackRadius : undefined}
@@ -56,6 +55,7 @@ const BaseTextInput = ({
       placeholderTextColor={theme.colors.morningGrey}
       editable={!disabled}
       style={styles.input}
+      {...props}
     />
   );
 };

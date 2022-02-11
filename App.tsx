@@ -12,7 +12,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Ionicons} from '@expo/vector-icons';
 
-import {AuthContext} from './src/modules/auth/JoinPatrol';
+import {AuthContext} from './src/modules/joinGroup/JoinPatrol';
 
 import {
   ApolloProvider,

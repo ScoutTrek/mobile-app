@@ -1,11 +1,11 @@
 import {createStackNavigator} from '@react-navigation/stack';
 import AdventuresNav from './UpcomingEvents';
 
-import JoinPatrol from '../auth/JoinPatrol';
+import JoinPatrol from '../joinGroup/JoinPatrol';
 
-import ChooseRole from '../auth/ChooseRole';
-import JoinTroop from '../auth/JoinTroop';
-import CreateTroop from '../auth/components/CreateTroop';
+import ChooseRole from '../joinGroup/ChooseRole';
+import JoinTroop from '../joinGroup/JoinTroop';
+import CreateTroop from '../joinGroup/components/CreateTroop';
 
 // function NotificationsScreen({navigation}) {
 //   return (

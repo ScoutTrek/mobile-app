@@ -86,7 +86,7 @@ const ADD_TROOP = gql`
   }
 `;
 
-import {formReducer} from '../SignUp';
+import {formReducer} from '../../auth/SignUp';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
 
 const CreateTroop = ({navigation, route}) => {

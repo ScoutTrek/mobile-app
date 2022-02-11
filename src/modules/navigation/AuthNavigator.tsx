@@ -3,7 +3,8 @@ import {createStackNavigator} from '@react-navigation/stack';
 const AuthStack = createStackNavigator();
 
 import SignIn from '../auth/SignIn';
-import SignUpNav from '../auth/SignUpNav';
+import SignUp from '../auth/SignUp';
+import JoinGroupNavigator from './JoinGroupNavigator';
 
 const AuthNavigator = () => {
   return (
@@ -11,8 +12,9 @@ const AuthNavigator = () => {
       screenOptions={() => ({
         headerShown: false,
       })}>
-      <AuthStack.Screen name="SignUp" component={SignUpNav} />
+      <AuthStack.Screen name="SignUp" component={SignUp} />
       <AuthStack.Screen name="SignIn" component={SignIn} />
+      <AuthStack.Screen name="JoinGroup" component={JoinGroupNavigator} />
     </AuthStack.Navigator>
   );
 };
