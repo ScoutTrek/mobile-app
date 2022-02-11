@@ -6,6 +6,7 @@ type Props = ButtonProps &
   StackableProps & {
     text: string;
     fullWidth?: boolean;
+    tall?: boolean;
   };
 
 const Button = ({
@@ -13,14 +14,15 @@ const Button = ({
   isStackBottom,
   isStackTop,
   stackRadius,
+  tall,
   ...rest
 }: Props) => {
   return (
     <ButtonBase
       alignSelf={fullWidth ? undefined : 'flex-start'}
-      paddingVertical="s"
-      paddingHorizontal="l"
-      borderRadius={stackRadius ? undefined : 'xl'}
+      paddingVertical={tall ? 'm' : 's'}
+      paddingHorizontal={tall ? 'm' : 'l'}
+      radius={stackRadius ? undefined : 'xl'}
       topRightRadius={isStackTop ? stackRadius : undefined}
       topLeftRadius={isStackTop ? stackRadius : undefined}
       bottomRightRadius={isStackBottom ? stackRadius : undefined}

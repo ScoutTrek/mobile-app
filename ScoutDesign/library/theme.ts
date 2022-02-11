@@ -89,6 +89,7 @@ const theme = createTheme({
     white: palette.white,
   },
   spacing: {
+    none: 0,
     micro: 2,
     xs: 4,
     icon: 6,

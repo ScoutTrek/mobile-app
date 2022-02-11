@@ -1,7 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import {useState} from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, Alert} from 'react-native';
 import {gql, useQuery} from '@apollo/client';
-import Constants from 'expo-constants';
 import Colors from '../../../constants/Colors';
 import Fonts from '../../../constants/Fonts';
 import {AntDesign, Ionicons} from '@expo/vector-icons';
@@ -9,7 +8,7 @@ import NextButton from '../../components/buttons/NextButton';
 import RichInputContainer from '../../components/containers/RichInputContainer';
 
 const GET_TROOPS = gql`
-  query GetTroops {
+  {
     troops {
       id
       unitNumber
@@ -45,7 +44,7 @@ const JoinTroop = ({navigation, route}) => {
   };
 
   if (loading) return null;
-  if (error) return <Text>`Error! ${error}`</Text>;
+  if (error) return <Text>`Error! ${error.message}`</Text>;
 
   return (
     <RichInputContainer icon="back" back={navigation.goBack}>

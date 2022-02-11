@@ -1,6 +1,7 @@
 import {createStackNavigator} from '@react-navigation/stack';
 
 import JoinTroop from '../joinGroup/JoinTroop';
+import AddChildren from '../joinGroup/AddChildren';
 import CreateTroop from '../joinGroup/components/CreateTroop.js';
 import ChooseRole from '../joinGroup/ChooseRole';
 import JoinPatrol from '../joinGroup/JoinPatrol';
@@ -16,6 +17,13 @@ const JoinGroupNavigator = () => {
       <JoinGroupStack.Screen
         name="ChooseRole"
         component={ChooseRole}
+        initialParams={{
+          nextView: 'AddChildren',
+        }}
+      />
+      <JoinGroupStack.Screen
+        name="AddChildren"
+        component={AddChildren}
         initialParams={{
           nextView: 'JoinTroop',
         }}

@@ -2,11 +2,11 @@ import {
   Pressable as RNPressable,
   View,
   GestureResponderEvent,
-} from "react-native";
-import { Theme } from "../../../theme";
-import Box from "../Box/Box";
-import { RadiusProps } from "../types";
-import { mapRadius } from "../Asset/Asset";
+} from 'react-native';
+import {Theme} from '../../../theme';
+import Box from '../Box/Box';
+import {RadiusProps} from '../types';
+import {mapRadius} from '../Asset/Asset';
 import {
   useRestyle,
   spacing,
@@ -20,7 +20,7 @@ import {
   BorderProps,
   BackgroundColorProps,
   ShadowProps,
-} from "@shopify/restyle";
+} from '@shopify/restyle';
 
 export interface PressableProps extends RadiusProps {
   disabled?: boolean;
@@ -48,6 +48,7 @@ const PressableBase = ({
   accessibilityLabel,
   key,
   disabled = false,
+  disabledStyle,
   onPress,
   onLongPress,
   sideEffect,
@@ -67,8 +68,7 @@ const PressableBase = ({
         {...rest}
         key={key}
         testID={accessibilityLabel}
-        nativeID={accessibilityLabel}
-      >
+        nativeID={accessibilityLabel}>
         {children}
       </Box>
     );
@@ -83,12 +83,11 @@ const PressableBase = ({
       disabled={disabled}
       testID={accessibilityLabel}
       nativeID={accessibilityLabel}
-      style={({ pressed }: { pressed: boolean }) => [
-        disabled ? { backgroundColor: "#ccc" } : undefined,
-        { opacity: pressed && !sideEffect ? 0.4 : 1 },
-      ]}
-    >
-      {({ pressed }) => <View {...props}>{children}</View>}
+      style={({pressed}: {pressed: boolean}) => [
+        disabled ? disabledStyle : undefined,
+        {opacity: pressed && !sideEffect ? 0.4 : 1},
+      ]}>
+      {({pressed}) => <View {...props}>{children}</View>}
     </RNPressable>
   );
 };
@@ -101,8 +100,7 @@ const Pressable = (props: Props) => {
       borderBottomLeftRadius={mapRadius(props?.bottomLeftRadius)}
       borderBottomRightRadius={mapRadius(props?.bottomRightRadius)}
       borderRadius={mapRadius(props?.radius)}
-      {...props}
-    >
+      {...props}>
       {props.children}
     </PressableBase>
   );

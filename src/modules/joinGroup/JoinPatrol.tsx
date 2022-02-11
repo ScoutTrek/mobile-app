@@ -8,7 +8,7 @@ import Colors from '../../../constants/Colors';
 import Fonts from '../../../constants/Fonts';
 import {AntDesign, Ionicons} from '@expo/vector-icons';
 import RichInputContainer from '../../components/containers/RichInputContainer';
-import AddItemForm from './components/AddItemFormSmall';
+import AddItemForm from './components/AddItemForm';
 import {_updateCurrentGroup} from '../profile/ProfileScreen';
 
 type AuthContextType = {

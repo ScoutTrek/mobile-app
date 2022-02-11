@@ -18,7 +18,7 @@ type Props = SpacingProps<Theme> &
   BackgroundColorProps<Theme> &
   BorderProps<Theme> &
   RadiusProps & {
-    accessibilityLabel: string;
+    accessibilityLabel?: string;
     key?: string;
     children: any;
   };
@@ -32,12 +32,14 @@ const Container = ({
   bottomLeftRadius,
   radius,
   children,
+  padding = 'm',
   ...rest
 }: Props) => {
   return (
     <Box
       {...rest}
       key={key}
+      padding={padding}
       borderTopLeftRadius={mapRadius(topLeftRadius)}
       borderTopRightRadius={mapRadius(topRightRadius)}
       borderBottomLeftRadius={mapRadius(bottomLeftRadius)}

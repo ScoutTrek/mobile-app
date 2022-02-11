@@ -48,6 +48,7 @@ const Stack = ({
   return (
     <Box>
       <Container
+        padding="none"
         accessibilityLabel={accessibilityLabel}
         borderWidth={borderColor ? 1 : undefined}
         borderColor={borderColor}

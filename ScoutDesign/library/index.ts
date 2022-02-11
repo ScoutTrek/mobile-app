@@ -10,6 +10,9 @@ export {default as Icon} from './Atoms/UI/Assets/Icon/Icon';
 export {default as Image} from './Atoms/UI/Assets/Image/Image';
 export {default as Avatar} from './Atoms/UI/Assets/Avatar/Avatar';
 
+// Layouts
+export {default as Container} from './Atoms/utility/Container/Container';
+
 // Widgets
 export {default as LineItem} from './Widgets/LineItem/LineItem';
 export {default as Card} from './Widgets/Card/Card';
@@ -21,4 +24,5 @@ export {default as ImageTileGrid} from './Widgets/ImageTileGrid/ImageTileGrid';
 
 // Form Fields
 export {default as TextInput} from './Atoms/FormFields/TextInput/SimpleTextInput';
+export {default as TextInputWithButton} from './Atoms/FormFields/TextInput/TextInputWithButton';
 export {default as ColorfulTextInput} from './Atoms/FormFields/TextInput/ColorfulTextInput';

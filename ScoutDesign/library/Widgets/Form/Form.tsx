@@ -43,6 +43,7 @@ const Form = ({
   return (
     <>
       <Container
+        padding="none"
         accessibilityLabel={accessibilityLabel}
         borderWidth={1}
         borderColor={borderColor}

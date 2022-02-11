@@ -17,7 +17,7 @@ const LargeFloatingButton = ({
       <ButtonBase
         paddingVertical="s"
         paddingHorizontal="m"
-        borderRadius="xl"
+        radius="xl"
         iconPadding="s"
         iconSize="m"
         {...rest}>

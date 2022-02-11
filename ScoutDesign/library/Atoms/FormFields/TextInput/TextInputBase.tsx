@@ -42,7 +42,7 @@ const BaseTextInput = ({
 
   return (
     <TextInput
-      borderRadius={theme.radii.m}
+      radius="m"
       topRightRadius={isStackTop ? stackRadius : undefined}
       topLeftRadius={isStackTop ? stackRadius : undefined}
       bottomRightRadius={isStackBottom ? stackRadius : undefined}

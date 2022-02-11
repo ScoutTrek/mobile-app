@@ -14,7 +14,7 @@ const SignUpFormFields = [
   {
     name: 'name',
     rules: {
-      required: true,
+      required: 'Please enter your first and last name',
     },
     fieldAttributes: {
       placeholder: 'First name & Last name',
@@ -71,7 +71,6 @@ const SignUpFormFields = [
 
 const SignUp = ({navigation, route}) => {
   const onSubmit = (data) => {
-    console.log('Data ', data);
     if (data.password !== data.passwordConfirm) {
       Alert.alert(
         'Whoops, the passwords you entered do not match.',

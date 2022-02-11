@@ -9,7 +9,7 @@ import {
   Pressable,
   PressableProps,
   Spacing,
-  StandardRadius,
+  Radius,
 } from '../../utility';
 import Icon from '../Assets/Icon/Icon';
 import Text from '../Text/Text';
@@ -27,7 +27,7 @@ type Props = ButtonProps & {
   alignSelf?: 'flex-start';
   paddingVertical: Spacing;
   paddingHorizontal: Spacing;
-  borderRadius?: StandardRadius;
+  radius?: Radius;
   textPadding?: Spacing;
   iconPadding: Spacing;
   iconSize: AssetSizePreset;
@@ -41,27 +41,33 @@ const Button = ({
   icon,
   backgroundColor = 'brandPrimary',
   textColor = 'white',
-  borderRadius,
+  radius,
   textPadding,
   iconPadding,
   iconSize,
   children,
+  disabled,
   ...props
 }: Props) => {
   const gradient = backgroundColor === 'gradient';
   if (gradient) textColor = 'brandPrimaryDark';
-  const bgColor = gradient ? undefined : backgroundColor;
+  const bgColor = gradient
+    ? undefined
+    : disabled
+    ? 'morningGrey'
+    : backgroundColor;
 
   return (
     <Pressable
       accessibilityLabel={accessibilityLabel}
-      onPress={onPress}
+      onPress={disabled ? undefined : onPress}
       backgroundColor={bgColor}
       alignItems="center"
       justifyContent="center"
       flexDirection="row"
       overflow="hidden"
-      borderRadius={mapRadius(borderRadius)}
+      borderRadius={mapRadius(radius)}
+      disabled={disabled}
       {...props}>
       {gradient && (
         <LinearGradient
