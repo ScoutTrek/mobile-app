@@ -1,34 +1,23 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useState} from 'react';
 import {ActivityIndicator} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {gql, useApolloClient, useMutation, useQuery} from '@apollo/client';
+
+import {gql, useMutation, useQuery} from '@apollo/client';
 import RichInputContainer from '../../components/containers/RichInputContainer';
-import AddItemForm from './components/AddItemForm';
+import {plusBold} from 'ScoutDesign/icons';
 import {_updateCurrentGroup} from '../profile/ProfileScreen';
-import {Container, Text, Button, Stack} from 'ScoutDesign/library';
+import {
+  Container,
+  Text,
+  Button,
+  Stack,
+  TextInputWithButton,
+} from 'ScoutDesign/library';
 
-type AuthContextType = {
-  authToken?: string | null;
-  setAuthToken?: React.Dispatch<any>;
-};
-
-export const AuthContext = React.createContext<AuthContextType>({
-  authToken: '',
-  setAuthToken: () => {},
-});
+import {useJoinGroupForm} from './JoinGroupForm/JoinGroupFormStore';
 
 const ADD_GROUP = gql`
   mutation AddGroup($membershipInfo: AddMembershipInput!) {
     addGroup(input: $membershipInfo) {
-      groupID
-    }
-  }
-`;
-
-const SIGN_UP = gql`
-  mutation SignUp($userInfo: SignupInput!) {
-    signup(input: $userInfo) {
-      token
       groupID
     }
   }
@@ -52,86 +41,42 @@ const ADD_PATROL = gql`
   }
 `;
 
-const JoinPatrol = ({navigation, route}) => {
-  const [signUp, signUpData] = useMutation(SIGN_UP);
+const JoinPatrol = ({navigation}) => {
+  const [joinGroupFormState] = useJoinGroupForm();
+
   const [addGroup] = useMutation(ADD_GROUP, {
     onCompleted: (data) => {
       console.log('Data ', data);
       _updateCurrentGroup(data?.addGroup?.groupID, navigation);
     },
   });
-  const [addPatrol] = useMutation(ADD_PATROL, {
-    onCompleted: (data) => setPatrolId(data.addPatrol.id),
-  });
+  const [addPatrol] = useMutation(ADD_PATROL);
 
   const [patrolName, setPatrolName] = useState('');
-  const [patrolId, setPatrolId] = useState(null);
-  const [noPatrol, setNoPatrol] = useState(false);
   const [patrolIsValid, setPatrolIsValid] = useState(false);
-  const [isValid, setIsValid] = useState(false);
 
   const {data, error, loading} = useQuery(GET_PATROLS, {
     pollInterval: 500,
     variables: {
-      troopId: route.params.troopID,
+      troopId: joinGroupFormState.troop,
     },
   });
 
-  const {setAuthToken} = useContext(AuthContext);
-
-  const handleSignUp = async (patrolID: string) => {
-    if (route.params?.shouldAddGroup) {
-      const {shouldAddGroup, ...newGroup} = route.params;
-      await addGroup({
-        variables: {
-          membershipInfo: {
-            ...newGroup,
-            patrolID: patrolID,
-          },
+  const joinGroup = async (patrolID: string) => {
+    // if (route.params?.shouldAddGroup) {
+    await addGroup({
+      variables: {
+        membershipInfo: {
+          ...joinGroupFormState,
+          patrolID: patrolID,
         },
-      });
-      navigation.navigate('UpcomingEvents');
-    } else {
-      console.log({
-        ...route.params,
-        patrol: patrolID,
-        expoNotificationToken: '',
-      });
-      // await signUp({
-      //   variables: {
-      //     userInfo: {
-      //       ...route.params,
-      //       patrol: patrolId,
-      //       expoNotificationToken: '',
-      //     },
-      //   },
-      // });
-    }
+      },
+    });
+
+    // }
   };
 
-  useEffect(() => {
-    const setToken = async () => {
-      try {
-        const token = await AsyncStorage.setItem(
-          'userToken',
-          signUpData.data.signup.token
-        );
-        await AsyncStorage.setItem(
-          'currMembershipID',
-          signUpData.data.signup.groupID
-        );
-        setAuthToken(signUpData.data.signup.token);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    if (signUpData.data) {
-      setToken();
-    }
-  }, [signUpData.data]);
-
-  if (loading || signUpData.loading) return <ActivityIndicator />;
+  if (loading) return <ActivityIndicator />;
   if (error) return <Text>`Error! ${error}`</Text>;
 
   return (
@@ -160,31 +105,43 @@ const JoinPatrol = ({navigation, route}) => {
           }}
         />
 
-        <AddItemForm
-          value={patrolName}
-          setValue={setPatrolName}
-          isValid={patrolIsValid}
-          setIsValid={setPatrolIsValid}
-          onPress={async () => {
-            await addPatrol({
-              variables: {
-                troopId: route.params.troopID,
-                patrolInfo: {
-                  name: patrolName,
+        <Container paddingHorizontal="s">
+          <Text paddingTop="s" preset="label">
+            Add your Patrol if you don't see yours listed above.
+          </Text>
+
+          <TextInputWithButton
+            placeholder="patrol name..."
+            onValueChange={(value) => {
+              setPatrolName(value);
+              if (value.toString().length > 2) {
+                setPatrolIsValid(true);
+              } else {
+                setPatrolIsValid(false);
+              }
+            }}
+            value={patrolName}
+            buttonText="Add"
+            buttonIcon={plusBold}
+            buttonColor="brandSecondary"
+            disabled={!patrolIsValid}
+            onPress={async () => {
+              await addPatrol({
+                variables: {
+                  troopId: joinGroupFormState.troop,
+                  patrolInfo: {
+                    name: patrolName,
+                  },
                 },
-              },
-            });
-            setPatrolName('');
-            setIsValid(true);
-            setPatrolIsValid(false);
-          }}
-          heading="Add your Patrol if you don't see yours listed above."
-          placeholder="patrol name..."
-        />
+              });
+              setPatrolName('');
+            }}
+          />
+        </Container>
         <Button
           accessibilityLabel="don't-belong-to-a-patrol"
           text="I don't belong to a Patrol"
-          onPress={() => handleSignUp('')}
+          onPress={() => joinGroup('')}
           fullWidth
         />
       </Container>

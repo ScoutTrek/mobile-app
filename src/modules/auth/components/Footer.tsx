@@ -23,7 +23,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     fontSize: 10,
-    marginVertical: 10,
+    marginTop: 16,
+    marginBottom: 10,
   },
 });
 

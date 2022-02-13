@@ -1,3 +1,4 @@
+import React, {useEffect, useContext} from 'react';
 import {
   KeyboardAvoidingView,
   Dimensions,
@@ -6,9 +7,40 @@ import {
   ScrollView,
 } from 'react-native';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import {Text, Form, Image} from 'ScoutDesign/library';
 import {Ionicons} from '@expo/vector-icons';
 import Footer from './components/Footer';
+
+import {gql, useMutation} from '@apollo/client';
+
+const SIGN_UP = gql`
+  mutation SignUp($userInfo: SignupInput!) {
+    signup(input: $userInfo) {
+      token
+      groupID
+    }
+  }
+`;
+
+export type AuthDataType = {
+  token: string;
+  noGroups: boolean;
+};
+
+type AuthContextType = {
+  authData: AuthDataType;
+  setAuthData: (newAuthData: AuthDataType) => void;
+};
+
+export const AuthContext = React.createContext<AuthContextType>({
+  authData: {
+    token: '',
+    noGroups: true,
+  },
+  setAuthData: () => {},
+});
 
 const SignUpFormFields = [
   {
@@ -70,6 +102,9 @@ const SignUpFormFields = [
 ];
 
 const SignUp = ({navigation, route}) => {
+  const [signUp, signUpData] = useMutation(SIGN_UP);
+  const {setAuthData} = useContext(AuthContext);
+
   const onSubmit = (data) => {
     if (data.password !== data.passwordConfirm) {
       Alert.alert(
@@ -77,9 +112,38 @@ const SignUp = ({navigation, route}) => {
         'Please re-enter passwords to confirm they match.'
       );
     } else {
-      navigation.navigate('JoinGroup', data);
+      console.log('Data ', data);
+      // await signUp({
+      //   variables: {
+      //     userInfo: {
+      //       ...data,
+      //     },
+      //   },
+      // });
     }
   };
+
+  useEffect(() => {
+    const setToken = async () => {
+      try {
+        const token = await AsyncStorage.setItem(
+          'userToken',
+          signUpData.data.signup.token
+        );
+        await AsyncStorage.setItem(
+          'currMembershipID',
+          signUpData.data.signup.groupID
+        );
+        setAuthToken(signUpData.data.signup.token);
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    if (signUpData.data) {
+      setToken();
+    }
+  }, [signUpData.data]);
 
   return (
     <ScrollView

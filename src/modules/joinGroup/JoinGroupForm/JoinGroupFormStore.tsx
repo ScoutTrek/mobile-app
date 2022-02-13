@@ -16,11 +16,11 @@ export const chooseGroup = (group: string, groupNum: string) => ({
 });
 
 export const chooseRole = (role: string) => ({
-  type: CHOOSE_GROUP,
+  type: CHOOSE_ROLE,
   role,
 });
 
-export const addChildren = (children: [string]) => ({
+export const addChildren = (children: string[]) => ({
   type: ADD_CHILDREN,
   children,
 });
@@ -37,9 +37,9 @@ export const clearForm = () => ({
 const JoinGroupStore = createContext<
   [formState: JoinGroupFormState, dispatch: Dispatch<any>] | undefined
 >(undefined);
-JoinGroupStore.displayName = 'EventStore';
+JoinGroupStore.displayName = 'JoinGroupStore';
 
-export const useEventForm = () => useContext(JoinGroupStore);
+export const useJoinGroupForm = () => useContext(JoinGroupStore);
 
 type Props = {
   initialState: JoinGroupFormState;
@@ -47,7 +47,7 @@ type Props = {
   children: any;
 };
 
-export const CreateEventFormProvider = ({
+export const JoinGroupFormProvider = ({
   initialState,
   reducer,
   children,

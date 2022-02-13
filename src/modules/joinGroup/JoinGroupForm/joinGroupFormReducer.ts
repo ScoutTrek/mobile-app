@@ -9,7 +9,7 @@ import {
 export type JoinGroupFormState = {
   user: string;
   troop: string;
-  troopNum: string;
+  troopNumber: string;
   patrol: string;
   role: string;
   children: string[];
@@ -19,13 +19,13 @@ export type JoinGroupFormState = {
 export const initialState: JoinGroupFormState = {
   user: '',
   troop: '',
-  troopNum: '',
+  troopNumber: '',
   patrol: '',
   role: '',
   children: [],
 };
 
-export const createEventFormReducer = (
+export const joinGroupFormReducer = (
   state: JoinGroupFormState = initialState,
   action: any
 ): JoinGroupFormState => {
@@ -34,7 +34,7 @@ export const createEventFormReducer = (
       return {
         ...state,
         troop: action.group,
-        troopNum: action.groupNum,
+        troopNumber: action.groupNum,
       };
     case CHOOSE_ROLE:
       return {

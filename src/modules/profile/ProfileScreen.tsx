@@ -6,7 +6,7 @@ import {Button, Text, LineItem, Stack} from 'ScoutDesign/library';
 import {ScoutTrekApolloClient} from '../../../App';
 import * as WebBrowser from 'expo-web-browser';
 
-import JoinPatrol, {AuthContext} from '../joinGroup/JoinPatrol';
+import {AuthContext} from '../auth/SignUp';
 
 import {gql, useApolloClient, useQuery} from '@apollo/client';
 
@@ -27,12 +27,12 @@ export const GET_CURR_USER = gql`
       id
       name
       email
-      role
-      patrol {
+      currRole
+      currPatrol {
         id
         name
       }
-      troop {
+      currTroop {
         id
         unitNumber
         patrols {
@@ -46,7 +46,7 @@ export const GET_CURR_USER = gql`
       }
       otherGroups {
         id
-        troopNum
+        troopNumber
       }
     }
   }
@@ -55,7 +55,7 @@ export const GET_CURR_USER = gql`
 const ProfileScreen = ({navigation}) => {
   const {data, loading} = useQuery(GET_CURR_USER);
   const client = useApolloClient();
-  const {setAuthToken} = useContext(AuthContext);
+  const {setAuthData} = useContext(AuthContext);
 
   const _handlePressButtonAsync = async () => {
     let result = await WebBrowser.openBrowserAsync(
@@ -72,17 +72,17 @@ const ProfileScreen = ({navigation}) => {
         justifyContent: 'space-between',
       }}>
       <View>
-        {!!data.currUser.role && (
+        {!!data.currUser.currRole && (
           <View style={{marginTop: 10}}>
             <View style={{padding: 20}}>
               <Text preset="h2">{data.currUser.name}</Text>
               <Text>{data.currUser.email}</Text>
-              <Text>{data.currUser.role}</Text>
+              <Text>{data.currUser.currRole}</Text>
             </View>
-            {data.currUser.patrol && (
+            {data.currUser.currPatrol && (
               <View style={{padding: 20, alignItems: 'flex-start'}}>
                 <Text>Patrol</Text>
-                <Text>{data.currUser.patrol.name}</Text>
+                <Text>{data.currUser.currPatrol.name}</Text>
               </View>
             )}
             {!!data.currUser.otherGroups?.length ? (
@@ -91,29 +91,29 @@ const ProfileScreen = ({navigation}) => {
                 type="accordion"
                 accordionContent={
                   <Stack
-                    type="Pressable"
+                    accessibilityLabel="other-groups"
+                    items={[...data.currUser.otherGroups]}
                     RenderItem={({item, ...rest}) => {
                       return (
                         <LineItem
                           {...rest}
                           type="button"
                           onPress={() =>
-                            _updateCurrentGroup(item.group.id, item.navigation)
+                            _updateCurrentGroup(item.id, navigation)
                           }
-                          accessibilityLabel={item.group.troopNum}>
+                          accessibilityLabel={item.troopNumber}>
                           <LineItem.Subheading>
                             Switch to Troop
                           </LineItem.Subheading>
                           <LineItem.Heading>
-                            {item.group.troopNum}
+                            {item.troopNumber}
                           </LineItem.Heading>
                         </LineItem>
                       );
                     }}
-                    items={[{group: {troopNum: '5', id: '1'}, navigation}]}
                   />
                 }>
-                <Text>{data.currUser.troop.unitNumber}</Text>
+                <Text>{data.currUser.currTroop.unitNumber}</Text>
               </LineItem>
             ) : null}
           </View>
@@ -128,7 +128,7 @@ const ProfileScreen = ({navigation}) => {
           text="Logout"
           onPress={async () => {
             await AsyncStorage.removeItem('userToken');
-            setAuthToken('');
+            setAuthData({token: '', noGroups: false});
             client.stop();
             await client.clearStore();
           }}

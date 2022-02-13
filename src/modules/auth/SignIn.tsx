@@ -11,13 +11,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {gql, useMutation} from '@apollo/client';
 import Footer from './components/Footer';
-import {AuthContext} from '../joinGroup/JoinPatrol';
+import {AuthContext} from '../auth/SignUp';
 
 const LOG_IN = gql`
   mutation Login($userInfo: LoginInput!) {
     login(input: $userInfo) {
       token
       groupID
+      noGroups
     }
   }
 `;
@@ -40,10 +41,10 @@ const SignInFormFields = [
   {
     name: 'password',
     rules: {
-      required: 'Please choose the password you would like to use',
+      required: 'Please enter your password for this account',
       minLength: {
         value: 8,
-        message: 'Your password should be at least 8 characters',
+        message: 'Your password is not long enough yet',
       },
     },
     fieldAttributes: {
@@ -55,7 +56,7 @@ const SignInFormFields = [
 ];
 
 const SignIn = ({navigation}) => {
-  const {setAuthToken} = useContext(AuthContext);
+  const {setAuthData} = useContext(AuthContext);
 
   const [logIn] = useMutation(LOG_IN, {
     onCompleted: async (data) => {
@@ -65,7 +66,7 @@ const SignIn = ({navigation}) => {
           'currMembershipID',
           data.login.groupID || undefined
         );
-        setAuthToken(data.login.token);
+        setAuthData({token: data.login.token, noGroups: data.login.noGroups});
       } catch (e) {
         console.log(e);
       }

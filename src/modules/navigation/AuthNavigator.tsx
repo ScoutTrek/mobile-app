@@ -4,7 +4,6 @@ const AuthStack = createStackNavigator();
 
 import SignIn from '../auth/SignIn';
 import SignUp from '../auth/SignUp';
-import JoinGroupNavigator from './JoinGroupNavigator';
 
 const AuthNavigator = () => {
   return (
@@ -12,7 +11,6 @@ const AuthNavigator = () => {
       screenOptions={() => ({
         headerShown: false,
       })}>
-      <AuthStack.Screen name="JoinGroup" component={JoinGroupNavigator} />
       <AuthStack.Screen name="SignUp" component={SignUp} />
       <AuthStack.Screen name="SignIn" component={SignIn} />
     </AuthStack.Navigator>

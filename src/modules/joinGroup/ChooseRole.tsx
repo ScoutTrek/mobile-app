@@ -1,7 +1,7 @@
-import {useState} from 'react';
 import {Button, Stack, Text, Container} from 'ScoutDesign/library';
 import RichInputContainer from '../../components/containers/RichInputContainer';
 import {convertRoleToText} from '../../data/utils/convertIDsToStrings';
+import {chooseRole, useJoinGroupForm} from './JoinGroupForm/JoinGroupFormStore';
 
 const ROLES = [
   'SCOUTMASTER',
@@ -14,21 +14,14 @@ const ROLES = [
 ];
 
 const ChooseRole = ({navigation, route}) => {
+  const [_, dispatch] = useJoinGroupForm();
   const nextForm = (role: string) => {
-    let signUpData;
+    dispatch(chooseRole(role));
     if (role === 'PARENT') {
-      signUpData = {
-        ...route.params,
-        role,
-      };
+      navigation.navigate('AddChildren');
     } else {
-      signUpData = {
-        ...route.params,
-        role,
-      };
+      navigation.navigate('JoinPatrol');
     }
-    delete signUpData.nextView;
-    navigation.navigate(route.params.nextView, signUpData);
   };
 
   return (

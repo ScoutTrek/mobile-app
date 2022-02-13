@@ -1,4 +1,9 @@
 import {createStackNavigator} from '@react-navigation/stack';
+import {JoinGroupFormProvider} from '../joinGroup/JoinGroupForm/JoinGroupFormStore';
+import {
+  initialState,
+  joinGroupFormReducer,
+} from '../joinGroup/JoinGroupForm/joinGroupFormReducer';
 
 import JoinTroop from '../joinGroup/JoinTroop';
 import AddChildren from '../joinGroup/AddChildren';
@@ -10,40 +15,20 @@ const JoinGroupStack = createStackNavigator();
 
 const JoinGroupNavigator = () => {
   return (
-    <JoinGroupStack.Navigator
-      screenOptions={() => ({
-        headerShown: false,
-      })}>
-      <JoinGroupStack.Screen
-        name="ChooseRole"
-        component={ChooseRole}
-        initialParams={{
-          nextView: 'AddChildren',
-        }}
-      />
-      <JoinGroupStack.Screen
-        name="AddChildren"
-        component={AddChildren}
-        initialParams={{
-          nextView: 'JoinTroop',
-        }}
-      />
-      <JoinGroupStack.Screen
-        name="JoinTroop"
-        component={JoinTroop}
-        initialParams={{
-          nextView: 'JoinPatrol',
-        }}
-      />
-      <JoinGroupStack.Screen
-        name="CreateTroop"
-        component={CreateTroop}
-        initialParams={{
-          nextView: 'JoinPatrol',
-        }}
-      />
-      <JoinGroupStack.Screen name="JoinPatrol" component={JoinPatrol} />
-    </JoinGroupStack.Navigator>
+    <JoinGroupFormProvider
+      initialState={initialState}
+      reducer={joinGroupFormReducer}>
+      <JoinGroupStack.Navigator
+        screenOptions={() => ({
+          headerShown: false,
+        })}>
+        <JoinGroupStack.Screen name="JoinTroop" component={JoinTroop} />
+        <JoinGroupStack.Screen name="CreateTroop" component={CreateTroop} />
+        <JoinGroupStack.Screen name="ChooseRole" component={ChooseRole} />
+        <JoinGroupStack.Screen name="AddChildren" component={AddChildren} />
+        <JoinGroupStack.Screen name="JoinPatrol" component={JoinPatrol} />
+      </JoinGroupStack.Navigator>
+    </JoinGroupFormProvider>
   );
 };
 

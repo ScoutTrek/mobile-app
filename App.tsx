@@ -12,7 +12,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Ionicons} from '@expo/vector-icons';
 
-import {AuthContext} from './src/modules/joinGroup/JoinPatrol';
+import {AuthContext, AuthDataType} from './src/modules/auth/SignUp';
 
 import {
   ApolloProvider,
@@ -72,11 +72,25 @@ const authMiddleware = new ApolloLink((operation, forward) => {
 });
 
 const AppLoadingContainer = () => {
-  const [authToken, setAuthToken] = useState<string | null>();
+  const [token, setToken] = useState<string>('');
+  const [noGroups, setNoGroups] = useState<boolean>(true);
+  const authData: AuthDataType = {
+    token,
+    noGroups,
+  };
+
+  const setAuthData = (newAuthData: AuthDataType) => {
+    setToken(newAuthData.token);
+    setNoGroups(newAuthData.noGroups);
+  };
 
   try {
     AsyncStorage.getItem('userToken').then((token) => {
-      setAuthToken(token);
+      AsyncStorage.getItem('currMembershipID').then((membership) => {
+        if (token) {
+          setAuthData({token, noGroups: !!membership});
+        }
+      });
     });
   } catch (e) {
     console.log(e);
@@ -109,13 +123,13 @@ const AppLoadingContainer = () => {
     );
 
   return (
-    <AuthContext.Provider value={{authToken, setAuthToken}}>
+    <AuthContext.Provider value={{authData, setAuthData}}>
       <NavigationContainer>
         <Stack.Navigator
           screenOptions={() => ({
             headerShown: false,
           })}>
-          {!authToken ? (
+          {!authData.token ? (
             <Stack.Screen
               name="AuthNav"
               component={AuthNavigator}
@@ -124,7 +138,13 @@ const AppLoadingContainer = () => {
               }}
             />
           ) : (
-            <Stack.Screen name="Home" component={MainStackNavigator} />
+            <Stack.Screen
+              name="Home"
+              component={MainStackNavigator}
+              initialParams={{
+                newUser: true,
+              }}
+            />
           )}
         </Stack.Navigator>
       </NavigationContainer>
