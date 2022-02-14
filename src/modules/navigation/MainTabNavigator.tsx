@@ -4,12 +4,11 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import CalendarNav from '../calendar/CalendarNavigator';
 import ProfileScreen from '../profile/ProfileScreen';
-import EventsCreatorNavigator from './CreateEventNavigator';
 
 import {Icon, Avatar} from 'ScoutDesign/library';
 import {home, calendar} from 'ScoutDesign/icons';
 
-import HomeNav from '../home/HomeNavigator';
+import HomeNav from '../home/UpcomingEvents';
 
 // Global Styles
 const MainBottomTab = createBottomTabNavigator();

@@ -7,7 +7,7 @@ import {
 
 import JoinTroop from '../joinGroup/JoinTroop';
 import AddChildren from '../joinGroup/AddChildren';
-import CreateTroop from '../joinGroup/components/CreateTroop.js';
+import CreateTroop from '../joinGroup/components/CreateTroop';
 import ChooseRole from '../joinGroup/ChooseRole';
 import JoinPatrol from '../joinGroup/JoinPatrol';
 
