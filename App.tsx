@@ -12,7 +12,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Ionicons} from '@expo/vector-icons';
 
-import {AuthContext, AuthDataType} from './src/modules/auth/SignUp';
+import {AuthContext} from './src/modules/auth/SignUp';
 
 import {
   ApolloProvider,
@@ -46,7 +46,7 @@ const errorMiddleware = onError(
 );
 
 export const GET_CURR_USER_GROUPS = gql`
-  query GetCurrUser {
+  query GetCurrUserGroups {
     currUser {
       noGroups
     }
@@ -81,6 +81,9 @@ const authMiddleware = new ApolloLink((operation, forward) => {
 });
 
 const AppLoadingContainer = () => {
+  const [token, setToken] = useState<string>('');
+  const [newUser, setNewUser] = useState<boolean>(false);
+
   useQuery(GET_CURR_USER_GROUPS, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
@@ -88,7 +91,8 @@ const AppLoadingContainer = () => {
         try {
           AsyncStorage.getItem('userToken').then((token) => {
             if (token) {
-              setAuthData({token, noGroups: data.currUser.noGroups});
+              setToken(token);
+              setNewUser(data.currUser.noGroups);
             }
             setAppLoading(false);
           });
@@ -99,17 +103,6 @@ const AppLoadingContainer = () => {
     },
   });
   const [appLoading, setAppLoading] = useState<boolean>(true);
-  const [token, setToken] = useState<string>('');
-  const [noGroups, setNoGroups] = useState<boolean>(true);
-  const authData: AuthDataType = {
-    token,
-    noGroups,
-  };
-
-  const setAuthData = (newAuthData: AuthDataType) => {
-    setToken(newAuthData.token);
-    setNoGroups(newAuthData.noGroups);
-  };
 
   const [fontsLoaded] = useFonts({
     ...Ionicons.font,
@@ -138,15 +131,13 @@ const AppLoadingContainer = () => {
     );
 
   return (
-    <AuthContext.Provider value={{authData, setAuthData}}>
-      {console.log('Auth data ', authData)}
-
+    <AuthContext.Provider value={{token, setToken, newUser, setNewUser}}>
       <NavigationContainer>
         <Stack.Navigator
           screenOptions={() => ({
             headerShown: false,
           })}>
-          {!authData.token ? (
+          {!token ? (
             <Stack.Screen
               name="AuthNav"
               component={AuthNavigator}
@@ -159,7 +150,7 @@ const AppLoadingContainer = () => {
               name="Home"
               component={MainStackNavigator}
               initialParams={{
-                newUser: authData?.noGroups,
+                newUser,
               }}
             />
           )}

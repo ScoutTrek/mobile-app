@@ -55,7 +55,7 @@ export const GET_CURR_USER = gql`
 const ProfileScreen = ({navigation}) => {
   const {data, loading} = useQuery(GET_CURR_USER);
   const client = useApolloClient();
-  const {setAuthData} = useContext(AuthContext);
+  const {setToken} = useContext(AuthContext);
 
   const _handlePressButtonAsync = async () => {
     let result = await WebBrowser.openBrowserAsync(
@@ -129,7 +129,7 @@ const ProfileScreen = ({navigation}) => {
           onPress={async () => {
             await AsyncStorage.removeItem('userToken');
             await AsyncStorage.removeItem('currMembershipID');
-            setAuthData({token: '', noGroups: false});
+            setToken('');
             client.stop();
             await client.clearStore();
           }}

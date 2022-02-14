@@ -56,7 +56,7 @@ const SignInFormFields = [
 ];
 
 const SignIn = ({navigation}) => {
-  const {setAuthData} = useContext(AuthContext);
+  const {setToken} = useContext(AuthContext);
 
   const [logIn] = useMutation(LOG_IN, {
     onCompleted: async (data) => {
@@ -66,7 +66,7 @@ const SignIn = ({navigation}) => {
           'currMembershipID',
           data.login.groupID || undefined
         );
-        setAuthData({token: data.login.token, noGroups: data.login.noGroups});
+        setToken(data.login.token);
       } catch (e) {
         console.log(e);
       }

@@ -44,14 +44,11 @@ const ADD_PATROL = gql`
 
 const JoinPatrol = ({navigation}) => {
   const [joinGroupFormState] = useJoinGroupForm();
-  const {setAuthData} = useContext(AuthContext);
+  const {setNewUser} = useContext(AuthContext);
 
   const [addGroup] = useMutation(ADD_GROUP, {
     onCompleted: async (data) => {
-      const token = await AsyncStorage.getItem('userToken');
-      if (token) {
-        setAuthData({token, noGroups: false});
-      }
+      setNewUser(false);
       await AsyncStorage.setItem('currMembershipID', data.addGroup.groupID);
       _updateCurrentGroup(data?.addGroup?.groupID, navigation);
     },

@@ -1,4 +1,4 @@
-import React, {useEffect, useContext} from 'react';
+import React, {useContext} from 'react';
 import {
   KeyboardAvoidingView,
   Dimensions,
@@ -24,22 +24,18 @@ const SIGN_UP = gql`
   }
 `;
 
-export type AuthDataType = {
-  token: string;
-  noGroups: boolean;
-};
-
 type AuthContextType = {
-  authData: AuthDataType;
-  setAuthData: (newAuthData: AuthDataType) => void;
+  token: string;
+  setToken: React.Dispatch<any>;
+  newUser: boolean;
+  setNewUser: React.Dispatch<any>;
 };
 
 export const AuthContext = React.createContext<AuthContextType>({
-  authData: {
-    token: '',
-    noGroups: true,
-  },
-  setAuthData: () => {},
+  token: '',
+  setToken: () => {},
+  newUser: false,
+  setNewUser: () => {},
 });
 
 const SignUpFormFields = [
@@ -101,9 +97,20 @@ const SignUpFormFields = [
   },
 ];
 
-const SignUp = ({navigation, route}) => {
-  const [signUp, signUpData] = useMutation(SIGN_UP);
-  const {setAuthData} = useContext(AuthContext);
+const SignUp = ({navigation}) => {
+  const {setToken, setNewUser} = useContext(AuthContext);
+
+  const [signUp] = useMutation(SIGN_UP, {
+    onCompleted: async ({signup}) => {
+      try {
+        const token = await AsyncStorage.setItem('userToken', signup.token);
+        setNewUser(true);
+        setToken(signup.token);
+      } catch (e) {
+        console.log(e);
+      }
+    },
+  });
 
   const onSubmit = async (data) => {
     if (data.password !== data.passwordConfirm) {
@@ -121,25 +128,6 @@ const SignUp = ({navigation, route}) => {
       });
     }
   };
-
-  useEffect(() => {
-    const setToken = async () => {
-      try {
-        const token = await AsyncStorage.setItem(
-          'userToken',
-          signUpData.data.signup.token
-        );
-
-        setAuthData({token: signUpData.data.signup.token, noGroups: true});
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    if (signUpData.data) {
-      setToken();
-    }
-  }, [signUpData.data]);
 
   return (
     <ScrollView
