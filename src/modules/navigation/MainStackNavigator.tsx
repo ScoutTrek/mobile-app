@@ -7,14 +7,10 @@ import MainTabNavigator from './MainTabNavigator';
 
 const MainStack = createStackNavigator();
 
-type Props = {
-  newUser: boolean;
-};
-
-const MainStackNavigator = ({newUser}: Props) => {
+const MainStackNavigator = ({route}) => {
   return (
     <MainStack.Navigator
-      initialRouteName={newUser ? 'JoinGroup' : 'Main'}
+      initialRouteName={route?.params?.newUser ? 'JoinGroup' : 'Main'}
       screenOptions={() => ({
         headerShown: false,
       })}>

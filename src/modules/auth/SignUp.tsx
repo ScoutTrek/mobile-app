@@ -19,7 +19,7 @@ const SIGN_UP = gql`
   mutation SignUp($userInfo: SignupInput!) {
     signup(input: $userInfo) {
       token
-      groupID
+      noGroups
     }
   }
 `;
@@ -105,21 +105,20 @@ const SignUp = ({navigation, route}) => {
   const [signUp, signUpData] = useMutation(SIGN_UP);
   const {setAuthData} = useContext(AuthContext);
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     if (data.password !== data.passwordConfirm) {
       Alert.alert(
         'Whoops, the passwords you entered do not match.',
         'Please re-enter passwords to confirm they match.'
       );
     } else {
-      console.log('Data ', data);
-      // await signUp({
-      //   variables: {
-      //     userInfo: {
-      //       ...data,
-      //     },
-      //   },
-      // });
+      await signUp({
+        variables: {
+          userInfo: {
+            ...data,
+          },
+        },
+      });
     }
   };
 
@@ -130,11 +129,8 @@ const SignUp = ({navigation, route}) => {
           'userToken',
           signUpData.data.signup.token
         );
-        await AsyncStorage.setItem(
-          'currMembershipID',
-          signUpData.data.signup.groupID
-        );
-        setAuthToken(signUpData.data.signup.token);
+
+        setAuthData({token: signUpData.data.signup.token, noGroups: true});
       } catch (e) {
         console.log(e);
       }

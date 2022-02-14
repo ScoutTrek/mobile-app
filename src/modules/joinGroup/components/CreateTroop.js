@@ -149,7 +149,7 @@ const CreateTroop = ({navigation, route}) => {
   if (data && !loading) {
     const signUpData = {
       ...route.params,
-      troop: data.addTroop.id,
+      troopID: data.addTroop.id,
     };
     delete signUpData.nextView;
     navigation.navigate(route.params.nextView, signUpData);

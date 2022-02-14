@@ -128,6 +128,7 @@ const ProfileScreen = ({navigation}) => {
           text="Logout"
           onPress={async () => {
             await AsyncStorage.removeItem('userToken');
+            await AsyncStorage.removeItem('currMembershipID');
             setAuthData({token: '', noGroups: false});
             client.stop();
             await client.clearStore();

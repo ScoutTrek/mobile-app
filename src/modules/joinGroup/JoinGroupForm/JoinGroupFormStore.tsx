@@ -12,7 +12,7 @@ export const CLEAR_FORM = 'CLEAR_FORM';
 export const chooseGroup = (group: string, groupNum: string) => ({
   type: CHOOSE_GROUP,
   group,
-  groupNum,
+  groupNum: groupNum.toString(),
 });
 
 export const chooseRole = (role: string) => ({

@@ -7,20 +7,18 @@ import {
 } from './JoinGroupFormStore';
 
 export type JoinGroupFormState = {
-  user: string;
-  troop: string;
+  troopID: string;
   troopNumber: string;
-  patrol: string;
+  patrolID: string;
   role: string;
   children: string[];
 };
 
 // Generate initial state
 export const initialState: JoinGroupFormState = {
-  user: '',
-  troop: '',
+  troopID: '',
   troopNumber: '',
-  patrol: '',
+  patrolID: '',
   role: '',
   children: [],
 };
@@ -33,7 +31,7 @@ export const joinGroupFormReducer = (
     case CHOOSE_GROUP:
       return {
         ...state,
-        troop: action.group,
+        troopID: action.group,
         troopNumber: action.groupNum,
       };
     case CHOOSE_ROLE:
@@ -49,7 +47,7 @@ export const joinGroupFormReducer = (
     case CHOOSE_PATROL:
       return {
         ...state,
-        patrol: action.patrol,
+        patrolID: action.patrol,
       };
     case CLEAR_FORM:
       return initialState;

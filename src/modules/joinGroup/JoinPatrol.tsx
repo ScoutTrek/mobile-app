@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import {useState, useContext} from 'react';
 import {ActivityIndicator} from 'react-native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {gql, useMutation, useQuery} from '@apollo/client';
 import RichInputContainer from '../../components/containers/RichInputContainer';
 import {plusBold} from 'ScoutDesign/icons';
 import {_updateCurrentGroup} from '../profile/ProfileScreen';
+import {AuthContext} from '../auth/SignUp';
 import {
   Container,
   Text,
@@ -43,10 +44,15 @@ const ADD_PATROL = gql`
 
 const JoinPatrol = ({navigation}) => {
   const [joinGroupFormState] = useJoinGroupForm();
+  const {setAuthData} = useContext(AuthContext);
 
   const [addGroup] = useMutation(ADD_GROUP, {
-    onCompleted: (data) => {
-      console.log('Data ', data);
+    onCompleted: async (data) => {
+      const token = await AsyncStorage.getItem('userToken');
+      if (token) {
+        setAuthData({token, noGroups: false});
+      }
+      await AsyncStorage.setItem('currMembershipID', data.addGroup.groupID);
       _updateCurrentGroup(data?.addGroup?.groupID, navigation);
     },
   });
@@ -58,12 +64,11 @@ const JoinPatrol = ({navigation}) => {
   const {data, error, loading} = useQuery(GET_PATROLS, {
     pollInterval: 500,
     variables: {
-      troopId: joinGroupFormState.troop,
+      troopId: joinGroupFormState.troopID,
     },
   });
 
   const joinGroup = async (patrolID: string) => {
-    // if (route.params?.shouldAddGroup) {
     await addGroup({
       variables: {
         membershipInfo: {
@@ -72,8 +77,6 @@ const JoinPatrol = ({navigation}) => {
         },
       },
     });
-
-    // }
   };
 
   if (loading) return <ActivityIndicator />;
@@ -97,7 +100,7 @@ const JoinPatrol = ({navigation}) => {
             return (
               <Button
                 accessibilityLabel={item.id}
-                onPress={() => handleSignUp(item.id)}
+                onPress={() => joinGroup(item.id)}
                 text={item.name}
                 {...rest}
               />
@@ -128,7 +131,7 @@ const JoinPatrol = ({navigation}) => {
             onPress={async () => {
               await addPatrol({
                 variables: {
-                  troopId: joinGroupFormState.troop,
+                  troopId: joinGroupFormState.troopID,
                   patrolInfo: {
                     name: patrolName,
                   },

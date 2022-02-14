@@ -66,6 +66,7 @@ const SignIn = ({navigation}) => {
           'currMembershipID',
           data.login.groupID || undefined
         );
+        console.log('Data ', data);
         setAuthData({token: data.login.token, noGroups: data.login.noGroups});
       } catch (e) {
         console.log(e);

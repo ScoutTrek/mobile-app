@@ -21,7 +21,8 @@ import {
   HttpLink,
   InMemoryCache,
   from,
-  makeVar,
+  gql,
+  useQuery,
 } from '@apollo/client';
 
 import {onError} from '@apollo/client/link/error';
@@ -43,6 +44,14 @@ const errorMiddleware = onError(
     if (networkError) console.error(`[Network error]: ${networkError}`);
   }
 );
+
+export const GET_CURR_USER_GROUPS = gql`
+  query GetCurrUser {
+    currUser {
+      noGroups
+    }
+  }
+`;
 
 type AsyncStorageData = {[key: string]: string | null};
 
@@ -72,6 +81,24 @@ const authMiddleware = new ApolloLink((operation, forward) => {
 });
 
 const AppLoadingContainer = () => {
+  useQuery(GET_CURR_USER_GROUPS, {
+    fetchPolicy: 'network-only',
+    onCompleted: (data) => {
+      if (data) {
+        try {
+          AsyncStorage.getItem('userToken').then((token) => {
+            if (token) {
+              setAuthData({token, noGroups: data.currUser.noGroups});
+            }
+            setAppLoading(false);
+          });
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    },
+  });
+  const [appLoading, setAppLoading] = useState<boolean>(true);
   const [token, setToken] = useState<string>('');
   const [noGroups, setNoGroups] = useState<boolean>(true);
   const authData: AuthDataType = {
@@ -84,19 +111,7 @@ const AppLoadingContainer = () => {
     setNoGroups(newAuthData.noGroups);
   };
 
-  try {
-    AsyncStorage.getItem('userToken').then((token) => {
-      AsyncStorage.getItem('currMembershipID').then((membership) => {
-        if (token) {
-          setAuthData({token, noGroups: !!membership});
-        }
-      });
-    });
-  } catch (e) {
-    console.log(e);
-  }
-
-  const [loaded] = useFonts({
+  const [fontsLoaded] = useFonts({
     ...Ionicons.font,
     montserrat: require('./assets/fonts/Montserrat/Montserrat-Regular.ttf'),
     'montserrat-med': require('./assets/fonts/Montserrat/Montserrat-Medium.ttf'),
@@ -115,7 +130,7 @@ const AppLoadingContainer = () => {
     'metropolis-light': require('./assets/fonts/metropolis/Metropolis-Light.otf'),
   });
 
-  if (!loaded)
+  if (!fontsLoaded || appLoading)
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <ActivityIndicator />
@@ -124,6 +139,8 @@ const AppLoadingContainer = () => {
 
   return (
     <AuthContext.Provider value={{authData, setAuthData}}>
+      {console.log('Auth data ', authData)}
+
       <NavigationContainer>
         <Stack.Navigator
           screenOptions={() => ({
@@ -142,7 +159,7 @@ const AppLoadingContainer = () => {
               name="Home"
               component={MainStackNavigator}
               initialParams={{
-                newUser: true,
+                newUser: authData?.noGroups,
               }}
             />
           )}
@@ -154,18 +171,11 @@ const AppLoadingContainer = () => {
 
 const Stack = createStackNavigator();
 
-export const eventData = makeVar({});
-
 export const ScoutTrekApolloClient = new ApolloClient({
   cache: new InMemoryCache({
     typePolicies: {
       Query: {
         fields: {
-          eventData: {
-            read() {
-              return eventData();
-            },
-          },
           upcomingEvents: {
             merge(_ignored, incoming) {
               return incoming;
@@ -179,8 +189,8 @@ export const ScoutTrekApolloClient = new ApolloClient({
     authMiddleware,
     errorMiddleware,
     new HttpLink({
-      // uri: 'http://localhost:4000/graphql',
-      uri: 'https://beta-dot-scouttrek-node-api.appspot.com/:4000',
+      uri: 'http://localhost:4000/graphql',
+      // uri: 'https://beta-dot-scouttrek-node-api.appspot.com/:4000',
     }),
   ]),
 });
