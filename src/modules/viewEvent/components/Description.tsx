@@ -2,7 +2,7 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 
 import {WebView} from 'react-native-webview';
-import Colors from '../../../constants/Colors';
+import Colors from '../../../../constants/Colors';
 import {Container, Text} from 'ScoutDesign/library';
 
 type Props = {
@@ -11,7 +11,7 @@ type Props = {
 
 const Description = ({description}: Props) => {
   return (
-    <Container radius="s" backgroundColor="mintGrey" margin="m" padding="s">
+    <Container radius="m" backgroundColor="mintGrey" margin="m" padding="s">
       <Text preset="h2" paddingHorizontal="m" paddingTop="s">
         Additional event info
       </Text>

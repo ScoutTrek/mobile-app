@@ -1,22 +1,19 @@
-import React from 'react';
-import {Text, Alert, ScrollView} from 'react-native';
-import EventHeader from './components/EventHeader';
+import {Text, Alert} from 'react-native';
 
 import {GOOGLE_MAPS_API_KEY} from '../../../env';
-import Constants from 'expo-constants';
 
 import {gql, useMutation, useQuery} from '@apollo/client';
-import Location from '../../components/EventInfoComponents/Location';
-import Time from '../../components/EventInfoComponents/Time';
+import Location from './components/Location';
+import Time from './components/Time';
 
-import Description from '../../components/EventInfoComponents/Description';
+import Description from './components/Description';
 import {eventData} from '../../../App';
 import {cloneDeep} from 'lodash';
 import {GET_UPCOMING_EVENTS} from '../home/UpcomingEvents';
-import {GET_EVENTS} from './CalendarView';
+import {GET_EVENTS} from '../calendar/CalendarView';
 import {EVENT_FIELDS} from '../home/UpcomingEvents';
 
-import {Button, CircleButton} from 'ScoutDesign/library';
+import {Button, CircleButton, ScreenContainer} from 'ScoutDesign/library';
 import {pencil} from 'ScoutDesign/icons';
 
 export const DELETE_EVENT = gql`
@@ -104,15 +101,7 @@ const EventDetailsScreen = ({route, navigation}) => {
     mapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${data.event.location.lat},${data.event.location.lng}&zoom=13&size=325x375&maptype=roadmap&markers=color:blue%7C${data.event.location.lat},${data.event.location.lng}&key=${GOOGLE_MAPS_API_KEY}`;
   }
   return (
-    <ScrollView
-      style={{
-        marginTop: Constants.statusBarHeight,
-        backgroundColor: '#fff',
-      }}
-      contentContainerStyles={{
-        flexGrow: 1,
-        backgroundColor: 'green',
-      }}>
+    <ScreenContainer paddingTop="l" icon="back" back={navigation.goBack}>
       {data.event.meetLocation ? (
         <>
           <Location
@@ -146,14 +135,17 @@ const EventDetailsScreen = ({route, navigation}) => {
             update: true,
           });
         }}
+        corner="bottom-right"
+        distanceFromCorner="l"
       />
       <Button
         accessibilityLabel="cancel-event"
         text="Cancel event"
-        backgroundColor="danger"
+        backgroundColor="white"
+        textColor="dangerDark"
         onPress={handleDeleteEvent}
       />
-    </ScrollView>
+    </ScreenContainer>
   );
 };
 

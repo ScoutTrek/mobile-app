@@ -1,7 +1,7 @@
 import {useRef, useEffect} from 'react';
 import {SectionList, StyleSheet, Platform} from 'react-native';
 import EventCard from './components/EventCard';
-import NoEvents from '../../components/widgets/NoEvents';
+import NoEvents from '../../components/NoEvents';
 import * as Device from 'expo-device';
 import {plusThin} from 'ScoutDesign/icons';
 import {Container, LargeFloatingButton, Text} from 'ScoutDesign/library';

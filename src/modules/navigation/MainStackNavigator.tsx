@@ -1,7 +1,7 @@
 import {createStackNavigator} from '@react-navigation/stack';
 
 import JoinGroupNavigator from './JoinGroupNavigator';
-import ViewEvent from '../calendar/EventView';
+import ViewEvent from '../viewEvent/ViewEvent';
 import CreateEvent from './CreateEventNavigator';
 import MainTabNavigator from './MainTabNavigator';
 

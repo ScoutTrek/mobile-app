@@ -18,8 +18,8 @@ interface CardProps extends PressableProps, DismissableProps {
   border?: boolean;
   shadow?: boolean;
   title?: string | React.ReactNode;
-  headerLeft: React.ReactNode;
-  headerRight: React.ReactNode;
+  headerLeft?: React.ReactNode;
+  headerRight?: React.ReactNode;
   children?: any;
   titleAlignment?: TextAlignmentWithinContainer;
   borderBelowHeader?: boolean;
@@ -114,7 +114,10 @@ const Description = ({
       <Text accessibilityLabel="heading" size="l" weight="bold">
         {heading}
       </Text>
-      <Text accessibilityLabel="card-description" paddingTop="micro">
+      <Text
+        preset="sublabel-light"
+        accessibilityLabel="card-description"
+        paddingTop="micro">
         {bodyText}
       </Text>
     </>

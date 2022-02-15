@@ -15,7 +15,7 @@ import Fonts from '../../../constants/Fonts';
 import useFetchEvents from '../../hooks/useFetchEvents';
 import {gql, useQuery} from '@apollo/client';
 import {EVENT_FIELDS} from '../home/UpcomingEvents';
-import NoEvents from '../../components/widgets/NoEvents';
+import NoEvents from '../../components/NoEvents';
 
 export const GET_EVENTS = gql`
   ${EVENT_FIELDS}

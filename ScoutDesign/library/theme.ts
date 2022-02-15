@@ -136,8 +136,8 @@ const theme = createTheme({
     },
     h3: {
       fontSize: 23,
-      fontFamily: 'metropolis-black',
-      fontWeight: '900',
+      fontFamily: 'metropolis-bold',
+      fontWeight: '800',
     },
     subheading: {
       fontSize: 19.5,

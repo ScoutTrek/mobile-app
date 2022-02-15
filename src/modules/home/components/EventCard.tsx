@@ -104,7 +104,6 @@ const EventCard = ({id, title, type, date, onSelect}: Props) => {
         }}
       />
       <Card.Description
-        sameLine
         heading={title}
         bodyText={
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec maximus'
