@@ -1,6 +1,12 @@
 import {useReducer} from 'react';
 import {Dimensions, View} from 'react-native';
-import {Button, Container, Text, TextInput} from 'ScoutDesign/library';
+import {
+  Button,
+  Container,
+  ScreenContainer,
+  Text,
+  TextInput,
+} from 'ScoutDesign/library';
 import {Picker} from '@react-native-picker/picker';
 import {gql, useMutation} from '@apollo/client';
 import {
@@ -78,8 +84,6 @@ const ADD_TROOP = gql`
   }
 `;
 
-import RichInputContainer from '../../../components/containers/RichInputContainer';
-
 export const formReducer = (state, action) => {
   if (action.type === 'UPDATE_INPUT_FIELD') {
     const updatedValues = {
@@ -132,7 +136,7 @@ const CreateTroop = ({navigation}) => {
   };
 
   return (
-    <RichInputContainer icon="back" back={navigation.goBack}>
+    <ScreenContainer icon="back" back={navigation.goBack}>
       <Container>
         <Text weight="bold" paddingVertical="s">
           What is the name of your Troop council?
@@ -188,7 +192,7 @@ const CreateTroop = ({navigation}) => {
           />
         </Container>
       </Container>
-    </RichInputContainer>
+    </ScreenContainer>
   );
 };
 

@@ -12,6 +12,7 @@ export {default as Avatar} from './Atoms/UI/Assets/Avatar/Avatar';
 
 // Layouts
 export {default as Container} from './Atoms/utility/Container/Container';
+export {default as ScreenContainer} from './Atoms/utility/Container/ScreenContainer';
 
 // Widgets
 export {default as LineItem} from './Widgets/LineItem/LineItem';

@@ -1,5 +1,6 @@
 import {useState} from 'react';
 import {
+  ScreenContainer,
   Button,
   Container,
   Text,
@@ -10,7 +11,6 @@ import {
   addChildren,
   useJoinGroupForm,
 } from './JoinGroupForm/JoinGroupFormStore';
-import RichInputContainer from '../../components/containers/RichInputContainer';
 
 const AddChildren = ({navigation}) => {
   const [_, dispatch] = useJoinGroupForm();
@@ -24,7 +24,7 @@ const AddChildren = ({navigation}) => {
   };
 
   return (
-    <RichInputContainer icon="back" back={navigation.goBack}>
+    <ScreenContainer icon="back" back={navigation.goBack}>
       <Container>
         <Text preset="h2" paddingHorizontal="s">
           What are the names of the Scouts who belong to you?
@@ -79,7 +79,7 @@ const AddChildren = ({navigation}) => {
           </Container>
         ) : null}
       </Container>
-    </RichInputContainer>
+    </ScreenContainer>
   );
 };
 

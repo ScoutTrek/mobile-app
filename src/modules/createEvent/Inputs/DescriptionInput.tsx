@@ -6,10 +6,8 @@ import {
   useEventForm,
   addEventFieldOfType,
 } from 'CreateEvent/CreateEventFormStore';
-import RichInputContainer from '../../../components/containers/RichInputContainer';
 import RTE from '../../../components/RichTextEditor/RichTextEditor';
 import PreviewTextBlock from '../../../components/PreviewTextBlock';
-import InputModalContainer from '../../../components/containers/InputModalContainer';
 import {EventInputProps} from './InputTypes';
 
 const DescriptionInputButton = ({fieldName, onPress}) => {

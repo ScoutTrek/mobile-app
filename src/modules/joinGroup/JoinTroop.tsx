@@ -1,7 +1,12 @@
 import {gql, useQuery} from '@apollo/client';
-import {Container, Text, Button, Stack} from 'ScoutDesign/library';
+import {
+  Container,
+  Text,
+  Button,
+  Stack,
+  ScreenContainer,
+} from 'ScoutDesign/library';
 import {plusBold} from 'ScoutDesign/icons';
-import RichInputContainer from '../../components/containers/RichInputContainer';
 import {
   chooseGroup,
   useJoinGroupForm,
@@ -33,7 +38,7 @@ const JoinTroop = ({navigation}) => {
   if (error) return <Text>`Error! ${error.message}`</Text>;
 
   return (
-    <RichInputContainer icon="back" back={navigation.goBack}>
+    <ScreenContainer icon="back" back={navigation.goBack}>
       <Container>
         <Text preset="h2" textAlign="center" padding="m">
           What Troop are you in?
@@ -72,7 +77,7 @@ const JoinTroop = ({navigation}) => {
           }}
         />
       </Container>
-    </RichInputContainer>
+    </ScreenContainer>
   );
 };
 

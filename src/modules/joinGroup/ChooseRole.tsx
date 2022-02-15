@@ -1,5 +1,10 @@
-import {Button, Stack, Text, Container} from 'ScoutDesign/library';
-import RichInputContainer from '../../components/containers/RichInputContainer';
+import {
+  Button,
+  Stack,
+  Text,
+  Container,
+  ScreenContainer,
+} from 'ScoutDesign/library';
 import {convertRoleToText} from '../../data/utils/convertIDsToStrings';
 import {chooseRole, useJoinGroupForm} from './JoinGroupForm/JoinGroupFormStore';
 
@@ -25,7 +30,7 @@ const ChooseRole = ({navigation, route}) => {
   };
 
   return (
-    <RichInputContainer icon="back" back={navigation.goBack}>
+    <ScreenContainer icon="back" back={navigation.goBack}>
       <Container>
         <Text preset="h2" textAlign="center" padding="m">
           What is your role within the Troop?
@@ -53,7 +58,7 @@ const ChooseRole = ({navigation, route}) => {
           }}
         />
       </Container>
-    </RichInputContainer>
+    </ScreenContainer>
   );
 };
 

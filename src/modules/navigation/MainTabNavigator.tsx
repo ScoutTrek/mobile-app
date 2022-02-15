@@ -16,7 +16,6 @@ const MainBottomTab = createBottomTabNavigator();
 // Icons
 const homeDark = require('../../../assets/images/tabbar/homeDark.png');
 const calendarDark = require('../../../assets/images/tabbar/calendarDark.png');
-const iconComponents = require('../../../assets/images/tabbar/components.png');
 
 const MainBottomTabNavigator = () => {
   return (

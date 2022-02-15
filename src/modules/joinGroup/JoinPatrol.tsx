@@ -2,11 +2,11 @@ import {useState, useContext} from 'react';
 import {ActivityIndicator} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {gql, useMutation, useQuery} from '@apollo/client';
-import RichInputContainer from '../../components/containers/RichInputContainer';
 import {plusBold} from 'ScoutDesign/icons';
 import {_updateCurrentGroup} from '../profile/ProfileScreen';
 import {AuthContext} from '../auth/SignUp';
 import {
+  ScreenContainer,
   Container,
   Text,
   Button,
@@ -80,7 +80,7 @@ const JoinPatrol = ({navigation}) => {
   if (error) return <Text>`Error! ${error}`</Text>;
 
   return (
-    <RichInputContainer icon="back" back={navigation.goBack}>
+    <ScreenContainer icon="back" back={navigation.goBack}>
       <Container>
         <Text preset="h2" textAlign="center" padding="m">
           Choose your patrol.
@@ -145,7 +145,7 @@ const JoinPatrol = ({navigation}) => {
           fullWidth
         />
       </Container>
-    </RichInputContainer>
+    </ScreenContainer>
   );
 };
 

@@ -1,10 +1,9 @@
 import {gql, useMutation, useQuery} from '@apollo/client';
-import RichInputContainer from '../../components/containers/RichInputContainer';
 import EventInputTemplate from './Inputs/EventInputTemplate';
 import {GET_EVENTS} from '../calendar/CalendarView';
 import {EVENT_FIELDS, GET_UPCOMING_EVENTS} from '../home/UpcomingEvents';
 import {useEventForm, clearEventForm} from 'CreateEvent/CreateEventFormStore';
-import {Button} from 'ScoutDesign/library';
+import {ScreenContainer, Container, Button} from 'ScoutDesign/library';
 
 const ADD_EVENT = gql`
   ${EVENT_FIELDS}
@@ -118,9 +117,10 @@ const CreateEvent = ({navigation, route}) => {
   }, []);
 
   return (
-    <RichInputContainer
-      background={'#fff'}
+    <ScreenContainer
       icon="back"
+      padding="none"
+      paddingTop="xl"
       back={() => {
         dispatch(clearEventForm());
         navigation.goBack();
@@ -138,12 +138,15 @@ const CreateEvent = ({navigation, route}) => {
             />
           )
       )}
-      <Button
-        accessibilityLabel="submit"
-        text="Create Event"
-        onPress={createEvent}
-      />
-    </RichInputContainer>
+      <Container>
+        <Button
+          fullWidth
+          accessibilityLabel="submit"
+          text="Create Event"
+          onPress={createEvent}
+        />
+      </Container>
+    </ScreenContainer>
   );
 };
 
