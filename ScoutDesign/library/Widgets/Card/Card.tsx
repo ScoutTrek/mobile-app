@@ -17,8 +17,9 @@ interface CardProps extends PressableProps, DismissableProps {
   accessibilityLabel: string;
   border?: boolean;
   shadow?: boolean;
-  title?: string;
+  title?: string | React.ReactNode;
   headerLeft: React.ReactNode;
+  headerRight: React.ReactNode;
   children?: any;
   titleAlignment?: TextAlignmentWithinContainer;
   borderBelowHeader?: boolean;
@@ -30,6 +31,7 @@ function Card({
   accessibilityLabel,
   title,
   headerLeft,
+  headerRight,
   children,
   titleAlignment,
   dismissComponent,
@@ -62,21 +64,23 @@ function Card({
                 dismissComponent={dismissComponent}
                 onDismiss={onDismiss}
               />
+            ) : headerRight ? (
+              headerRight
             ) : undefined
           }
           leftComponent={headerLeft}
           childrenAlignment={titleAlignment}
           bottomBorder={borderBelowHeader}
           bottomPadding={borderBelowHeader ? 's' : undefined}>
-          <LineItem.Subheading>{title}</LineItem.Subheading>
+          {typeof title === 'string' ? (
+            <LineItem.Subheading>{title}</LineItem.Subheading>
+          ) : (
+            title
+          )}
         </LineItem>
         <Box paddingVertical="micro">
           {Children.map(children, (child) => {
-            return (
-              <Box marginTop="xs" marginBottom="micro">
-                {child}
-              </Box>
-            );
+            return <Box marginVertical="xs">{child}</Box>;
           })}
         </Box>
       </Pressable>
@@ -98,7 +102,7 @@ const Description = ({
   if (sameLine) {
     return (
       <Text accessibilityLabel="card-description">
-        <Text accessibilityLabel="heading" size="l" weight="bold">
+        <Text accessibilityLabel="heading" preset="h3">
           {heading}&nbsp;
         </Text>
         {bodyText}

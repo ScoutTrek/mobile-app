@@ -1,23 +1,24 @@
-import React from "react";
-import { createText, TextProps } from "@shopify/restyle";
-import { Theme } from "../../../theme";
+import React from 'react';
+import {createText, TextProps} from '@shopify/restyle';
+import {Theme} from '../../../theme';
 
 const TextUtility = createText<Theme>();
 
-export type TextAlignmentWithinContainer = "right" | "center" | "left";
+export type TextAlignmentWithinContainer = 'right' | 'center' | 'left';
 
-type weights = "bold" | "regular" | "light";
-type sizes = "s" | "m" | "l";
+type weights = 'bold' | 'regular' | 'light';
+type sizes = 's' | 'm' | 'l';
 type presets =
-  | "h2"
-  | "h1"
-  | "subheading"
-  | "label"
-  | "label-light"
-  | "sublabel"
-  | "sublabel-light"
-  | "button"
-  | "micro";
+  | 'h1'
+  | 'h2'
+  | 'h3'
+  | 'subheading'
+  | 'label'
+  | 'label-light'
+  | 'sublabel'
+  | 'sublabel-light'
+  | 'button'
+  | 'micro';
 
 type Props = React.ComponentProps<typeof TextUtility> & {
   accessibilityLabel?: string;
@@ -28,8 +29,8 @@ type Props = React.ComponentProps<typeof TextUtility> & {
 
 const Text = ({
   accessibilityLabel,
-  size = "m",
-  weight = "regular",
+  size = 'm',
+  weight = 'regular',
   preset,
   children,
   ...rest
@@ -38,8 +39,7 @@ const Text = ({
     <TextUtility
       variant={preset ? preset : `${size}-${weight}`}
       nativeID={accessibilityLabel}
-      {...rest}
-    >
+      {...rest}>
       {children}
     </TextUtility>
   );

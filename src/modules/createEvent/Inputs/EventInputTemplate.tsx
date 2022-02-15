@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {useEventForm} from 'CreateEvent/CreateEventFormStore';
 import {useModal} from 'ScoutDesign/library';
 import Row from './Row';
-import TapToEditContainer from '../../../components/containers/TapToEditContainer';
+import TapToEditContainer from './components/TapToEditContainer';
 
 // Component Types
 import TitleInput from './TitleInput';

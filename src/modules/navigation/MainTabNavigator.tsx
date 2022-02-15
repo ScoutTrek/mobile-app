@@ -1,14 +1,42 @@
 import {Image} from 'react-native';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {createStackNavigator} from '@react-navigation/stack';
 
 import CalendarNav from '../calendar/CalendarNavigator';
 import ProfileScreen from '../profile/ProfileScreen';
 
-import {Icon, Avatar} from 'ScoutDesign/library';
-import {home, calendar} from 'ScoutDesign/icons';
+import {Icon, Text, Avatar, Container} from 'ScoutDesign/library';
+import {home, calendar, notifications} from 'ScoutDesign/icons';
 
-import HomeNav from '../home/UpcomingEvents';
+import UpcomingEvents from '../home/UpcomingEvents';
+
+const HomeStack = createStackNavigator();
+
+const HomeNav = ({navigation}) => {
+  return (
+    <HomeStack.Navigator
+      screenOptions={() => ({
+        headerTitle: () => (
+          <Container paddingVertical="none">
+            <Text weight="bold">ScoutTrek</Text>
+          </Container>
+        ),
+        headerRight: () => (
+          <Container paddingVertical="none">
+            <Icon
+              icon={notifications}
+              color="informationDark"
+              size="m"
+              onPress={() => {}}
+            />
+          </Container>
+        ),
+      })}>
+      <HomeStack.Screen name="Home" component={UpcomingEvents} />
+    </HomeStack.Navigator>
+  );
+};
 
 // Global Styles
 const MainBottomTab = createBottomTabNavigator();

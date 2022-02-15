@@ -1,10 +1,10 @@
 import {useRef, useEffect} from 'react';
-import {SectionList, SafeAreaView, StyleSheet} from 'react-native';
-import EventListItem from '../../components/EventListItem';
+import {SectionList, StyleSheet, Platform} from 'react-native';
+import EventCard from './components/EventCard';
 import NoEvents from '../../components/widgets/NoEvents';
 import * as Device from 'expo-device';
 import {plusThin} from 'ScoutDesign/icons';
-import {LargeFloatingButton, Text} from 'ScoutDesign/library';
+import {Container, LargeFloatingButton, Text} from 'ScoutDesign/library';
 
 import * as Notifications from 'expo-notifications';
 import {gql, useMutation, useQuery} from '@apollo/client';
@@ -69,6 +69,11 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
+
+export type EventSignature = {
+  id: string;
+  type: Event;
+};
 
 export default function UpcomingEvents({navigation}) {
   const {loading, error, data} = useQuery(GET_UPCOMING_EVENTS, {
@@ -162,23 +167,22 @@ export default function UpcomingEvents({navigation}) {
     },
   ];
   return (
-    <SafeAreaView style={styles.screen}>
+    <Container flex={1}>
       <SectionList
         sections={!data?.upcomingEvents?.length ? [] : eventListData}
         keyExtractor={(item) => item.id}
         renderItem={({item}) => (
-          <EventListItem
+          <EventCard
             key={item.id}
             id={item.id}
             title={item.title}
             type={item.type}
             date={item.date}
-            creator={item.creator.name}
             onSelect={viewEvent}
           />
         )}
         renderSectionHeader={({section: {title, data}}) =>
-          data.length > 0 ? <Text preset="h2">{title}</Text> : null
+          data.length > 0 ? <Text preset="sublabel">{title}</Text> : null
         }
         ListEmptyComponent={<NoEvents navigation={navigation} />}
       />
@@ -190,7 +194,7 @@ export default function UpcomingEvents({navigation}) {
         corner="bottom-right"
         distanceFromCorner="l"
       />
-    </SafeAreaView>
+    </Container>
   );
 }
 

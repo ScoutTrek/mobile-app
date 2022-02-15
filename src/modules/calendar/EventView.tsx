@@ -16,11 +16,8 @@ import {GET_UPCOMING_EVENTS} from '../home/UpcomingEvents';
 import {GET_EVENTS} from './CalendarView';
 import {EVENT_FIELDS} from '../home/UpcomingEvents';
 
-import {CircleButton} from 'ScoutDesign/library';
+import {Button, CircleButton} from 'ScoutDesign/library';
 import {pencil} from 'ScoutDesign/icons';
-import Colors from '../../../constants/Colors';
-import InlineButton from '../../components/buttons/InlineButton';
-import InfoRowSmall from '../../components/LayoutComponents/InfoRowSmall';
 
 export const DELETE_EVENT = gql`
   mutation DeleteEvent($id: ID!) {
@@ -122,8 +119,8 @@ const EventDetailsScreen = ({route, navigation}) => {
             heading="Meet Place"
             address={data.event.meetLocation.address}
           />
-          <Time time={+data.event.meetTime} text="arrive at meet place" />
-          <Time time={+data.event.leaveTime} text="leave meet place" />
+          <Time time={+data.event.meetTime} heading="Arrive at meet place" />
+          <Time time={+data.event.leaveTime} heading="Leave meet place" />
         </>
       ) : null}
 
@@ -131,9 +128,9 @@ const EventDetailsScreen = ({route, navigation}) => {
         heading="Event location"
         address={data.event.location.address}
       />
-      <Time time={+data.event.startTime} text="event start time" />
+      <Time time={+data.event.startTime} heading="Event start time" />
       {!data.event.endTime ? null : (
-        <Time time={+data.event.endTime} text="estimated return" />
+        <Time time={+data.event.endTime} heading="Estimated return" />
       )}
 
       <Description description={data.event.description} />
@@ -150,13 +147,12 @@ const EventDetailsScreen = ({route, navigation}) => {
           });
         }}
       />
-      <InfoRowSmall>
-        <InlineButton
-          title="Cancel event"
-          color={Colors.red}
-          onPress={handleDeleteEvent}
-        />
-      </InfoRowSmall>
+      <Button
+        accessibilityLabel="cancel-event"
+        text="Cancel event"
+        backgroundColor="danger"
+        onPress={handleDeleteEvent}
+      />
     </ScrollView>
   );
 };

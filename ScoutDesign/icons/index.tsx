@@ -1,5 +1,4 @@
 import {
-  FontAwesome5,
   MaterialCommunityIcons,
   Foundation,
   Ionicons,
@@ -8,6 +7,7 @@ import {
   Octicons,
   AntDesign,
   MaterialIcons,
+  Fontisto,
 } from '@expo/vector-icons';
 
 export type IconPayloadType = {
@@ -39,6 +39,16 @@ export const backChevron = new IconPayload({
   library: Ionicons,
 });
 
+export const bike = new IconPayload({
+  name: 'bike',
+  library: MaterialCommunityIcons,
+});
+
+export const boat = new IconPayload({
+  name: 'ios-boat',
+  library: Ionicons,
+});
+
 export const bonfire = new IconPayload({
   name: 'bonfire',
   library: Ionicons,
@@ -52,6 +62,11 @@ export const calendar = new IconPayload({
 export const checkmark = new IconPayload({
   name: 'checkmark-sharp',
   library: Ionicons,
+});
+
+export const clock = new IconPayload({
+  name: 'clock',
+  library: MaterialCommunityIcons,
 });
 
 export const close = new IconPayload({
@@ -84,6 +99,11 @@ export const gearThin = new IconPayload({
   library: EvilIcons,
 });
 
+export const hiking = new IconPayload({
+  name: 'hiking',
+  library: MaterialCommunityIcons,
+});
+
 export const home = new IconPayload({
   name: 'home',
   library: AntDesign,
@@ -94,9 +114,24 @@ export const light = new IconPayload({
   library: Entypo,
 });
 
+export const mapMarker = new IconPayload({
+  name: 'map-marker-alt',
+  library: Fontisto,
+});
+
+export const notifications = new IconPayload({
+  name: 'md-notifications-sharp',
+  library: Ionicons,
+});
+
 export const pencil = new IconPayload({
   name: 'edit',
   library: MaterialIcons,
+});
+
+export const people = new IconPayload({
+  name: 'md-people',
+  library: Ionicons,
 });
 
 export const plusBold = new IconPayload({
@@ -112,6 +147,11 @@ export const plusThin = new IconPayload({
 export const searchThin = new IconPayload({
   name: 'search',
   library: EvilIcons,
+});
+
+export const tent = new IconPayload({
+  name: 'tent',
+  library: MaterialCommunityIcons,
 });
 
 export const trash = new IconPayload({

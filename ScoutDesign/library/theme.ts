@@ -124,7 +124,7 @@ const theme = createTheme({
   textVariants: {
     h1: {
       fontSize: 28,
-      lineHeight: 42,
+      lineHeight: 40,
       fontFamily: 'metropolis-black',
       fontWeight: '900',
     },
@@ -133,6 +133,11 @@ const theme = createTheme({
       lineHeight: 34,
       fontFamily: 'metropolis-bold',
       fontWeight: '800',
+    },
+    h3: {
+      fontSize: 23,
+      fontFamily: 'metropolis-black',
+      fontWeight: '900',
     },
     subheading: {
       fontSize: 19.5,
