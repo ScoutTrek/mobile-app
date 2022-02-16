@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
 import {useQuery, useMutation} from '@apollo/client';
-import RTE from '../../../components/RichTextEditor';
+import RTE from '../../createEvent/Inputs/components/RichTextEditor';
 import RichInputContainer from '../../../components/containers/RichInputContainer';
 import SubmitBtn from '../../../components/buttons/SubmitButton';
 import {UPDATE_EVENT} from '../../createEvent/components/UpdateEventDetails';

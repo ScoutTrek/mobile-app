@@ -6,9 +6,9 @@ import {
   useEventForm,
   addEventFieldOfType,
 } from 'CreateEvent/CreateEventFormStore';
-import RTE from '../../../components/RichTextEditor/RichTextEditor';
-import PreviewTextBlock from '../../../components/PreviewTextBlock';
+import RTE from './components/RichTextEditor/RichTextEditor';
 import {EventInputProps} from './InputTypes';
+import PreviewRichText from './components/RichTextEditor/PreviewRichText';
 
 const DescriptionInputButton = ({fieldName, onPress}) => {
   return (
@@ -74,5 +74,5 @@ const DescriptionInput = ({
 export default {
   InitialButton: DescriptionInputButton,
   EditingComponent: DescriptionInput,
-  CompletedComponent: PreviewTextBlock,
+  CompletedComponent: PreviewRichText,
 };

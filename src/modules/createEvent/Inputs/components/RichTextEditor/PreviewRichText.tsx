@@ -1,5 +1,5 @@
 import {View, StyleSheet} from 'react-native';
-import Colors from '../../constants/Colors';
+import Colors from '../../../../../../constants/Colors';
 import {WebView} from 'react-native-webview';
 
 export default ({data}) => {
