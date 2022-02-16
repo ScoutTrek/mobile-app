@@ -28,12 +28,13 @@ export const GET_EVENTS = gql`
 
 const getColor = () => {
   const allColors = [
-    Colors.blue,
-    Colors.yellow,
-    Colors.purple,
-    Colors.orange,
-    Colors.green,
-    Colors.darkGreen,
+    'interactive',
+    'urgent',
+    'information',
+    'brandSecondary',
+    'brandSecondaryDark',
+    'brandPrimary',
+    'brandPrimaryDark',
   ];
   return allColors[Math.floor(Math.random() * allColors.length)];
 };

@@ -1,8 +1,6 @@
-import React from 'react';
-import {View, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 
 import {WebView} from 'react-native-webview';
-import Colors from '../../../../constants/Colors';
 import {Container, Text} from 'ScoutDesign/library';
 
 type Props = {

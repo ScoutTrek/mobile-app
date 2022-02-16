@@ -1,10 +1,10 @@
 import {createStackNavigator} from '@react-navigation/stack';
 
-import CalendarView from './CalendarView';
+import CalendarView from '../calendar/CalendarView';
 
 const CalendarStack = createStackNavigator();
 
-function CalendarStackNavigator({navigation, route}) {
+function CalendarStackNavigator() {
   return (
     <CalendarStack.Navigator
       initialRouteName="Calendar"

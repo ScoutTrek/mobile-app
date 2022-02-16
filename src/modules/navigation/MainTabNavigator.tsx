@@ -3,7 +3,7 @@ import {Image} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import CalendarNav from '../calendar/CalendarNavigator';
+import CalendarNav from './CalendarNavigator';
 import ProfileScreen from '../profile/ProfileScreen';
 
 import {Icon, Text, Avatar, Container} from 'ScoutDesign/library';
