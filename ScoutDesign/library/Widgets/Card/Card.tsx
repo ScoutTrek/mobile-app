@@ -55,29 +55,31 @@ function Card({
         borderWidth={0.5}
         backgroundColor="white"
         {...rest}>
-        <LineItem
-          type="simpleRow"
-          accessibilityLabel="card-header"
-          rightComponent={
-            onDismiss ? (
-              <DismissButton
-                dismissComponent={dismissComponent}
-                onDismiss={onDismiss}
-              />
-            ) : headerRight ? (
-              headerRight
-            ) : undefined
-          }
-          leftComponent={headerLeft}
-          childrenAlignment={titleAlignment}
-          bottomBorder={borderBelowHeader}
-          bottomPadding={borderBelowHeader ? 's' : undefined}>
-          {typeof title === 'string' ? (
-            <LineItem.Subheading>{title}</LineItem.Subheading>
-          ) : (
-            title
-          )}
-        </LineItem>
+        {(title || headerLeft) && (
+          <LineItem
+            type="simpleRow"
+            accessibilityLabel="card-header"
+            rightComponent={
+              onDismiss ? (
+                <DismissButton
+                  dismissComponent={dismissComponent}
+                  onDismiss={onDismiss}
+                />
+              ) : headerRight ? (
+                headerRight
+              ) : undefined
+            }
+            leftComponent={headerLeft}
+            childrenAlignment={titleAlignment}
+            bottomBorder={borderBelowHeader}
+            bottomPadding={borderBelowHeader ? 's' : undefined}>
+            {typeof title === 'string' ? (
+              <LineItem.Subheading>{title}</LineItem.Subheading>
+            ) : (
+              title
+            )}
+          </LineItem>
+        )}
         <Box paddingVertical="micro">
           {Children.map(children, (child) => {
             return <Box marginVertical="xs">{child}</Box>;

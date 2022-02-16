@@ -5,6 +5,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import CalendarNav from './CalendarNavigator';
 import ProfileScreen from '../profile/ProfileScreen';
+import CalendarScreen from '../calendar/CalendarView';
 
 import {Icon, Text, Avatar, Container} from 'ScoutDesign/library';
 import {home, calendar, notifications} from 'ScoutDesign/icons';
@@ -47,23 +48,21 @@ const calendarDark = require('../../../assets/images/tabbar/calendarDark.png');
 
 const MainBottomTabNavigator = () => {
   return (
-    <MainBottomTab.Navigator
-      screenOptions={MainBottomTabConfig}
-      tabBarOptions={{
-        showLabel: false,
-      }}>
+    <MainBottomTab.Navigator screenOptions={MainBottomTabConfig}>
       <MainBottomTab.Screen
         options={{tabBarLabel: 'Home'}}
         name="UpcomingEvents"
         component={HomeNav}
       />
-      <MainBottomTab.Screen name="Calendar" component={CalendarNav} />
+      <MainBottomTab.Screen name="Calendar" component={CalendarScreen} />
       <MainBottomTab.Screen name="Profile" component={ProfileScreen} />
     </MainBottomTab.Navigator>
   );
 };
 
 const MainBottomTabConfig = ({route}) => ({
+  headerShown: false,
+  tabBarShowLabel: false,
   tabBarIcon: ({focused}: {focused: boolean}) => {
     const size = 23;
     switch (route.name) {

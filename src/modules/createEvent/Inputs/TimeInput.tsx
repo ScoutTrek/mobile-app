@@ -58,7 +58,6 @@ const ChooseTime = ({
               mode="time"
               display="inline"
               onChange={(_, newDateString) => {
-                console.log(newDateString);
                 if (!newDateString) {
                   return;
                 }
@@ -85,7 +84,6 @@ const ChooseTime = ({
       mode="time"
       display="default"
       onChange={(_, newDateString) => {
-        console.log('Date string ', newDateString);
         next(new Date(newDateString));
       }}
       style={{flex: 1}}

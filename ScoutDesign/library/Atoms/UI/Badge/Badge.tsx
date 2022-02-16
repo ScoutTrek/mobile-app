@@ -1,8 +1,11 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
+import {SpacingProps} from '@shopify/restyle';
+import {Theme} from '../../../theme';
 
 import {Color, Pressable, PressableProps} from '../../utility';
+
 import {IconPayload} from '../../../../icons';
 import Icon from '../Assets/Icon/Icon';
 import Text from '../Text/Text';
@@ -16,6 +19,8 @@ interface BadgeProps extends PressableProps {
   alignSelf?: 'flex-start';
 }
 
+type Props = BadgeProps & SpacingProps<Theme>;
+
 const Badge = ({
   children,
   accessibilityLabel,
@@ -24,7 +29,7 @@ const Badge = ({
   icon,
   color,
   ...props
-}: BadgeProps) => {
+}: Props) => {
   return (
     <Pressable
       flexDirection="row"

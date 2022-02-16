@@ -20,43 +20,52 @@ function getMonthObject(datestring: string) {
   return monthObject;
 }
 
-const useCurrMonthEvents = () => {
-  const [currMonthEvents, setCurrMonthEvents] = useState();
+type CalData = {
+  dateString: string;
+  day: number;
+  month: number;
+  timestamp: number;
+  year: number;
+};
 
-  const loadItemsForMonth = (allEvents, calData) => {
+const useCurrMonthEvents = () => {
+  const [currMonthEvents, setCurrMonthEvents] = useState({});
+
+  const loadItemsForMonth = (allEvents: any, calData: CalData) => {
     if (calData) {
       const eventsInCurrMonth = allEvents.filter(
         ({date}) => new Date(+date).getMonth() + 1 === calData.month
       );
       const items = getMonthObject(calData.dateString);
       if (!eventsInCurrMonth.length) {
-        setCurrMonthEvents(items);
-      }
-      eventsInCurrMonth.forEach(({id, title, creator, date, type}) => {
-        const name = creator.name.split(' ');
-        if (type === 'TroopMeeting') {
-          type = 'Meeting';
-        }
-        if (type === 'SpecialEvent') {
-          type = 'Special Event';
-        }
-        if (type === 'SummerCamp') {
-          type = 'Camp';
-        }
-        const strDate = moment(+date).format('YYYY-MM-DD');
-        items[strDate].push({
-          title,
-          type,
-          id,
-          date,
-          labels: [
-            `${name[0]} ${name[1] ? name[1].substring(0, 1) : ''}`,
+        setCurrMonthEvents((prevItems) => ({...items, ...prevItems}));
+      } else {
+        eventsInCurrMonth.forEach(({id, title, creator, date, type}) => {
+          const name = creator.name.split(' ');
+          if (type === 'TroopMeeting') {
+            type = 'Meeting';
+          }
+          if (type === 'SpecialEvent') {
+            type = 'Special Event';
+          }
+          if (type === 'SummerCamp') {
+            type = 'Camp';
+          }
+          const strDate = moment(+date).format('YYYY-MM-DD');
+          items[strDate].push({
+            title,
             type,
-          ],
-        });
+            id,
+            date,
+            labels: [
+              `${name[0]} ${name[1] ? name[1].substring(0, 1) : ''}`,
+              type,
+            ],
+          });
 
-        setCurrMonthEvents(items);
-      });
+          setCurrMonthEvents((prevItems) => ({...items, ...prevItems}));
+        });
+      }
     }
   };
 
