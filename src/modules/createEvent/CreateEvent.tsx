@@ -44,11 +44,6 @@ const CreateEvent = ({navigation, route}) => {
           query: GET_EVENTS,
           data: {events: events.concat([event])},
         });
-        const {upcomingEvents} = cache.readQuery({query: GET_UPCOMING_EVENTS});
-        cache.writeQuery({
-          query: GET_UPCOMING_EVENTS,
-          data: {upcomingEvents: upcomingEvents.concat([event])},
-        });
       } catch {
         cache.writeQuery({
           query: GET_EVENTS,

@@ -1,42 +1,38 @@
-import {useState} from 'react';
 import moment from 'moment';
+import {useState} from 'react';
 
 function daysInMonth(month, year) {
   return new Date(year, month, 0).getDate();
 }
 
-function getMonthObject(datestring) {
+function getMonthObject(datestring: string) {
   const absDate = new Date(datestring);
   const offset = absDate.getTimezoneOffset() * 60 * 1000;
   const date = new Date(absDate.getTime() - offset);
-  let monthObject = {};
+  let monthObject: {[key: string]: any} = {};
   for (let i = 1; i <= daysInMonth(date.getMonth(), date.getFullYear()); i++) {
-    const string = `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(
-      -2
-    )}-${('0' + i).slice(-2)}`;
-    monthObject[string] = [];
+    const dateKeyString: string = `${date.getFullYear()}-${(
+      '0' +
+      (date.getMonth() + 1)
+    ).slice(-2)}-${('0' + i).slice(-2)}`;
+    monthObject[dateKeyString] = [];
   }
   return monthObject;
 }
 
-const useFetchEvents = () => {
-  const [events, setEvents] = useState({});
-  const [prevRenderMonth, setPrevRenderMonth] = useState();
-  const getItems = (data, calData) => {
-    if (calData.month === prevRenderMonth) return;
-    if (calData) {
-      const eventsInMonth = data.events.filter(
-        ({date}) =>
-          new Date(+date).getMonth() + 1 === calData.month &&
-          new Date(+date).getFullYear() === 2021
-      );
+const useCurrMonthEvents = () => {
+  const [currMonthEvents, setCurrMonthEvents] = useState();
 
+  const loadItemsForMonth = (allEvents, calData) => {
+    if (calData) {
+      const eventsInCurrMonth = allEvents.filter(
+        ({date}) => new Date(+date).getMonth() + 1 === calData.month
+      );
       const items = getMonthObject(calData.dateString);
-      if (!eventsInMonth.length) {
-        setEvents(items);
-        return;
+      if (!eventsInCurrMonth.length) {
+        setCurrMonthEvents(items);
       }
-      eventsInMonth.forEach(({id, title, creator, date, type}) => {
+      eventsInCurrMonth.forEach(({id, title, creator, date, type}) => {
         const name = creator.name.split(' ');
         if (type === 'TroopMeeting') {
           type = 'Meeting';
@@ -58,12 +54,13 @@ const useFetchEvents = () => {
             type,
           ],
         });
-        setPrevRenderMonth(calData.month);
-        setEvents(items);
+
+        setCurrMonthEvents(items);
       });
     }
   };
-  return [events, getItems];
+
+  return {currMonthEvents, loadItemsForMonth};
 };
 
-export default useFetchEvents;
+export default useCurrMonthEvents;

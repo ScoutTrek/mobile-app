@@ -1,6 +1,6 @@
+import 'react-native-gesture-handler';
 import {useState} from 'react';
 
-import 'react-native-gesture-handler';
 import {ThemeProvider} from '@shopify/restyle';
 import theme from './ScoutDesign/library/theme';
 import {useFonts} from 'expo-font';
@@ -167,7 +167,7 @@ export const ScoutTrekApolloClient = new ApolloClient({
     typePolicies: {
       Query: {
         fields: {
-          upcomingEvents: {
+          events: {
             merge(_ignored, incoming) {
               return incoming;
             },

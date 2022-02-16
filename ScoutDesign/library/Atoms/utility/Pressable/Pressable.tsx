@@ -1,8 +1,4 @@
-import {
-  Pressable as RNPressable,
-  View,
-  GestureResponderEvent,
-} from 'react-native';
+import {Pressable as RNPressable, View} from 'react-native';
 import {Theme} from '../../../theme';
 import Box from '../Box/Box';
 import {RadiusProps} from '../types';
@@ -25,8 +21,8 @@ import {
 export interface PressableProps extends RadiusProps {
   disabled?: boolean;
   disabledStyle?: any;
-  onPress?: (nativeEvent: GestureResponderEvent) => void;
-  onLongPress?: (nativeEvent: GestureResponderEvent) => void;
+  onPress?: (nativeEvent: any) => void;
+  onLongPress?: (nativeEvent: any) => void;
   sideEffect?: () => void;
 }
 

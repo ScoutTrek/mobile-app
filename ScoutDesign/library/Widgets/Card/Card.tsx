@@ -1,5 +1,5 @@
 import React, {Children} from 'react';
-import Swipeable from 'react-native-gesture-handler/Swipeable';
+import {Swipeable} from 'react-native-gesture-handler';
 
 import DismissButton, {
   DismissableProps,

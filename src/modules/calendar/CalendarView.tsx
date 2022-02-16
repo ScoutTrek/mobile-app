@@ -1,21 +1,17 @@
 import {useRef} from 'react';
-import {
-  StyleSheet,
-  View,
-  Text,
-  TouchableOpacity,
-  Dimensions,
-} from 'react-native';
+import {StyleSheet, View, TouchableOpacity, Dimensions} from 'react-native';
 import {Agenda} from 'react-native-calendars';
 import Constants from 'expo-constants';
 
 import Colors from '../../../constants/Colors';
 import Fonts from '../../../constants/Fonts';
 
-import useFetchEvents from '../../hooks/useFetchEvents';
 import {gql, useQuery} from '@apollo/client';
 import {EVENT_FIELDS} from '../home/UpcomingEvents';
 import NoEvents from '../../components/NoEvents';
+import {Container, Text} from 'ScoutDesign/library';
+import moment from 'moment';
+import useCurrMonthEvents from './hooks/useCurrMonthEvents';
 
 export const GET_EVENTS = gql`
   ${EVENT_FIELDS}
@@ -42,17 +38,17 @@ const getColor = () => {
 const CalendarView = ({navigation}) => {
   const {data, loading, error} = useQuery(GET_EVENTS);
 
-  const [events, setEvents] = useFetchEvents();
+  const {currMonthEvents, loadItemsForMonth} = useCurrMonthEvents();
 
   const itemColor = useRef(getColor());
 
   const renderEmptyDate = () => {
     return (
-      <View style={styles.emptyDate}>
-        <Text style={{fontSize: 12, color: Colors.lightBlue}}>
+      <Container>
+        <Text size="s" color="interactiveLight">
           No events on this day.
         </Text>
-      </View>
+      </Container>
     );
   };
 
@@ -137,30 +133,24 @@ const CalendarView = ({navigation}) => {
 
   if (error) return <Text>Error: {error}</Text>;
   if (loading) return <Text>Loading...</Text>;
-  if (!events.length) {
+  console.log('Curr Month Events ', currMonthEvents);
+  if (!data.events.length) {
     return <NoEvents navigation={navigation} />;
   }
   return (
     <Agenda
-      current={new Date()}
-      style={styles.container}
-      items={events}
-      onVisibleMonthsChange={(calData) => {
-        if (calData.length === 2) {
-          setEvents(data, calData[0]);
-        }
-        if (calData.length === 3) {
-          setEvents(data, calData[1]);
-        }
-      }}
-      renderItem={renderItem}
-      renderEmptyDate={renderEmptyDate}
-      theme={{
-        dotColor: Colors.yellow,
-        selectedDayBackgroundColor: Colors.purple,
-        agendaTodayColor: Colors.purple,
-        backgroundColor: '#F1F1F8',
-      }}
+      current={moment().format('YYYY-MM-DD')}
+      // style={styles.container}
+      // loadItemsForMonth={(calData) => loadItemsForMonth(data.events, calData)}
+      // items={currMonthEvents}
+      // renderItem={renderItem}
+      // renderEmptyDate={renderEmptyDate}
+      // theme={{
+      //   dotColor: Colors.yellow,
+      //   selectedDayBackgroundColor: Colors.purple,
+      //   agendaTodayColor: Colors.purple,
+      //   backgroundColor: '#F1F1F8',
+      // }}
     />
   );
 };

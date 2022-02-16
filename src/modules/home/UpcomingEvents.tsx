@@ -45,9 +45,9 @@ export const EVENT_FIELDS = gql`
   }
 `;
 
-export const GET_UPCOMING_EVENTS = gql`
-  query UpcomingEvents {
-    upcomingEvents {
+export const GET_EVENTS = gql`
+  query Events {
+    events {
       ...EventFragment
     }
   }
@@ -76,9 +76,7 @@ export type EventSignature = {
 };
 
 export default function UpcomingEvents({navigation}) {
-  const {loading, error, data} = useQuery(GET_UPCOMING_EVENTS, {
-    fetchPolicy: 'network-only',
-  });
+  const {loading, error, data} = useQuery(GET_EVENTS);
 
   const [updateToken] = useMutation(UPDATE_EXPO_TOKEN);
   const notificationListener = useRef();
@@ -155,21 +153,17 @@ export default function UpcomingEvents({navigation}) {
   const eventListData = [
     {
       title: 'Happening Now',
-      data: data.upcomingEvents.filter(
-        ({date}) => new Date(+date) - new Date() < 0
-      ),
+      data: data.events.filter(({date}) => new Date(+date) - new Date() < 0),
     },
     {
       title: 'Upcoming Events',
-      data: data.upcomingEvents.filter(
-        ({date}) => new Date(+date) - new Date() >= 0
-      ),
+      data: data.events.filter(({date}) => new Date(+date) - new Date() >= 0),
     },
   ];
   return (
     <Container flex={1}>
       <SectionList
-        sections={!data?.upcomingEvents?.length ? [] : eventListData}
+        sections={!data?.events?.length ? [] : eventListData}
         keyExtractor={(item) => item.id}
         renderItem={({item}) => (
           <EventCard
