@@ -6,7 +6,6 @@ import {
   Modal as RNModal,
 } from 'react-native';
 import {useKeyboard} from '@react-native-community/hooks';
-import Constants from 'expo-constants';
 import CircleButton from '../../Atoms/UI/Buttons/CircleButton';
 import DismissButton from '../../Atoms/UI/Buttons/DismissButton';
 import Text from '../../Atoms/UI/Text/Text';

@@ -7,8 +7,6 @@ import Location from './components/Location';
 import Time from './components/Time';
 
 import Description from './components/Description';
-import {eventData} from '../../../App';
-import {cloneDeep} from 'lodash';
 import {GET_UPCOMING_EVENTS} from '../home/UpcomingEvents';
 import {GET_EVENTS} from '../calendar/CalendarView';
 import {EVENT_FIELDS} from '../home/UpcomingEvents';
@@ -84,13 +82,6 @@ const EventDetailsScreen = ({route, navigation}) => {
     );
   };
 
-  const addEventToCache = () => {
-    const localEventData = cloneDeep(data.event);
-    delete localEventData.id;
-    delete localEventData.creator;
-    eventData(localEventData);
-  };
-
   if (loading) return null;
   if (error)
     return <Text style={{paddingTop: 50}}>`Error! ${error.toString()}`</Text>;
@@ -128,11 +119,13 @@ const EventDetailsScreen = ({route, navigation}) => {
         accessibilityLabel="edit-event"
         icon={pencil}
         onPress={() => {
-          addEventToCache();
           navigation.navigate('CreateEvent', {
-            type: data.event.type,
-            id: data.event.id,
-            update: true,
+            screen: 'EventForm',
+            params: {
+              type: data.event.type,
+              id: data.event.id,
+              update: true,
+            },
           });
         }}
         corner="bottom-right"

@@ -176,7 +176,13 @@ export default function UpcomingEvents({navigation}) {
           />
         )}
         renderSectionHeader={({section: {title, data}}) =>
-          data.length > 0 ? <Text preset="sublabel">{title}</Text> : null
+          data.length > 0 ? (
+            <Text
+              preset="sublabel"
+              marginTop={title === 'Upcoming Events' ? 'm' : undefined}>
+              {title}
+            </Text>
+          ) : null
         }
         ListEmptyComponent={<NoEvents navigation={navigation} />}
       />

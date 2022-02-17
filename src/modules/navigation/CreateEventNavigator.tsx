@@ -21,7 +21,7 @@ const EventStackNavigator = () => {
           headerShown: false,
         })}>
         <EventStack.Screen name="ViewEventsList" component={ViewEvents} />
-        <EventStack.Screen name="CreateEvent" component={CreateEvent} />
+        <EventStack.Screen name="EventForm" component={CreateEvent} />
       </EventStack.Navigator>
     </CreateEventFormProvider>
   );

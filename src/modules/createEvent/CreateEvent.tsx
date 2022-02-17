@@ -23,12 +23,6 @@ export const UPDATE_EVENT = gql`
   ${EVENT_FIELDS}
 `;
 
-export const GET_EVENT_DATA = gql`
-  query GetEventData {
-    eventData @client
-  }
-`;
-
 export const GET_EVENT_SCHEMAS = gql`
   query EventSchemas {
     eventSchemas
@@ -57,7 +51,26 @@ const CreateEvent = ({navigation, route}) => {
   const [state, dispatch] = useEventForm();
   const {fields} = state;
 
-  const [updateEvent] = useMutation(UPDATE_EVENT);
+  const [updateEvent] = useMutation(UPDATE_EVENT, {
+    update(cache, {data: {event}}) {
+      try {
+        const {events} = cache.readQuery({query: GET_EVENTS});
+        cache.writeQuery({
+          query: GET_EVENTS,
+          data: {
+            events: events
+              .filter((existingEvent) => existingEvent.id !== event.id)
+              .concat([event]),
+          },
+        });
+      } catch {
+        cache.writeQuery({
+          query: GET_EVENTS,
+          data: {events: [event]},
+        });
+      }
+    },
+  });
 
   if (schemaLoading) return null;
 
@@ -116,6 +129,7 @@ const CreateEvent = ({navigation, route}) => {
       icon="back"
       padding="none"
       paddingTop="xl"
+      paddingBottom="xl"
       back={() => {
         dispatch(clearEventForm());
         navigation.goBack();
@@ -135,10 +149,10 @@ const CreateEvent = ({navigation, route}) => {
       )}
       <Container>
         <Button
-          fullWidth
           accessibilityLabel="submit"
           text="Create Event"
           onPress={createEvent}
+          fullWidth
         />
       </Container>
     </ScreenContainer>

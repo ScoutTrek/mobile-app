@@ -39,7 +39,7 @@ const ViewEventsList = ({navigation}: Props) => {
           title: convertEventIDToText(item?.metaData?.eventID),
           onPress: () => {
             dispatch(initializeEventForm(item?.metaData?.eventID));
-            navigation.navigate('CreateEvent', {
+            navigation.navigate('EventForm', {
               type: item?.metaData?.eventID,
             });
           },

@@ -78,7 +78,7 @@ const CalendarView = ({navigation}) => {
     });
 
     return (
-      <Container flex={1} padding="s">
+      <Container flex={1} padding="s" marginRight="m">
         <Card accessibilityLabel="eventView" onPress={() => viewEvent(item)}>
           <Text numberOfLines={1} size="l" weight="bold">
             {item.title}
