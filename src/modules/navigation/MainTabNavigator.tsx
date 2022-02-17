@@ -81,9 +81,10 @@ const MainBottomTabConfig = ({route}) => ({
       case 'Profile':
         return (
           <Avatar
+            border={focused}
             size="m"
             source={{
-              uri: 'https://picsum.photos/28',
+              uri: 'https://scontent.fphl1-1.fna.fbcdn.net/v/t1.6435-1/p200x200/118340926_1011702955945323_5696098932584800560_n.jpg?_nc_cat=105&ccb=1-5&_nc_sid=7206a8&_nc_ohc=bpE50jhr6n8AX8txH3C&_nc_ht=scontent.fphl1-1.fna&oh=00_AT_6Pv1FgzxZfWNjpVmM7q5JLcgVc132nSqFgkhqhDCivA&oe=6231BD49',
             }}
           />
         );

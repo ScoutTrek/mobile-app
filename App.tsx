@@ -173,6 +173,11 @@ export const ScoutTrekApolloClient = new ApolloClient({
               return incoming;
             },
           },
+          currUser: {
+            merge(previous, incoming) {
+              return {...previous, ...incoming};
+            },
+          },
         },
       },
     },
