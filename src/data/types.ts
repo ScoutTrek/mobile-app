@@ -51,7 +51,7 @@ export type EventType =
   | 'FISHING_TRIP'
   | 'FLAG_RETIREMENT'
   | 'FUNDRAISER'
-  | 'GROUP_MEETING'
+  | 'TROOP_MEETING'
   | 'HIKE'
   | 'KAYAK_TRIP'
   | 'MERIT_BADGE_CLASS'

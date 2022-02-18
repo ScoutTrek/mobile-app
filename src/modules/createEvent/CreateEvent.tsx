@@ -123,11 +123,13 @@ const CreateEvent = ({navigation, route}) => {
     }
   };
 
-  const disabledFields = schema.options.reduce((accumulator, currentValue) => {
-    return fields?.[currentValue.condition] === currentValue['shown']
-      ? [...accumulator]
-      : [...accumulator, ...currentValue.hiddenFields];
-  }, []);
+  const disabledFields = schema?.options
+    ? schema.options.reduce((accumulator, currentValue) => {
+        return fields?.[currentValue.condition] === currentValue['shown']
+          ? [...accumulator]
+          : [...accumulator, ...currentValue.hiddenFields];
+      }, [])
+    : [];
 
   return (
     <ScreenContainer

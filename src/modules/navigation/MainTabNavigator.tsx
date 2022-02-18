@@ -26,7 +26,7 @@ const HomeNav = ({navigation}) => {
           <Container paddingVertical="none">
             <Icon
               icon={notifications}
-              color="informationDark"
+              color="darkGrey"
               size="m"
               onPress={() => {}}
             />

@@ -8,7 +8,8 @@ import {
 import {Theme} from '../../../theme';
 import Image from '../../UI/Assets/Image/Image';
 import Constants from 'expo-constants';
-import {BackButton, DismissButton} from 'ScoutDesign/library';
+import BackButton from '../../UI/Buttons/BackButton';
+import DismissButton from '../../UI/Buttons/DismissButton';
 import Container from './Container';
 import {Color, Spacing} from '../types';
 

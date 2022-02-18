@@ -1,5 +1,5 @@
 import {useRef} from 'react';
-import {StyleSheet, View, TouchableOpacity, Dimensions} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {Agenda} from 'react-native-calendars';
 import Constants from 'expo-constants';
 

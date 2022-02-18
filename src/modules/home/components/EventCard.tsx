@@ -1,6 +1,7 @@
-import {Event} from '../../createEvent/eventTypes';
+import {EventType} from 'data/types';
 import {EventSignature} from '../UpcomingEvents';
 import {Card, Badge, Image, Text, Container} from 'ScoutDesign/library';
+import {convertEventIDToText} from 'data/utils/convertIDsToStrings';
 import {
   bike,
   boat,
@@ -12,19 +13,19 @@ import {
 } from 'ScoutDesign/icons';
 import {ImageSourcePropType} from 'react-native';
 
-function getIcon(eventType: Event) {
+function getIcon(eventType: EventType) {
   switch (eventType) {
-    case 'Hike':
+    case 'HIKE':
       return hiking;
-    case 'BikeRide':
+    case 'BIKE_RIDE':
       return bike;
-    case 'Canoeing':
+    case 'CANOE_TRIP':
       return boat;
-    case 'TroopMeeting':
+    case 'TROOP_MEETING':
       return people;
-    case 'Campout':
+    case 'CAMPOUT':
       return bonfire;
-    case 'SummerCamp':
+    case 'SUMMER_CAMP':
       return tent;
     default:
       return compass;
@@ -36,11 +37,23 @@ type Props = {
   title: string;
   type: Event;
   date: string;
+  creator?: {
+    id: string;
+    name: string;
+  };
   imageSource: ImageSourcePropType;
   onSelect: (item: EventSignature) => void;
 };
 
-const EventCard = ({id, title, type, date, imageSource, onSelect}: Props) => {
+const EventCard = ({
+  id,
+  title,
+  type,
+  date,
+  creator,
+  imageSource,
+  onSelect,
+}: Props) => {
   const absDate = new Date(+date);
   const offset = -1 * absDate.getTimezoneOffset() * 60 * 1000;
   const localDate = new Date(absDate.getTime() - offset);
@@ -50,7 +63,7 @@ const EventCard = ({id, title, type, date, imageSource, onSelect}: Props) => {
       headerLeft={
         <Badge
           accessibilityLabel="campout-solid-badge"
-          text={type}
+          text={convertEventIDToText(type)}
           icon={getIcon(type)}
           color="brandSecondaryDark"
         />
@@ -105,9 +118,7 @@ const EventCard = ({id, title, type, date, imageSource, onSelect}: Props) => {
       />
       <Card.Description
         heading={title}
-        bodyText={
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec maximus'
-        }
+        bodyText={`Created by ${creator?.name}`}
       />
     </Card>
   );

@@ -170,6 +170,7 @@ export default function UpcomingEvents({navigation}) {
             title={item.title}
             type={item.type}
             date={item.date}
+            creator={item.creator}
             imageSource={{uri: item.mapImageSource}}
             onSelect={viewEvent}
           />

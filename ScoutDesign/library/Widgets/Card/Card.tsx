@@ -117,7 +117,7 @@ const Description = ({
         {heading}
       </Text>
       <Text
-        preset="sublabel-light"
+        weight="light"
         accessibilityLabel="card-description"
         paddingTop="micro">
         {bodyText}

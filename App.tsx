@@ -2,12 +2,13 @@ import 'react-native-reanimated';
 import 'react-native-gesture-handler';
 import {useState} from 'react';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import {ThemeProvider} from '@shopify/restyle';
 import theme from './ScoutDesign/library/theme';
 import {useFonts} from 'expo-font';
 
 import {ActivityIndicator, View} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
@@ -15,38 +16,12 @@ import {Ionicons} from '@expo/vector-icons';
 
 import {AuthContext} from './src/modules/auth/SignUp';
 
-import {
-  ApolloProvider,
-  ApolloClient,
-  ApolloLink,
-  HttpLink,
-  InMemoryCache,
-  from,
-  gql,
-  useQuery,
-} from '@apollo/client';
+import {ApolloProvider, gql, useQuery} from '@apollo/client';
 
-import {GOOGLE_MAPS_API_KEY} from 'env';
-
-import {onError} from '@apollo/client/link/error';
+import {ScoutTrekApolloClient} from 'data';
 
 import AuthNavigator from './src/modules/navigation/AuthNavigator';
 import MainStackNavigator from './src/modules/navigation/MainStackNavigator';
-
-const errorMiddleware = onError(
-  ({graphQLErrors, networkError, operation, forward}) => {
-    if (graphQLErrors) {
-      graphQLErrors.map(({message, locations, path}) =>
-        console.error(
-          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-        )
-      );
-      return forward(operation);
-    }
-
-    if (networkError) console.error(`[Network error]: ${networkError}`);
-  }
-);
 
 export const GET_CURR_USER_GROUPS = gql`
   query GetCurrUserGroups {
@@ -55,33 +30,6 @@ export const GET_CURR_USER_GROUPS = gql`
     }
   }
 `;
-
-type AsyncStorageData = {[key: string]: string | null};
-
-const loadKeysFromAsyncStorage = async (
-  asyncDataKeys: string[]
-): Promise<AsyncStorageData> => {
-  let asyncData: AsyncStorageData = {};
-  for (const key of asyncDataKeys) {
-    const value = await AsyncStorage.getItem(key);
-    asyncData[key] = value;
-  }
-  return asyncData;
-};
-
-const authMiddleware = new ApolloLink((operation, forward) => {
-  return loadKeysFromAsyncStorage(['userToken', 'currMembershipID']).then(
-    ({userToken, currMembershipID}) => {
-      operation.setContext({
-        headers: {
-          membership: currMembershipID ? currMembershipID : undefined,
-          authorization: userToken,
-        },
-      });
-      return forward(operation);
-    }
-  );
-});
 
 const AppLoadingContainer = () => {
   const [token, setToken] = useState<string>('');
@@ -164,46 +112,6 @@ const AppLoadingContainer = () => {
 };
 
 const Stack = createStackNavigator();
-
-export const ScoutTrekApolloClient = new ApolloClient({
-  cache: new InMemoryCache({
-    typePolicies: {
-      Query: {
-        fields: {
-          events: {
-            merge(_ignored, incoming) {
-              return incoming;
-            },
-          },
-          currUser: {
-            merge(previous, incoming) {
-              return {...previous, ...incoming};
-            },
-          },
-        },
-      },
-      Event: {
-        fields: {
-          mapImageSource(_, {readField}) {
-            const location = readField<string>('location');
-            const mapUrl = location
-              ? `https://maps.googleapis.com/maps/api/staticmap?center=${location.lat},${location.lng}&zoom=12&size=350x400&maptype=roadmap&markers=size:mid%7Ccolor:orange%7C${location.lat},${location.lng}&key=${GOOGLE_MAPS_API_KEY}`
-              : null;
-            return mapUrl;
-          },
-        },
-      },
-    },
-  }),
-  link: from([
-    authMiddleware,
-    errorMiddleware,
-    new HttpLink({
-      uri: 'http://localhost:4000/graphql',
-      // uri: 'https://beta-dot-scouttrek-node-api.appspot.com/:4000',
-    }),
-  ]),
-});
 
 export default function App() {
   return (

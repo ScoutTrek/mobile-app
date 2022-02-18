@@ -1,5 +1,5 @@
 import {useContext} from 'react';
-import {View, ActivityIndicator} from 'react-native';
+import {ActivityIndicator} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {CommonActions} from '@react-navigation/native';
 import {
@@ -12,7 +12,7 @@ import {
   Badge,
   Avatar,
 } from 'ScoutDesign/library';
-import {ScoutTrekApolloClient} from '../../../App';
+import {ScoutTrekApolloClient} from 'data';
 import {convertRoleToText} from '../../data/utils/convertIDsToStrings';
 import * as WebBrowser from 'expo-web-browser';
 
