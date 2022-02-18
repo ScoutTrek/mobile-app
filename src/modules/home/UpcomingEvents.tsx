@@ -8,7 +8,6 @@ import {Container, LargeFloatingButton, Text} from 'ScoutDesign/library';
 
 import * as Notifications from 'expo-notifications';
 import {gql, useMutation, useQuery} from '@apollo/client';
-import Colors from '../../../constants/Colors';
 
 export const EVENT_FIELDS = gql`
   fragment EventFragment on Event {
@@ -17,7 +16,6 @@ export const EVENT_FIELDS = gql`
     title
     description
     date
-    day
     startTime
     distance
     uniqueMeetLocation
@@ -198,10 +196,3 @@ export default function UpcomingEvents({navigation}) {
     </Container>
   );
 }
-
-const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: Colors.offWhite2,
-  },
-});
