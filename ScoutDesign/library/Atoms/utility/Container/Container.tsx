@@ -10,6 +10,7 @@ import {
   BackgroundColorProps,
   ShadowProps,
 } from '@shopify/restyle';
+import {StackableProps} from '../../../Widgets/Stack/Stack';
 
 type Props = SpacingProps<Theme> &
   LayoutProps<Theme> &
@@ -17,7 +18,8 @@ type Props = SpacingProps<Theme> &
   ShadowProps<Theme> &
   BackgroundColorProps<Theme> &
   BorderProps<Theme> &
-  RadiusProps & {
+  RadiusProps &
+  StackableProps & {
     accessibilityLabel?: string;
     key?: string;
     children: any;
@@ -32,6 +34,9 @@ const Container = ({
   bottomLeftRadius,
   radius,
   children,
+  isStackTop,
+  isStackBottom,
+  stackRadius,
   padding = 'm',
   ...rest
 }: Props) => {
@@ -40,11 +45,19 @@ const Container = ({
       {...rest}
       key={key}
       padding={padding}
-      borderTopLeftRadius={mapRadius(topLeftRadius)}
-      borderTopRightRadius={mapRadius(topRightRadius)}
-      borderBottomLeftRadius={mapRadius(bottomLeftRadius)}
-      borderBottomRightRadius={mapRadius(bottomRightRadius)}
       borderRadius={mapRadius(radius)}
+      borderTopLeftRadius={
+        isStackTop ? mapRadius(stackRadius) : mapRadius(topLeftRadius)
+      }
+      borderTopRightRadius={
+        isStackTop ? mapRadius(stackRadius) : mapRadius(topRightRadius)
+      }
+      borderBottomLeftRadius={
+        isStackBottom ? mapRadius(stackRadius) : mapRadius(bottomLeftRadius)
+      }
+      borderBottomRightRadius={
+        isStackBottom ? mapRadius(stackRadius) : mapRadius(bottomRightRadius)
+      }
       testID={accessibilityLabel}
       nativeID={accessibilityLabel}>
       {children}

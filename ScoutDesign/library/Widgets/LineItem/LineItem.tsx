@@ -1,15 +1,15 @@
 /** Design inspiration for this component comes from React Native Elements LineItem. */
-import React, { useState } from "react";
+import React, {useState} from 'react';
 
-import theme from "../../theme";
-import { Box, Color, Spacing } from "../../Atoms/utility";
-import Text, { TextAlignmentWithinContainer } from "../../Atoms/UI/Text/Text";
-import Icon from "../../Atoms/UI/Assets/Icon/Icon";
-import { upCaret, downCaret } from "../../../icons";
-import { Pressable, PressableProps } from "../../Atoms/utility";
-import { StackableProps } from "../Stack/Stack";
+import theme from '../../theme';
+import {Box, Color, Spacing} from '../../Atoms/utility';
+import Text, {TextAlignmentWithinContainer} from '../../Atoms/UI/Text/Text';
+import Icon from '../../Atoms/UI/Assets/Icon/Icon';
+import {upCaret, downCaret} from '../../../icons';
+import {Pressable, PressableProps} from '../../Atoms/utility';
+import {StackableProps} from '../Stack/Stack';
 
-const LineItemToggleIcon = ({ open }: { open: boolean }) => {
+const LineItemToggleIcon = ({open}: {open: boolean}) => {
   if (open) {
     return <Icon icon={downCaret} color="darkGrey" size="s" />;
   }
@@ -18,13 +18,13 @@ const LineItemToggleIcon = ({ open }: { open: boolean }) => {
 
 type LineItemHeadingProps = {
   color?: Color;
-  weight?: "medium" | "light";
+  weight?: 'medium' | 'light';
   children: React.ReactNode;
 };
 
 interface Props extends PressableProps, StackableProps {
   accessibilityLabel: string;
-  type: "button" | "static" | "simpleRow" | "accordion" | "formField";
+  type: 'button' | 'static' | 'simpleRow' | 'accordion' | 'formField';
   borderColor?: Color;
   topBorder?: boolean;
   bottomBorder?: boolean;
@@ -54,14 +54,14 @@ const LineItem = ({
   isStackTop,
   stackRadius,
   children,
-  childrenAlignment = "left",
+  childrenAlignment = 'left',
   ...rest
 }: Props) => {
-  const accordion = type === "accordion";
-  const simpleRow = type === "simpleRow";
+  const accordion = type === 'accordion';
+  const simpleRow = type === 'simpleRow';
   const [accordionIsOpen, setAccordionIsOpen] = useState(false);
 
-  if (type === "accordion" && !accordionContent) {
+  if (type === 'accordion' && !accordionContent) {
     console.error(
       "LineItem with type='accordion' must include JSX to include in the accordion"
     );
@@ -80,26 +80,23 @@ const LineItem = ({
       sideEffect={
         accordion ? () => setAccordionIsOpen((prev) => !prev) : undefined
       }
-      {...rest}
-    >
+      {...rest}>
       {topBorder && (
         <Box height={0} borderTopColor="slateGrey" borderTopWidth={0.25} />
       )}
       <Box
         paddingVertical="xs"
         paddingBottom={bottomPadding}
-        marginHorizontal={simpleRow ? undefined : "m"}
+        marginHorizontal={simpleRow ? undefined : 'm'}
         alignItems="center"
         justifyContent="space-between"
         flexDirection="row"
-        flexShrink={0}
-      >
+        flexShrink={0}>
         <Box
-          paddingVertical={simpleRow ? undefined : topBorder ? "micro" : "s"}
+          paddingVertical={simpleRow ? undefined : topBorder ? 'micro' : 's'}
           alignItems="center"
           flexDirection="row"
-          flex={1}
-        >
+          flex={1}>
           {leftComponent}
           <Box
             paddingHorizontal="m"
@@ -107,8 +104,7 @@ const LineItem = ({
             flexDirection="column"
             justifyContent="center"
             alignItems={theme.alignments[childrenAlignment]}
-            marginVertical={topBorder ? "xs" : undefined}
-          >
+            marginVertical={topBorder ? 'xs' : undefined}>
             {children}
           </Box>
         </Box>
@@ -131,27 +127,26 @@ const LineItem = ({
 };
 
 LineItem.Heading = ({
-  color = "darkGrey",
-  weight = "light",
+  color = 'darkGrey',
+  weight = 'light',
   children,
 }: LineItemHeadingProps) => {
   return (
-    <Text preset={weight === "light" ? "label-light" : "label"} color={color}>
+    <Text preset={weight === 'light' ? 'label-light' : 'label'} color={color}>
       {children}
     </Text>
   );
 };
 
 LineItem.Subheading = ({
-  weight = "light",
-  color = "darkGrey",
+  weight = 'light',
+  color = 'darkGrey',
   children,
 }: LineItemHeadingProps) => {
   return (
     <Text
-      preset={weight === "light" ? "sublabel-light" : "sublabel"}
-      color={color}
-    >
+      preset={weight === 'light' ? 'sublabel-light' : 'sublabel'}
+      color={color}>
       {children}
     </Text>
   );

@@ -8,6 +8,7 @@ import {
 } from 'CreateEvent/CreateEventFormStore';
 import RTE from './components/RichTextEditor/RichTextEditor';
 import {EventInputProps} from './InputTypes';
+import Description from '../../viewEvent/components/Description';
 import PreviewRichText from './components/RichTextEditor/PreviewRichText';
 
 const DescriptionInputButton = ({fieldName, onPress}) => {
@@ -71,8 +72,15 @@ const DescriptionInput = ({
   );
 };
 
+type DescriptionData = {
+  // this is a string containing HTML
+  data: string;
+};
+
 export default {
   InitialButton: DescriptionInputButton,
   EditingComponent: DescriptionInput,
-  CompletedComponent: PreviewRichText,
+  CompletedComponent: ({data}: DescriptionData) => (
+    <Description description={data} />
+  ),
 };

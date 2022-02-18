@@ -9,7 +9,13 @@ type Props = {
 
 const Description = ({description}: Props) => {
   return (
-    <Container radius="m" backgroundColor="mintGrey" margin="m" padding="s">
+    <Container
+      radius="m"
+      backgroundColor="lightMintGrey"
+      margin="m"
+      borderWidth={1}
+      borderColor="mintGrey"
+      padding="s">
       <Text preset="h2" paddingHorizontal="m" paddingTop="s">
         Additional event info
       </Text>
@@ -23,7 +29,7 @@ const Description = ({description}: Props) => {
                             <meta charset="UTF-8">
                             <meta name="viewport" content="width=device-width, initial-scale=0.99">
                         </head>
-                        <body style="background-color: ${'#DBE6E1'}; padding: 8px; font-size: 15px; font-family: Montserrat, Raleway, serif">
+                        <body style="background-color: ${'#F4F6F5'}; padding: 8px; font-size: 15px; font-family: Montserrat, Raleway, serif">
                             ${description}
                         </body>
                     </html>`,
@@ -39,7 +45,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: '100%',
-    minHeight: 180,
+    minHeight: 150,
   },
 });
 

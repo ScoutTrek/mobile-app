@@ -1,9 +1,6 @@
 import React from 'react';
 import {Container, Box, StandardRadius, Color} from '../../Atoms/utility';
-import {
-  FormFieldProps,
-  InputFieldStates,
-} from '../../Atoms/FormFields/formTypes';
+import {InputFieldStates} from '../../Atoms/FormFields/formTypes';
 
 import {IconPayload} from '../../../icons';
 
@@ -62,8 +59,8 @@ const Stack = ({
         {HeaderComponent ? (
           <HeaderComponent
             isStackTop
+            isStackBottom={!items.length}
             stackRadius={radius}
-            paddingVertical="m"
           />
         ) : null}
         {items.map((item: StackItemSchema, index: number) => {

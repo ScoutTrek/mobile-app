@@ -6,8 +6,6 @@ import {
 } from 'CreateEvent/CreateEventFormStore';
 import DefaultInputButton from './components/DefaultInputButton';
 import DateTimeLineItem from './components/DateTimeLineItem';
-import Colors from '../../../../constants/Colors';
-import Fonts from '../../../../constants/Fonts';
 import {CalendarList} from 'react-native-calendars';
 import {EventInputProps} from './InputTypes';
 
@@ -32,15 +30,15 @@ const ChooseDate = ({id, Modal, modalProps, questionText}: EventInputProps) => {
       <CalendarList
         current={date.format('YYYY-MM-DD')}
         theme={{
-          textDayFontFamily: Fonts.primaryText,
-          textMonthFontFamily: Fonts.primaryTextBold,
+          textDayFontFamily: 'metropolis-regular',
+          textMonthFontFamily: 'metropolis-bold',
         }}
         markingType={'custom'}
         markedDates={{
           [moment().format('YYYY-MM-DD')]: {
             customStyles: {
               container: {
-                backgroundColor: Colors.lightGray,
+                backgroundColor: '#DBE6E1',
                 elevation: 2,
               },
               text: {
