@@ -1,7 +1,7 @@
 import {gql, useMutation, useQuery} from '@apollo/client';
 import EventInputTemplate from './Inputs/EventInputTemplate';
 import {GET_EVENTS} from '../calendar/CalendarView';
-import {EVENT_FIELDS, GET_UPCOMING_EVENTS} from '../home/UpcomingEvents';
+import {EVENT_FIELDS} from '../home/UpcomingEvents';
 import {useEventForm, clearEventForm} from 'CreateEvent/CreateEventFormStore';
 import {ScreenContainer, Container, Button} from 'ScoutDesign/library';
 
@@ -52,7 +52,7 @@ const CreateEvent = ({navigation, route}) => {
   const {fields} = state;
 
   const [updateEvent] = useMutation(UPDATE_EVENT, {
-    update(cache, {data: {event}}) {
+    update(cache, {data: {updateEvent: event}}) {
       try {
         const {events} = cache.readQuery({query: GET_EVENTS});
         cache.writeQuery({
@@ -77,44 +77,49 @@ const CreateEvent = ({navigation, route}) => {
   const schema = data['eventSchemas'][route.params.type.toLowerCase()];
 
   const createEvent = () => {
-    if (true) {
-      const eventDataCopy = {...fields};
-      if (route.params.update) {
-        const omitTypename = (key, value) =>
-          key === '__typename' ? undefined : value;
-        const cleanedEventData = JSON.parse(
-          JSON.stringify(eventDataCopy),
-          omitTypename
-        );
-        updateEvent({
-          variables: {id: route.params.id, updates: cleanedEventData},
+    const eventDataCopy = {...fields};
+    if (route.params.update) {
+      const omitInvalidFields = (key, value) => {
+        if (key === '__typename') {
+          return undefined;
+        } else if (value === null) {
+          return undefined;
+        } else {
+          return value;
+        }
+      };
+      const cleanedEventData = JSON.parse(
+        JSON.stringify(eventDataCopy),
+        omitInvalidFields
+      );
+      updateEvent({
+        variables: {id: route.params.id, updates: cleanedEventData},
+      })
+        .then(() => {
+          return new Promise((res, rej) => {
+            dispatch(clearEventForm());
+            navigation.goBack();
+            res();
+          });
         })
-          .then(() => {
-            return new Promise((res, rej) => {
-              dispatch(clearEventForm());
-              navigation.goBack();
-              res();
-            });
-          })
-          .catch((err) => console.log(err));
-      } else {
-        addEvent({
-          variables: {
-            event: {
-              type: schema.metaData.eventID,
-              ...eventDataCopy,
-            },
+        .catch((err) => console.log(err));
+    } else {
+      addEvent({
+        variables: {
+          event: {
+            type: schema.metaData.eventID,
+            ...eventDataCopy,
           },
+        },
+      })
+        .then(() => {
+          return new Promise((res, rej) => {
+            navigation.popToTop();
+            navigation.navigate('UpcomingEvents');
+            res();
+          });
         })
-          .then(() => {
-            return new Promise((res, rej) => {
-              navigation.popToTop();
-              navigation.navigate('UpcomingEvents');
-              res();
-            });
-          })
-          .catch((err) => console.log(err));
-      }
+        .catch((err) => console.log(err));
     }
   };
 
@@ -129,7 +134,6 @@ const CreateEvent = ({navigation, route}) => {
       icon="back"
       padding="none"
       paddingTop="xl"
-      paddingBottom="xl"
       back={() => {
         dispatch(clearEventForm());
         navigation.goBack();
@@ -147,10 +151,10 @@ const CreateEvent = ({navigation, route}) => {
             />
           )
       )}
-      <Container>
+      <Container paddingTop="l" paddingBottom="xl">
         <Button
           accessibilityLabel="submit"
-          text="Create Event"
+          text={route.params?.update ? 'Update' : 'Create Event'}
           onPress={createEvent}
           fullWidth
         />

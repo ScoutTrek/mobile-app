@@ -1,5 +1,6 @@
 import {
   INITIALIZE_FORM,
+  POPULATE_EVENT,
   ADD_FIELD,
   UPDATE_FIELD,
   DELETE_FIELD,
@@ -28,6 +29,14 @@ export const createEventFormReducer = (
       return {
         ...state,
         currEventType: action.eventType,
+      };
+    case POPULATE_EVENT:
+      return {
+        ...state,
+        currEventType: action.eventType,
+        fields: {
+          ...action.event,
+        },
       };
     case ADD_FIELD:
       return {

@@ -120,7 +120,7 @@ export const mapMarker = new IconPayload({
 });
 
 export const notifications = new IconPayload({
-  name: 'md-notifications-sharp',
+  name: 'notifications',
   library: Ionicons,
 });
 

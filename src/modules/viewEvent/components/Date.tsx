@@ -1,19 +1,21 @@
 import moment from 'moment';
 import {Text, Icon, LineItem} from 'ScoutDesign/library';
-import {clock} from 'ScoutDesign/icons';
+import {calendar} from 'ScoutDesign/icons';
 
-const Time = ({time, heading}) => {
+const Date = ({date, heading}) => {
   return (
     <LineItem
       accessibilityLabel="event-time"
       type="static"
-      leftComponent={<Icon icon={clock} size="m" color="brandSecondaryDark" />}>
+      leftComponent={
+        <Icon icon={calendar} size="m" color="brandPrimaryDark" />
+      }>
       <Text color="darkGrey" weight="bold" size="l" paddingBottom="micro">
-        {moment(time).format('hh:mm A')}
+        {moment(date).format('dddd, MMMM Do')}
       </Text>
       <LineItem.Subheading>{heading}</LineItem.Subheading>
     </LineItem>
   );
 };
 
-export default Time;
+export default Date;

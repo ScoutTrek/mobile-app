@@ -24,7 +24,7 @@ type Props = {
 
 const ViewEventsList = ({navigation}: Props) => {
   const [_, dispatch] = useEventForm();
-  const {loading, error, data} = useQuery(GET_EVENT_SCHEMAS);
+  const {loading, data} = useQuery(GET_EVENT_SCHEMAS);
 
   if (loading) {
     return <ActivityIndicator />;

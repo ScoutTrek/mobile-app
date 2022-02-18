@@ -1,8 +1,10 @@
 import {createContext, useContext, useReducer, Dispatch} from 'react';
 import {EventFormState} from './createEventFormReducer';
+import {Event, EventType} from 'data/types';
 
 // Action types
 export const INITIALIZE_FORM = 'INITIALIZE_FORM';
+export const POPULATE_EVENT = 'POPULATE_EVENT';
 export const ADD_FIELD = 'ADD_FIELD';
 export const UPDATE_FIELD = 'UPDATE_FIELD';
 export const DELETE_FIELD = 'DELETE_FIELD';
@@ -11,6 +13,12 @@ export const CLEAR_FORM = 'CLEAR_FORM';
 // Actions
 export const initializeEventForm = (eventType: string) => ({
   type: INITIALIZE_FORM,
+  eventType,
+});
+
+export const populateEvent = (event: Event, eventType: EventType) => ({
+  type: POPULATE_EVENT,
+  event,
   eventType,
 });
 

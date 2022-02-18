@@ -10,6 +10,7 @@ import {
   people,
   tent,
 } from 'ScoutDesign/icons';
+import {ImageSourcePropType} from 'react-native';
 
 function getIcon(eventType: Event) {
   switch (eventType) {
@@ -35,10 +36,11 @@ type Props = {
   title: string;
   type: Event;
   date: string;
+  imageSource: ImageSourcePropType;
   onSelect: (item: EventSignature) => void;
 };
 
-const EventCard = ({id, title, type, date, onSelect}: Props) => {
+const EventCard = ({id, title, type, date, imageSource, onSelect}: Props) => {
   const absDate = new Date(+date);
   const offset = -1 * absDate.getTimezoneOffset() * 60 * 1000;
   const localDate = new Date(absDate.getTime() - offset);
@@ -99,9 +101,7 @@ const EventCard = ({id, title, type, date, onSelect}: Props) => {
         size={{
           height: 100,
         }}
-        source={{
-          uri: 'https://picsum.photos/1000',
-        }}
+        source={imageSource}
       />
       <Card.Description
         heading={title}

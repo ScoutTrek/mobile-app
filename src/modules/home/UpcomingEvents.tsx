@@ -27,7 +27,6 @@ export const EVENT_FIELDS = gql`
     checkoutTime
     endTime
     endDate
-    recurring
     location {
       lat
       lng
@@ -42,6 +41,7 @@ export const EVENT_FIELDS = gql`
       id
       name
     }
+    mapImageSource @client
   }
 `;
 
@@ -172,6 +172,7 @@ export default function UpcomingEvents({navigation}) {
             title={item.title}
             type={item.type}
             date={item.date}
+            imageSource={{uri: item.mapImageSource}}
             onSelect={viewEvent}
           />
         )}

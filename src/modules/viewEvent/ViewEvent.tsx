@@ -1,13 +1,13 @@
 import {Text, Alert} from 'react-native';
 
-import {GOOGLE_MAPS_API_KEY} from '../../../env';
+import {useEventForm, populateEvent} from 'CreateEvent/CreateEventFormStore';
 
 import {gql, useMutation, useQuery} from '@apollo/client';
 import Location from './components/Location';
 import Time from './components/Time';
-
+import Date from './components/Date';
 import Description from './components/Description';
-import {GET_UPCOMING_EVENTS} from '../home/UpcomingEvents';
+
 import {GET_EVENTS} from '../calendar/CalendarView';
 import {EVENT_FIELDS} from '../home/UpcomingEvents';
 
@@ -40,20 +40,14 @@ export const deleteEventConfig = {
         query: GET_EVENTS,
         data: {events: updatedEvents},
       });
-    } catch (err) {}
-    const {upcomingEvents} = cache.readQuery({query: GET_UPCOMING_EVENTS});
-    const updatedUpcomingEvents = upcomingEvents.filter(
-      (t) => t.id !== deleteEvent.id
-    );
-
-    cache.writeQuery({
-      query: GET_UPCOMING_EVENTS,
-      data: {upcomingEvents: updatedUpcomingEvents},
-    });
+    } catch (err) {
+      console.error(err);
+    }
   },
 };
 
 const EventDetailsScreen = ({route, navigation}) => {
+  const [_, dispatch] = useEventForm();
   const {currItem} = route.params;
   const {loading, error, data} = useQuery(GET_EVENT, {
     variables: {id: currItem},
@@ -86,13 +80,16 @@ const EventDetailsScreen = ({route, navigation}) => {
   if (error)
     return <Text style={{paddingTop: 50}}>`Error! ${error.toString()}`</Text>;
 
-  // Clear database and
-  let mapUrl;
-  if (data.event.location) {
-    mapUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${data.event.location.lat},${data.event.location.lng}&zoom=13&size=325x375&maptype=roadmap&markers=color:blue%7C${data.event.location.lat},${data.event.location.lng}&key=${GOOGLE_MAPS_API_KEY}`;
-  }
   return (
-    <ScreenContainer paddingTop="l" icon="back" back={navigation.goBack}>
+    <ScreenContainer
+      padding="none"
+      icon="back"
+      back={navigation.goBack}
+      headingImage={
+        data.event.mapImageSource
+          ? {source: {uri: data.event.mapImageSource}}
+          : undefined
+      }>
       {data.event.meetLocation ? (
         <>
           <Location
@@ -108,10 +105,20 @@ const EventDetailsScreen = ({route, navigation}) => {
         heading="Event location"
         address={data.event.location.address}
       />
-      <Time time={+data.event.startTime} heading="Event start time" />
-      {!data.event.endTime ? null : (
+      <Date date={+data.event.date} heading="Event date" />
+      <Time time={+data.event.startTime} heading="Start time" />
+      {data.event.endTime ? (
         <Time time={+data.event.endTime} heading="Estimated return" />
-      )}
+      ) : null}
+      {data.event.endDate ? (
+        <Date date={+data.event.endDate} heading="Event ends" />
+      ) : null}
+      {data.event.pickupTime ? (
+        <Time time={+data.event.pickupTime} heading="Pick up Scouts" />
+      ) : null}
+      {data.event.checkoutTime ? (
+        <Time time={+data.event.checkoutTime} heading="Check out" />
+      ) : null}
 
       <Description description={data.event.description} />
 
@@ -119,11 +126,13 @@ const EventDetailsScreen = ({route, navigation}) => {
         accessibilityLabel="edit-event"
         icon={pencil}
         onPress={() => {
+          const {id, type, creator, ...eventData} = data.event;
+          dispatch(populateEvent(eventData, type));
           navigation.navigate('CreateEvent', {
             screen: 'EventForm',
             params: {
-              type: data.event.type,
-              id: data.event.id,
+              type: type,
+              id: id,
               update: true,
             },
           });

@@ -4,6 +4,7 @@ import {Image as RNImage, ImageSourcePropType, StyleSheet} from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 import {SpacingProps} from '@shopify/restyle';
 import theme, {Theme} from '../../../../theme';
+import Text from '../../Text/Text';
 
 import {
   Pressable,
@@ -12,8 +13,6 @@ import {
   PressableProps,
   mapRadius,
 } from '../../../utility';
-
-import Text from '../../Text/Text';
 
 export interface ImageProps extends SizeProps, PressableProps {
   accessibilityLabel: string;

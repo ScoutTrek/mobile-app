@@ -3,7 +3,6 @@ import {Image} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import CalendarNav from './CalendarNavigator';
 import ProfileScreen from '../profile/ProfileScreen';
 import CalendarScreen from '../calendar/CalendarView';
 

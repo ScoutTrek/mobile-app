@@ -26,6 +26,8 @@ import {
   useQuery,
 } from '@apollo/client';
 
+import {GOOGLE_MAPS_API_KEY} from 'env';
+
 import {onError} from '@apollo/client/link/error';
 
 import AuthNavigator from './src/modules/navigation/AuthNavigator';
@@ -177,6 +179,17 @@ export const ScoutTrekApolloClient = new ApolloClient({
             merge(previous, incoming) {
               return {...previous, ...incoming};
             },
+          },
+        },
+      },
+      Event: {
+        fields: {
+          mapImageSource(_, {readField}) {
+            const location = readField<string>('location');
+            const mapUrl = location
+              ? `https://maps.googleapis.com/maps/api/staticmap?center=${location.lat},${location.lng}&zoom=12&size=350x400&maptype=roadmap&markers=size:mid%7Ccolor:orange%7C${location.lat},${location.lng}&key=${GOOGLE_MAPS_API_KEY}`
+              : null;
+            return mapUrl;
           },
         },
       },
