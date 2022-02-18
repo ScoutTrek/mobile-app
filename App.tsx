@@ -56,13 +56,6 @@ const AppLoadingContainer = () => {
   const [appLoading, setAppLoading] = useState<boolean>(true);
 
   const [fontsLoaded] = useFonts({
-    ...Ionicons.font,
-    montserrat: require('./assets/fonts/Montserrat/Montserrat-Regular.ttf'),
-    'montserrat-med': require('./assets/fonts/Montserrat/Montserrat-Medium.ttf'),
-    'montserrat-light': require('./assets/fonts/Montserrat/Montserrat-Light.ttf'),
-    'montserrat-bold': require('./assets/fonts/Montserrat/Montserrat-Bold.ttf'),
-    'raleway-bold': require('./assets/fonts/Raleway/Raleway-Bold.ttf'),
-    'raleway-black': require('./assets/fonts/Raleway/Raleway-Black.ttf'),
     'open-sans-bold': require('./assets/fonts/OpenSans/OpenSans-Bold.ttf'),
     'open-sans-semibold': require('./assets/fonts/OpenSans/OpenSans-SemiBold.ttf'),
     'open-sans-regular': require('./assets/fonts/OpenSans/OpenSans-Regular.ttf'),
