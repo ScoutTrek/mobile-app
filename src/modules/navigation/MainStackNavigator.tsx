@@ -10,6 +10,7 @@ import JoinGroupNavigator from './JoinGroupNavigator';
 import ViewEvent from '../viewEvent/ViewEvent';
 import CreateEvent from './CreateEventNavigator';
 import MainTabNavigator from './MainTabNavigator';
+import Notifications from '../notifications/Notifications';
 
 const MainStack = createStackNavigator();
 
@@ -24,6 +25,7 @@ const MainStackNavigator = ({route}) => {
           headerShown: false,
         })}>
         <MainStack.Screen name="JoinGroup" component={JoinGroupNavigator} />
+        <MainStack.Screen name="Notifications" component={Notifications} />
         <MainStack.Screen name="Main" component={MainTabNavigator} />
         <MainStack.Screen name="CreateEvent" component={CreateEvent} />
         <MainStack.Screen name="ViewEvent" component={ViewEvent} />

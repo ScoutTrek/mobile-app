@@ -1,22 +1,30 @@
-import {Image} from 'react-native';
+import {ActivityIndicator, Image} from 'react-native';
 
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import ProfileScreen from '../profile/ProfileScreen';
+import ProfileScreen, {GET_CURR_USER} from '../profile/ProfileScreen';
 import CalendarScreen from '../calendar/CalendarView';
 
 import {Icon, Text, Avatar, Container} from 'ScoutDesign/library';
 import {home, calendar, notifications} from 'ScoutDesign/icons';
 
 import UpcomingEvents from '../home/UpcomingEvents';
+import {useQuery} from '@apollo/client';
 
 const HomeStack = createStackNavigator();
 
 const HomeNav = ({navigation}) => {
+  const {data, error, loading} = useQuery(GET_CURR_USER);
+
+  if (error) {
+    console.error(error);
+    return null;
+  }
+  if (loading) return <ActivityIndicator />;
   return (
     <HomeStack.Navigator
-      screenOptions={() => ({
+      screenOptions={({navigation}) => ({
         headerTitle: () => (
           <Container paddingVertical="none">
             <Text weight="bold">ScoutTrek</Text>
@@ -28,7 +36,9 @@ const HomeNav = ({navigation}) => {
               icon={notifications}
               color="darkGrey"
               size="m"
-              onPress={() => {}}
+              onPress={() => navigation.navigate('Notifications')}
+              // @todo this should be updated with a GQL subscription because it should change if the app is open when another user modifies an event.
+              badge={!!data.currUser?.unreadNotifications?.length}
             />
           </Container>
         ),

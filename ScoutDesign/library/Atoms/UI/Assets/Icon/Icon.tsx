@@ -3,9 +3,9 @@ import {
   Pressable,
   IconSizePresets,
   PressableProps,
-  mapRadius,
   Color,
 } from '../../../utility';
+import {Box} from '../../../utility';
 import {SpacingProps} from '@shopify/restyle';
 
 import {IconPayload} from '../../../../../icons';
@@ -15,11 +15,20 @@ interface IconProps extends PressableProps {
   size: IconSizePresets;
   color: Color;
   backgroundColor?: Color;
+  badge?: boolean;
 }
 
 type Props = IconProps & SpacingProps<Theme>;
 
-const Icon = ({radius, icon, size, color, backgroundColor, ...rest}: Props) => {
+const Icon = ({
+  radius,
+  icon,
+  size,
+  color,
+  backgroundColor,
+  badge,
+  ...rest
+}: Props) => {
   if (typeof size !== 'string') {
     console.error('Icon can only use size presets, not custom dimensions.');
     return null;
@@ -44,6 +53,16 @@ const Icon = ({radius, icon, size, color, backgroundColor, ...rest}: Props) => {
           }
           color={color ? theme.colors?.[color] : undefined}
         />
+        {badge ? (
+          <Box
+            borderRadius={13}
+            backgroundColor="danger"
+            position="absolute"
+            top={0}
+            right={0}
+            style={{width: 13, height: 13}}
+          />
+        ) : undefined}
       </Pressable>
     );
   }

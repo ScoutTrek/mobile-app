@@ -83,6 +83,7 @@ const EventDetailsScreen = ({route, navigation}) => {
   return (
     <ScreenContainer
       padding="none"
+      paddingBottom="xl"
       icon="back"
       back={navigation.goBack}
       headingImage={
@@ -126,7 +127,7 @@ const EventDetailsScreen = ({route, navigation}) => {
         accessibilityLabel="edit-event"
         icon={pencil}
         onPress={() => {
-          const {id, type, creator, ...eventData} = data.event;
+          const {id, type, creator, mapImageSource, ...eventData} = data.event;
           dispatch(populateEvent(eventData, type));
           navigation.navigate('CreateEvent', {
             screen: 'EventForm',

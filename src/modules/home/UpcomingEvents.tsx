@@ -1,5 +1,5 @@
 import {useRef, useEffect} from 'react';
-import {SectionList, StyleSheet, Platform} from 'react-native';
+import {SectionList, Platform} from 'react-native';
 import EventCard from './components/EventCard';
 import NoEvents from '../../components/NoEvents';
 import * as Device from 'expo-device';
@@ -8,6 +8,9 @@ import {Container, LargeFloatingButton, Text} from 'ScoutDesign/library';
 
 import * as Notifications from 'expo-notifications';
 import {gql, useMutation, useQuery} from '@apollo/client';
+
+import {DISMISS_NOTIFICATION} from '../notifications/Notifications';
+import {GET_CURR_USER} from '../profile/ProfileScreen';
 
 export const EVENT_FIELDS = gql`
   fragment EventFragment on Event {
@@ -74,6 +77,10 @@ export type EventSignature = {
 };
 
 export default function UpcomingEvents({navigation}) {
+  const [dismissNotification] = useMutation(DISMISS_NOTIFICATION, {
+    refetchQueries: [GET_CURR_USER],
+  });
+
   const {loading, error, data} = useQuery(GET_EVENTS);
 
   const [updateToken] = useMutation(UPDATE_EXPO_TOKEN);
@@ -87,13 +94,14 @@ export default function UpcomingEvents({navigation}) {
         Notifications.addNotificationResponseReceivedListener((response) => {
           const notificationType =
             response.notification.request.content.data.type;
-          const ID = response.notification.request.content.data.ID;
+          const notificationID =
+            response.notification.request.content.data.notificationID;
+          const eventID = response.notification.request.content.data.ID;
 
           switch (notificationType) {
             case 'event':
-              navigation.navigate('ViewEvent', {
-                params: {currItem: ID},
-              });
+              navigation.navigate('ViewEvent', {currItem: eventID});
+              dismissNotification({variables: {id: notificationID}});
               break;
           }
         });
@@ -159,26 +167,31 @@ export default function UpcomingEvents({navigation}) {
     },
   ];
   return (
-    <Container flex={1}>
+    <Container padding="none" flex={1}>
       <SectionList
         sections={!data?.events?.length ? [] : eventListData}
         keyExtractor={(item) => item.id}
+        contentContainerStyle={{flexGrow: 1, paddingBottom: 20}}
+        scrollIndicatorInsets={{right: 1}}
         renderItem={({item}) => (
-          <EventCard
-            key={item.id}
-            id={item.id}
-            title={item.title}
-            type={item.type}
-            date={item.date}
-            creator={item.creator}
-            imageSource={{uri: item.mapImageSource}}
-            onSelect={viewEvent}
-          />
+          <Container paddingVertical="none">
+            <EventCard
+              key={item.id}
+              id={item.id}
+              title={item.title}
+              type={item.type}
+              date={item.date}
+              creator={item.creator}
+              imageSource={{uri: item.mapImageSource}}
+              onSelect={viewEvent}
+            />
+          </Container>
         )}
         renderSectionHeader={({section: {title, data}}) =>
           data.length > 0 ? (
             <Text
               preset="sublabel"
+              marginLeft="s"
               marginTop={title === 'Upcoming Events' ? 'm' : undefined}>
               {title}
             </Text>

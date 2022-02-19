@@ -32,41 +32,56 @@ export const _updateCurrentGroup = async (groupID, navigation) => {
   await ScoutTrekApolloClient.resetStore();
 };
 
-export const GET_CURR_USER = gql`
-  query GetCurrUser {
-    currUser {
+export const USER_FIELDS = gql`
+  fragment UserFragment on User {
+    id
+    name
+    email
+    currRole
+    currPatrol {
       id
       name
-      email
-      currRole
-      currPatrol {
+    }
+    currTroop {
+      id
+      unitNumber
+      council
+      patrols {
         id
         name
-      }
-      currTroop {
-        id
-        unitNumber
-        council
-        patrols {
+        members {
           id
           name
-          members {
-            id
-            name
-          }
         }
       }
-      userPhoto
-      otherGroups {
-        id
-        troopNumber
-      }
+    }
+    userPhoto
+    unreadNotifications {
+      id
+      createdAt
+      title
+      type
+      eventType
+      eventID
+    }
+    otherGroups {
+      id
+      troopNumber
     }
   }
 `;
 
+export const GET_CURR_USER = gql`
+  query GetCurrUser {
+    currUser {
+      ...UserFragment
+    }
+  }
+  ${USER_FIELDS}
+`;
+
 const ProfileScreen = ({navigation}) => {
-  const {data, loading} = useQuery(GET_CURR_USER);
+  const {data, error, loading} = useQuery(GET_CURR_USER);
   const client = useApolloClient();
   const {setToken} = useContext(AuthContext);
 
@@ -76,6 +91,10 @@ const ProfileScreen = ({navigation}) => {
     );
   };
 
+  if (error) {
+    console.error(error);
+    return null;
+  }
   if (loading) return <ActivityIndicator />;
 
   return (
