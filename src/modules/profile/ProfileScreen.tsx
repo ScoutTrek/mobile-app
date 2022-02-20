@@ -73,8 +73,6 @@ const ProfileScreen = ({navigation}) => {
   }
   if (loading) return <ActivityIndicator />;
 
-  console.log(data);
-
   return (
     <ScreenContainer justifyContent="space-between">
       <Container padding="none">
