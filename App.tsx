@@ -17,24 +17,16 @@ import {AuthContext} from './src/modules/auth/SignUp';
 
 import {ApolloProvider, gql, useQuery} from '@apollo/client';
 
-import {ScoutTrekApolloClient} from 'data';
+import {ScoutTrekApolloClient, GET_CURR_USER} from 'data';
 
 import AuthNavigator from './src/modules/navigation/AuthNavigator';
 import MainStackNavigator from './src/modules/navigation/MainStackNavigator';
-
-export const GET_CURR_USER_GROUPS = gql`
-  query GetCurrUserGroups {
-    currUser {
-      noGroups
-    }
-  }
-`;
 
 const AppLoadingContainer = () => {
   const [token, setToken] = useState<string>('');
   const [newUser, setNewUser] = useState<boolean>(false);
 
-  useQuery(GET_CURR_USER_GROUPS, {
+  useQuery(GET_CURR_USER, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
       if (data) {

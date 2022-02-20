@@ -5,12 +5,12 @@ import NoEvents from '../../components/NoEvents';
 import * as Device from 'expo-device';
 import {plusThin} from 'ScoutDesign/icons';
 import {Container, LargeFloatingButton, Text} from 'ScoutDesign/library';
+import {GET_CURR_USER} from 'data';
 
 import * as Notifications from 'expo-notifications';
 import {gql, useMutation, useQuery} from '@apollo/client';
 
 import {DISMISS_NOTIFICATION} from '../notifications/Notifications';
-import {GET_CURR_USER} from '../profile/ProfileScreen';
 
 export const EVENT_FIELDS = gql`
   fragment EventFragment on Event {

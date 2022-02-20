@@ -2,9 +2,10 @@ import {ActivityIndicator} from 'react-native';
 import {ScreenContainer, Container, Card, Text} from 'ScoutDesign/library';
 import {useQuery, useMutation, gql} from '@apollo/client';
 
-import {GET_CURR_USER} from '../profile/ProfileScreen';
 import {checkmark} from 'ScoutDesign/icons';
 import moment from 'moment';
+
+import {GET_CURR_USER} from 'data';
 
 export const DISMISS_NOTIFICATION = gql`
   mutation DismissNotificaion($id: ID!) {

@@ -3,13 +3,14 @@ import {ActivityIndicator, Image} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import ProfileScreen, {GET_CURR_USER} from '../profile/ProfileScreen';
+import ProfileScreen from '../profile/ProfileScreen';
 import CalendarScreen from '../calendar/CalendarView';
 
 import {Icon, Text, Avatar, Container} from 'ScoutDesign/library';
 import {home, calendar, notifications} from 'ScoutDesign/icons';
 
 import UpcomingEvents from '../home/UpcomingEvents';
+import {GET_CURR_USER} from 'data';
 import {useQuery} from '@apollo/client';
 
 const HomeStack = createStackNavigator();

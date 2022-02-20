@@ -85,8 +85,8 @@ const ChooseTime = ({
       display="default"
       onChange={(_, newDateString) => {
         next(new Date(newDateString));
+        setShowAndroidClock(false);
       }}
-      style={{flex: 1}}
     />
   ) : null;
 };
