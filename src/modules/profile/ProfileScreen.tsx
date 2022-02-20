@@ -11,6 +11,7 @@ import {
   ScreenContainer,
   Badge,
   Avatar,
+  ImagePickerConainer,
 } from 'ScoutDesign/library';
 import {ScoutTrekApolloClient} from 'data';
 import {convertRoleToText} from '../../data/utils/convertIDsToStrings';
@@ -18,7 +19,7 @@ import * as WebBrowser from 'expo-web-browser';
 
 import {AuthContext} from '../auth/SignUp';
 
-import {gql, useApolloClient, useQuery} from '@apollo/client';
+import {gql, useApolloClient, useQuery, useMutation} from '@apollo/client';
 import {plusThin} from 'ScoutDesign/icons';
 
 export const _updateCurrentGroup = async (groupID, navigation) => {
@@ -80,10 +81,33 @@ export const GET_CURR_USER = gql`
   ${USER_FIELDS}
 `;
 
+const UPLOAD_PROFILE_PHOTO = gql`
+  mutation UploadProfilePhoto($file: Upload!) {
+    uploadImage(file: $file)
+  }
+`;
+
 const ProfileScreen = ({navigation}) => {
   const {data, error, loading} = useQuery(GET_CURR_USER);
   const client = useApolloClient();
+
   const {setToken} = useContext(AuthContext);
+
+  const [
+    uploadProfilePhoto,
+    {loading: imageUploadInProgress, error: uploadError},
+  ] = useMutation(UPLOAD_PROFILE_PHOTO, {
+    update(cache, {data: {uploadImage}}) {
+      const {currUser} = cache.readQuery({query: GET_CURR_USER});
+      cache.modify({
+        fields: {
+          currUser() {
+            return {...currUser, userPhoto: uploadImage};
+          },
+        },
+      });
+    },
+  });
 
   const _handlePressButtonAsync = async () => {
     let result = await WebBrowser.openBrowserAsync(
@@ -97,6 +121,8 @@ const ProfileScreen = ({navigation}) => {
   }
   if (loading) return <ActivityIndicator />;
 
+  console.log(data);
+
   return (
     <ScreenContainer justifyContent="space-between">
       <Container padding="none">
@@ -106,12 +132,17 @@ const ProfileScreen = ({navigation}) => {
             justifyContent="center"
             padding="none"
             paddingBottom="m">
-            <Avatar
-              size="xl"
-              source={{
-                uri: data.currUser.userPhoto,
-              }}
-            />
+            <ImagePickerConainer
+              loading={imageUploadInProgress}
+              error={uploadError}
+              uploadImage={uploadProfilePhoto}>
+              <Avatar
+                size="xl"
+                source={{
+                  uri: data.currUser.userPhoto,
+                }}
+              />
+            </ImagePickerConainer>
             <Text preset="h2" paddingTop="m">
               {data.currUser.name}
             </Text>

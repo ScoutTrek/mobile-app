@@ -65,5 +65,5 @@ export const mapRadius = (
 };
 
 export interface SizeProps {
-  size: SizePresets | Dimensions;
+  size?: SizePresets | Dimensions;
 }

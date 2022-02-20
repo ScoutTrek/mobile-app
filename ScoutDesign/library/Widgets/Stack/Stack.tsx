@@ -39,8 +39,6 @@ const Stack = ({
   RenderItem,
   items,
   everyItemProps,
-  HeaderComponent,
-  FooterComponent,
 }: StackProps) => {
   return (
     <Box>
@@ -49,23 +47,15 @@ const Stack = ({
         accessibilityLabel={accessibilityLabel}
         borderWidth={borderColor ? 1 : undefined}
         borderColor={borderColor}
-        borderTopWidth={HeaderComponent ? 0 : undefined}
-        borderBottomWidth={FooterComponent ? 0 : undefined}
+        borderBottomWidth={undefined}
         backgroundColor={backgroundColor}
-        topLeftRadius={HeaderComponent ? undefined : radius}
-        topRightRadius={HeaderComponent ? undefined : radius}
-        bottomLeftRadius={FooterComponent ? undefined : radius}
-        bottomRightRadius={FooterComponent ? undefined : radius}>
-        {HeaderComponent ? (
-          <HeaderComponent
-            isStackTop
-            isStackBottom={!items.length}
-            stackRadius={radius}
-          />
-        ) : null}
+        topLeftRadius={radius}
+        topRightRadius={radius}
+        bottomLeftRadius={radius}
+        bottomRightRadius={radius}>
         {items.map((item: StackItemSchema, index: number) => {
-          const firstItem = index === 0 && !HeaderComponent;
-          const lastItem = index === items.length - 1 && !FooterComponent;
+          const firstItem = index === 0;
+          const lastItem = index === items.length - 1;
           return (
             <React.Fragment key={item.id}>
               {!firstItem && (
@@ -89,9 +79,6 @@ const Stack = ({
           );
         })}
       </Container>
-      {FooterComponent ? (
-        <FooterComponent isStackBottom stackRadius={radius} />
-      ) : null}
     </Box>
   );
 };

@@ -45,7 +45,9 @@ const ModalBase = ({
         backgroundColor: 'rgba(155, 155, 155, 0.88)',
       }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Dimensions.get('window').height * 0.1}>
+      keyboardVerticalOffset={
+        noStyles ? 0 : Dimensions.get('window').height * 0.1
+      }>
       {noStyles ? (
         <>
           {children}

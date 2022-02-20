@@ -1,15 +1,16 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {GOOGLE_MAPS_API_KEY} from 'env';
-import {
-  ApolloClient,
-  HttpLink,
-  InMemoryCache,
-  from,
-  ApolloLink,
-} from '@apollo/client';
+import {ApolloClient, InMemoryCache, from, ApolloLink} from '@apollo/client';
 import {onError} from '@apollo/client/link/error';
 
+import {createUploadLink} from 'apollo-upload-client';
+
 type AsyncStorageData = {[key: string]: string | null};
+
+const httpLink = new createUploadLink({
+  // uri: 'http://localhost:4000/graphql',
+  uri: 'https://beta-dot-scouttrek-node-api.appspot.com/graphql',
+});
 
 const loadKeysFromAsyncStorage = async (
   asyncDataKeys: string[]
@@ -80,14 +81,7 @@ const ScoutTrekApolloClient = new ApolloClient({
       },
     },
   }),
-  link: from([
-    authMiddleware,
-    errorMiddleware,
-    new HttpLink({
-      uri: 'http://localhost:4000/graphql',
-      // uri: 'https://beta-dot-scouttrek-node-api.appspot.com/:4000',
-    }),
-  ]),
+  link: from([authMiddleware, errorMiddleware, httpLink]),
 });
 
 export default ScoutTrekApolloClient;

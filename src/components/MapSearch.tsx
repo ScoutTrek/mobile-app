@@ -56,6 +56,7 @@ const MapSearch = ({
         />
       </Container>
       <ScrollView
+        keyboardShouldPersistTaps="handled"
         style={{
           flex: 1,
           width: '100%',

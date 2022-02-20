@@ -70,7 +70,7 @@ const EventCard = ({
       }
       titleAlignment="right"
       headerRight={
-        <Container padding="none" flexDirection="row" alignItems="baseline">
+        <Container padding="none" flexDirection="row" alignItems="center">
           <Text preset="micro">
             {
               [

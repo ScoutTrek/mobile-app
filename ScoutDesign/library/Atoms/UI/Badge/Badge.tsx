@@ -55,13 +55,25 @@ const Badge = ({
       {!!icon && icon.isValid() && (
         <Icon
           icon={icon}
-          color={color === 'gradient' ? 'brandPrimaryDark' : 'white'}
+          color={
+            color === 'gradient'
+              ? 'brandPrimaryDark'
+              : color === 'white'
+              ? 'darkGrey'
+              : 'white'
+          }
           size="xs"
         />
       )}
       <Text
         accessibilityLabel={text}
-        color={color === 'gradient' ? 'brandPrimaryDark' : 'white'}
+        color={
+          color === 'gradient'
+            ? 'brandPrimaryDark'
+            : color === 'white'
+            ? 'darkGrey'
+            : 'white'
+        }
         preset="micro"
         paddingLeft={icon ? 'xs' : undefined}>
         {text}

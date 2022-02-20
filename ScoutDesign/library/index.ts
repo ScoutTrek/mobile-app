@@ -8,6 +8,7 @@ export {default as BackButton} from './Atoms/UI/Buttons/BackButton';
 export {default as Text} from './Atoms/UI/Text/Text';
 export {default as Icon} from './Atoms/UI/Assets/Icon/Icon';
 export {default as Image} from './Atoms/UI/Assets/Image/Image';
+export {default as ImagePickerConainer} from './Atoms/UI/Assets/Image/ImagePickerConainer';
 export {default as Avatar} from './Atoms/UI/Assets/Avatar/Avatar';
 
 // Layouts

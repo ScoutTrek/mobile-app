@@ -81,8 +81,8 @@ const positions: PositionObj = {
       left: 14,
     },
     edge: {
-      bottom: -7,
-      left: -7,
+      bottom: 0,
+      left: 0,
     },
   },
 };

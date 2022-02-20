@@ -9,7 +9,15 @@
       "ios",
       "android"
     ],
-    "version": "1.0.2",
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos allow you to choose a profile photo."
+        }
+      ]
+    ],
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/images/ScoutTrekIcon.png",
     "updates": {
