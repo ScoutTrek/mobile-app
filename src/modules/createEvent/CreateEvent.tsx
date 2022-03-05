@@ -1,7 +1,6 @@
 import {gql, useMutation, useQuery} from '@apollo/client';
 import EventInputTemplate from './Inputs/EventInputTemplate';
-import {GET_EVENTS} from '../calendar/CalendarView';
-import {EVENT_FIELDS} from '../home/UpcomingEvents';
+import {GET_EVENTS, EVENT_FIELDS} from 'data';
 import {useEventForm, clearEventForm} from 'CreateEvent/CreateEventFormStore';
 import {ScreenContainer, Container, Button} from 'ScoutDesign/library';
 

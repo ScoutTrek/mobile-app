@@ -2,22 +2,13 @@ import {useRef} from 'react';
 import {StyleSheet} from 'react-native';
 import {Agenda} from 'react-native-calendars';
 import Constants from 'expo-constants';
+import {GET_EVENTS} from 'data';
 
-import {gql, useQuery} from '@apollo/client';
-import {EVENT_FIELDS} from '../home/UpcomingEvents';
+import {useQuery} from '@apollo/client';
 import NoEvents from '../../components/NoEvents';
 import {Badge, Card, Container, Text} from 'ScoutDesign/library';
 import moment from 'moment';
 import useCurrMonthEvents from './hooks/useCurrMonthEvents';
-
-export const GET_EVENTS = gql`
-  ${EVENT_FIELDS}
-  query ALL_EVENTS {
-    events {
-      ...EventFragment
-    }
-  }
-`;
 
 const getColor = () => {
   const allColors = [
@@ -33,7 +24,9 @@ const getColor = () => {
 };
 
 const CalendarView = ({navigation}) => {
-  const {data, loading, error} = useQuery(GET_EVENTS);
+  const {data, loading, error} = useQuery(GET_EVENTS, {
+    fetchPolicy: 'network-only',
+  });
 
   const {currMonthEvents, loadItemsForMonth} = useCurrMonthEvents();
 

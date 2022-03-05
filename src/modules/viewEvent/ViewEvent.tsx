@@ -8,8 +8,7 @@ import Time from './components/Time';
 import Date from './components/Date';
 import Description from './components/Description';
 
-import {GET_EVENTS} from '../calendar/CalendarView';
-import {EVENT_FIELDS} from '../home/UpcomingEvents';
+import {GET_EVENTS, EVENT_FIELDS} from 'data';
 
 import {Button, CircleButton, ScreenContainer} from 'ScoutDesign/library';
 import {pencil} from 'ScoutDesign/icons';

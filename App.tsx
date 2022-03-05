@@ -15,9 +15,9 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import {AuthContext} from './src/modules/auth/SignUp';
 
-import {ApolloProvider, gql, useQuery} from '@apollo/client';
+import {ApolloProvider, useQuery} from '@apollo/client';
 
-import {ScoutTrekApolloClient, GET_CURR_USER} from 'data';
+import {ScoutTrekApolloClient, GET_INITIAL_USER_FIELDS} from 'data';
 
 import AuthNavigator from './src/modules/navigation/AuthNavigator';
 import MainStackNavigator from './src/modules/navigation/MainStackNavigator';
@@ -26,7 +26,7 @@ const AppLoadingContainer = () => {
   const [token, setToken] = useState<string>('');
   const [newUser, setNewUser] = useState<boolean>(false);
 
-  useQuery(GET_CURR_USER, {
+  useQuery(GET_INITIAL_USER_FIELDS, {
     fetchPolicy: 'network-only',
     onCompleted: (data) => {
       if (data) {

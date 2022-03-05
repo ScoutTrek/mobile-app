@@ -1,6 +1,5 @@
-import {useEffect, useContext} from 'react';
+import {useContext} from 'react';
 import {
-  StyleSheet,
   KeyboardAvoidingView,
   Dimensions,
   Platform,

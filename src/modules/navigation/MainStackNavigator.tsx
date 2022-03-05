@@ -1,4 +1,7 @@
 import {createStackNavigator} from '@react-navigation/stack';
+import {useContext, useEffect} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useApolloClient} from '@apollo/client';
 
 import {
   initialState,
@@ -11,10 +14,21 @@ import ViewEvent from '../viewEvent/ViewEvent';
 import CreateEvent from './CreateEventNavigator';
 import MainTabNavigator from './MainTabNavigator';
 import Notifications from '../notifications/Notifications';
+import {AuthContext} from '../auth/SignUp';
 
 const MainStack = createStackNavigator();
 
 const MainStackNavigator = ({route}) => {
+  // const client = useApolloClient();
+  // const {setToken} = useContext(AuthContext);
+  // useEffect(() => {
+  //   AsyncStorage.removeItem('userToken');
+  //   AsyncStorage.removeItem('currMembershipID');
+  //   setToken('');
+  //   client.stop();
+  //   client.clearStore();
+  // }, []);
+
   return (
     <CreateEventFormProvider
       initialState={initialState}

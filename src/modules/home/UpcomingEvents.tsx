@@ -5,55 +5,12 @@ import NoEvents from '../../components/NoEvents';
 import * as Device from 'expo-device';
 import {plusThin} from 'ScoutDesign/icons';
 import {Container, LargeFloatingButton, Text} from 'ScoutDesign/library';
-import {GET_CURR_USER} from 'data';
+import {GET_CURR_USER, GET_EVENTS} from 'data';
 
 import * as Notifications from 'expo-notifications';
 import {gql, useMutation, useQuery} from '@apollo/client';
 
 import {DISMISS_NOTIFICATION} from '../notifications/Notifications';
-
-export const EVENT_FIELDS = gql`
-  fragment EventFragment on Event {
-    id
-    type
-    title
-    description
-    date
-    startTime
-    distance
-    uniqueMeetLocation
-    meetTime
-    leaveTime
-    pickupTime
-    checkoutTime
-    endTime
-    endDate
-    location {
-      lat
-      lng
-      address
-    }
-    meetLocation {
-      lat
-      lng
-      address
-    }
-    creator {
-      id
-      name
-    }
-    mapImageSource @client
-  }
-`;
-
-export const GET_EVENTS = gql`
-  query Events {
-    events {
-      ...EventFragment
-    }
-  }
-  ${EVENT_FIELDS}
-`;
 
 export const UPDATE_EXPO_TOKEN = gql`
   mutation UpdateExpoToken($token: UpdateUserInput!) {
@@ -81,7 +38,9 @@ export default function UpcomingEvents({navigation}) {
     refetchQueries: [GET_CURR_USER],
   });
 
-  const {loading, error, data} = useQuery(GET_EVENTS);
+  const {loading, error, data} = useQuery(GET_EVENTS, {
+    fetchPolicy: 'network-only',
+  });
 
   const [updateToken] = useMutation(UPDATE_EXPO_TOKEN);
   const notificationListener = useRef();
