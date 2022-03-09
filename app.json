@@ -29,7 +29,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.scouttrek.kalebdavenport",
-      "buildNumber": "1.0.62"
+      "buildNumber": "1.0.63"
     },
     "android": {
       "useNextNotificationsApi": true,

@@ -2,7 +2,20 @@ import {View} from 'react-native';
 import {Text} from 'ScoutDesign/library';
 import RadioForm from 'react-native-simple-radio-button';
 
-const RadioChoice = ({text, a, b, onPress}) => {
+type Option = {
+  label: string;
+  value: string;
+};
+
+type Props = {
+  text: string;
+  initial: number;
+  a: Option;
+  b: Option;
+  onPress: () => void;
+};
+
+const RadioChoice = ({text, initial, a, b, onPress}: Props) => {
   return (
     <View
       style={{
@@ -25,7 +38,7 @@ const RadioChoice = ({text, a, b, onPress}) => {
         buttonSize={15}
         buttonColor="#34A86C"
         selectedButtonColor="#34A86C"
-        initial={-1}
+        initial={initial}
         animation
         style={{paddingTop: 18}}
         onPress={onPress}

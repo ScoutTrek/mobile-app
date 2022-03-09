@@ -38,6 +38,13 @@ export default ({fieldType, id, fieldName, questionText, payload}) => {
       return (
         <Row valid={!!fields?.[id]} key={id} fieldName={fieldName}>
           <InitialButton
+            initial={
+              fields?.[id] === payload?.options?.[0]
+                ? 0
+                : fields?.[id] === payload?.options?.[1]
+                ? 1
+                : -1
+            }
             id={id}
             questionText={questionText}
             option1={payload?.options?.[0]}

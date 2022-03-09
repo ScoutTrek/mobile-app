@@ -9,7 +9,6 @@ import {
 import RTE from './components/RichTextEditor/RichTextEditor';
 import {EventInputProps} from './InputTypes';
 import Description from '../../viewEvent/components/Description';
-import PreviewRichText from './components/RichTextEditor/PreviewRichText';
 
 const DescriptionInputButton = ({fieldName, onPress}) => {
   return (
