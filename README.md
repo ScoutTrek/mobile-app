@@ -55,7 +55,7 @@ Then open the project in XCode
 
 The API for ScoutTrek can be found at
 
-[ScoutTrek API](https://github.com/TheEarlyNerd/Scouttrek_API)
+[ScoutTrek API](https://github.com/TheEarlyNerd/ScoutTrek-API)
 
 The Custom Figma Design System can be found at
 
