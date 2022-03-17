@@ -12,7 +12,7 @@ Choose Event | Fill out Details | Notify the Troop
 :-------------------------:|:-------------------------:|:-------------------------:
 ![Choose Event](https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_325/v1647456135/ScoutTrek/Screen_Shot_2022-03-16_at_14.36.34.png)  |  ![Fill out Details](https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_325/v1647456135/ScoutTrek/Screen_Shot_2022-03-16_at_14.37.04.png) | ![Notify the Troop](https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_325/v1647456135/ScoutTrek/Screen_Shot_2022-03-16_at_14.40.58.png)
 
-#### Replacing confusing email chains and chaotic plans with one central calendar.
+#### Replace confusing email chains with one simple event planner
 
 Calendar | Upcoming Events
 :-------------------------:|:-------------------------:
