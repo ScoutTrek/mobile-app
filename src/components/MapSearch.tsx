@@ -1,6 +1,6 @@
 import {useState} from 'react';
 import {ScrollView, StyleSheet, TextInput, Dimensions} from 'react-native';
-import {GOOGLE_MAPS_API_KEY} from '../../env';
+import Constants from 'expo-constants';
 import {Container, Text, Icon, LineItem} from 'ScoutDesign/library';
 import {backArrow, searchThin} from 'ScoutDesign/icons';
 
@@ -19,7 +19,9 @@ const MapSearch = ({
       `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${searchText.replace(
         / /g,
         '+'
-      )}&key=${GOOGLE_MAPS_API_KEY}&sessiontoken=${locationToken}`
+      )}&key=${
+        Constants?.manifest?.extra?.GOOGLE_MAPS_API_KEY
+      }&sessiontoken=${locationToken}`
     ).catch((err) => console.error(err));
     const placesData = await places.json();
     setSuggestedPlaces(placesData.predictions);

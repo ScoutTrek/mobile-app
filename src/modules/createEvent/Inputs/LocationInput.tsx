@@ -7,7 +7,6 @@ import {
   addEventFieldOfType,
 } from 'CreateEvent/CreateEventFormStore';
 import * as Location from 'expo-location';
-import {GOOGLE_MAPS_API_KEY} from '../../../../env';
 import MapView, {Marker} from 'react-native-maps';
 import MapSearch from '../../../components/MapSearch';
 import Constants from 'expo-constants';
@@ -54,7 +53,7 @@ const ChooseLocation = ({id, Modal, modalProps, questionText}) => {
 
   const _getPlaceDetails = async (id) => {
     const locationDetails = await fetch(
-      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=${GOOGLE_MAPS_API_KEY}`
+      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=${Constants?.manifest?.extra?.GOOGLE_MAPS_API_KEY}`
     ).catch((err) => console.error(err));
     const locationData = await locationDetails.json();
 

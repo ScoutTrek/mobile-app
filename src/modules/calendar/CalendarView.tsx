@@ -9,6 +9,7 @@ import NoEvents from '../../components/NoEvents';
 import {Badge, Card, Container, Text} from 'ScoutDesign/library';
 import moment from 'moment';
 import useCurrMonthEvents from './hooks/useCurrMonthEvents';
+import {convertEventIDToText} from 'data';
 
 const getColor = () => {
   const allColors = [
@@ -63,7 +64,7 @@ const CalendarView = ({navigation}) => {
           <Badge
             accessibilityLabel={`label-${label}`}
             key={`label-${label}`}
-            text={label}
+            text={convertEventIDToText(label)}
             color={itemColor.current}
           />
         );

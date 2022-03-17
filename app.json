@@ -29,7 +29,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.scouttrek.kalebdavenport",
-      "buildNumber": "1.0.63"
+      "buildNumber": "1.0.64"
     },
     "android": {
       "useNextNotificationsApi": true,
@@ -60,6 +60,9 @@
       "icon": "./assets/images/Icon.png",
       "color": "#F29959",
       "iosDisplayInForeground": true
+    },
+    "extra": {
+      "GOOGLE_MAPS_API_KEY": "AIzaSyCy38WoJFJEn3gr7EEc1OAWcO-Xsslilbs"
     }
   }
 }

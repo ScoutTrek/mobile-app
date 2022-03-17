@@ -1,8 +1,8 @@
 import moment from 'moment';
 import {useState} from 'react';
 
-function daysInMonth(month, year) {
-  return new Date(year, month, 0).getDate();
+function daysInMonth(date) {
+  return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 }
 
 function getMonthObject(datestring: string) {
@@ -10,7 +10,7 @@ function getMonthObject(datestring: string) {
   const offset = absDate.getTimezoneOffset() * 60 * 1000;
   const date = new Date(absDate.getTime() - offset);
   let monthObject: {[key: string]: any} = {};
-  for (let i = 1; i <= daysInMonth(date.getMonth(), date.getFullYear()); i++) {
+  for (let i = 1; i <= daysInMonth(date); i++) {
     const dateKeyString: string = `${date.getFullYear()}-${(
       '0' +
       (date.getMonth() + 1)
