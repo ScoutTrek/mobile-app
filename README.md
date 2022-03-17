@@ -61,8 +61,6 @@ The Custom Figma Design System can be found at
 
 [Figma File](https://www.figma.com/community/file/1086027778775525073)
 
-[ScoutDesign Design System](https://github.com/TheEarlyNerd/ScoutDesign)
-
 ## License
 
 Content and Design Copyright &copy; ScoutTrek LLC. All rights reserved.
