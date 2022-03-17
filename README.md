@@ -20,9 +20,10 @@ Calendar | Upcoming Events
 
 ## Tech stack
 
-* React Native + Expo + React Navigation
+* TypeScript
+* React Native + Expo
+* React Navigation
 * Apollo Client
-* Apollo Global Data Store
 
 ## Installation
 
