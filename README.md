@@ -18,6 +18,16 @@ Calendar | Upcoming Events
 :-------------------------:|:-------------------------:
 ![Calendar](https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_325/v1647461045/ScoutTrek/Screen_Shot_2022-03-16_at_16.03.09.png) | ![Choose Event](https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_325/v1647461045/ScoutTrek/Screen_Shot_2022-03-16_at_15.35.34.png)
 
+## Related
+
+The API for ScoutTrek can be found at
+
+[ScoutTrek API](https://github.com/TheEarlyNerd/ScoutTrek-API)
+
+The Custom Figma Design System can be found at
+
+[Figma File](https://www.figma.com/community/file/1086027778775525073)
+
 ## Tech stack
 
 * TypeScript
@@ -50,16 +60,6 @@ To run on an iOS device
 ```
 
 Then open the project in XCode
-
-## Related
-
-The API for ScoutTrek can be found at
-
-[ScoutTrek API](https://github.com/TheEarlyNerd/ScoutTrek-API)
-
-The Custom Figma Design System can be found at
-
-[Figma File](https://www.figma.com/community/file/1086027778775525073)
 
 ## License
 
