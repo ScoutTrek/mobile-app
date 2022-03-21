@@ -6,13 +6,13 @@ Girl Scouts             |  Boy Scouts
 :-------------------------:|:-------------------------:
 ![Girl Scout Meeting](https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_300/v1647448233/ScoutTrek/pauline-loroy-A9U0cMNsxwY-unsplash.jpg)  |  ![Slip and slide](https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_450/v1599241295/ScoutTrek/luke-porter-mGFJIUD9yiM-unsplash.jpg)
 
-#### One central location for Patrol Leaders and Scoutmasters to plan events:
+One central location for Patrol Leaders and Scoutmasters to plan events:
 
 Choose Event | Fill out Details | Notify the Troop
 :-------------------------:|:-------------------------:|:-------------------------:
 ![Choose Event](https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_325/v1647456135/ScoutTrek/Screen_Shot_2022-03-16_at_14.36.34.png)  |  ![Fill out Details](https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_325/v1647456135/ScoutTrek/Screen_Shot_2022-03-16_at_14.37.04.png) | ![Notify the Troop](https://res.cloudinary.com/wow-your-client/image/upload/c_scale,w_325/v1647456135/ScoutTrek/Screen_Shot_2022-03-16_at_14.40.58.png)
 
-#### Replace confusing email chains with one simple event planner
+Replace confusing email chains with one simple event planner
 
 Calendar | Upcoming Events
 :-------------------------:|:-------------------------:
