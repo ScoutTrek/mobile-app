@@ -139,6 +139,8 @@ const CreateEvent = ({navigation, route}) => {
         dispatch(clearEventForm());
         navigation.goBack();
       }}>
+      {/* Schema representing all the types of events currently in the app. This
+      comes from the server */}
       {schema.form.map(
         (field) =>
           !disabledFields.includes(field.fieldID) && (

@@ -8,8 +8,8 @@ import {createUploadLink} from 'apollo-upload-client';
 type AsyncStorageData = {[key: string]: string | null};
 
 const httpLink = new createUploadLink({
-  // uri: 'http://localhost:4000/graphql',
-  uri: 'https://beta-dot-scouttrek-node-api.appspot.com/graphql',
+  uri: 'http://localhost:4000/graphql',
+  // uri: 'https://beta-dot-scouttrek-node-api.appspot.com/graphql',
 });
 
 const loadKeysFromAsyncStorage = async (
