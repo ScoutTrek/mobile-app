@@ -34,7 +34,7 @@ export const _updateCurrentGroup = async (groupID, navigation) => {
 };
 
 const UPLOAD_PROFILE_PHOTO = gql`
-  mutation UploadProfilePhoto($file: Upload!) {
+  mutation UploadProfilePhoto($file: String!) {
     uploadImage(file: $file)
   }
 `;

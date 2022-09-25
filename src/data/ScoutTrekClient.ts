@@ -1,15 +1,13 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Constants from 'expo-constants';
-import {ApolloClient, InMemoryCache, from, ApolloLink} from '@apollo/client';
+import {ApolloClient, InMemoryCache, from, ApolloLink, HttpLink} from '@apollo/client';
 import {onError} from '@apollo/client/link/error';
-
-import {createUploadLink} from 'apollo-upload-client';
 
 type AsyncStorageData = {[key: string]: string | null};
 
-const httpLink = new createUploadLink({
-  // uri: 'http://localhost:4000/graphql',
-  uri: 'https://beta-dot-scouttrek-node-api.appspot.com/graphql',
+const httpLink = new HttpLink({
+  uri: 'http://localhost:4000/graphql',
+  // uri: 'https://beta-dot-scouttrek-node-api.appspot.com/graphql',
 });
 
 const loadKeysFromAsyncStorage = async (

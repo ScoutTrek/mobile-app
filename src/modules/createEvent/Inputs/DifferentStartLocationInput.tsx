@@ -1,5 +1,7 @@
 import RadioChoice from '../../../components/formfields/RadioChoice';
 
+// @todo if this file is not used it should be deleted
+
 type Props = {
   onPress: () => void;
 };
