@@ -2,13 +2,21 @@
   "presets": ["babel-preset-expo"],
   "plugins": [
     "react-native-reanimated/plugin",
+    "transform-inline-environment-variables",
+    [
+      "module:react-native-dotenv",
+      {
+        "envName": "APP_ENV",
+        "moduleName": "@env",
+        "path": ".env"
+      }
+    ],
     ["module-resolver", {
       "root": ["."],
       "alias": {
         "ScoutDesign": "./ScoutDesign",
         "CreateEvent": "./src/modules/createEvent/createEventForm",
         "data": "./src/data"
-        
       }
     }]
   ]

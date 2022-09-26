@@ -1,4 +1,3 @@
-import {ReactNativeFile} from 'apollo-upload-client';
 import {manipulateAsync, SaveFormat} from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
 import Text from '../../Text/Text';
@@ -9,11 +8,14 @@ import uuidv4 from 'uuid/v1';
 export async function uploadAssetAsync(uri) {
   const uriParts = uri.split('.');
   const fileType = uriParts[uriParts.length - 1];
-  return new ReactNativeFile({
-    uri,
-    name: `${uuidv4()}.${fileType}`,
-    type: 'image/jpeg', // Customize later
-  });
+  // @todo In place of ReactNativeFile, there will be some other object available from another upload library
+  // to send files to the server using REST conventions
+
+  // return new ReactNativeFile({
+  //   uri,
+  //   name: `${uuidv4()}.${fileType}`,
+  //   type: 'image/jpeg', // Customize later
+  // });
 }
 
 import {pencil} from 'ScoutDesign/icons';
