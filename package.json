@@ -53,7 +53,7 @@
     "react-dom": "18.0.0",
     "react-hook-form": "^7.26.1",
     "react-native": "0.69.5",
-    "react-native-calendars": "^1.1277.0",
+    "react-native-calendars": "^1.1289.0",
     "react-native-gesture-handler": "~2.5.0",
     "react-native-maps": "0.31.1",
     "react-native-pell-rich-editor": "^1.8.8",
