@@ -49,6 +49,20 @@ const alignments: Alignments = {
   right: 'flex-end',
 };
 
+type Borders = {
+  simple: {
+    borderColor: String;
+    borderWidth: String;
+  };
+}
+
+const borders: Borders = {
+  simple: {
+    borderColor: 'black',
+    borderWidth: '2',
+  }
+}
+
 const theme = createTheme({
   colors: {
     brandPrimaryLight: palette.aquamarine,
@@ -100,6 +114,7 @@ const theme = createTheme({
     xxl: 96,
   },
   alignments,
+  borders,
   radii: {
     micro: 1,
     xs: 2,

@@ -9,6 +9,7 @@ import {
   border,
   layout,
   position,
+  shadow,
   backgroundColor,
   SpacingProps,
   LayoutProps,
@@ -16,6 +17,7 @@ import {
   BorderProps,
   BackgroundColorProps,
   ShadowProps,
+  composeRestyleFunctions
 } from '@shopify/restyle';
 
 export interface PressableProps extends RadiusProps {
@@ -26,19 +28,25 @@ export interface PressableProps extends RadiusProps {
   sideEffect?: () => void;
 }
 
-const restyleFunctions = [spacing, layout, position, border, backgroundColor];
-
-type Props = SpacingProps<Theme> &
-  LayoutProps<Theme> &
+type RestyleProps = SpacingProps<Theme> &
+  BorderProps<Theme> &
   PositionProps<Theme> &
   ShadowProps<Theme> &
-  BackgroundColorProps<Theme> &
-  BorderProps<Theme> &
+  LayoutProps<Theme> &
+  BackgroundColorProps<Theme>;
+
+
+type Props = RestyleProps &
   PressableProps & {
     accessibilityLabel: string;
     key?: string;
     children: any;
   };
+
+  const restyleFunctions = composeRestyleFunctions<Theme, RestyleProps>([
+    spacing, border, position, layout, backgroundColor, shadow
+  ]);
+  
 
 const PressableBase = ({
   accessibilityLabel,
