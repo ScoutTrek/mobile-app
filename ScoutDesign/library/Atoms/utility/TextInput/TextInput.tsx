@@ -11,6 +11,7 @@ import {
   BorderProps,
   BackgroundColorProps,
   SpacingProps,
+  composeRestyleFunctions
 } from '@shopify/restyle';
 
 import {Theme} from '../../../theme';
@@ -22,7 +23,7 @@ export type TextInputUtilityProps = RadiusProps &
   BackgroundColorProps<Theme> &
   ColorProps<Theme>;
 
-const restyleFunctions = [spacing, border, backgroundColor];
+const restyleFunctions = composeRestyleFunctions([spacing, border, backgroundColor]);
 
 const TextInputUtility = forwardRef<RNTextInput, TextInputUtilityProps>(
   ({...rest}, ref) => {
