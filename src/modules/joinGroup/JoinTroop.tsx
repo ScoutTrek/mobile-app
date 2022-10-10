@@ -6,6 +6,7 @@ import {
   Stack,
   ScreenContainer,
 } from 'ScoutDesign/library';
+import { View } from "react-native";
 import {plusBold} from 'ScoutDesign/icons';
 import {
   chooseGroup,
@@ -64,18 +65,22 @@ const JoinTroop = ({navigation}) => {
           }}
         />
 
-        <Text paddingTop="xl" paddingBottom="s" paddingHorizontal="xs">
-          Please select a Troop or add one below
-        </Text>
-        <Button
-          accessibilityLabel="create-new-troop"
-          text="Create Troop"
-          backgroundColor="brandSecondary"
-          icon={plusBold}
-          onPress={() => {
-            navigation.navigate('CreateTroop');
-          }}
-        />
+        <View
+          style={{
+            marginTop: 20
+          }}>
+          <Button
+            accessibilityLabel="create-new-troop"
+            text="Create Troop"
+            backgroundColor="brandSecondary"
+            icon={plusBold}
+            onPress={() => {
+              navigation.navigate('CreateTroop');
+            }}
+            fullWidth={true}
+            tall={true}
+          />
+        </View>
       </Container>
     </ScreenContainer>
   );
