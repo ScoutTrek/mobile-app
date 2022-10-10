@@ -67,8 +67,7 @@ const JoinTroop = ({navigation}) => {
 
         <View
           style={{
-            marginTop: 20,
-            alignItems: 'center'
+            marginTop: 20
           }}>
           <Button
             accessibilityLabel="create-new-troop"
@@ -78,6 +77,8 @@ const JoinTroop = ({navigation}) => {
             onPress={() => {
               navigation.navigate('CreateTroop');
             }}
+            fullWidth={true}
+            tall={true}
           />
         </View>
       </Container>
