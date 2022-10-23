@@ -65,16 +65,14 @@ If you are on public wifi, you may need to run
   yarn dev --tunnel --clear
 ```
 
-`yarn dev` should populate the `.env` file with your current IP address, but if that doesn't work you need to manually fill it in:
+### Use Prod Server
 
-`LOCAL_IP_ADDRESS={your ip address here}`
+To run the app using the GCP server, use:
 
-To find it, run `ipconfig` in a terminal (`ipconfig getifaddr en0` for Mac) and take the IPv4 Address underneath Wireless LAN adapter Wi-Fi. Alternatively,
-you can go to your Network and Internet Settings >> Properties >> scroll until you see IPv4 Address for Windows, or for Mac,
-System Preferences >> Network >> the wifi network you're connected to.
-
-Note that your IP address will change if you're on different wifi networks, so you will need to do this each time you develop. Then run
-
+```bash
+  yarn start --clear
+```
+The `--clear` flag is necessary here when switching between `yarn start` and `yarn dev`, as the environment variables can sometimes be cached.
 
 You may also need to run the following commands if you get errors related to them:
 
