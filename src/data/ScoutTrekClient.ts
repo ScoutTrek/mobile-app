@@ -8,9 +8,14 @@ import {LOCAL_IP_ADDRESS, ENV} from '@env';
 type AsyncStorageData = {[key: string]: string | null};
 
 const httpLink = new HttpLink({
+<<<<<<< HEAD
   uri: ENV == 'dev' ? 
     `http://${LOCAL_IP_ADDRESS}:4000/graphql` : 
     'https://beta-dot-scouttrek-node-api.appspot.com/graphql',
+=======
+   uri: `http://${LOCAL_IP_ADDRESS}:4000/graphql`,
+   // uri: 'https://scouttrek-363618.uc.r.appspot.com/graphql'
+>>>>>>> master
 });
 
 const loadKeysFromAsyncStorage = async (
