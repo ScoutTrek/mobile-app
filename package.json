@@ -4,7 +4,7 @@
   "version": "0.0.2",
   "scripts": {
     "start": "expo start",
-    "dev": "./ip_conf.py && yarn start --tunnel",
+    "dev": "./ip_conf.py && yarn start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "test": "jest --watchAll"

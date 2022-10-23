@@ -51,7 +51,21 @@ then to run on an Expo simulator:
   yarn install
 ```
 
-Place your local IP address into the local variable in the .env file, as seen below:
+Make a copy of the file `.env_ex` and name it as `.env`. Then, start the app using:
+
+```bash
+  yarn dev --clear
+```
+
+Note that the `--clear` might not be necessary (especially if you've been developing on the same wifi network), but will help if you have some React Native caching issues.
+
+If you are on public wifi, you may need to run 
+
+```bash
+  yarn dev --tunnel --clear
+```
+
+`yarn dev` should populate the `.env` file with your current IP address, but if that doesn't work you need to manually fill it in:
 
 `LOCAL_IP_ADDRESS={your ip address here}`
 
@@ -61,17 +75,6 @@ System Preferences >> Network >> the wifi network you're connected to.
 
 Note that your IP address will change if you're on different wifi networks, so you will need to do this each time you develop. Then run
 
-```bash
-  yarn start --clear
-```
-
-Note that the `--clear` might not be necessary (especially if you've been developing on the same wifi network), but will help if you have some React Native caching issues.
-
-If you are on public wifi, you may need to run 
-
-```bash
-  yarn start --tunnel --clear
-```
 
 You may also need to run the following commands if you get errors related to them:
 
