@@ -123,6 +123,14 @@ const SignIn = ({navigation}) => {
           onSubmit={handleSignIn}
           submitBtnText="Sign In"
         />
+        <Text 
+          color="darkGrey" 
+          size="s" 
+          style={{width: "100%", paddingHorizontal: 12, paddingTop: 6, textAlign: "right"}}
+          onPress={() => navigation.navigate('ForgotPassword')}
+        >
+          Forgot Password?
+        </Text>
         <Footer
           footerText="Don&rsquo;t have an account?"
           btnType="Sign Up Now"
