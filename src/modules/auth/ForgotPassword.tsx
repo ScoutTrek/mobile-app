@@ -1,96 +1,45 @@
-import { useState } from 'react';
-import {
-  KeyboardAvoidingView,
-  Dimensions,
-  Platform,
-  ScrollView,
-} from 'react-native';
-import {Text, Form, Image, Container} from 'ScoutDesign/library';
-
-import Footer from './components/Footer';
+import { StackScreenProps } from '@react-navigation/stack';
+import { AuthStackParamList } from '../navigation/AuthNavigator';
+import PasswordConfig from './components/PasswordConfig';
 
 const ForgotPasswordFormFields = [
-    {
-      name: 'email',
-      rules: {
-        required: 'Please enter an email',
-        pattern: {
-          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-          message: "Looks like you didn't enter a valid email.",
-        },
-      },
-      fieldAttributes: {
-        placeholder: 'Email',
-        autoCapitalize: 'none',
+  {
+    name: 'email',
+    rules: {
+      required: 'Please enter an email',
+      pattern: {
+        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+        message: "Looks like you didn't enter a valid email.",
       },
     },
-  ];
+    fieldAttributes: {
+      placeholder: 'Email',
+      autoCapitalize: 'none',
+    },
+  },
+];
 
-const ForgotPassword = ({navigation}) => { // TODO: figure out typing
-  
-    const [emailSent, setEmailSent] = useState(false);
-  
-    const onSubmitEmail = (data: {email: String}) => {
-        console.log("submitted email", data.email)
-        setEmailSent(true);
-    }
+const ForgotPassword = ({navigation}) => {
 
-    return (
-      <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-          backgroundColor: '#fff',
-          justifyContent: 'center',
-        }}
-        keyboardShouldPersistTaps="handled">
-        {emailSent ? (
-          <>
-          <Container>
-            <Text marginBottom="m" textAlign="center" preset="h2">
-              Email Sent!
-            </Text>
-            <Text
-              color="darkGrey"
-              size="s"
-              textAlign="center"
-              style={{marginBottom: 60, fontSize: 16}}>
-              Follow the instructions in the email to reset your password.
-            </Text>
-          </Container>
-            
-          </>
-        ) : (
-          <KeyboardAvoidingView
-            style={{
-              flex: 1,
-              justifyContent: 'center',
-              paddingHorizontal: 20,
-            }}
-            behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
-            <Text marginBottom="m" textAlign="center" preset="h2">
-              Reset Password
-            </Text>
-            <Text
-              color="darkGrey"
-              size="s"
-              textAlign="center"
-              style={{marginBottom: 60, fontSize: 16}}>
-              Enter the email associated with your account. We’ll send an email
-              with instructions to reset your password.
-            </Text>
-            <Form
-              formFields={ForgotPasswordFormFields}
-              accessibilityLabel="forgot-password-form"
-              radius="l"
-              borderColor="mediumGrey"
-              backgroundColor="white"
-              onSubmit={onSubmitEmail}
-              submitBtnText="Reset Password"
-            />
-          </KeyboardAvoidingView>
-        )}
-      </ScrollView>
-    );
+  const onSubmitEmail = (
+    setSuccess: (success: boolean) => void,
+    data: {email: String}
+  ) => {
+    console.log('submitted email', data.email);
+    setSuccess(true);
   };
-  
-  export default ForgotPassword;
+
+  return (
+    <PasswordConfig
+      navigation={navigation}
+      formTitle="Reset Password"
+      formDescription="Enter the email associated with your account. We’ll send an email with instructions to reset your password."
+      formFields={ForgotPasswordFormFields}
+      handleSubmit={onSubmitEmail}
+      successTitle="Email Sent!"
+      successDescription="Follow the instructions in the email to reset your password."
+    />
+  );
+};
+
+export default ForgotPassword;

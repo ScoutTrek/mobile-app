@@ -127,7 +127,7 @@ const SignIn = ({navigation}) => {
           color="darkGrey" 
           size="s" 
           style={{width: "100%", paddingHorizontal: 12, paddingTop: 6, textAlign: "right"}}
-          onPress={() => navigation.navigate('ForgotPassword')}
+          onPress={() => navigation.navigate('ResetPassword')}
         >
           Forgot Password?
         </Text>
