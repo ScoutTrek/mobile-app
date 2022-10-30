@@ -4,7 +4,14 @@ import SignUp from '../auth/SignUp';
 import ForgotPassword from '../auth/ForgotPassword';
 import CreateNewPassword from '../auth/CreateNewPassword';
 
-const AuthStack = createStackNavigator();
+export type AuthStackParamList = {
+  SignUp: undefined,
+  SignIn: undefined,
+  ForgotPassword: undefined,
+  ResetPassword: undefined,
+}
+
+const AuthStack = createStackNavigator<AuthStackParamList>();
 
 const AuthNavigator = () => {
   return (

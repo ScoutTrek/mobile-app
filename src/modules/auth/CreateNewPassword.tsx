@@ -1,4 +1,4 @@
-import { StackNavigationProps } from '@react-navigation/stack';
+import { StackScreenProps } from '@react-navigation/stack';
 import {Alert} from 'react-native';
 import { AuthStackParamList } from '../navigation/AuthNavigator';
 import PasswordConfig from './components/PasswordConfig';
@@ -38,7 +38,7 @@ const CreateNewPasswordFormFields = [
   },
 ];
 
-const CreateNewPassword = ({navigation}) => {
+const CreateNewPassword = ({navigation}: StackScreenProps<AuthStackParamList, 'ResetPassword'>) => {
 
   const onChangePassword = (
     setSuccess: (success: boolean) => void,

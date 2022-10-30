@@ -22,6 +22,14 @@ import {ScoutTrekApolloClient, GET_INITIAL_USER_FIELDS} from 'data';
 import AuthNavigator from './src/modules/navigation/AuthNavigator';
 import MainStackNavigator from './src/modules/navigation/MainStackNavigator';
 
+export type AppStackParamList = {
+  AuthNav: undefined,
+  Home: {newUser: boolean},
+}
+
+const Stack = createStackNavigator<AppStackParamList>();
+
+
 const AppLoadingContainer = () => {
   const [token, setToken] = useState<string>('');
   const [newUser, setNewUser] = useState<boolean>(false);
@@ -95,7 +103,6 @@ const AppLoadingContainer = () => {
   );
 };
 
-const Stack = createStackNavigator();
 
 export default function App() {
   return (

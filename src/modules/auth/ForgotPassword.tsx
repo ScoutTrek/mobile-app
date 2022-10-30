@@ -19,7 +19,7 @@ const ForgotPasswordFormFields = [
   },
 ];
 
-const ForgotPassword = ({navigation}) => {
+const ForgotPassword = ({navigation}: StackScreenProps<AuthStackParamList, 'ForgotPassword'>) => {
 
   const onSubmitEmail = (
     setSuccess: (success: boolean) => void,

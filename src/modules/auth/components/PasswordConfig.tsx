@@ -1,6 +1,19 @@
+import { StackNavigationProp } from '@react-navigation/stack';
 import {useState} from 'react';
 import {KeyboardAvoidingView, Platform, ScrollView} from 'react-native';
 import {Text, Form, Container, ScreenContainer} from 'ScoutDesign/library';
+import { AuthStackParamList } from 'src/modules/navigation/AuthNavigator';
+
+type ForgotPasswordProps = {
+  formTitle: string,
+  formDescription: string,
+  formFields: any[],
+  handleSubmit: (setSuccess: (s: boolean) => void, data: any) => void,
+  successTitle: string,
+  successDescription: string,
+  navigation: StackNavigationProp<AuthStackParamList, "ForgotPassword"> | StackNavigationProp<AuthStackParamList, "ResetPassword"> 
+}
+
 
 const ForgotPassword = ({
   navigation,
@@ -10,8 +23,7 @@ const ForgotPassword = ({
   handleSubmit,
   successTitle,
   successDescription,
-}) => {
-  // TODO: figure out typing
+}: ForgotPasswordProps) => {
 
   const [success, setSuccess] = useState(false);
 
