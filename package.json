@@ -3,7 +3,8 @@
   "name": "scout-trek-native",
   "version": "0.0.2",
   "scripts": {
-    "start": "expo start",
+    "start": "./env_conf.py --env prod && expo start",
+    "dev": "./env_conf.py --env dev && expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "test": "jest --watchAll"
