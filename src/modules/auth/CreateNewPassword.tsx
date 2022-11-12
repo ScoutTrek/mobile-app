@@ -42,11 +42,16 @@ const CreateNewPassword = ({navigation}: StackScreenProps<AuthStackParamList, 'R
 
   const onChangePassword = (
     setSuccess: (success: boolean) => void,
-    data: {password: String; passwordConfirm: String}
+    data: {password: string; passwordConfirm: string}
   ) => {
     if (data.password !== data.passwordConfirm) {
       Alert.alert(
         'Whoops, the passwords you entered do not match. Please re-enter passwords to confirm they match.'
+      );
+    } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(data.password)) {
+      // regex pattern from https://stackoverflow.com/a/21456918
+      Alert.alert(
+        'Your password must contain at least one uppercase letter, one lowercase letter, one number and one special character.'
       );
     } else {
       console.log('new password: ', data.password);
@@ -58,7 +63,7 @@ const CreateNewPassword = ({navigation}: StackScreenProps<AuthStackParamList, 'R
     <PasswordConfig
       navigation={navigation}
       formTitle="Create New Password"
-      formDescription="Your new password must be different from previous passwords."
+      formDescription="Your new password must be different from previous passwords. It must contain at least one uppercase letter, one lowercase letter, one number and one special character."
       formFields={CreateNewPasswordFormFields}
       handleSubmit={onChangePassword}
       successTitle="Success!"
