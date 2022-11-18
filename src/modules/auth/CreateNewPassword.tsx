@@ -54,6 +54,7 @@ const CreateNewPassword = ({navigation}: StackScreenProps<AuthStackParamList, 'R
         'Your password must contain at least one uppercase letter, one lowercase letter, one number and one special character.'
       );
     } else {
+      // TODO: send request to create new password
       console.log('new password: ', data.password);
       setSuccess(true);
     }

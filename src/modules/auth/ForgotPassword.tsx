@@ -25,6 +25,7 @@ const ForgotPassword = ({navigation}: StackScreenProps<AuthStackParamList, 'Forg
     setSuccess: (success: boolean) => void,
     data: {email: String}
   ) => {
+    // TODO: send request to email user
     console.log('submitted email', data.email);
     setSuccess(true);
   };
