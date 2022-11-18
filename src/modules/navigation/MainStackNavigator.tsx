@@ -1,4 +1,4 @@
-import {createStackNavigator} from '@react-navigation/stack';
+import {createStackNavigator, StackNavigationProp, StackScreenProps} from '@react-navigation/stack';
 import {useContext, useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useApolloClient} from '@apollo/client';
@@ -15,10 +15,19 @@ import CreateEvent from './CreateEventNavigator';
 import MainTabNavigator from './MainTabNavigator';
 import Notifications from '../notifications/Notifications';
 import {AuthContext} from '../auth/SignUp';
+import { AppStackParamList } from 'App';
 
-const MainStack = createStackNavigator();
+export type MainStackParamList = {
+  JoinGroup: undefined,
+  Notifications: undefined,
+  Main: undefined,
+  CreateEvent: undefined,
+  ViewEvent: undefined,
+}
 
-const MainStackNavigator = ({route}) => {
+const MainStack = createStackNavigator<MainStackParamList>();
+
+const MainStackNavigator = ({route}: StackScreenProps<AppStackParamList, 'Home'>) => {
   // const client = useApolloClient();
   // const {setToken} = useContext(AuthContext);
   // useEffect(() => {
