@@ -5,7 +5,7 @@ import {Container, Pressable, Floatable} from '../../../utility';
 
 import uuidv4 from 'uuid/v1';
 
-export async function uploadAssetAsync(uri) {
+export async function uploadAssetAsync(uri: string) {
   const uriParts = uri.split('.');
   const fileType = uriParts[uriParts.length - 1];
   // @todo In place of ReactNativeFile, there will be some other object available from another upload library

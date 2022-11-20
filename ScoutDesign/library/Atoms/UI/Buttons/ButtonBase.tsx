@@ -2,7 +2,7 @@ import {StyleSheet} from 'react-native';
 import {LinearGradient} from 'expo-linear-gradient';
 
 import {
-  AssetSizePreset,
+  IconSizePresets,
   Color,
   mapRadius,
   Pressable,
@@ -29,7 +29,7 @@ type Props = ButtonProps & {
   radius?: Radius;
   textPadding?: Spacing;
   iconPadding: Spacing;
-  iconSize: AssetSizePreset;
+  iconSize: IconSizePresets;
   children?: any;
 };
 

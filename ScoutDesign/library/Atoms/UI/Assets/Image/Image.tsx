@@ -62,14 +62,14 @@ const Image = ({
             ? '100%'
             : typeof size === 'string'
             ? theme.assetSizes[size]
-            : size.width
+            : size?.width
         }
         height={
           size === 'fill'
             ? '100%'
             : typeof size === 'string'
             ? theme.assetSizes[size]
-            : size.height
+            : size?.height
         }
         borderRadius={mapRadius(radius, size)}
         overflow="hidden">

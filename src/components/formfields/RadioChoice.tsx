@@ -24,6 +24,8 @@ const RadioChoice = ({text, initial, a, b, onPress}: Props) => {
       }}>
       <Text color="darkGrey">{text}</Text>
 
+      {/* 
+      // @ts-expect-error RadioForm types don't include React elements for the label */}
       <RadioForm
         radio_props={[
           {
