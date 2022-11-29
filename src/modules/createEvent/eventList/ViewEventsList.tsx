@@ -11,6 +11,7 @@ import {backArrow} from 'ScoutDesign/icons';
 import {ImageTileGrid, LargeFloatingButton} from 'ScoutDesign/library';
 
 import {convertEventIDToText} from 'data/utils/convertIDsToStrings';
+import { TileProps } from 'ScoutDesign/library/Widgets/ImageTileGrid/ImageTileGrid';
 
 export const GET_EVENT_SCHEMAS = gql`
   query EventSchemas {
@@ -23,7 +24,8 @@ type Props = {
 };
 
 const ViewEventsList = ({navigation}: Props) => {
-  const [_, dispatch] = useEventForm();
+  const eventForm = useEventForm();
+  const dispatch = eventForm && eventForm[1];
   const {loading, data} = useQuery(GET_EVENT_SCHEMAS);
 
   if (loading) {
@@ -31,21 +33,24 @@ const ViewEventsList = ({navigation}: Props) => {
   }
 
   const eventSchemasArr = Object.values(data['eventSchemas']);
-  const tiles = eventSchemasArr.map((item) =>
-    typeof item === 'object'
-      ? {
-          id: item?.metaData?.eventID,
-          source: item?.metaData?.image,
-          title: convertEventIDToText(item?.metaData?.eventID),
-          onPress: () => {
-            dispatch(initializeEventForm(item?.metaData?.eventID));
-            navigation.navigate('EventForm', {
-              type: item?.metaData?.eventID,
-            });
-          },
-        }
-      : undefined
-  );
+  const tiles = eventSchemasArr.reduce((res: TileProps[], item: any) => {
+    if (typeof item === 'object') {
+      const title = convertEventIDToText(item?.metaData?.eventID);
+      res.push({
+        id: item?.metaData?.eventID,
+        source: item?.metaData?.image,
+        title,
+        onPress: () => {
+          dispatch && dispatch(initializeEventForm(item?.metaData?.eventID));
+          navigation.navigate('EventForm', {
+            type: item?.metaData?.eventID,
+          });
+        },
+        accessibilityLabel: title
+      })
+    }
+    return res;
+  }, []);
 
   return (
     <View style={styles.container}>

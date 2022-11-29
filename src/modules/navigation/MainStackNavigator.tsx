@@ -22,7 +22,7 @@ export type MainStackParamList = {
   Notifications: undefined,
   Main: undefined,
   CreateEvent: undefined,
-  ViewEvent: undefined,
+  ViewEvent: {currItem: any},
 }
 
 const MainStack = createStackNavigator<MainStackParamList>();

@@ -10,9 +10,15 @@ import {Badge, Card, Container, Text} from 'ScoutDesign/library';
 import moment from 'moment';
 import useCurrMonthEvents from './hooks/useCurrMonthEvents';
 import {convertEventIDToText} from 'data';
+import { MainBottomParamList } from '../navigation/MainTabNavigator';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { CompositeScreenProps } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { MainStackParamList } from '../navigation/MainStackNavigator';
+import { Color } from 'ScoutDesign/library/Atoms/utility';
 
-const getColor = () => {
-  const allColors = [
+const getColor = () : Color => {
+  const allColors: Color[] = [
     'interactive',
     'urgent',
     'information',
@@ -24,7 +30,12 @@ const getColor = () => {
   return allColors[Math.floor(Math.random() * allColors.length)];
 };
 
-const CalendarView = ({navigation}) => {
+type ProfileScreenProps = CompositeScreenProps<
+  BottomTabScreenProps<MainBottomParamList, 'Calendar'>, // param list of parent stack
+  StackScreenProps<MainStackParamList> // param list of grandparent stack
+>;
+
+const CalendarView = ({navigation}: ProfileScreenProps) => {
   const {data, loading, error} = useQuery(GET_EVENTS, {
     fetchPolicy: 'network-only',
   });
@@ -43,12 +54,12 @@ const CalendarView = ({navigation}) => {
     );
   };
 
-  const viewEvent = (item) => {
+  const viewEvent = (item: any) => {
     navigation.navigate('ViewEvent', {currItem: item.id});
   };
 
-  const renderItem = (item) => {
-    const labels = item?.labels?.map((label, index) => {
+  const renderItem = (item: any) => {
+    const labels = item?.labels?.map((label: string, index: number) => {
       if (index === 0) {
         return (
           <Badge
@@ -91,7 +102,7 @@ const CalendarView = ({navigation}) => {
     );
   };
 
-  if (error) return <Text>Error: {error}</Text>;
+  if (error) return <Text><>Error: {error}</></Text>;
   if (loading) return <Text>Loading...</Text>;
   if (!data.events.length) {
     return <NoEvents navigation={navigation} />;
