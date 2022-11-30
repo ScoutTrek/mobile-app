@@ -97,6 +97,8 @@ const CalendarView = ({navigation}) => {
     return <NoEvents navigation={navigation} />;
   }
 
+  console.log("AAAA", currMonthEvents);
+
   return (
     <Agenda
       selected={moment().format('YYYY-MM-DD')}
