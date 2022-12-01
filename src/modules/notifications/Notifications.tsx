@@ -53,7 +53,7 @@ const Notifications = ({navigation}) => {
                     }}
                     headerLeft={
                       <Text weight="light">
-                        {moment(+createdAt).format('hh:mm a')}
+                        {moment(createdAt).format('hh:mm a')}
                       </Text>
                     }
                     dismissComponent={checkmark}

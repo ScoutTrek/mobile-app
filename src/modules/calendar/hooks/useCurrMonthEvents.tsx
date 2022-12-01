@@ -8,7 +8,7 @@ function daysInMonth(date) {
 function getMonthObject(datestring: string) {
   const absDate = new Date(datestring);
   const offset = absDate.getTimezoneOffset() * 60 * 1000;
-  const date = new Date(absDate.getTime() - offset);
+  const date = new Date(absDate.getTime() + offset);
   let monthObject: {[key: string]: any} = {};
   for (let i = 1; i <= daysInMonth(date); i++) {
     const dateKeyString: string = `${date.getFullYear()}-${(

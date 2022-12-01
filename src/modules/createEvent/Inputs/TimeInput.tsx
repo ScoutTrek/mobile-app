@@ -17,7 +17,7 @@ const ChooseTime = ({
   setShowAndroidClock,
 }) => {
   const [{fields}, dispatch] = useEventForm();
-  const [time, setTime] = useState(+fields?.[id] || new Date());
+  const [time, setTime] = useState(new Date(fields?.[id]) || new Date());
 
   const next = (androidTime) => {
     dispatch(addEventFieldOfType(id, androidTime || time));
