@@ -12,6 +12,7 @@ import TimeInput from './TimeInput';
 import DescriptionInput from './DescriptionInput';
 import NumberSliderInput from './NumberSliderInput';
 import OptionsInput from './OptionsInput';
+import { Platform } from 'react-native';
 
 const eventComponents = {
   shortText: TitleInput,
@@ -23,11 +24,22 @@ const eventComponents = {
   setting: OptionsInput,
 };
 
-export default ({fieldType, id, fieldName, questionText, payload}) => {
+type EventInputTemplateProps = {
+  fieldType: keyof typeof eventComponents,
+  id: string,
+  fieldName: string,
+  questionText: string,
+  payload: any 
+  // TODO: gql form schema rewrite: payload is json object describing the form field. Need to update its type
+  // using the updated gql forms schema. Also probably fix the compile errs below; should have some way
+  // for TS to know that the fieldType changes the expected props for EditingComponent/InitialButton etc.
+}
+
+export default ({fieldType, id, fieldName, questionText, payload}: EventInputTemplateProps) => {
   const {InitialButton, EditingComponent, CompletedComponent} =
     eventComponents[fieldType];
 
-  const [{fields}] = useEventForm();
+  const [{fields}] = useEventForm() || [{fields: null}];
 
   const [showAndroidClock, setShowAndroidClock] = useState(false);
 

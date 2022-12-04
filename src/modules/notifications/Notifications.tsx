@@ -6,6 +6,8 @@ import {checkmark} from 'ScoutDesign/icons';
 import moment from 'moment';
 
 import {GET_CURR_USER} from 'data';
+import { MainStackParamList } from '../navigation/MainStackNavigator';
+import { StackScreenProps } from '@react-navigation/stack';
 
 export const DISMISS_NOTIFICATION = gql`
   mutation DismissNotificaion($id: ID!) {
@@ -13,7 +15,7 @@ export const DISMISS_NOTIFICATION = gql`
   }
 `;
 
-const Notifications = ({navigation}) => {
+const Notifications = ({navigation}: StackScreenProps<MainStackParamList, "Notifications">) => {
   const {data, error, loading} = useQuery(GET_CURR_USER);
   const [dismissNotification] = useMutation(DISMISS_NOTIFICATION, {
     refetchQueries: [GET_CURR_USER],
@@ -34,7 +36,7 @@ const Notifications = ({navigation}) => {
               Notifications
             </Text>
             {data.currUser?.unreadNotifications.map(
-              ({id, title, createdAt, type, eventType, eventID}) => {
+              ({id, title, createdAt, eventID}: {id: number, title: string, createdAt: number, eventID: number}) => {
                 return (
                   <Card
                     key={id}

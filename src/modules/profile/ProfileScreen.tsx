@@ -1,7 +1,7 @@
 import {useContext} from 'react';
 import {ActivityIndicator} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {CommonActions} from '@react-navigation/native';
+import {CommonActions, CompositeScreenProps} from '@react-navigation/native';
 import {
   Button,
   Text,
@@ -21,6 +21,10 @@ import {AuthContext} from '../auth/SignUp';
 
 import {gql, useApolloClient, useQuery, useMutation} from '@apollo/client';
 import {plusThin} from 'ScoutDesign/icons';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { MainBottomParamList } from '../navigation/MainTabNavigator';
+import { StackScreenProps } from '@react-navigation/stack';
+import { MainStackParamList } from '../navigation/MainStackNavigator';
 
 export const _updateCurrentGroup = async (groupID, navigation) => {
   await AsyncStorage.setItem('currMembershipID', groupID);
@@ -39,7 +43,12 @@ const UPLOAD_PROFILE_PHOTO = gql`
   }
 `;
 
-const ProfileScreen = ({navigation}) => {
+type ProfileScreenProps = CompositeScreenProps<
+  BottomTabScreenProps<MainBottomParamList, "Profile">,
+  StackScreenProps<MainStackParamList>
+>;
+
+const ProfileScreen = ({navigation}: ProfileScreenProps) => {
   const {data, error, loading} = useQuery(GET_CURR_USER);
   const client = useApolloClient();
 

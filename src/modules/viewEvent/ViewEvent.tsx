@@ -12,6 +12,8 @@ import {GET_EVENTS, EVENT_FIELDS} from 'data';
 
 import {Button, CircleButton, ScreenContainer} from 'ScoutDesign/library';
 import {pencil} from 'ScoutDesign/icons';
+import { StackScreenProps } from '@react-navigation/stack';
+import { MainStackParamList } from '../navigation/MainStackNavigator';
 
 export const DELETE_EVENT = gql`
   mutation DeleteEvent($id: ID!) {
@@ -45,8 +47,8 @@ export const deleteEventConfig = {
   },
 };
 
-const EventDetailsScreen = ({route, navigation}) => {
-  const [_, dispatch] = useEventForm();
+const EventDetailsScreen = ({route, navigation}: StackScreenProps<MainStackParamList, 'ViewEvent'>) => {
+  const [_, dispatch] = useEventForm() || [null, null];
   const {currItem} = route.params;
   const {loading, error, data} = useQuery(GET_EVENT, {
     variables: {id: currItem},
@@ -127,7 +129,7 @@ const EventDetailsScreen = ({route, navigation}) => {
         icon={pencil}
         onPress={() => {
           const {id, type, creator, mapImageSource, ...eventData} = data.event;
-          dispatch(populateEvent(eventData, type));
+          dispatch && dispatch(populateEvent(eventData, type));
           navigation.navigate('CreateEvent', {
             screen: 'EventForm',
             params: {

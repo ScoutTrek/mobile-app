@@ -9,13 +9,13 @@ import {EventInputProps} from './InputTypes';
 import DefaultInputButton from './components/DefaultInputButton';
 
 const ChooseName = ({id, Modal, modalProps, questionText}: EventInputProps) => {
-  const [{fields}, dispatch] = useEventForm();
+  const [{fields}, dispatch] = useEventForm() || [{fields: null}, null];
   const [title, setTitle] = useState(fields?.[id] || '');
   const [nameIsValid, setNameIsValid] = useState(!!fields?.[id] || false);
 
   const next = () => {
     if (nameIsValid) {
-      dispatch(addEventFieldOfType(id, title));
+      dispatch && dispatch(addEventFieldOfType(id, title));
     }
   };
 

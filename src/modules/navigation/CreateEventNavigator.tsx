@@ -3,7 +3,12 @@ import {createStackNavigator} from '@react-navigation/stack';
 import ViewEvents from '../createEvent/eventList/ViewEventsList';
 import CreateEvent from '../createEvent/CreateEvent';
 
-const EventStack = createStackNavigator();
+export type EventStackParamList = {
+  ViewEventsList: undefined,
+  EventForm: {type: string, update: boolean}
+}
+
+const EventStack = createStackNavigator<EventStackParamList>();
 
 const EventStackNavigator = () => {
   return (

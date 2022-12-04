@@ -2,7 +2,7 @@ import moment from 'moment';
 import {Text, Icon, LineItem} from 'ScoutDesign/library';
 import {clock} from 'ScoutDesign/icons';
 
-const Time = ({time, heading}) => {
+const Time = ({time, heading}: {time: moment.MomentInput, heading: string}) => {
   return (
     <LineItem
       accessibilityLabel="event-time"

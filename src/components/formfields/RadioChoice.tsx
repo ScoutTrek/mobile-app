@@ -9,7 +9,7 @@ type Option = {
 
 type Props = {
   text: string;
-  initial: number;
+  initial?: number;
   a: Option;
   b: Option;
   onPress: () => void;

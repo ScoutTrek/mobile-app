@@ -10,7 +10,7 @@ import RTE from './components/RichTextEditor/RichTextEditor';
 import {EventInputProps} from './InputTypes';
 import Description from '../../viewEvent/components/Description';
 
-const DescriptionInputButton = ({fieldName, onPress}) => {
+const DescriptionInputButton = ({fieldName, onPress}: {fieldName: string, onPress: () => any}) => {
   return (
     <View
       style={{
@@ -53,11 +53,12 @@ const DescriptionInput = ({
   modalProps,
   questionText,
 }: EventInputProps) => {
-  const [{fields}, dispatch] = useEventForm();
+  const eventForm = useEventForm();
+  const [{fields}, dispatch] = eventForm || [{fields: null}, null];
   const [description, setDescription] = useState(fields?.description || '');
 
   const nextForm = () => {
-    dispatch(addEventFieldOfType(id, description));
+    dispatch && dispatch(addEventFieldOfType(id, description));
   };
 
   return (

@@ -35,7 +35,7 @@ function getIcon(eventType: EventType) {
 type Props = {
   id: string;
   title: string;
-  type: Event;
+  type: EventType;
   date: string;
   creator?: {
     id: string;

@@ -16,7 +16,7 @@ import uuidv4 from 'uuid/v1';
 const locationToken = uuidv4();
 
 type ChooseLocationProps = {
-  id: number,
+  id: string,
   Modal: React.ComponentType,
   modalProps: any,
   questionText: string
@@ -25,7 +25,7 @@ type ChooseLocationProps = {
 type Location = {latitude: number, longitude: number}
 
 const ChooseLocation = ({id, Modal, modalProps, questionText}: ChooseLocationProps) => {
-  const [{fields}, dispatch] = useEventForm();
+  const [{fields}, dispatch] = useEventForm() || [{fields: null}, null];
   const initialLocation = fields?.[id];
   const [location, setLocation] = useState<Location | null>(
     initialLocation
@@ -79,7 +79,7 @@ const ChooseLocation = ({id, Modal, modalProps, questionText}: ChooseLocationPro
   };
 
   const next = () => {
-    dispatch(
+    dispatch && dispatch(
       addEventFieldOfType(id, {
         address: locationString,
         lat: location?.latitude,

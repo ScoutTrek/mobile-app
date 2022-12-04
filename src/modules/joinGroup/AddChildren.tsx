@@ -11,15 +11,17 @@ import {
   addChildren,
   useJoinGroupForm,
 } from './JoinGroupForm/JoinGroupFormStore';
+import { StackScreenProps } from '@react-navigation/stack';
+import { JoinGroupStackParamList } from '../navigation/JoinGroupNavigator';
 
-const AddChildren = ({navigation}) => {
-  const [_, dispatch] = useJoinGroupForm();
+const AddChildren = ({navigation}: StackScreenProps<JoinGroupStackParamList>) => {
+  const [_, dispatch] = useJoinGroupForm() || [null, null];
   const [childName, setChildName] = useState('');
-  const [children, setChildren] = useState([]);
+  const [children, setChildren] = useState<string[]>([]);
   const [childNameIsValid, setChildNameIsValid] = useState(false);
 
   const next = () => {
-    dispatch(addChildren(children));
+    dispatch && dispatch(addChildren(children));
     navigation.navigate('JoinPatrol');
   };
 
@@ -33,7 +35,7 @@ const AddChildren = ({navigation}) => {
         <TextInputWithButton
           placeholder="First & Last Name"
           onValueChange={(value) => {
-            setChildName(value);
+            setChildName(value.toString());
             if (value.toString().length > 2) {
               setChildNameIsValid(true);
             } else {

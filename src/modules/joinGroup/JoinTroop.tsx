@@ -12,6 +12,8 @@ import {
   chooseGroup,
   useJoinGroupForm,
 } from './JoinGroupForm/JoinGroupFormStore';
+import { StackScreenProps } from '@react-navigation/stack';
+import { JoinGroupStackParamList } from '../navigation/JoinGroupNavigator';
 
 const GET_TROOPS = gql`
   query GetTroops {
@@ -24,14 +26,14 @@ const GET_TROOPS = gql`
   }
 `;
 
-const JoinTroop = ({navigation}) => {
-  const [_, dispatch] = useJoinGroupForm();
+const JoinTroop = ({navigation}: StackScreenProps<JoinGroupStackParamList>) => {
+  const [_, dispatch] = useJoinGroupForm() || [null, null];
   const {data, error, loading} = useQuery(GET_TROOPS, {
     fetchPolicy: 'network-only',
   });
 
   const nextForm = (troopID: string, troopNumber: string) => {
-    dispatch(chooseGroup(troopID, troopNumber));
+    dispatch && dispatch(chooseGroup(troopID, troopNumber));
     navigation.navigate('ChooseRole');
   };
 
