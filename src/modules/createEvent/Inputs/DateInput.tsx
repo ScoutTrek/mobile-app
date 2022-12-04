@@ -12,8 +12,8 @@ import {EventInputProps} from './InputTypes';
 const ChooseDate = ({id, Modal, modalProps, questionText}: EventInputProps) => {
   const [{fields}, dispatch] = useEventForm();
   const [date, setDate] = useState(
-    moment(+fields?.[id], 'MM-DD-YYYY').isValid()
-      ? moment(+fields?.[id])
+    moment(new Date(fields?.[id]), 'MM-DD-YYYY').isValid()
+      ? moment(new Date(fields?.[id]))
       : moment()
   );
 
@@ -29,6 +29,7 @@ const ChooseDate = ({id, Modal, modalProps, questionText}: EventInputProps) => {
       valid={!!date}>
       <CalendarList
         current={date.format('YYYY-MM-DD')}
+        calendarStyle={{width: "100%"}}
         theme={{
           textDayFontFamily: 'metropolis-regular',
           textMonthFontFamily: 'metropolis-bold',
