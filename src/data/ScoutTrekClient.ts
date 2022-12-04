@@ -30,7 +30,7 @@ const authMiddleware = new ApolloLink((operation, forward) => {
       operation.setContext({
         headers: {
           membership: currMembershipID ? currMembershipID : undefined,
-          authorization: userToken,
+          authorization: "Bearer " + userToken,
         },
       });
       return forward(operation);
