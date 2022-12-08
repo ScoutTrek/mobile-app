@@ -13,7 +13,6 @@ export const EVENT_FIELDS = gql`
     meetTime
     leaveTime
     pickupTime
-    checkoutTime
     endTime
     endDate
     location {

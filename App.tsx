@@ -42,7 +42,7 @@ const AppLoadingContainer = () => {
           AsyncStorage.getItem('userToken').then((token) => {
             if (token) {
               setToken(token);
-              setNewUser(data.currUser.noGroups);
+              setNewUser(!data.currUser || data.currUser.noGroups);
             }
             setAppLoading(false);
           });
@@ -51,6 +51,14 @@ const AppLoadingContainer = () => {
         }
       }
     },
+    onError: ({ graphQLErrors }) => {
+      graphQLErrors.forEach((err) => {
+        if (err.extensions.code === "UNAUTHORIZED") {
+          setNewUser(true);
+          setAppLoading(false);
+        }
+      })
+    }
   });
   const [appLoading, setAppLoading] = useState<boolean>(true);
 

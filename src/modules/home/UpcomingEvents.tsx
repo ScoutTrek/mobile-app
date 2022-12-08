@@ -131,11 +131,11 @@ export default function UpcomingEvents({navigation}: UpcomingEventsProp) {
   const eventListData = [
     {
       title: 'Happening Now',
-      data: data.events.filter(({date}) => new Date(+date) - new Date() < 0),
+      data: data.events.filter(({date}) => new Date(date) - new Date() < 0),
     },
     {
       title: 'Upcoming Events',
-      data: data.events.filter(({date}) => new Date(+date) - new Date() >= 0),
+      data: data.events.filter(({date}) => new Date(date) - new Date() >= 0),
     },
   ];
   return (
