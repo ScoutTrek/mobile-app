@@ -14,8 +14,8 @@ const ChooseDate = ({id, Modal, modalProps, questionText}: EventInputProps) => {
   const fields = eventForm && eventForm[0].fields;
   const dispatch = eventForm && eventForm[1];
   const [date, setDate] = useState(
-    moment(new Date(fields?.[id]), 'MM-DD-YYYY').isValid()
-      ? moment(new Date(fields?.[id]))
+    moment(new Date(+fields?.[id]), 'MM-DD-YYYY').isValid()
+      ? moment(new Date(+fields?.[id]))
       : moment()
   );
 
