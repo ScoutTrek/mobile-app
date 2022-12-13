@@ -90,7 +90,7 @@ const CalendarView = ({navigation}: ProfileScreenProps) => {
           </Text>
           <Container padding="none" flexDirection="row" alignItems="center">
             <Text>
-              {new Date(+item.date).toLocaleDateString('en-US', {
+              {new Date(item.date).toLocaleDateString('en-US', {
                 month: 'long',
                 day: 'numeric',
               })}

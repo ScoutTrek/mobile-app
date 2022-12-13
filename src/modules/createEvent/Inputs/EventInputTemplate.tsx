@@ -92,7 +92,7 @@ export default ({fieldType, id, fieldName, questionText, payload}: EventInputTem
                     ? openModal()
                     : setShowAndroidClock(true)
                 }>
-                <CompletedComponent data={+fields?.[id]} />
+                <CompletedComponent data={fields?.[id]} />
               </TapToEditContainer>
             )}
           </Row>
@@ -112,7 +112,7 @@ export default ({fieldType, id, fieldName, questionText, payload}: EventInputTem
               <InitialButton onPress={openModal} fieldName={fieldName} />
             ) : (
               <TapToEditContainer edit={openModal}>
-                <CompletedComponent data={+fields?.[id]} />
+                <CompletedComponent data={fields?.[id]} />
               </TapToEditContainer>
             )}
           </Row>

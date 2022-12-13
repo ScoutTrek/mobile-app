@@ -17,7 +17,6 @@ export type Event = {
   meetTime?: string;
   leaveTime?: string;
   pickupTime?: string;
-  checkoutTime?: string;
   endTime?: string;
   endDate?: string;
   location?: Location;
