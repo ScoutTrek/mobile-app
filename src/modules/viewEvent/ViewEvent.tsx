@@ -58,6 +58,7 @@ const EventDetailsScreen = ({route, navigation}) => {
   });
   const [deleteEvent] = useMutation(DELETE_EVENT, deleteEventConfig);
   const {data: userData, error: userError, loading: userLoading} = useQuery(GET_CURR_USER);
+  const leadershipRoles = ["SCOUTMASTER", "ASST_SCOUTMASTER", "SENIOR_PATROL_LEADER", "PATROL_LEADER"];
 
   const handleDeleteEvent = () => {
 
@@ -155,7 +156,7 @@ const EventDetailsScreen = ({route, navigation}) => {
         corner="bottom-right"
         distanceFromCorner="l"
       />
-      {userData.currUser.currRole === "SCOUTMASTER" &&
+      {(leadershipRoles.indexOf(userData.currUser.currRole) > -1) &&
         <Button
           accessibilityLabel="cancel-event"
           text="Cancel event"
