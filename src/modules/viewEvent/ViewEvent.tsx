@@ -1,4 +1,5 @@
 import {Text, Alert} from 'react-native';
+import {useContext} from 'react';
 
 import {useEventForm, populateEvent} from 'CreateEvent/CreateEventFormStore';
 
@@ -8,10 +9,12 @@ import Time from './components/Time';
 import Date from './components/Date';
 import Description from './components/Description';
 
-import {GET_EVENTS, EVENT_FIELDS} from 'data';
+import {GET_EVENTS, EVENT_FIELDS, GET_CURR_USER} from 'data';
 
 import {Button, CircleButton, ScreenContainer} from 'ScoutDesign/library';
 import {pencil} from 'ScoutDesign/icons';
+
+import {AuthContext} from '../auth/SignUp';
 
 export const DELETE_EVENT = gql`
   mutation DeleteEvent($id: ID!) {
@@ -40,7 +43,7 @@ export const deleteEventConfig = {
         data: {events: updatedEvents},
       });
     } catch (err) {
-      console.error(err);
+      Alert.alert('You do not have permission to delete this event');
     }
   },
 };
@@ -54,6 +57,13 @@ const EventDetailsScreen = ({route, navigation}) => {
   const [deleteEvent] = useMutation(DELETE_EVENT, deleteEventConfig);
 
   const handleDeleteEvent = () => {
+
+    const {token} = useContext(AuthContext);
+    const {data, error, loading} = useQuery(GET_CURR_USER);
+
+    // TODO: Before deleting event, check if the user has a leadership role
+
+
     Alert.alert(
       'Are you sure you want to cancel this event?',
       'This action cannot be undone.',
@@ -73,6 +83,9 @@ const EventDetailsScreen = ({route, navigation}) => {
       ],
       {cancelable: true}
     );
+  
+
+    
   };
 
   if (loading) return null;
