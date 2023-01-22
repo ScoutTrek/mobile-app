@@ -42,7 +42,7 @@ This project uses [Expo](https://docs.expo.dev/get-started/installation/)
 To download this project
 
 ```bash
-  git clone git@github.com:TheEarlyNerd/ScoutTrek.git
+  git clone git@github.com:sandboxnu/ScoutTrek-Frontend.git
 ```
 
 then to run on an Expo simulator: 
