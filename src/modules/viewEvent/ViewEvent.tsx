@@ -3,6 +3,8 @@ import {useContext} from 'react';
 
 import {useEventForm, populateEvent} from 'CreateEvent/CreateEventFormStore';
 
+import {convertRoleToText} from '../../data/utils/convertIDsToStrings';
+
 import {gql, useMutation, useQuery} from '@apollo/client';
 import Location from './components/Location';
 import Time from './components/Time';
@@ -55,6 +57,7 @@ const EventDetailsScreen = ({route, navigation}) => {
     variables: {id: currItem},
   });
   const [deleteEvent] = useMutation(DELETE_EVENT, deleteEventConfig);
+  const {data: userData, error: userError, loading: userLoading} = useQuery(GET_CURR_USER);
 
   const handleDeleteEvent = () => {
 
@@ -62,8 +65,6 @@ const EventDetailsScreen = ({route, navigation}) => {
     const {data, error, loading} = useQuery(GET_CURR_USER);
 
     // TODO: Before deleting event, check if the user has a leadership role
-
-
     Alert.alert(
       'Are you sure you want to cancel this event?',
       'This action cannot be undone.',
@@ -88,10 +89,11 @@ const EventDetailsScreen = ({route, navigation}) => {
     
   };
 
-  if (loading) return null;
+  if (loading || userLoading) return null;
   if (error)
     return <Text style={{paddingTop: 50}}>`Error! ${error.toString()}`</Text>;
-
+  if (userError)
+    return <Text style={{paddingTop: 50}}>`Error! ${userError.toString()}`</Text>;
   return (
     <ScreenContainer
       padding="none"
@@ -153,13 +155,13 @@ const EventDetailsScreen = ({route, navigation}) => {
         corner="bottom-right"
         distanceFromCorner="l"
       />
-      <Button
-        accessibilityLabel="cancel-event"
-        text="Cancel event"
-        backgroundColor="white"
-        textColor="dangerDark"
-        onPress={handleDeleteEvent}
-      />
+      {userData.currUser.currRole === "SCOUTMASTER" &&
+        <Button
+          accessibilityLabel="cancel-event"
+          text="Cancel event"
+          backgroundColor="white"
+          textColor="dangerDark"
+          onPress={handleDeleteEvent}/>}
     </ScreenContainer>
   );
 };
