@@ -51,18 +51,10 @@ then to run on an Expo simulator:
   yarn install
 ```
 
-Place your local IP address into the local variable in the .env file, as seen below:
-
-`LOCAL_IP_ADDRESS={your ip address here}`
-
-To find it, run `ipconfig` in a terminal (`ipconfig getifaddr en0` for Mac) and take the IPv4 Address underneath Wireless LAN adapter Wi-Fi. Alternatively,
-you can go to your Network and Internet Settings >> Properties >> scroll until you see IPv4 Address for Windows, or for Mac,
-System Preferences >> Network >> the wifi network you're connected to.
-
-Note that your IP address will change if you're on different wifi networks, so you will need to do this each time you develop. Then run
+Make a copy of the file `.env_ex` and name it as `.env`. Then, start the app using:
 
 ```bash
-  yarn start --clear
+  yarn dev --clear
 ```
 
 Note that the `--clear` might not be necessary (especially if you've been developing on the same wifi network), but will help if you have some React Native caching issues.
@@ -70,8 +62,17 @@ Note that the `--clear` might not be necessary (especially if you've been develo
 If you are on public wifi, you may need to run 
 
 ```bash
-  yarn start --tunnel --clear
+  yarn dev --tunnel --clear
 ```
+
+### Use Prod Server
+
+To run the app using the GCP server, use:
+
+```bash
+  yarn start --clear
+```
+The `--clear` flag is necessary here when switching between `yarn start` and `yarn dev`, as the environment variables can sometimes be cached.
 
 You may also need to run the following commands if you get errors related to them:
 

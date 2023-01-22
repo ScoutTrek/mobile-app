@@ -54,7 +54,7 @@ const EventCard = ({
   imageSource,
   onSelect,
 }: Props) => {
-  const absDate = new Date(+date);
+  const absDate = new Date(date);
   const offset = -1 * absDate.getTimezoneOffset() * 60 * 1000;
   const localDate = new Date(absDate.getTime() - offset);
   return (

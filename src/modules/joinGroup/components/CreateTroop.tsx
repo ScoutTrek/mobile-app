@@ -76,7 +76,7 @@ const STATES = [
 ];
 
 const ADD_TROOP = gql`
-  mutation AddTroop($troopInfo: AddTroopInput) {
+  mutation AddTroop($troopInfo: AddTroopInput!) {
     addTroop(input: $troopInfo) {
       id
       unitNumber

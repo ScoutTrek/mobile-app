@@ -112,8 +112,8 @@ const EventDetailsScreen = ({route, navigation}) => {
             heading="Meet Place"
             address={data.event.meetLocation.address}
           />
-          <Time time={+data.event.meetTime} heading="Arrive at meet place" />
-          <Time time={+data.event.leaveTime} heading="Leave meet place" />
+          <Time time={data.event.meetTime} heading="Arrive at meet place" />
+          <Time time={data.event.leaveTime} heading="Leave meet place" />
         </>
       ) : null}
 
@@ -121,19 +121,19 @@ const EventDetailsScreen = ({route, navigation}) => {
         heading="Event location"
         address={data.event.location.address}
       />
-      <Date date={+data.event.date} heading="Event date" />
-      <Time time={+data.event.startTime} heading="Start time" />
+      <Date date={data.event.date} heading="Event date" />
+      <Time time={data.event.startTime} heading="Start time" />
       {data.event.endTime ? (
-        <Time time={+data.event.endTime} heading="Estimated return" />
+        <Time time={data.event.endTime} heading="Estimated return" />
       ) : null}
       {data.event.endDate ? (
-        <Date date={+data.event.endDate} heading="Event ends" />
+        <Date date={data.event.endDate} heading="Event ends" />
       ) : null}
       {data.event.pickupTime ? (
-        <Time time={+data.event.pickupTime} heading="Pick up Scouts" />
+        <Time time={data.event.pickupTime} heading="Pick up Scouts" />
       ) : null}
       {data.event.checkoutTime ? (
-        <Time time={+data.event.checkoutTime} heading="Check out" />
+        <Time time={data.event.checkoutTime} heading="Check out" />
       ) : null}
 
       <Description description={data.event.description} />

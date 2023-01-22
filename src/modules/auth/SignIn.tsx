@@ -11,6 +11,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {gql, useMutation} from '@apollo/client';
 import Footer from './components/Footer';
 import {AuthContext} from '../auth/SignUp';
+import { StackScreenProps } from '@react-navigation/stack';
+import { AuthStackParamList } from '../navigation/AuthNavigator';
 
 const LOG_IN = gql`
   mutation Login($userInfo: LoginInput!) {
@@ -54,7 +56,7 @@ const SignInFormFields = [
   },
 ];
 
-const SignIn = ({navigation}) => {
+const SignIn = ({navigation}: StackScreenProps<AuthStackParamList, "SignIn">) => {
   const {setToken} = useContext(AuthContext);
 
   const [logIn] = useMutation(LOG_IN, {
@@ -72,7 +74,7 @@ const SignIn = ({navigation}) => {
     },
   });
 
-  const handleSignIn = async (data) => {
+  const handleSignIn = async (data: any) => {
     await logIn({
       variables: {
         userInfo: {
@@ -123,6 +125,14 @@ const SignIn = ({navigation}) => {
           onSubmit={handleSignIn}
           submitBtnText="Sign In"
         />
+        <Text 
+          color="darkGrey" 
+          size="s" 
+          style={{width: "100%", paddingHorizontal: 12, paddingTop: 6, textAlign: "right"}}
+          onPress={() => navigation.navigate('ForgotPassword')}
+        >
+          Forgot Password?
+        </Text>
         <Footer
           footerText="Don&rsquo;t have an account?"
           btnType="Sign Up Now"

@@ -14,6 +14,8 @@ import {Ionicons} from '@expo/vector-icons';
 import Footer from './components/Footer';
 
 import {gql, useMutation} from '@apollo/client';
+import { StackScreenProps } from '@react-navigation/stack';
+import { AuthStackParamList } from '../navigation/AuthNavigator';
 
 const SIGN_UP = gql`
   mutation SignUp($userInfo: SignupInput!) {
@@ -97,7 +99,7 @@ const SignUpFormFields = [
   },
 ];
 
-const SignUp = ({navigation}) => {
+const SignUp = ({navigation}: StackScreenProps<AuthStackParamList, "SignUp">) => {
   const {setToken, setNewUser} = useContext(AuthContext);
 
   const [signUp] = useMutation(SIGN_UP, {
@@ -112,7 +114,7 @@ const SignUp = ({navigation}) => {
     },
   });
 
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: any) => {
     if (data.password !== data.passwordConfirm) {
       Alert.alert(
         'Whoops, the passwords you entered do not match.',
