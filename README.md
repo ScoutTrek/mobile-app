@@ -54,7 +54,7 @@ then to run on an Expo simulator:
 Make a copy of the file `.env_ex` and name it as `.env`. Then, start the app using:
 
 ```bash
-  yarn dev --clear
+  yarn local --clear
 ```
 
 Note that the `--clear` might not be necessary (especially if you've been developing on the same wifi network), but will help if you have some React Native caching issues.
@@ -62,24 +62,20 @@ Note that the `--clear` might not be necessary (especially if you've been develo
 If you are on public wifi, you may need to run 
 
 ```bash
-  yarn dev --tunnel --clear
+  yarn local --tunnel --clear
 ```
 
 ### Use Prod Server
 
-To run the app using the GCP server, use:
+To run the app using the backend hosted on the GC App Engine, use one of the following to connect to the prod or dev environments:
 
 ```bash
-  yarn start --clear
+  yarn start:prod --clear
+  yarn start:dev --clear
 ```
-The `--clear` flag is necessary here when switching between `yarn start` and `yarn dev`, as the environment variables can sometimes be cached.
+The `--clear` flag is necessary here when switching between `yarn start` and `yarn local`, as the environment variables can sometimes be cached.
 
 You may also need to run the following commands if you get errors related to them:
-
-```bash
-  yarn add babel-plugin-transform-inline-environment-variables
-  yarn add apollo-upload-client
-```
 
 If you are having issues related to Android SDK path, you may also need to install Android Studio / have some Android development files set up. (Doing so will also let you use Android emulators.)
 
