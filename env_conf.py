@@ -7,7 +7,7 @@ parser.add_argument("--env")
 args=parser.parse_args()
 
 IP = ''
-if args.env == 'dev':
+if args.env == 'local':
     # Get the ip address 
     # https://stackoverflow.com/questions/60656088/how-to-get-wireless-lan-adapter-wi-fi-ip-address-in-python
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
