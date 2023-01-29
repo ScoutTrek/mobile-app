@@ -1,6 +1,6 @@
 import {Text, Alert} from 'react-native';
-import {useContext} from 'react';
-
+import {FC, useContext} from 'react';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import {useEventForm, populateEvent} from 'CreateEvent/CreateEventFormStore';
 
 import {convertRoleToText} from '../../data/utils/convertIDsToStrings';
@@ -17,6 +17,7 @@ import {Button, CircleButton, ScreenContainer} from 'ScoutDesign/library';
 import {pencil} from 'ScoutDesign/icons';
 
 import {AuthContext} from '../auth/SignUp';
+import { JoinGroupNavigationProp, JoinGroupRouteProp, MainStackRoutes } from '../navigation/types/mainStack';
 
 export const DELETE_EVENT = gql`
   mutation DeleteEvent($id: ID!) {
@@ -50,7 +51,11 @@ export const deleteEventConfig = {
   },
 };
 
-const EventDetailsScreen = ({route, navigation}) => {
+interface Props {}
+
+const EventDetailsScreen: FC<Props> = () => {
+  const navigation = useNavigation<JoinGroupNavigationProp>();
+  const route = useRoute<JoinGroupRouteProp>();
   const [_, dispatch] = useEventForm();
   const {currItem} = route.params;
   const {loading, error, data} = useQuery(GET_EVENT, {

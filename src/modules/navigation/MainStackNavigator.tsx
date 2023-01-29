@@ -17,6 +17,8 @@ import Notifications from '../notifications/Notifications';
 import {AuthContext} from '../auth/SignUp';
 import { AppStackParamList } from 'App';
 
+import { MainStackRoutes } from './types/mainStack';
+
 export type MainStackParamList = {
   JoinGroup: undefined,
   Notifications: undefined,
@@ -47,11 +49,12 @@ const MainStackNavigator = ({route}: StackScreenProps<AppStackParamList, 'Home'>
         screenOptions={() => ({
           headerShown: false,
         })}>
-        <MainStack.Screen name="JoinGroup" component={JoinGroupNavigator} />
-        <MainStack.Screen name="Notifications" component={Notifications} />
-        <MainStack.Screen name="Main" component={MainTabNavigator} />
-        <MainStack.Screen name="CreateEvent" component={CreateEvent} />
-        <MainStack.Screen name="ViewEvent" component={ViewEvent} />
+        <MainStack.Screen name={MainStackRoutes.joinGroup} component={JoinGroupNavigator} />
+        <MainStack.Screen name={MainStackRoutes.notifications} component={Notifications} />
+        <MainStack.Screen name={MainStackRoutes.main} component={MainTabNavigator} />
+        <MainStack.Screen name={MainStackRoutes.createEvent} component={CreateEvent} />
+        <MainStack.Screen name={MainStackRoutes.viewEvent} component={ViewEvent} />
+        
       </MainStack.Navigator>
     </CreateEventFormProvider>
   );
