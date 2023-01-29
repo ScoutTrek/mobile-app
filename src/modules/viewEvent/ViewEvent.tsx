@@ -61,11 +61,6 @@ const EventDetailsScreen = ({route, navigation}) => {
   const leadershipRoles = ["SCOUTMASTER", "ASST_SCOUTMASTER", "SENIOR_PATROL_LEADER", "PATROL_LEADER"];
 
   const handleDeleteEvent = () => {
-
-    const {token} = useContext(AuthContext);
-    const {data, error, loading} = useQuery(GET_CURR_USER);
-
-    // TODO: Before deleting event, check if the user has a leadership role
     Alert.alert(
       'Are you sure you want to cancel this event?',
       'This action cannot be undone.',
