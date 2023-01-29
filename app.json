@@ -1,6 +1,7 @@
 {
   "name": "ScoutTrek",
   "expo": {
+    "owner": "sandboxnu",
     "entryPoint": "node_modules/expo/AppEntry.js",
     "name": "ScoutTrek",
     "slug": "scout-trek-native",
@@ -42,7 +43,8 @@
         "READ_PHONE_STATE",
         "VIBRATE",
         "WAKE_LOCK",
-        "WRITE_EXTERNAL_STORAGE"
+        "WRITE_EXTERNAL_STORAGE",
+        "android.permission.RECORD_AUDIO"
       ],
       "config": {
         "googleMaps": {
@@ -53,7 +55,7 @@
       "googleServicesFile": "./google-services.json"
     },
     "splash": {
-      "backgroundColor": "#34A86C",
+      "backgroundColor": "#34A86C"
     },
     "description": "Testing the publishing feature of Expo",
     "notification": {
@@ -62,7 +64,10 @@
       "iosDisplayInForeground": true
     },
     "extra": {
-      "GOOGLE_MAPS_API_KEY": "AIzaSyCy38WoJFJEn3gr7EEc1OAWcO-Xsslilbs"
+      "GOOGLE_MAPS_API_KEY": "AIzaSyCy38WoJFJEn3gr7EEc1OAWcO-Xsslilbs",
+      "eas": {
+        "projectId": "053431a1-924d-475e-baec-77fa89064c5a"
+      }
     }
   }
 }
