@@ -42,7 +42,7 @@ This project uses [Expo](https://docs.expo.dev/get-started/installation/)
 To download this project
 
 ```bash
-  git clone git@github.com:TheEarlyNerd/ScoutTrek.git
+  git clone git@github.com:sandboxnu/ScoutTrek-Frontend.git
 ```
 
 then to run on an Expo simulator: 
@@ -50,6 +50,8 @@ then to run on an Expo simulator:
 ```bash
   yarn install
 ```
+
+You will need an Android SDK installed to run the front end. A good option is [Android Studio](https://developer.android.com/studio)
 
 Make a copy of the file `.env_ex` and name it as `.env`. Then, start the app using:
 
