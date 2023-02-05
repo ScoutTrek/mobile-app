@@ -22,7 +22,7 @@ const ChooseName = ({id, Modal, modalProps, questionText}: EventInputProps) => {
   return (
     <Modal
       {...modalProps}
-      onNext={() => {next}}
+      onNext={next}
       title={questionText}
       valid={nameIsValid}>
       <ColorfulTextInput
