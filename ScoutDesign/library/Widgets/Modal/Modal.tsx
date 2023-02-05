@@ -114,8 +114,8 @@ const ModalBase = ({
 const Modal = ({visible, escape, onNext, children, ...rest}: ModalProps) => {
   let next = onNext
     ? () => {
-        onNext();
         escape();
+        onNext();
       }
     : undefined;
 
