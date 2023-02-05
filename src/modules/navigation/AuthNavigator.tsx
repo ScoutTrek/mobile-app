@@ -8,7 +8,9 @@ export type AuthStackParamList = {
   SignUp: undefined,
   SignIn: undefined,
   ForgotPassword: undefined,
-  ResetPassword: undefined,
+  ResetPassword: {
+    email: string,
+  },
 }
 
 const AuthStack = createStackNavigator<AuthStackParamList>();
