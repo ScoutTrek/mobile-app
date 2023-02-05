@@ -27,7 +27,7 @@ const ChooseName = ({id, Modal, modalProps, questionText}: EventInputProps) => {
       valid={nameIsValid}>
       <ColorfulTextInput
         value={title}
-        autoCompleteType="off"
+        autoComplete="off"
         autoCorrect={false}
         onValueChange={(value) => {
           if (typeof value === 'number') {
