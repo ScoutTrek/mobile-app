@@ -1,4 +1,4 @@
-import {ActivityIndicator} from 'react-native';
+import {ActivityIndicator, View} from 'react-native';
 import {ScreenContainer, Container, Card, Text} from 'ScoutDesign/library';
 import {useQuery, useMutation, gql} from '@apollo/client';
 
@@ -23,7 +23,10 @@ const Notifications = ({navigation}) => {
     console.error(error);
     return null;
   }
-  if (loading) return <ActivityIndicator />;
+  if (loading) return (
+    <View style={{justifyContent: 'center', flex: 1}}>
+      <ActivityIndicator />
+    </View>)
 
   return (
     <ScreenContainer marginTop="xl" icon="back" back={navigation.goBack}>

@@ -1,5 +1,5 @@
 import {useRef} from 'react';
-import {StyleSheet} from 'react-native';
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import {Agenda} from 'react-native-calendars';
 import Constants from 'expo-constants';
 import {GET_EVENTS} from 'data';
@@ -91,8 +91,11 @@ const CalendarView = ({navigation}) => {
     );
   };
 
-  if (error) return <Text>Error: {error}</Text>;
-  if (loading) return <Text>Loading...</Text>;
+  if (loading) return (
+  <View style={{justifyContent: 'center', flex: 1}}>
+    <ActivityIndicator />
+  </View>) 
+
   if (!data.events.length) {
     return <NoEvents navigation={navigation} />;
   }

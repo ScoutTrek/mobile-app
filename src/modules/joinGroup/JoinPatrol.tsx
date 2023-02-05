@@ -1,5 +1,5 @@
 import {useState, useContext} from 'react';
-import {ActivityIndicator} from 'react-native';
+import {ActivityIndicator, View} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {gql, useMutation, useQuery} from '@apollo/client';
 import {plusBold} from 'ScoutDesign/icons';
@@ -76,7 +76,11 @@ const JoinPatrol = ({navigation}) => {
     });
   };
 
-  if (loading) return <ActivityIndicator />;
+  if (loading) return (
+    <View style={{justifyContent: 'center', flex: 1}}>
+      <ActivityIndicator />
+    </View>
+  )
   if (error) return <Text>`Error! ${error}`</Text>;
 
   return (
