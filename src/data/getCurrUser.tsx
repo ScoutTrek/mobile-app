@@ -39,6 +39,12 @@ export const USER_FIELDS = gql`
   }
 `;
 
+export interface GET_INITIAL_USER_FIELDS_RETURN {
+  currUser: {
+    noGroups: boolean;
+  };
+}
+
 export const GET_INITIAL_USER_FIELDS = gql`
   query GetInitialUserFields {
     currUser {

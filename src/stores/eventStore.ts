@@ -1,8 +1,7 @@
-interface EventStore {
+import {StoreGet, StoreSet} from './useStore';
 
-}
+export interface EventStore {}
 
-// TODO: type get and set to StoreGet and StoreSet
-const eventStore = (set: any, get: any): EventStore => ({
+const eventStore = (set: StoreSet, get: StoreGet): EventStore => ({});
 
-});
+export default eventStore;
