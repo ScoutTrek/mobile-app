@@ -1,9 +1,7 @@
+import {LOCAL_IP_ADDRESS, ENV, DEV_URL, PROD_URL, GOOGLE_MAPS_API_KEY} from '@env';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Constants from 'expo-constants';
 import {ApolloClient, InMemoryCache, from, ApolloLink, HttpLink} from '@apollo/client';
 import {onError} from '@apollo/client/link/error';
-
-import {LOCAL_IP_ADDRESS, ENV, DEV_URL, PROD_URL} from '@env';
 
 type AsyncStorageData = {[key: string]: string | null};
 
@@ -76,7 +74,7 @@ const ScoutTrekApolloClient = new ApolloClient({
           mapImageSource(_, {readField}) {
             const location = readField<string>('location');
             const mapUrl = location
-              ? `https://maps.googleapis.com/maps/api/staticmap?center=${location.lat},${location.lng}&zoom=12&size=350x400&maptype=roadmap&markers=size:mid%7Ccolor:orange%7C${location.lat},${location.lng}&key=${Constants?.manifest?.extra?.GOOGLE_MAPS_API_KEY}`
+              ? `https://maps.googleapis.com/maps/api/staticmap?center=${location.lat},${location.lng}&zoom=12&size=350x400&maptype=roadmap&markers=size:mid%7Ccolor:orange%7C${location.lat},${location.lng}&key=${GOOGLE_MAPS_API_KEY}`
               : null;
             return mapUrl;
           },
