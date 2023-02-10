@@ -41,32 +41,30 @@ const AppLoadingContainer = () => {
   }
 
   return (
-    <AuthContext.Provider value={{token, setToken, newUser, setNewUser}}>
-      <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={() => ({
-            headerShown: false,
-          })}>
-          {!token ? (
-            <Stack.Screen
-              name="AuthNav"
-              component={AuthNavigator}
-              options={{
-                animationTypeForReplace: 'push',
-              }}
-            />
-          ) : (
-            <Stack.Screen
-              name="Home"
-              component={MainStackNavigator}
-              initialParams={{
-                newUser,
-              }}
-            />
-          )}
-        </Stack.Navigator>
-      </NavigationContainer>
-    </AuthContext.Provider>
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={() => ({
+          headerShown: false,
+        })}>
+        {!token ? (
+          <Stack.Screen
+            name="AuthNav"
+            component={AuthNavigator}
+            options={{
+              animationTypeForReplace: 'push',
+            }}
+          />
+        ) : (
+          <Stack.Screen
+            name="Home"
+            component={MainStackNavigator}
+            initialParams={{
+              newUser,
+            }}
+          />
+        )}
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 

@@ -10,10 +10,9 @@ export interface AuthStore {
   isNewUser: boolean;
 }
 
-const authStore = (set: StoreSet, get: StoreGet): AuthStore => {
-  let token = undefined;
-
-  const getToken = () => {
+const authStore = (set: StoreSet, get: StoreGet): AuthStore => ({
+  token: undefined,
+  getToken: () => {
     useQuery(GET_INITIAL_USER_FIELDS, {
       fetchPolicy: 'network-only',
       onCompleted: async (data) => {
@@ -44,9 +43,9 @@ const authStore = (set: StoreSet, get: StoreGet): AuthStore => {
         });
       },
     });
-  };
+  },
 
-  return {token, getToken};
-};
+  isNewUser: false,
+});
 
 export default authStore;
