@@ -1,5 +1,5 @@
 MainStackNavigator types [DONE]
 AuthNavigator types [DONE]
-CreateEventNavigator types
-JoinGroupNavigator types
+CreateEventNavigator types [DONE]
+JoinGroupNavigator types [DONE]
 MainTabNavigator types 
