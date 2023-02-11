@@ -1,37 +1,34 @@
-import { ParamListBase, RouteProp } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-
-export const VIEW_EVENTS_LIST = "ViewEventsList" as const;
-export const EVENT_FORM = "EventForm" as const;
+import { ParamListBase, RouteProp } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export enum EventStackRoutes {
-    viewEventsList = "ViewEventsList",
-    eventForm = "EventForm"
+  viewEventsList = 'ViewEventsList',
+  eventForm = 'EventForm',
 }
 
 interface EventStackNavigationParamsList extends ParamListBase {
-    [EventStackRoutes.viewEventsList]: {};
-    [EventStackRoutes.eventForm]: {};
+  [EventStackRoutes.viewEventsList]: {};
+  [EventStackRoutes.eventForm]: {};
 }
 
 // Navigation Props
 export type ViewEventsListNavigationProp = NativeStackNavigationProp<
-    EventStackNavigationParamsList,
-	EventStackRoutes.viewEventsList
+  EventStackNavigationParamsList,
+  EventStackRoutes.viewEventsList
 >;
 
 export type EventFormNavigationProp = NativeStackNavigationProp<
-    EventStackNavigationParamsList,
-	EventStackRoutes.eventForm
+  EventStackNavigationParamsList,
+  EventStackRoutes.eventForm
 >;
 
 // Route Props
 export type ViewEventsListRouteProp = RouteProp<
-    EventStackNavigationParamsList, 
-    EventStackRoutes.viewEventsList
+  EventStackNavigationParamsList,
+  EventStackRoutes.viewEventsList
 >;
 
 export type EventFormRouteProp = RouteProp<
-    EventStackNavigationParamsList, 
-    EventStackRoutes.eventForm
+  EventStackNavigationParamsList,
+  EventStackRoutes.eventForm
 >;
