@@ -4,6 +4,6 @@ export enum AppRoutes {
 }
 
 export type AppStackParamList = {
-  AuthNav: undefined;
-  Home: { newUser: boolean };
+  AuthNav: {};
+  Home: {};
 };

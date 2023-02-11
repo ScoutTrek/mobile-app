@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useFonts } from 'expo-font';
-import { View, ActivityIndicator } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import AuthNavigator from 'src/modules/navigation/AuthNavigator';
 import MainStackNavigator from 'src/modules/navigation/MainStackNavigator';
 import {
@@ -41,7 +41,8 @@ const AppLoadingContainer = () => {
       <Stack.Navigator
         screenOptions={() => ({
           headerShown: false,
-        })}>
+        })}
+      >
         {token ? (
           <Stack.Screen name={AppRoutes.home} component={MainStackNavigator} />
         ) : (

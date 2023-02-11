@@ -1,35 +1,40 @@
-import {createStackNavigator, StackNavigationProp, StackScreenProps} from '@react-navigation/stack';
-import {useContext, useEffect} from 'react';
+import { useApolloClient } from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useApolloClient} from '@apollo/client';
-
 import {
-  initialState,
-  createEventFormReducer,
-} from '../createEvent/createEventForm/createEventFormReducer';
-import {CreateEventFormProvider} from '../createEvent/createEventForm/CreateEventFormStore';
+  StackNavigationProp,
+  StackScreenProps,
+  createStackNavigator,
+} from '@react-navigation/stack';
+import useStore from 'src/stores/useStore';
 
-import JoinGroupNavigator from './JoinGroupNavigator';
+import { CreateEventFormProvider } from '../createEvent/createEventForm/CreateEventFormStore';
+import {
+  createEventFormReducer,
+  initialState,
+} from '../createEvent/createEventForm/createEventFormReducer';
+import Notifications from '../notifications/Notifications';
 import ViewEvent from '../viewEvent/ViewEvent';
 import CreateEvent from './EventStackNavigator';
+import JoinGroupNavigator from './JoinGroupNavigator';
 import MainTabNavigator from './MainTabNavigator';
-import Notifications from '../notifications/Notifications';
-import {AuthContext} from '../auth/SignUp';
-import { AppStackParamList } from 'App';
-
+import { AppStackParamList } from './types/appStack';
 import { MainStackRoutes } from './types/mainStack';
 
 export type MainStackParamList = {
-  JoinGroup: undefined,
-  Notifications: undefined,
-  Main: undefined,
-  CreateEvent: undefined,
-  ViewEvent: undefined,
-}
+  JoinGroup: undefined;
+  Notifications: undefined;
+  Main: undefined;
+  CreateEvent: undefined;
+  ViewEvent: undefined;
+};
 
 const MainStack = createStackNavigator<MainStackParamList>();
 
-const MainStackNavigator = ({route}: StackScreenProps<AppStackParamList, 'Home'>) => {
+const MainStackNavigator = ({
+  route,
+}: StackScreenProps<AppStackParamList, 'Home'>) => {
+  const isNewUser = useStore((s) => s.isNewUser);
+
   // const client = useApolloClient();
   // const {setToken} = useContext(AuthContext);
   // useEffect(() => {
@@ -43,18 +48,36 @@ const MainStackNavigator = ({route}: StackScreenProps<AppStackParamList, 'Home'>
   return (
     <CreateEventFormProvider
       initialState={initialState}
-      reducer={createEventFormReducer}>
+      reducer={createEventFormReducer}
+    >
       <MainStack.Navigator
-        initialRouteName={route?.params?.newUser ? 'JoinGroup' : 'Main'}
+        initialRouteName={
+          isNewUser ? MainStackRoutes.joinGroup : MainStackRoutes.main
+        }
         screenOptions={() => ({
           headerShown: false,
-        })}>
-        <MainStack.Screen name={MainStackRoutes.joinGroup} component={JoinGroupNavigator} />
-        <MainStack.Screen name={MainStackRoutes.notifications} component={Notifications} />
-        <MainStack.Screen name={MainStackRoutes.main} component={MainTabNavigator} />
-        <MainStack.Screen name={MainStackRoutes.createEvent} component={CreateEvent} />
-        <MainStack.Screen name={MainStackRoutes.viewEvent} component={ViewEvent} />
-        
+        })}
+      >
+        <MainStack.Screen
+          name={MainStackRoutes.joinGroup}
+          component={JoinGroupNavigator}
+        />
+        <MainStack.Screen
+          name={MainStackRoutes.notifications}
+          component={Notifications}
+        />
+        <MainStack.Screen
+          name={MainStackRoutes.main}
+          component={MainTabNavigator}
+        />
+        <MainStack.Screen
+          name={MainStackRoutes.createEvent}
+          component={CreateEvent}
+        />
+        <MainStack.Screen
+          name={MainStackRoutes.viewEvent}
+          component={ViewEvent}
+        />
       </MainStack.Navigator>
     </CreateEventFormProvider>
   );
