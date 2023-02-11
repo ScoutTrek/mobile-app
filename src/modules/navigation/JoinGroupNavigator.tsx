@@ -6,10 +6,11 @@ import {
 } from '../joinGroup/JoinGroupForm/joinGroupFormReducer';
 
 import JoinTroop from '../joinGroup/JoinTroop';
-import AddChildren from '../joinGroup/AddChildren';
 import CreateTroop from '../joinGroup/components/CreateTroop';
+import AddChildren from '../joinGroup/AddChildren';
 import ChooseRole from '../joinGroup/ChooseRole';
 import JoinPatrol from '../joinGroup/JoinPatrol';
+import { JoinGroupStackRoutes } from './types/joinGroupStack';
 
 const JoinGroupStack = createStackNavigator();
 
@@ -22,11 +23,11 @@ const JoinGroupNavigator = () => {
         screenOptions={() => ({
           headerShown: false,
         })}>
-        <JoinGroupStack.Screen name="JoinTroop" component={JoinTroop} />
-        <JoinGroupStack.Screen name="CreateTroop" component={CreateTroop} />
-        <JoinGroupStack.Screen name="ChooseRole" component={ChooseRole} />
-        <JoinGroupStack.Screen name="AddChildren" component={AddChildren} />
-        <JoinGroupStack.Screen name="JoinPatrol" component={JoinPatrol} />
+        <JoinGroupStack.Screen name={JoinGroupStackRoutes.joinTroop} component={JoinTroop} />
+        <JoinGroupStack.Screen name={JoinGroupStackRoutes.createTroop} component={CreateTroop} />
+        <JoinGroupStack.Screen name={JoinGroupStackRoutes.chooseRole} component={ChooseRole} />
+        <JoinGroupStack.Screen name={JoinGroupStackRoutes.addChildren} component={AddChildren} />
+        <JoinGroupStack.Screen name={JoinGroupStackRoutes.joinPatrol} component={JoinPatrol} />
       </JoinGroupStack.Navigator>
     </JoinGroupFormProvider>
   );

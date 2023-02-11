@@ -1,4 +1,4 @@
-import { ParamListBase, RouteProp, NavigationProp } from "@react-navigation/native";
+import { ParamListBase, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 export const JOIN_GROUP = "JoinGroup" as const;
