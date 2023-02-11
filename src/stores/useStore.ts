@@ -1,8 +1,8 @@
-import {create} from 'zustand';
-import {devtools, persist} from 'zustand/middleware';
-import appStore, {AppStore} from './appStore';
-import authStore, {AuthStore} from './authStore';
-import eventStore, {EventStore} from './eventStore';
+import { create } from 'zustand';
+import { devtools, persist } from 'zustand/middleware';
+import appStore, { AppStore } from './appStore';
+import authStore, { AuthStore } from './authStore';
+import eventStore, { EventStore } from './eventStore';
 
 type Store = EventStore & AuthStore & AppStore;
 

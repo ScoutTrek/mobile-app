@@ -1,15 +1,15 @@
-import {useQuery} from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
-import {GET_INITIAL_USER_FIELDS} from 'data';
-import {useFonts} from 'expo-font';
-import {useState} from 'react';
-import {View, ActivityIndicator} from 'react-native';
-import {AuthContext} from 'src/modules/auth/SignUp';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { GET_INITIAL_USER_FIELDS } from 'data';
+import { useFonts } from 'expo-font';
+import { useState } from 'react';
+import { View, ActivityIndicator } from 'react-native';
+import { AuthContext } from 'src/modules/auth/SignUp';
 import AuthNavigator from 'src/modules/navigation/AuthNavigator';
 import MainStackNavigator from 'src/modules/navigation/MainStackNavigator';
-import {AppStackParamList} from 'src/modules/navigation/types/appStack';
+import { AppStackParamList } from 'src/modules/navigation/types/appStack';
 import useStore from 'src/stores/useStore';
 
 const Stack = createStackNavigator<AppStackParamList>();
@@ -17,8 +17,6 @@ const Stack = createStackNavigator<AppStackParamList>();
 const AppLoadingContainer = () => {
   const isLoading = useStore((s) => s.isLoading);
   const token = useStore((s) => s.token);
-
-  const [newUser, setNewUser] = useState<boolean>(false);
 
   const [fontsLoaded] = useFonts({
     'open-sans-bold': require('./assets/fonts/OpenSans/OpenSans-Bold.ttf'),
@@ -34,7 +32,7 @@ const AppLoadingContainer = () => {
 
   if (!fontsLoaded || isLoading) {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator />
       </View>
     );
@@ -46,20 +44,20 @@ const AppLoadingContainer = () => {
         screenOptions={() => ({
           headerShown: false,
         })}>
-        {!token ? (
-          <Stack.Screen
-            name="AuthNav"
-            component={AuthNavigator}
-            options={{
-              animationTypeForReplace: 'push',
-            }}
-          />
-        ) : (
+        {token ? (
           <Stack.Screen
             name="Home"
             component={MainStackNavigator}
             initialParams={{
               newUser,
+            }}
+          />
+        ) : (
+          <Stack.Screen
+            name="AuthNav"
+            component={AuthNavigator}
+            options={{
+              animationTypeForReplace: 'push',
             }}
           />
         )}

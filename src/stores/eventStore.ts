@@ -1,4 +1,4 @@
-import {StoreGet, StoreSet} from './useStore';
+import { StoreGet, StoreSet } from './useStore';
 
 export interface EventStore {}
 
