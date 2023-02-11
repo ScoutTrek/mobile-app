@@ -11,7 +11,7 @@ import {CreateEventFormProvider} from '../createEvent/createEventForm/CreateEven
 
 import JoinGroupNavigator from './JoinGroupNavigator';
 import ViewEvent from '../viewEvent/ViewEvent';
-import CreateEvent from './CreateEventNavigator';
+import CreateEvent from './EventStackNavigator';
 import MainTabNavigator from './MainTabNavigator';
 import Notifications from '../notifications/Notifications';
 import {AuthContext} from '../auth/SignUp';
