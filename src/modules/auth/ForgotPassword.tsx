@@ -26,20 +26,21 @@ const ForgotPasswordFormFields = [
   },
 ];
 
-const ForgotPassword = ({navigation}: StackScreenProps<AuthStackParamList, 'ForgotPassword'>) => {
-
+const ForgotPassword = ({
+  navigation,
+}: StackScreenProps<AuthStackParamList, 'ForgotPassword'>) => {
   const [request_reset] = useMutation(REQUEST_RESET);
 
   const onSubmitEmail = (
     setSuccess: (success: boolean) => void,
-    data: {email: string}
+    data: { email: string }
   ) => {
     request_reset({
       variables: {
         email: data.email,
       },
     });
-    navigation.navigate('ResetPassword', {email: data.email});
+    navigation.navigate('ResetPassword', { email: data.email });
   };
 
   return (

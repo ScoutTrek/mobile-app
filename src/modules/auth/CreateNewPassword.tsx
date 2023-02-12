@@ -1,5 +1,5 @@
 import { StackScreenProps } from '@react-navigation/stack';
-import {Alert} from 'react-native';
+import { Alert } from 'react-native';
 import { AuthStackParamList } from '../navigation/AuthNavigator';
 import PasswordConfig from './components/PasswordConfig';
 import { gql, useMutation } from '@apollo/client';
@@ -22,7 +22,8 @@ const CreateNewPasswordFormFields = [
       placeholder: 'Token',
       autoCapitalize: 'none',
     },
-  },{
+  },
+  {
     name: 'password',
     rules: {
       required: 'Enter a new password',
@@ -56,19 +57,26 @@ const CreateNewPasswordFormFields = [
   },
 ];
 
-const CreateNewPassword = ({route, navigation}: StackScreenProps<AuthStackParamList, 'ResetPassword'>) => {
+const CreateNewPassword = ({
+  route,
+  navigation,
+}: StackScreenProps<AuthStackParamList, 'ResetPassword'>) => {
   const [reset_password] = useMutation(RESET_PASSWORD);
 
-  const {email} = route.params;
+  const { email } = route.params;
   const onChangePassword = async (
     setSuccess: (success: boolean) => void,
-    data: {token: string; password: string; passwordConfirm: string}
+    data: { token: string; password: string; passwordConfirm: string }
   ) => {
     if (data.password !== data.passwordConfirm) {
       Alert.alert(
         'Whoops, the passwords you entered do not match. Please re-enter passwords to confirm they match.'
       );
-    } else if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(data.password)) {
+    } else if (
+      !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(
+        data.password
+      )
+    ) {
       // regex pattern from https://stackoverflow.com/a/21456918
       Alert.alert(
         'Your password must contain at least one uppercase letter, one lowercase letter, one number and one special character.'
@@ -79,8 +87,8 @@ const CreateNewPassword = ({route, navigation}: StackScreenProps<AuthStackParamL
           input: {
             email,
             token: data.token,
-            password: data.password
-          }
+            password: data.password,
+          },
         },
       });
 
