@@ -75,7 +75,7 @@ const ProfileScreen = ({navigation}) => {
     <View style={{justifyContent: 'center', flex: 1}}>
       <ActivityIndicator />
     </View>)
-  )
+  
 
   return (
     <ScreenContainer justifyContent="space-between">
