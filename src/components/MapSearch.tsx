@@ -4,6 +4,21 @@ import {ScrollView, StyleSheet, TextInput, Dimensions} from 'react-native';
 import {Container, Text, Icon, LineItem} from 'ScoutDesign/library';
 import {backArrow, searchThin} from 'ScoutDesign/icons';
 
+type MapSearchProps = {
+  locationToken: string,
+  searchText: string,
+  setSearchText: (text: string) => any,
+  back: () => any,
+  placeholder?: string | undefined,
+  _getPlaceDetails: (id: string) => any
+}
+
+type Place = {
+  id: number,
+  description: string,
+  place_id: string,
+}
+
 const MapSearch = ({
   locationToken,
   searchText,
@@ -11,8 +26,8 @@ const MapSearch = ({
   back,
   placeholder,
   _getPlaceDetails,
-}) => {
-  const [suggestedPlaces, setSuggestedPlaces] = useState();
+}: MapSearchProps) => {
+  const [suggestedPlaces, setSuggestedPlaces] = useState<Place[] | null>();
 
   const getSuggestedPlaces = async () => {
     const places = await fetch(
@@ -20,11 +35,11 @@ const MapSearch = ({
         searchText.replace(/ /g, '+')
       }&key=${GOOGLE_MAPS_API_KEY}&sessiontoken=${locationToken}`
     ).catch((err) => console.error(err));
-    const placesData = await places.json();
-    setSuggestedPlaces(placesData.predictions);
+    const placesData = await places?.json();
+    setSuggestedPlaces(placesData?.predictions);
   };
 
-  const searchUpdateHandler = (value) => {
+  const searchUpdateHandler = (value: string) => {
     setSearchText(value);
     if (searchText.length > 1) {
       getSuggestedPlaces();
@@ -72,7 +87,7 @@ const MapSearch = ({
                   setSearchText('');
                   setSuggestedPlaces(null);
                   _getPlaceDetails(
-                    suggestedPlaces.find(({id}) => id === place.id).place_id
+                    suggestedPlaces.find(({id}) => id === place.id)!.place_id
                   );
                 }}
                 leftComponent={

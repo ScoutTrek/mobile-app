@@ -13,6 +13,8 @@ import {
   useJoinGroupForm,
   chooseGroup,
 } from '../JoinGroupForm/JoinGroupFormStore';
+import { StackScreenProps } from '@react-navigation/stack';
+import { JoinGroupStackParamList } from 'src/modules/navigation/JoinGroupNavigator';
 
 const STATES = [
   'Alabama',
@@ -84,7 +86,19 @@ const ADD_TROOP = gql`
   }
 `;
 
-export const formReducer = (state, action) => {
+type InputValue = {council: string, state: string, city: string, unitNumber: string}
+
+type FormState = {
+  inputValues: InputValue
+}
+
+type FormAction = {
+  type: "UPDATE_INPUT_FIELD",
+  value: string,
+  input: keyof InputValue
+}
+
+export const formReducer: (state: FormState, action: FormAction) => FormState = (state, action) => {
   if (action.type === 'UPDATE_INPUT_FIELD') {
     const updatedValues = {
       ...state.inputValues,
@@ -94,13 +108,14 @@ export const formReducer = (state, action) => {
       inputValues: updatedValues,
     };
   }
+  return state;
 };
 
-const CreateTroop = ({navigation}) => {
-  const [_, dispatch] = useJoinGroupForm();
+const CreateTroop = ({navigation}: StackScreenProps<JoinGroupStackParamList>) => {
+  const [_, dispatch] = useJoinGroupForm() || [null, null];
   const [addTroop] = useMutation(ADD_TROOP, {
     onCompleted: (data) => {
-      dispatch(chooseGroup(data.addTroop.id, data.addTroop.unitNumber));
+      dispatch && dispatch(chooseGroup(data.addTroop.id, data.addTroop.unitNumber));
       navigation.navigate('ChooseRole');
     },
   });
@@ -114,7 +129,7 @@ const CreateTroop = ({navigation}) => {
     },
   });
 
-  const handleInputChange = (inputIdentifier: string, value: any) => {
+  const handleInputChange = (inputIdentifier: keyof InputValue, value: any) => {
     dispatchFormChange({
       type: 'UPDATE_INPUT_FIELD',
       value: value,
@@ -126,10 +141,10 @@ const CreateTroop = ({navigation}) => {
     await addTroop({
       variables: {
         troopInfo: {
-          council: formState.inputValues.council,
-          state: formState.inputValues.state,
-          city: formState.inputValues.city,
-          unitNumber: +formState.inputValues.unitNumber,
+          council: formState?.inputValues.council,
+          state: formState?.inputValues.state,
+          city: formState?.inputValues.city,
+          unitNumber: +formState?.inputValues.unitNumber,
         },
       },
     });
@@ -143,7 +158,7 @@ const CreateTroop = ({navigation}) => {
         </Text>
         <TextInput
           onValueChange={(value) => handleInputChange('council', value)}
-          value={formState.inputValues.council}
+          value={formState?.inputValues.council}
           placeholder="Council Name"
         />
 
@@ -155,9 +170,9 @@ const CreateTroop = ({navigation}) => {
             style={{
               width: (Dimensions.get('window').width * 4) / 5,
             }}
-            selectedValue={formState.inputValues.state}
+            selectedValue={formState?.inputValues.state}
             onValueChange={(value) => handleInputChange('state', value)}
-            onSelect={(value) => {
+            onSelect={(value: string) => {
               handleInputChange('state', value);
             }}>
             {STATES.map((state) => (
@@ -171,7 +186,7 @@ const CreateTroop = ({navigation}) => {
         </Text>
         <TextInput
           onValueChange={(value) => handleInputChange('city', value)}
-          value={formState.inputValues.city}
+          value={formState?.inputValues.city}
           placeholder="City"
         />
         <Text weight="bold" paddingVertical="s">
@@ -179,7 +194,7 @@ const CreateTroop = ({navigation}) => {
         </Text>
         <TextInput
           onValueChange={(value) => handleInputChange('unitNumber', value)}
-          value={formState.inputValues.unitNumber}
+          value={formState?.inputValues.unitNumber}
           placeholder=""
         />
 

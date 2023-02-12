@@ -1,7 +1,7 @@
 import moment from 'moment';
 import {useState} from 'react';
 
-function daysInMonth(date) {
+function daysInMonth(date: Date) {
   return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 }
 

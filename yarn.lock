@@ -2253,6 +2253,21 @@
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.5.tgz#5f19d2b85a98e9558036f6a3cacc8819420f05cf"
   integrity sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==
 
+"@types/react-native-simple-radio-button@^2.7.2":
+  version "2.7.2"
+  resolved "https://registry.yarnpkg.com/@types/react-native-simple-radio-button/-/react-native-simple-radio-button-2.7.2.tgz#f2f4f218b61514aa9a71f1d268a1e1df33fd3fd2"
+  integrity sha512-iH/EBAtH2XznNvh+eCNeIl2c1fW5ZGGe6XC4qcNCiqO7oBHVQuyCTrtg+xEN3uxwxxYFb8EXa0hez1UqOKSJiw==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "*"
+
+"@types/react-native@*":
+  version "0.70.6"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.70.6.tgz#0d1bc3014111f64f13e0df643aec2ab03f021fdb"
+  integrity sha512-ynQ2jj0km9d7dbnyKqVdQ6Nti7VQ8SLTA/KKkkS5+FnvGyvij2AOo1/xnkBR/jnSNXuzrvGVzw2n0VWfppmfKw==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-native@~0.69.1":
   version "0.69.13"
   resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.69.13.tgz#f947b2bd00439126f8101441945739698bb5051e"

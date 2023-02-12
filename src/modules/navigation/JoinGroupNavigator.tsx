@@ -11,7 +11,15 @@ import CreateTroop from '../joinGroup/components/CreateTroop';
 import ChooseRole from '../joinGroup/ChooseRole';
 import JoinPatrol from '../joinGroup/JoinPatrol';
 
-const JoinGroupStack = createStackNavigator();
+export type JoinGroupStackParamList = {
+  JoinTroop: undefined,
+  CreateTroop: undefined,
+  ChooseRole: undefined,
+  AddChildren: undefined,
+  JoinPatrol: undefined,
+}
+
+const JoinGroupStack = createStackNavigator<JoinGroupStackParamList>();
 
 const JoinGroupNavigator = () => {
   return (

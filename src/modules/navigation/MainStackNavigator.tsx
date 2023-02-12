@@ -21,8 +21,8 @@ export type MainStackParamList = {
   JoinGroup: undefined,
   Notifications: undefined,
   Main: undefined,
-  CreateEvent: undefined,
-  ViewEvent: undefined,
+  CreateEvent: {screen: string, params: { type: string, id: number, update: boolean}},
+  ViewEvent: {currItem: any},
 }
 
 const MainStack = createStackNavigator<MainStackParamList>();

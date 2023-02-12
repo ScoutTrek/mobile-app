@@ -16,16 +16,25 @@ import uuidv4 from 'uuid/v1';
 
 const locationToken = uuidv4();
 
-const ChooseLocation = ({id, Modal, modalProps, questionText}) => {
-  const [{fields}, dispatch] = useEventForm();
+type ChooseLocationProps = {
+  id: string,
+  Modal: React.ComponentType,
+  modalProps: any,
+  questionText: string
+}
+
+type Location = {latitude: number, longitude: number}
+
+const ChooseLocation = ({id, Modal, modalProps, questionText}: ChooseLocationProps) => {
+  const [{fields}, dispatch] = useEventForm() || [{fields: null}, null];
   const initialLocation = fields?.[id];
-  const [location, setLocation] = useState(
+  const [location, setLocation] = useState<Location | null>(
     initialLocation
       ? {latitude: initialLocation.lat, longitude: initialLocation.lng}
       : null
   );
   const [errorMsg, setErrorMsg] = useState('');
-  const [locationCoords, setLocationCoords] = useState(
+  const [locationCoords, setLocationCoords] = useState<Location | null>(
     initialLocation
       ? {latitude: initialLocation.lat, longitude: initialLocation.lng}
       : null
@@ -52,29 +61,30 @@ const ChooseLocation = ({id, Modal, modalProps, questionText}) => {
     });
   };
 
-  const _getPlaceDetails = async (id) => {
+  const _getPlaceDetails = async (id: string) => {
     const locationDetails = await fetch(
       `https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=${GOOGLE_MAPS_API_KEY}`
     ).catch((err) => console.error(err));
-    const locationData = await locationDetails.json();
+    const locationData = await locationDetails?.json();
 
-    const chosenPlace = {
+    const chosenPlace: Location | null = locationData ? {
       latitude: locationData.result.geometry.location.lat,
       longitude: locationData.result.geometry.location.lng,
-    };
+    } : 
+    null;
     setLocation(chosenPlace);
     setLocationCoords(chosenPlace);
-    setLocationString(locationData.result.formatted_address);
+    setLocationString(locationData ? locationData.result.formatted_address : '');
 
     Keyboard.dismiss();
   };
 
   const next = () => {
-    dispatch(
+    dispatch && dispatch(
       addEventFieldOfType(id, {
         address: locationString,
-        lat: location.latitude,
-        lng: location.longitude,
+        lat: location?.latitude,
+        lng: location?.longitude,
       })
     );
   };
@@ -103,12 +113,12 @@ const ChooseLocation = ({id, Modal, modalProps, questionText}) => {
           longitudeDelta: 0.0421,
         }}
         region={
-          locationCoords && {
+          locationCoords ? {
             latitude: location.latitude,
             longitude: location.longitude,
             latitudeDelta: 0.0822,
             longitudeDelta: 0.04,
-          }
+          } : undefined
         }>
         {locationCoords && <Marker coordinate={locationCoords} />}
       </MapView>
@@ -120,7 +130,6 @@ const ChooseLocation = ({id, Modal, modalProps, questionText}) => {
           searchText={searchText}
           setSearchText={setSearchText}
           _getPlaceDetails={_getPlaceDetails}
-          style={styles.searchBar}
         />
       </View>
     </Modal>

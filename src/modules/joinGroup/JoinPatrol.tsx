@@ -15,6 +15,8 @@ import {
 } from 'ScoutDesign/library';
 
 import {useJoinGroupForm} from './JoinGroupForm/JoinGroupFormStore';
+import { StackScreenProps } from '@react-navigation/stack';
+import { JoinGroupStackParamList } from '../navigation/JoinGroupNavigator';
 
 const ADD_GROUP = gql`
   mutation AddGroup($membershipInfo: AddMembershipInput!) {
@@ -42,8 +44,8 @@ const ADD_PATROL = gql`
   }
 `;
 
-const JoinPatrol = ({navigation}) => {
-  const [joinGroupFormState] = useJoinGroupForm();
+const JoinPatrol = ({navigation}: StackScreenProps<JoinGroupStackParamList>) => {
+  const [joinGroupFormState] = useJoinGroupForm() || [null];
   const {setNewUser} = useContext(AuthContext);
 
   const [addGroup] = useMutation(ADD_GROUP, {
@@ -61,7 +63,7 @@ const JoinPatrol = ({navigation}) => {
   const {data, error, loading} = useQuery(GET_PATROLS, {
     pollInterval: 500,
     variables: {
-      troopId: joinGroupFormState.troopID,
+      troopId: joinGroupFormState?.troopID,
     },
   });
 
@@ -77,7 +79,7 @@ const JoinPatrol = ({navigation}) => {
   };
 
   if (loading) return <ActivityIndicator />;
-  if (error) return <Text>`Error! ${error}`</Text>;
+  if (error) return <Text><>`Error! ${error}`</></Text>;
 
   return (
     <ScreenContainer>
@@ -113,7 +115,7 @@ const JoinPatrol = ({navigation}) => {
           <TextInputWithButton
             placeholder="patrol name..."
             onValueChange={(value) => {
-              setPatrolName(value);
+              setPatrolName(value.toString());
               if (value.toString().length > 2) {
                 setPatrolIsValid(true);
               } else {
@@ -128,7 +130,7 @@ const JoinPatrol = ({navigation}) => {
             onPress={async () => {
               await addPatrol({
                 variables: {
-                  troopId: joinGroupFormState.troopID,
+                  troopId: joinGroupFormState?.troopID,
                   patrolInfo: {
                     name: patrolName,
                   },

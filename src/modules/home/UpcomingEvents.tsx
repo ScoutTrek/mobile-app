@@ -11,6 +11,11 @@ import * as Notifications from 'expo-notifications';
 import {gql, useMutation, useQuery} from '@apollo/client';
 
 import {DISMISS_NOTIFICATION} from '../notifications/Notifications';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { HomeStackParamList, MainBottomParamList } from '../navigation/MainTabNavigator';
+import { CompositeScreenProps } from '@react-navigation/native';
+import { StackScreenProps } from '@react-navigation/stack';
+import { MainStackParamList } from '../navigation/MainStackNavigator';
 
 export const UPDATE_EXPO_TOKEN = gql`
   mutation UpdateExpoToken($token: UpdateUserInput!) {
@@ -33,7 +38,15 @@ export type EventSignature = {
   type: Event;
 };
 
-export default function UpcomingEvents({navigation}) {
+type UpcomingEventsProp = CompositeScreenProps<
+  StackScreenProps<HomeStackParamList, "Home">,
+  CompositeScreenProps<
+    BottomTabScreenProps<MainBottomParamList>,
+    StackScreenProps<MainStackParamList>
+  >
+>;
+
+export default function UpcomingEvents({navigation}: UpcomingEventsProp) {
   const [dismissNotification] = useMutation(DISMISS_NOTIFICATION, {
     refetchQueries: [GET_CURR_USER],
   });
@@ -113,7 +126,7 @@ export default function UpcomingEvents({navigation}) {
     }
   };
 
-  if (error) return <Text>Error: {error}</Text>;
+  if (error) return <Text><>Error: {error}</></Text>;
   if (loading) return <Text>Loading...</Text>;
   const eventListData = [
     {

@@ -14,7 +14,7 @@ const ChooseDistance = ({
   modalProps,
   questionText,
 }: EventInputProps) => {
-  const [{fields}, dispatch] = useEventForm();
+  const [{fields}, dispatch] = useEventForm() || [{fields: null}, null];
   const [distance, setDistance] = useState(fields?.[id] || 1);
   const [valid, setValid] = useState(!!fields?.[id] || false);
 
@@ -26,7 +26,7 @@ const ChooseDistance = ({
 
   const nextForm = () => {
     if (valid) {
-      dispatch(addEventFieldOfType(id, distance));
+      dispatch && dispatch(addEventFieldOfType(id, distance));
     }
   };
 

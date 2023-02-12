@@ -1,7 +1,7 @@
 import {LineItem, Icon, Text, Container} from 'ScoutDesign/library';
 import {mapMarker} from 'ScoutDesign/icons';
 
-const Location = ({heading, address}) => {
+const Location = ({heading, address}: {heading: string, address: string}) => {
   return (
     <LineItem
       accessibilityLabel="event-location"

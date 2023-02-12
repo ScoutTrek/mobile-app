@@ -3,6 +3,11 @@ import EventInputTemplate from './Inputs/EventInputTemplate';
 import {GET_EVENTS, EVENT_FIELDS} from 'data';
 import {useEventForm, clearEventForm} from 'CreateEvent/CreateEventFormStore';
 import {ScreenContainer, Container, Button} from 'ScoutDesign/library';
+import { StackScreenProps } from '@react-navigation/stack';
+import { CompositeScreenProps } from '@react-navigation/native';
+import { EventStackParamList } from '../navigation/CreateEventNavigator';
+import { MainBottomParamList } from '../navigation/MainTabNavigator';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 
 const ADD_EVENT = gql`
   ${EVENT_FIELDS}
@@ -28,7 +33,12 @@ export const GET_EVENT_SCHEMAS = gql`
   }
 `;
 
-const CreateEvent = ({navigation, route}) => {
+type CreateEventProps = CompositeScreenProps<
+  StackScreenProps<EventStackParamList, "EventForm">,
+  BottomTabScreenProps<MainBottomParamList>
+>
+
+const CreateEvent = ({navigation, route}: CreateEventProps) => {
   const [addEvent] = useMutation(ADD_EVENT, {
     update(cache, {data: {event}}) {
       try {
@@ -47,8 +57,8 @@ const CreateEvent = ({navigation, route}) => {
   });
   const {loading: schemaLoading, data} = useQuery(GET_EVENT_SCHEMAS);
 
-  const [state, dispatch] = useEventForm();
-  const {fields} = state;
+  const [state, dispatch] = useEventForm() || [null, null];
+  const {fields} = state || {fields: null};
 
   const [updateEvent] = useMutation(UPDATE_EVENT, {
     update(cache, {data: {updateEvent: event}}) {
@@ -95,8 +105,8 @@ const CreateEvent = ({navigation, route}) => {
         variables: {id: route.params.id, updates: cleanedEventData},
       })
         .then(() => {
-          return new Promise((res, rej) => {
-            dispatch(clearEventForm());
+          return new Promise<void>((res, rej) => {
+            dispatch && dispatch(clearEventForm());
             navigation.goBack();
             res();
           });
@@ -112,7 +122,7 @@ const CreateEvent = ({navigation, route}) => {
         },
       })
         .then(() => {
-          return new Promise((res, rej) => {
+          return new Promise<void>((res, rej) => {
             navigation.popToTop();
             navigation.navigate('UpcomingEvents');
             res();
@@ -136,11 +146,12 @@ const CreateEvent = ({navigation, route}) => {
       padding="none"
       paddingTop="xl"
       back={() => {
-        dispatch(clearEventForm());
+        dispatch && dispatch(clearEventForm());
         navigation.goBack();
       }}>
       {/* Schema representing all the types of events currently in the app. This
-      comes from the server */}
+      comes from the server 
+      TODO: gql form schema rewrite: update with the new form types */}
       {schema.form.map(
         (field) =>
           !disabledFields.includes(field.fieldID) && (
