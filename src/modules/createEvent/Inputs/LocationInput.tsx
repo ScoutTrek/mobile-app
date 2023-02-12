@@ -1,3 +1,4 @@
+import {GOOGLE_MAPS_API_KEY} from '@env';
 import {useEffect, useState} from 'react';
 import {Dimensions, Keyboard, StyleSheet, View} from 'react-native';
 import {Text} from 'ScoutDesign/library';
@@ -53,7 +54,7 @@ const ChooseLocation = ({id, Modal, modalProps, questionText}) => {
 
   const _getPlaceDetails = async (id) => {
     const locationDetails = await fetch(
-      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=${Constants?.manifest?.extra?.GOOGLE_MAPS_API_KEY}`
+      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${id}&key=${GOOGLE_MAPS_API_KEY}`
     ).catch((err) => console.error(err));
     const locationData = await locationDetails.json();
 
