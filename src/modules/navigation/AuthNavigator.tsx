@@ -8,7 +8,9 @@ export type AuthStackParamList = {
   SignUp: undefined;
   SignIn: undefined;
   ForgotPassword: undefined;
-  ResetPassword: undefined;
+  ResetPassword: {
+    email: string;
+  };
 };
 
 const AuthStack = createStackNavigator<AuthStackParamList>();
@@ -18,8 +20,7 @@ const AuthNavigator = () => {
     <AuthStack.Navigator
       screenOptions={() => ({
         headerShown: false,
-      })}
-    >
+      })}>
       <AuthStack.Screen name="SignUp" component={SignUp} />
       <AuthStack.Screen name="SignIn" component={SignIn} />
       <AuthStack.Screen name="ForgotPassword" component={ForgotPassword} />
