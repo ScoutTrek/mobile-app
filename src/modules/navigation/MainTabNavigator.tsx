@@ -1,9 +1,6 @@
 import { ActivityIndicator, Image } from 'react-native';
 
-import {
-  BottomTabScreenProps,
-  createBottomTabNavigator,
-} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import ProfileScreen from '../profile/ProfileScreen';
@@ -15,18 +12,10 @@ import { home, calendar, notifications } from 'ScoutDesign/icons';
 import UpcomingEvents from '../home/UpcomingEvents';
 import { GET_CURR_USER } from 'data';
 import { useQuery } from '@apollo/client';
-import { NavigatorScreenParams } from '@react-navigation/native';
-import { MainStackParamList } from './MainStackNavigator';
 
-export type HomeStackParamList = {
-  Home: undefined;
-};
+const HomeStack = createStackNavigator();
 
-const HomeStack = createStackNavigator<HomeStackParamList>();
-
-const HomeNav = ({
-  navigation,
-}: BottomTabScreenProps<MainBottomParamList, 'UpcomingEvents'>) => {
+const HomeNav = ({ navigation }) => {
   const { data, error, loading } = useQuery(GET_CURR_USER);
 
   if (error) {
@@ -61,14 +50,8 @@ const HomeNav = ({
   );
 };
 
-export type MainBottomParamList = {
-  UpcomingEvents: undefined;
-  Calendar: NavigatorScreenParams<MainStackParamList>;
-  Profile: undefined;
-};
-
 // Global Styles
-const MainBottomTab = createBottomTabNavigator<MainBottomParamList>();
+const MainBottomTab = createBottomTabNavigator();
 
 // Icons
 const homeDark = require('../../../assets/images/tabbar/homeDark.png');
