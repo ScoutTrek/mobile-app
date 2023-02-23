@@ -17,13 +17,12 @@ import { onError } from '@apollo/client/link/error';
 
 type AsyncStorageData = { [key: string]: string | null };
 
+export const apiBaseUri = ENV == 'local' ? `http://${LOCAL_IP_ADDRESS}:4000`
+: ENV == 'dev' ? DEV_URL
+: PROD_URL
+
 const httpLink = new HttpLink({
-  uri:
-    ENV == 'local'
-      ? `http://${LOCAL_IP_ADDRESS}:4000/graphql`
-      : ENV == 'dev'
-      ? DEV_URL
-      : PROD_URL,
+  uri: apiBaseUri + "/graphql",
 });
 
 const loadKeysFromAsyncStorage = async (

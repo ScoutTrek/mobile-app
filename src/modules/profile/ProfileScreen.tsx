@@ -11,7 +11,7 @@ import {
   ScreenContainer,
   Badge,
   Avatar,
-  ImagePickerConainer,
+  ImagePickerContainer,
 } from 'ScoutDesign/library';
 import { ScoutTrekApolloClient, GET_CURR_USER } from 'data';
 import { convertRoleToText } from '../../data/utils/convertIDsToStrings';
@@ -92,7 +92,7 @@ const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
             padding="none"
             paddingBottom="m"
           >
-            <ImagePickerConainer
+            <ImagePickerContainer
               loading={imageUploadInProgress}
               error={uploadError}
               uploadImage={uploadProfilePhoto}
@@ -103,7 +103,7 @@ const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
                   uri: data.currUser.userPhoto,
                 }}
               />
-            </ImagePickerConainer>
+            </ImagePickerContainer>
             <Text preset="h2" paddingTop="m">
               {data.currUser.name}
             </Text>

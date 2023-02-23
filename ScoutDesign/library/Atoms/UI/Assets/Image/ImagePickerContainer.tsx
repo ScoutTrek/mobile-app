@@ -5,21 +5,36 @@ import { Container, Pressable, Floatable } from '../../../utility';
 
 import uuidv4 from 'uuid/v1';
 
-export async function uploadAssetAsync(uri: string) {
-  const uriParts = uri.split('.');
-  const fileType = uriParts[uriParts.length - 1];
-  // @todo In place of ReactNativeFile, there will be some other object available from another upload library
-  // to send files to the server using REST conventions
-
-  // return new ReactNativeFile({
-  //   uri,
-  //   name: `${uuidv4()}.${fileType}`,
-  //   type: 'image/jpeg', // Customize later
-  // });
-}
-
 import { pencil } from 'ScoutDesign/icons';
 import Badge from '../../Badge/Badge';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import ScoutTrekApolloClient, { apiBaseUri } from 'data/ScoutTrekClient';
+import { GET_CURR_USER } from 'data';
+
+import {
+  LOCAL_IP_ADDRESS,
+  ENV,
+  DEV_URL,
+  PROD_URL,
+} from '@env';
+
+
+function buildUploadBody(fileName: string, uri: string) {
+  const uriParts = uri.split('.');
+  const fileType = uriParts[uriParts.length - 1];
+
+  const data = new FormData();
+
+  const file = {
+    uri,
+    name: `${uuidv4()}.${fileType}`,
+    type: 'image/png', // Customize later
+  };
+
+  data.append(fileName, file as unknown as Blob);
+
+  return data;
+}
 
 type Props = {
   children: any;
@@ -49,8 +64,29 @@ const ImagePickerContainer = ({
         [{ resize: { width: 300 } }],
         { compress: 0.7, format: SaveFormat.PNG }
       );
-      const file = await uploadAssetAsync(resizedPhoto.uri);
-      await uploadImage({ variables: { file } });
+      const data = buildUploadBody('photo', resizedPhoto.uri);
+      // await uploadImage({ variables: { file } });
+      console.log(apiBaseUri + "/upload");
+      fetch(apiBaseUri + "/upload", {
+        method: 'POST',
+        body: data,
+        headers: {
+          "Authorization": "Bearer " + await AsyncStorage.getItem("userToken")
+        }
+      }).then(async (resp) => {
+        const json = await resp.json();
+        const cache = ScoutTrekApolloClient.cache;
+        const { currUser } = cache.readQuery({ query: GET_CURR_USER });
+        cache.modify({
+          fields: {
+            currUser() {
+              return { ...currUser, userPhoto: json.url };
+            },
+          },
+        });
+      }).catch((e) => {
+        console.error(e);
+      });
       return;
     }
   };
@@ -67,8 +103,7 @@ const ImagePickerContainer = ({
         radius="circle"
         justifyContent="center"
         alignItems="center"
-        backgroundColor="brandSecondaryLight"
-      >
+        backgroundColor="brandSecondaryLight">
         <Text weight="light" color="darkGrey">
           Loading...
         </Text>
@@ -81,8 +116,7 @@ const ImagePickerContainer = ({
       accessibilityLabel="image-picker"
       justifyContent="center"
       alignItems="center"
-      onPress={pickImage}
-    >
+      onPress={pickImage}>
       {children}
       <Floatable corner="bottom-right" distanceFromCorner="edge">
         <Badge
