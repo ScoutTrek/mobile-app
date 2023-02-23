@@ -14,6 +14,7 @@ import {
   HttpLink,
 } from '@apollo/client';
 import { onError } from '@apollo/client/link/error';
+import Toast from 'react-native-root-toast';
 
 type AsyncStorageData = { [key: string]: string | null };
 
@@ -54,11 +55,9 @@ const authMiddleware = new ApolloLink((operation, forward) => {
 const errorMiddleware = onError(
   ({ graphQLErrors, networkError, operation, forward }) => {
     if (graphQLErrors) {
-      graphQLErrors.map(({ message, locations, path }) =>
-        console.error(
-          `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-        )
-      );
+      Toast.show(graphQLErrors[0]['message'], {
+        duration: Toast.durations.LONG,
+      });
       return forward(operation);
     }
     if (networkError) console.error(`[Network error]: ${networkError}`);
