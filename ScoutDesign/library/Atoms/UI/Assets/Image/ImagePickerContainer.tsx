@@ -7,17 +7,7 @@ import uuidv4 from 'uuid/v1';
 
 import { pencil } from 'ScoutDesign/icons';
 import Badge from '../../Badge/Badge';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import ScoutTrekApolloClient, { apiBaseUri } from 'data/ScoutTrekClient';
-import { GET_CURR_USER } from 'data';
-
-import {
-  LOCAL_IP_ADDRESS,
-  ENV,
-  DEV_URL,
-  PROD_URL,
-} from '@env';
-
+import { useState } from 'react';
 
 function buildUploadBody(fileName: string, uri: string) {
   const uriParts = uri.split('.');
@@ -38,17 +28,13 @@ function buildUploadBody(fileName: string, uri: string) {
 
 type Props = {
   children: any;
-  loading?: boolean;
   error?: any;
   uploadImage: (apolloVariables: any) => Promise<any>;
 };
 
-const ImagePickerContainer = ({
-  children,
-  loading,
-  error,
-  uploadImage,
-}: Props) => {
+const ImagePickerContainer = ({ children, error, uploadImage }: Props) => {
+  const [loading, setLoading] = useState(false);
+
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -59,40 +45,20 @@ const ImagePickerContainer = ({
     });
 
     if (!result.cancelled) {
+      setLoading(true);
       const resizedPhoto = await manipulateAsync(
         result.uri,
         [{ resize: { width: 300 } }],
         { compress: 0.7, format: SaveFormat.PNG }
       );
       const data = buildUploadBody('photo', resizedPhoto.uri);
-      // await uploadImage({ variables: { file } });
-      console.log(apiBaseUri + "/upload");
-      fetch(apiBaseUri + "/upload", {
-        method: 'POST',
-        body: data,
-        headers: {
-          "Authorization": "Bearer " + await AsyncStorage.getItem("userToken")
-        }
-      }).then(async (resp) => {
-        const json = await resp.json();
-        const cache = ScoutTrekApolloClient.cache;
-        const { currUser } = cache.readQuery({ query: GET_CURR_USER });
-        cache.modify({
-          fields: {
-            currUser() {
-              return { ...currUser, userPhoto: json.url };
-            },
-          },
-        });
-      }).catch((e) => {
-        console.error(e);
-      });
-      return;
+      await uploadImage(data);
+      setLoading(false);
     }
   };
 
   if (error) {
-    console.error('Error uploading image', error);
+    console.error('Error uploading image: ', error);
     return null;
   }
 
