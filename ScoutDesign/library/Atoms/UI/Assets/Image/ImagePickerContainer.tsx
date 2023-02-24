@@ -59,7 +59,6 @@ const ImagePickerContainer = ({ children, error, uploadImage }: Props) => {
 
   if (error) {
     console.error('Error uploading image: ', error);
-    return null;
   }
 
   if (loading) {
