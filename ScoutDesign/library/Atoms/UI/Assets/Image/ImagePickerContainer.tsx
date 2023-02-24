@@ -69,7 +69,8 @@ const ImagePickerContainer = ({ children, error, uploadImage }: Props) => {
         radius="circle"
         justifyContent="center"
         alignItems="center"
-        backgroundColor="brandSecondaryLight">
+        backgroundColor="brandSecondaryLight"
+      >
         <Text weight="light" color="darkGrey">
           Loading...
         </Text>
@@ -82,7 +83,8 @@ const ImagePickerContainer = ({ children, error, uploadImage }: Props) => {
       accessibilityLabel="image-picker"
       justifyContent="center"
       alignItems="center"
-      onPress={pickImage}>
+      onPress={pickImage}
+    >
       {children}
       <Floatable corner="bottom-right" distanceFromCorner="edge">
         <Badge

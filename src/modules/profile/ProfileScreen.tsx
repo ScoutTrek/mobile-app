@@ -58,12 +58,12 @@ const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
   const [uploadError, setUploadError] = useState<any>(null);
   const uploadProfilePhoto = async (data: FormData) => {
     try {
-      const resp = await fetch(apiBaseUri + "/upload", {
+      const resp = await fetch(apiBaseUri + '/upload', {
         method: 'POST',
         body: data,
         headers: {
-          "Authorization": "Bearer " + await AsyncStorage.getItem("userToken")
-        }
+          Authorization: 'Bearer ' + (await AsyncStorage.getItem('userToken')),
+        },
       });
       const json = await resp.json();
       if (resp.status !== 200) {
@@ -82,7 +82,7 @@ const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
     } catch (e) {
       setUploadError(e);
     }
-  }
+  };
 
   const _handlePressButtonAsync = async () => {
     let result = await WebBrowser.openBrowserAsync(
