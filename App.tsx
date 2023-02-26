@@ -1,6 +1,6 @@
 import 'react-native-reanimated';
 import 'react-native-gesture-handler';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -21,6 +21,10 @@ import { ScoutTrekApolloClient, GET_INITIAL_USER_FIELDS } from 'data';
 
 import AuthNavigator from './src/modules/navigation/AuthNavigator';
 import MainStackNavigator from './src/modules/navigation/MainStackNavigator';
+
+import { RootSiblingParent } from 'react-native-root-siblings';
+
+import Toast from 'react-native-root-toast';
 
 export type AppStackParamList = {
   AuthNav: undefined;
@@ -86,8 +90,7 @@ const AppLoadingContainer = () => {
         <Stack.Navigator
           screenOptions={() => ({
             headerShown: false,
-          })}
-        >
+          })}>
           {!token ? (
             <Stack.Screen
               name="AuthNav"
@@ -113,10 +116,13 @@ const AppLoadingContainer = () => {
 
 export default function App() {
   return (
-    <ApolloProvider client={ScoutTrekApolloClient}>
-      <ThemeProvider theme={theme}>
-        <AppLoadingContainer />
-      </ThemeProvider>
-    </ApolloProvider>
+    <RootSiblingParent>
+      <ApolloProvider client={ScoutTrekApolloClient}>
+        <ThemeProvider theme={theme}>
+          <Toast />
+          <AppLoadingContainer />
+        </ThemeProvider>
+      </ApolloProvider>
+    </RootSiblingParent>
   );
 }

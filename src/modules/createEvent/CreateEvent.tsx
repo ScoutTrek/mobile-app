@@ -8,6 +8,8 @@ import { CompositeScreenProps } from '@react-navigation/native';
 import { EventStackParamList } from '../navigation/CreateEventNavigator';
 import { MainBottomParamList } from '../navigation/MainTabNavigator';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import Toast from 'react-native-root-toast';
+import React from 'react';
 
 const ADD_EVENT = gql`
   ${EVENT_FIELDS}
@@ -42,7 +44,6 @@ const CreateEvent = ({ navigation, route }: CreateEventProps) => {
   const [addEvent] = useMutation(ADD_EVENT, {
     update(cache, { data: { event } }) {
       try {
-        const { events } = cache.readQuery({ query: GET_EVENTS });
         cache.writeQuery({
           query: GET_EVENTS,
           data: { events: events.concat([event]) },
@@ -128,7 +129,13 @@ const CreateEvent = ({ navigation, route }: CreateEventProps) => {
             res();
           });
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          // console.log('before', err);
+          // let toast = Toast.show('Request failed to send.', {
+          //   duration: Toast.durations.LONG,
+          // });
+          // console.log('after', err);
+        });
     }
   };
 
@@ -148,8 +155,7 @@ const CreateEvent = ({ navigation, route }: CreateEventProps) => {
       back={() => {
         dispatch && dispatch(clearEventForm());
         navigation.goBack();
-      }}
-    >
+      }}>
       {/* Schema representing all the types of events currently in the app. This
       comes from the server 
       TODO: gql form schema rewrite: update with the new form types */}
