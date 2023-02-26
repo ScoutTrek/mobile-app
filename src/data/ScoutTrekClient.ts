@@ -57,6 +57,8 @@ const errorMiddleware = onError(
     if (graphQLErrors) {
       Toast.show(graphQLErrors[0]['message'], {
         duration: Toast.durations.LONG,
+        backgroundColor: 'red',
+        position: 20,
       });
       return forward(operation);
     }
