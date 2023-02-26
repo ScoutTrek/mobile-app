@@ -20,7 +20,7 @@
       "ScoutDesign/*": ["./ScoutDesign/*"],
       "CreateEvent/*": ["./src/modules/createEvent/createEventForm/*"],
       "data/*": ["./src/data/*"],
-      "src": ["./src"]
+      "src/*": ["./src/*"]
     }
   },
   "extends": "expo/tsconfig.base"

@@ -1,11 +1,9 @@
-import { useApolloClient } from '@apollo/client';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   StackScreenProps,
   createStackNavigator,
 } from '@react-navigation/stack';
 
-import useStore from 'src/store/useStore';
+import useStore from 'src/store';
 import { CreateEventFormProvider } from '../createEvent/createEventForm/CreateEventFormStore';
 import {
   createEventFormReducer,
@@ -21,11 +19,8 @@ import RouteNames from './route_names/main';
 
 const MainStack = createStackNavigator<ParamList>();
 
-const MainStackNavigator = ({ route }: StackScreenProps<ParamList, 'Home'>) => {
-  // const isNewUser = useStore((s) => );
-  // TODO: remove
-  const isNewUser = true;
-
+const MainStackNavigator = () => {
+  const isNewUser = useStore((s) => s.isNewUser);
   // const client = useApolloClient();
   // const {setToken} = useContext(AuthContext);
   // useEffect(() => {
@@ -41,7 +36,6 @@ const MainStackNavigator = ({ route }: StackScreenProps<ParamList, 'Home'>) => {
       initialState={initialState}
       reducer={createEventFormReducer}>
       <MainStack.Navigator
-        // TODO: just check if user is not in a group?
         initialRouteName={isNewUser ? RouteNames.joinGroup : RouteNames.main}
         screenOptions={() => ({
           headerShown: false,

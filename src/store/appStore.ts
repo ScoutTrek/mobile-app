@@ -1,7 +1,16 @@
 import { StoreGet, StoreSet } from './useStore';
 
-export interface AppStore {}
+export interface AppStore {
+  isLoading: boolean;
 
-const appStore = (set: StoreSet, get: StoreGet): AppStore => ({});
+  setIsLoading: (isLoading: boolean) => void;
+}
+
+const appStore = (set: StoreSet, get: StoreGet): AppStore => ({
+  isLoading: true,
+  setIsLoading: (isLoading: boolean) => {
+    set({ isLoading });
+  },
+});
 
 export default appStore;

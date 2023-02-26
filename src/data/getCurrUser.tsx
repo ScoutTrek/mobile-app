@@ -47,6 +47,19 @@ export const GET_INITIAL_USER_FIELDS = gql`
   }
 `;
 
+export const IS_NEW_USER_QUERY = gql`
+  query {
+    currUser {
+      noGroups
+    }
+  }
+`;
+export interface IsNewUserQuery {
+  currUser: {
+    noGroups: boolean;
+  };
+}
+
 export const GET_CURR_USER = gql`
   query GetCurrUser {
     currUser {
