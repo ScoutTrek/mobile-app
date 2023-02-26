@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CommonActions, CompositeScreenProps } from '@react-navigation/native';
@@ -11,7 +11,7 @@ import {
   ScreenContainer,
   Badge,
   Avatar,
-  ImagePickerConainer,
+  ImagePickerContainer,
 } from 'ScoutDesign/library';
 import { ScoutTrekApolloClient, GET_CURR_USER } from 'data';
 import { convertRoleToText } from '../../data/utils/convertIDsToStrings';
@@ -25,6 +25,7 @@ import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { MainBottomParamList } from '../navigation/MainTabNavigator';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../navigation/MainStackNavigator';
+import { apiBaseUri } from 'data/ScoutTrekClient';
 
 export const _updateCurrentGroup = async (groupID, navigation) => {
   await AsyncStorage.setItem('currMembershipID', groupID);
@@ -54,21 +55,34 @@ const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
 
   const { setToken } = useContext(AuthContext);
 
-  const [
-    uploadProfilePhoto,
-    { loading: imageUploadInProgress, error: uploadError },
-  ] = useMutation(UPLOAD_PROFILE_PHOTO, {
-    update(cache, { data: { uploadImage } }) {
-      const { currUser } = cache.readQuery({ query: GET_CURR_USER });
-      cache.modify({
-        fields: {
-          currUser() {
-            return { ...currUser, userPhoto: uploadImage };
-          },
+  const [uploadError, setUploadError] = useState<any>(null);
+  const uploadProfilePhoto = async (data: FormData) => {
+    try {
+      const resp = await fetch(apiBaseUri + '/upload', {
+        method: 'POST',
+        body: data,
+        headers: {
+          Authorization: 'Bearer ' + (await AsyncStorage.getItem('userToken')),
         },
       });
-    },
-  });
+      const json = await resp.json();
+      if (resp.status !== 200) {
+        setUploadError(json.message);
+      } else {
+        const cache = ScoutTrekApolloClient.cache;
+        const { currUser } = cache.readQuery({ query: GET_CURR_USER });
+        cache.modify({
+          fields: {
+            currUser() {
+              return { ...currUser, userPhoto: json.url };
+            },
+          },
+        });
+      }
+    } catch (e) {
+      setUploadError(e);
+    }
+  };
 
   const _handlePressButtonAsync = async () => {
     let result = await WebBrowser.openBrowserAsync(
@@ -92,8 +106,7 @@ const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
             padding="none"
             paddingBottom="m"
           >
-            <ImagePickerConainer
-              loading={imageUploadInProgress}
+            <ImagePickerContainer
               error={uploadError}
               uploadImage={uploadProfilePhoto}
             >
@@ -103,7 +116,7 @@ const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
                   uri: data.currUser.userPhoto,
                 }}
               />
-            </ImagePickerConainer>
+            </ImagePickerContainer>
             <Text preset="h2" paddingTop="m">
               {data.currUser.name}
             </Text>
