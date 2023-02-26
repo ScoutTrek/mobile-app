@@ -1,13 +1,13 @@
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
-import Text from '../../Text/Text';
-import { Container, Pressable, Floatable } from '../../../utility';
-
+import { useState } from 'react';
+import Toast from 'react-native-root-toast';
+import { pencil } from 'ScoutDesign/icons';
 import uuidv4 from 'uuid/v1';
 
-import { pencil } from 'ScoutDesign/icons';
+import { Container, Floatable, Pressable } from '../../../utility';
 import Badge from '../../Badge/Badge';
-import { useState } from 'react';
+import Text from '../../Text/Text';
 
 function buildUploadBody(fileName: string, uri: string) {
   const uriParts = uri.split('.');
@@ -58,7 +58,11 @@ const ImagePickerContainer = ({ children, error, uploadImage }: Props) => {
   };
 
   if (error) {
-    console.error('Error uploading image: ', error);
+    Toast.show('Error uploading image', {
+      duration: Toast.durations.LONG,
+      backgroundColor: 'red',
+      position: 20,
+    });
   }
 
   if (loading) {
