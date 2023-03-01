@@ -3,7 +3,7 @@ import {
   createStackNavigator,
 } from '@react-navigation/stack';
 
-import useStore from 'src/store';
+import useStore from '../../../src/store';
 import { CreateEventFormProvider } from '../createEvent/createEventForm/CreateEventFormStore';
 import {
   createEventFormReducer,

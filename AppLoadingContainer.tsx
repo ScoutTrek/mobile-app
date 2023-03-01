@@ -7,12 +7,12 @@ import { ActivityIndicator, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import AuthNavigator from 'src/modules/navigation/AuthNavigator';
-import MainStackNavigator from 'src/modules/navigation/MainStackNavigator';
-import RouteNames from 'src/modules/navigation/route_names/app';
-import ParamList from 'src/modules/navigation/param_list/app';
-import { useFonts } from 'src/hooks/useFonts';
-import useStore from 'src/store';
+import AuthNavigator from './src/modules/navigation/AuthNavigator';
+import MainStackNavigator from './src/modules/navigation/MainStackNavigator';
+import RouteNames from './src/modules/navigation/route_names/app';
+import ParamList from './src/modules/navigation/param_list/app';
+import { useFonts } from './src/hooks/useFonts';
+import useStore from './src/store';
 
 const Stack = createStackNavigator<ParamList>();
 

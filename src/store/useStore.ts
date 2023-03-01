@@ -30,7 +30,7 @@ const useStore = create<Store>()(
       }),
 
       {
-        name: 'ScoutTrekStore',
+        name: '',
       }
     )
   )

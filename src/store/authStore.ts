@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { IS_NEW_USER_QUERY } from 'data/getCurrUser';
-import { AsyncStorageKeys } from 'src/constants/asyncStorageKeys';
-import { executeQuery } from 'src/gqlClient/executeQuery';
+import { AsyncStorageKeys } from '../constants/asyncStorageKeys';
+import { executeQuery } from '../gqlClient/executeQuery';
 import { StoreGet, StoreSet } from './useStore';
 
 export interface AuthStore {
