@@ -17,9 +17,8 @@ const authStore = (set: StoreSet, get: StoreGet): AuthStore => ({
 
   initUser: async () => {
     const token = await AsyncStorage.getItem(AsyncStorageKeys.userToken);
-    set({ token });
     const isNewUser = await executeQuery(IS_NEW_USER_QUERY);
-    set({ isNewUser });
+    set({ token, isNewUser });
   },
 });
 

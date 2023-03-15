@@ -1,5 +1,6 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
-import { devtools, persist } from 'zustand/middleware';
+import { createJSONStorage, devtools, persist } from 'zustand/middleware';
 import appStore, { AppStore } from './appStore';
 import authStore, { AuthStore } from './authStore';
 import eventStore, { EventStore } from './eventStore';
@@ -30,7 +31,8 @@ const useStore = create<Store>()(
       }),
 
       {
-        name: '',
+        name: 'ScoutTrek-Store',
+        storage: createJSONStorage(() => AsyncStorage),
       }
     )
   )
