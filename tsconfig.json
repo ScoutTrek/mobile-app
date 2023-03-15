@@ -15,8 +15,9 @@
       "CreateEvent": ["./src/modules/createEvent/createEventForm"],
       "ScoutDesign/*": ["./ScoutDesign/*"],
       "CreateEvent/*": ["./src/modules/createEvent/createEventForm/*"],
+      "data": ["./src/data"],
       "data/*": ["./src/data/*"],
-      "src/*": ["src/*"]
+      "src/*": ["./src/*"]
     }
   },
   "exclude": [

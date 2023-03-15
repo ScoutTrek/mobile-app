@@ -20,7 +20,7 @@ const AppLoadingContainer = () => {
   const token = useStore((s) => s.token);
   const initUser = useStore((s) => s.initUser);
   const isLoading = useStore((s) => s.isLoading);
-  const [fontsLoaded] = useFonts();
+  const fontsLoaded = useFonts();
 
   useEffect(() => {
     const init = async () => {
