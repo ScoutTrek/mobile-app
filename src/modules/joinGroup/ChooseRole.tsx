@@ -1,3 +1,4 @@
+import { StackScreenProps } from '@react-navigation/stack';
 import {
   Button,
   Stack,
@@ -5,8 +6,12 @@ import {
   Container,
   ScreenContainer,
 } from 'ScoutDesign/library';
-import {convertRoleToText} from '../../data/utils/convertIDsToStrings';
-import {chooseRole, useJoinGroupForm} from './JoinGroupForm/JoinGroupFormStore';
+import { convertRoleToText } from '../../data/utils/convertIDsToStrings';
+import { JoinGroupStackParamList } from '../navigation/JoinGroupNavigator';
+import {
+  chooseRole,
+  useJoinGroupForm,
+} from './JoinGroupForm/JoinGroupFormStore';
 
 const ROLES = [
   'SCOUTMASTER',
@@ -18,10 +23,12 @@ const ROLES = [
   'ADULT_VOLUNTEER',
 ];
 
-const ChooseRole = ({navigation, route}) => {
-  const [_, dispatch] = useJoinGroupForm();
+const ChooseRole = ({
+  navigation,
+}: StackScreenProps<JoinGroupStackParamList>) => {
+  const [_, dispatch] = useJoinGroupForm() || [null, null];
   const nextForm = (role: string) => {
-    dispatch(chooseRole(role));
+    dispatch && dispatch(chooseRole(role));
     if (role === 'PARENT') {
       navigation.navigate('AddChildren');
     } else {
@@ -46,7 +53,7 @@ const ChooseRole = ({navigation, route}) => {
             fullWidth: true,
             paddingVertical: 'm',
           }}
-          RenderItem={({item, ...rest}) => {
+          RenderItem={({ item, ...rest }) => {
             return (
               <Button
                 accessibilityLabel={item.id}

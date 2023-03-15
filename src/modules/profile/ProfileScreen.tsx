@@ -1,7 +1,7 @@
 import {useContext} from 'react';
 import {ActivityIndicator, View} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {CommonActions} from '@react-navigation/native';
+import { CommonActions, CompositeScreenProps } from '@react-navigation/native';
 import {
   Button,
   Text,
@@ -11,23 +11,28 @@ import {
   ScreenContainer,
   Badge,
   Avatar,
-  ImagePickerConainer,
+  ImagePickerContainer,
 } from 'ScoutDesign/library';
-import {ScoutTrekApolloClient, GET_CURR_USER} from 'data';
-import {convertRoleToText} from '../../data/utils/convertIDsToStrings';
+import { ScoutTrekApolloClient, GET_CURR_USER } from 'data';
+import { convertRoleToText } from '../../data/utils/convertIDsToStrings';
 import * as WebBrowser from 'expo-web-browser';
 
-import {AuthContext} from '../auth/SignUp';
+import { AuthContext } from '../auth/SignUp';
 
-import {gql, useApolloClient, useQuery, useMutation} from '@apollo/client';
-import {plusThin} from 'ScoutDesign/icons';
+import { gql, useApolloClient, useQuery, useMutation } from '@apollo/client';
+import { plusThin } from 'ScoutDesign/icons';
+import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import { MainBottomParamList } from '../navigation/MainTabNavigator';
+import { StackScreenProps } from '@react-navigation/stack';
+import { MainStackParamList } from '../navigation/MainStackNavigator';
+import { apiBaseUri } from 'data/ScoutTrekClient';
 
 export const _updateCurrentGroup = async (groupID, navigation) => {
   await AsyncStorage.setItem('currMembershipID', groupID);
   navigation.dispatch(
     CommonActions.reset({
       index: 1,
-      routes: [{name: 'Home'}],
+      routes: [{ name: 'Home' }],
     })
   );
   await ScoutTrekApolloClient.resetStore();
@@ -39,27 +44,45 @@ const UPLOAD_PROFILE_PHOTO = gql`
   }
 `;
 
-const ProfileScreen = ({navigation}) => {
-  const {data, error, loading} = useQuery(GET_CURR_USER);
+type ProfileScreenProps = CompositeScreenProps<
+  BottomTabScreenProps<MainBottomParamList, 'Profile'>,
+  StackScreenProps<MainStackParamList>
+>;
+
+const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
+  const { data, error, loading } = useQuery(GET_CURR_USER);
   const client = useApolloClient();
 
-  const {setToken} = useContext(AuthContext);
+  const { setToken } = useContext(AuthContext);
 
-  const [
-    uploadProfilePhoto,
-    {loading: imageUploadInProgress, error: uploadError},
-  ] = useMutation(UPLOAD_PROFILE_PHOTO, {
-    update(cache, {data: {uploadImage}}) {
-      const {currUser} = cache.readQuery({query: GET_CURR_USER});
-      cache.modify({
-        fields: {
-          currUser() {
-            return {...currUser, userPhoto: uploadImage};
-          },
+  const [uploadError, setUploadError] = useState<any>(null);
+  const uploadProfilePhoto = async (data: FormData) => {
+    try {
+      const resp = await fetch(apiBaseUri + '/upload', {
+        method: 'POST',
+        body: data,
+        headers: {
+          Authorization: 'Bearer ' + (await AsyncStorage.getItem('userToken')),
         },
       });
-    },
-  });
+      const json = await resp.json();
+      if (resp.status !== 200) {
+        setUploadError(json.message);
+      } else {
+        const cache = ScoutTrekApolloClient.cache;
+        const { currUser } = cache.readQuery({ query: GET_CURR_USER });
+        cache.modify({
+          fields: {
+            currUser() {
+              return { ...currUser, userPhoto: json.url };
+            },
+          },
+        });
+      }
+    } catch (e) {
+      setUploadError(e);
+    }
+  };
 
   const _handlePressButtonAsync = async () => {
     let result = await WebBrowser.openBrowserAsync(
@@ -85,18 +108,19 @@ const ProfileScreen = ({navigation}) => {
             alignItems="center"
             justifyContent="center"
             padding="none"
-            paddingBottom="m">
-            <ImagePickerConainer
-              loading={imageUploadInProgress}
+            paddingBottom="m"
+          >
+            <ImagePickerContainer
               error={uploadError}
-              uploadImage={uploadProfilePhoto}>
+              uploadImage={uploadProfilePhoto}
+            >
               <Avatar
                 size="xl"
                 source={{
                   uri: data.currUser.userPhoto,
                 }}
               />
-            </ImagePickerConainer>
+            </ImagePickerContainer>
             <Text preset="h2" paddingTop="m">
               {data.currUser.name}
             </Text>
@@ -106,7 +130,8 @@ const ProfileScreen = ({navigation}) => {
             flexDirection="row"
             alignItems="center"
             paddingHorizontal="none"
-            paddingBottom="s">
+            paddingBottom="s"
+          >
             <Badge accessibilityLabel="role" color="interactive" text="Role" />
             <Text size="l" weight="bold" paddingLeft="m">
               {convertRoleToText(data.currUser.currRole)}
@@ -119,7 +144,8 @@ const ProfileScreen = ({navigation}) => {
               alignItems="center"
               paddingHorizontal="none"
               paddingTop="s"
-              paddingBottom="none">
+              paddingBottom="none"
+            >
               <Badge
                 accessibilityLabel="role"
                 color="information"
@@ -145,21 +171,23 @@ const ProfileScreen = ({navigation}) => {
             <Stack
               accessibilityLabel="other-groups"
               items={[...data.currUser.otherGroups]}
-              RenderItem={({item, ...rest}) => {
+              RenderItem={({ item, ...rest }) => {
                 return (
                   <LineItem
                     {...rest}
                     type="button"
                     backgroundColor="lightMintGrey"
                     onPress={() => _updateCurrentGroup(item.id, navigation)}
-                    accessibilityLabel={item.troopNumber}>
+                    accessibilityLabel={item.troopNumber}
+                  >
                     <Text size="s">Switch to Troop</Text>
                     <Text preset="h2">{item.troopNumber}</Text>
                   </LineItem>
                 );
               }}
             />
-          }>
+          }
+        >
           <Text size="l" weight="bold">
             {data.currUser.currTroop.council}
           </Text>

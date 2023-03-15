@@ -1,15 +1,17 @@
-import {createStackNavigator} from '@react-navigation/stack';
+import { createStackNavigator } from '@react-navigation/stack';
 import SignIn from '../auth/SignIn';
 import SignUp from '../auth/SignUp';
 import ForgotPassword from '../auth/ForgotPassword';
 import CreateNewPassword from '../auth/CreateNewPassword';
 
 export type AuthStackParamList = {
-  SignUp: undefined,
-  SignIn: undefined,
-  ForgotPassword: undefined,
-  ResetPassword: undefined,
-}
+  SignUp: undefined;
+  SignIn: undefined;
+  ForgotPassword: undefined;
+  ResetPassword: {
+    email: string;
+  };
+};
 
 const AuthStack = createStackNavigator<AuthStackParamList>();
 

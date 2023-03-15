@@ -1,4 +1,4 @@
-import {gql, useQuery} from '@apollo/client';
+import { gql, useQuery } from '@apollo/client';
 import {
   Container,
   Text,
@@ -6,12 +6,14 @@ import {
   Stack,
   ScreenContainer,
 } from 'ScoutDesign/library';
-import { View } from "react-native";
-import {plusBold} from 'ScoutDesign/icons';
+import { View } from 'react-native';
+import { plusBold } from 'ScoutDesign/icons';
 import {
   chooseGroup,
   useJoinGroupForm,
 } from './JoinGroupForm/JoinGroupFormStore';
+import { StackScreenProps } from '@react-navigation/stack';
+import { JoinGroupStackParamList } from '../navigation/JoinGroupNavigator';
 
 const GET_TROOPS = gql`
   query GetTroops {
@@ -24,14 +26,16 @@ const GET_TROOPS = gql`
   }
 `;
 
-const JoinTroop = ({navigation}) => {
-  const [_, dispatch] = useJoinGroupForm();
-  const {data, error, loading} = useQuery(GET_TROOPS, {
+const JoinTroop = ({
+  navigation,
+}: StackScreenProps<JoinGroupStackParamList>) => {
+  const [_, dispatch] = useJoinGroupForm() || [null, null];
+  const { data, error, loading } = useQuery(GET_TROOPS, {
     fetchPolicy: 'network-only',
   });
 
   const nextForm = (troopID: string, troopNumber: string) => {
-    dispatch(chooseGroup(troopID, troopNumber));
+    dispatch && dispatch(chooseGroup(troopID, troopNumber));
     navigation.navigate('ChooseRole');
   };
 
@@ -53,7 +57,7 @@ const JoinTroop = ({navigation}) => {
             justifyContent: 'flex-start',
             paddingVertical: 'm',
           }}
-          RenderItem={({item, ...rest}) => {
+          RenderItem={({ item, ...rest }) => {
             return (
               <Button
                 accessibilityLabel={item.id}
@@ -67,8 +71,9 @@ const JoinTroop = ({navigation}) => {
 
         <View
           style={{
-            marginTop: 20
-          }}>
+            marginTop: 20,
+          }}
+        >
           <Button
             accessibilityLabel="create-new-troop"
             text="Create Troop"

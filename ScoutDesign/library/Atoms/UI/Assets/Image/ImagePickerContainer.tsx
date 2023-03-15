@@ -1,39 +1,40 @@
-import {manipulateAsync, SaveFormat} from 'expo-image-manipulator';
+import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 import * as ImagePicker from 'expo-image-picker';
-import Text from '../../Text/Text';
-import {Container, Pressable, Floatable} from '../../../utility';
-
+import { useState } from 'react';
+import Toast from 'react-native-root-toast';
+import { pencil } from 'ScoutDesign/icons';
 import uuidv4 from 'uuid/v1';
 
-export async function uploadAssetAsync(uri) {
+import { Container, Floatable, Pressable } from '../../../utility';
+import Badge from '../../Badge/Badge';
+import Text from '../../Text/Text';
+
+function buildUploadBody(fileName: string, uri: string) {
   const uriParts = uri.split('.');
   const fileType = uriParts[uriParts.length - 1];
-  // @todo In place of ReactNativeFile, there will be some other object available from another upload library
-  // to send files to the server using REST conventions
 
-  // return new ReactNativeFile({
-  //   uri,
-  //   name: `${uuidv4()}.${fileType}`,
-  //   type: 'image/jpeg', // Customize later
-  // });
+  const data = new FormData();
+
+  const file = {
+    uri,
+    name: `${uuidv4()}.${fileType}`,
+    type: 'image/png', // Customize later
+  };
+
+  data.append(fileName, file as unknown as Blob);
+
+  return data;
 }
-
-import {pencil} from 'ScoutDesign/icons';
-import Badge from '../../Badge/Badge';
 
 type Props = {
   children: any;
-  loading?: boolean;
   error?: any;
   uploadImage: (apolloVariables: any) => Promise<any>;
 };
 
-const ImagePickerContainer = ({
-  children,
-  loading,
-  error,
-  uploadImage,
-}: Props) => {
+const ImagePickerContainer = ({ children, error, uploadImage }: Props) => {
+  const [loading, setLoading] = useState(false);
+
   const pickImage = async () => {
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -44,20 +45,24 @@ const ImagePickerContainer = ({
     });
 
     if (!result.cancelled) {
+      setLoading(true);
       const resizedPhoto = await manipulateAsync(
         result.uri,
-        [{resize: {width: 300}}],
-        {compress: 0.7, format: SaveFormat.PNG}
+        [{ resize: { width: 300 } }],
+        { compress: 0.7, format: SaveFormat.PNG }
       );
-      const file = await uploadAssetAsync(resizedPhoto.uri);
-      await uploadImage({variables: {file}});
-      return;
+      const data = buildUploadBody('photo', resizedPhoto.uri);
+      await uploadImage(data);
+      setLoading(false);
     }
   };
 
   if (error) {
-    console.error('Error uploading image', error);
-    return null;
+    Toast.show('Error uploading image', {
+      duration: Toast.durations.LONG,
+      backgroundColor: 'red',
+      position: 20,
+    });
   }
 
   if (loading) {
@@ -67,7 +72,8 @@ const ImagePickerContainer = ({
         radius="circle"
         justifyContent="center"
         alignItems="center"
-        backgroundColor="brandSecondaryLight">
+        backgroundColor="brandSecondaryLight"
+      >
         <Text weight="light" color="darkGrey">
           Loading...
         </Text>
@@ -80,7 +86,8 @@ const ImagePickerContainer = ({
       accessibilityLabel="image-picker"
       justifyContent="center"
       alignItems="center"
-      onPress={pickImage}>
+      onPress={pickImage}
+    >
       {children}
       <Floatable corner="bottom-right" distanceFromCorner="edge">
         <Badge

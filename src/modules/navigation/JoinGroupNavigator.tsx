@@ -1,5 +1,5 @@
-import {createStackNavigator} from '@react-navigation/stack';
-import {JoinGroupFormProvider} from '../joinGroup/JoinGroupForm/JoinGroupFormStore';
+import { createStackNavigator } from '@react-navigation/stack';
+import { JoinGroupFormProvider } from '../joinGroup/JoinGroupForm/JoinGroupFormStore';
 import {
   initialState,
   joinGroupFormReducer,
@@ -11,17 +11,27 @@ import CreateTroop from '../joinGroup/components/CreateTroop';
 import ChooseRole from '../joinGroup/ChooseRole';
 import JoinPatrol from '../joinGroup/JoinPatrol';
 
-const JoinGroupStack = createStackNavigator();
+export type JoinGroupStackParamList = {
+  JoinTroop: undefined;
+  CreateTroop: undefined;
+  ChooseRole: undefined;
+  AddChildren: undefined;
+  JoinPatrol: undefined;
+};
+
+const JoinGroupStack = createStackNavigator<JoinGroupStackParamList>();
 
 const JoinGroupNavigator = () => {
   return (
     <JoinGroupFormProvider
       initialState={initialState}
-      reducer={joinGroupFormReducer}>
+      reducer={joinGroupFormReducer}
+    >
       <JoinGroupStack.Navigator
         screenOptions={() => ({
           headerShown: false,
-        })}>
+        })}
+      >
         <JoinGroupStack.Screen name="JoinTroop" component={JoinTroop} />
         <JoinGroupStack.Screen name="CreateTroop" component={CreateTroop} />
         <JoinGroupStack.Screen name="ChooseRole" component={ChooseRole} />

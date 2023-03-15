@@ -1,6 +1,13 @@
 import { StackScreenProps } from '@react-navigation/stack';
 import { AuthStackParamList } from '../navigation/AuthNavigator';
 import PasswordConfig from './components/PasswordConfig';
+import { gql, useMutation } from '@apollo/client';
+
+const REQUEST_RESET = gql`
+  mutation RequestPasswordReset($email: String!) {
+    requestPasswordReset(email: $email)
+  }
+`;
 
 const ForgotPasswordFormFields = [
   {
@@ -19,22 +26,28 @@ const ForgotPasswordFormFields = [
   },
 ];
 
-const ForgotPassword = ({navigation}: StackScreenProps<AuthStackParamList, 'ForgotPassword'>) => {
+const ForgotPassword = ({
+  navigation,
+}: StackScreenProps<AuthStackParamList, 'ForgotPassword'>) => {
+  const [request_reset] = useMutation(REQUEST_RESET);
 
   const onSubmitEmail = (
     setSuccess: (success: boolean) => void,
-    data: {email: String}
+    data: { email: string }
   ) => {
-    // TODO: send request to email user
-    console.log('submitted email', data.email);
-    setSuccess(true);
+    request_reset({
+      variables: {
+        email: data.email,
+      },
+    });
+    navigation.navigate('ResetPassword', { email: data.email });
   };
 
   return (
     <PasswordConfig
       navigation={navigation}
       formTitle="Reset Password"
-      formDescription="Enter the email associated with your account. We’ll send an email with instructions to reset your password."
+      formDescription="Enter the email associated with your account. We’ll send an email with a token to reset your password."
       formFields={ForgotPasswordFormFields}
       handleSubmit={onSubmitEmail}
       successTitle="Email Sent!"

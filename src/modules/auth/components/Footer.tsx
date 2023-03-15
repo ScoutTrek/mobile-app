@@ -1,7 +1,13 @@
-import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
-import {Badge, Text} from 'ScoutDesign/library';
+import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
+import { Badge, Text } from 'ScoutDesign/library';
 
-const Footer = ({footerText, btnType, onPress}) => {
+type FooterProps = {
+  footerText: string;
+  btnType: string;
+  onPress: () => any;
+};
+
+const Footer = ({ footerText, btnType, onPress }: FooterProps) => {
   return (
     <View style={styles.footer}>
       <Text color="darkGrey" size="s">
