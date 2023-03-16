@@ -21,15 +21,6 @@ const MainStack = createStackNavigator<ParamList>();
 
 const MainStackNavigator = () => {
   const isNewUser = useStore((s) => s.isNewUser);
-  // const client = useApolloClient();
-  // const {setToken} = useContext(AuthContext);
-  // useEffect(() => {
-  //   AsyncStorage.removeItem('userToken');
-  //   AsyncStorage.removeItem('currMembershipID');
-  //   setToken('');
-  //   client.stop();
-  //   client.clearStore();
-  // }, []);
 
   return (
     <CreateEventFormProvider
