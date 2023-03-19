@@ -24,8 +24,7 @@ export interface AuthStore {
   initUser: () => Promise<void>;
   signUp: (input: SignupInput) => Promise<void>;
   login: (input: LoginInput) => Promise<void>;
-
-  __signOutCompletely: () => Promise<void>;
+  logout: () => Promise<void>;
 }
 
 const authStore = (set: StoreSet, get: StoreGet): AuthStore => ({
@@ -65,17 +64,19 @@ const authStore = (set: StoreSet, get: StoreGet): AuthStore => ({
 
     if (ret) {
       const { token, groupID } = ret.login;
-      await AsyncStorage.setItem('userToken', token);
-      await AsyncStorage.setItem('currMembershipID', groupID || 'undefined');
+      await AsyncStorage.setItem(AsyncStorageKeys.userToken, token);
+      await AsyncStorage.setItem(
+        AsyncStorageKeys.currMembershipID,
+        groupID || ''
+      );
       set({ token });
     }
   },
 
-  __signOutCompletely: async () => {
+  logout: async () => {
     const { clearToken } = get();
-    clearToken();
-    await AsyncStorage.removeItem('userToken');
-    await AsyncStorage.removeItem('currMembershipID');
+    await clearToken();
+    await AsyncStorage.removeItem(AsyncStorageKeys.currMembershipID);
     ScoutTrekApolloClient.stop();
     await ScoutTrekApolloClient.clearStore();
   },

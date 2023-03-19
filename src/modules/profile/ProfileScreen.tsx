@@ -1,7 +1,11 @@
-import { useContext } from 'react';
+import { useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { CommonActions, CompositeScreenProps } from '@react-navigation/native';
+import {
+  CommonActions,
+  CompositeScreenProps,
+  useNavigation,
+} from '@react-navigation/native';
 import {
   Button,
   Text,
@@ -17,17 +21,25 @@ import { ScoutTrekApolloClient, GET_CURR_USER } from 'data';
 import { convertRoleToText } from '../../data/utils/convertIDsToStrings';
 import * as WebBrowser from 'expo-web-browser';
 
-import { AuthContext } from '../auth/SignUp';
-
-import { gql, useApolloClient, useQuery, useMutation } from '@apollo/client';
+import { gql, useApolloClient, useQuery } from '@apollo/client';
 import { plusThin } from 'ScoutDesign/icons';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { MainBottomParamList } from '../navigation/MainTabNavigator';
 import { StackScreenProps } from '@react-navigation/stack';
-import { MainStackParamList } from '../navigation/MainStackNavigator';
+import { MainNavigationProps } from '../navigation/navigation_props/main';
+import useStore from '../../store';
+import RouteNames from '../navigation/route_names/main';
 
-export const _updateCurrentGroup = async (groupID, navigation) => {
-  await AsyncStorage.setItem('currMembershipID', groupID);
+import MainStackParamList from '../navigation/param_list/main';
+
+import { apiBaseUri } from '../../gqlClient/ScoutTrekClient';
+import { AsyncStorageKeys } from '../../constants/asyncStorageKeys';
+
+export const _updateCurrentGroup = async (
+  groupID: string,
+  navigation: MainNavigationProps
+) => {
+  await AsyncStorage.setItem(AsyncStorageKeys.currMembershipID, groupID);
   navigation.dispatch(
     CommonActions.reset({
       index: 1,
@@ -37,38 +49,52 @@ export const _updateCurrentGroup = async (groupID, navigation) => {
   await ScoutTrekApolloClient.resetStore();
 };
 
-const UPLOAD_PROFILE_PHOTO = gql`
-  mutation UploadProfilePhoto($file: String!) {
-    uploadImage(file: $file)
-  }
-`;
+// const UPLOAD_PROFILE_PHOTO = gql`
+//   mutation UploadProfilePhoto($file: String!) {
+//     uploadImage(file: $file)
+//   }
+// `;
 
 type ProfileScreenProps = CompositeScreenProps<
   BottomTabScreenProps<MainBottomParamList, 'Profile'>,
   StackScreenProps<MainStackParamList>
 >;
 
-const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
+const ProfileScreen = () => {
+  const logout = useStore((s) => s.logout);
+
+  const navigation = useNavigation<MainNavigationProps>();
+
   const { data, error, loading } = useQuery(GET_CURR_USER);
-  const client = useApolloClient();
 
-  const { setToken } = useContext(AuthContext);
-
-  const [
-    uploadProfilePhoto,
-    { loading: imageUploadInProgress, error: uploadError },
-  ] = useMutation(UPLOAD_PROFILE_PHOTO, {
-    update(cache, { data: { uploadImage } }) {
-      const { currUser } = cache.readQuery({ query: GET_CURR_USER });
-      cache.modify({
-        fields: {
-          currUser() {
-            return { ...currUser, userPhoto: uploadImage };
-          },
+  const [uploadError, setUploadError] = useState<any>(null);
+  const uploadProfilePhoto = async (data: FormData) => {
+    try {
+      const resp = await fetch(apiBaseUri + '/upload', {
+        method: 'POST',
+        body: data,
+        headers: {
+          Authorization: 'Bearer ' + (await AsyncStorage.getItem('userToken')),
         },
       });
-    },
-  });
+      const json = await resp.json();
+      if (resp.status !== 200) {
+        setUploadError(json.message);
+      } else {
+        const cache = ScoutTrekApolloClient.cache;
+        const { currUser } = cache.readQuery({ query: GET_CURR_USER }) as any;
+        cache.modify({
+          fields: {
+            currUser() {
+              return { ...currUser, userPhoto: json.url };
+            },
+          },
+        });
+      }
+    } catch (e) {
+      setUploadError(e);
+    }
+  };
 
   const _handlePressButtonAsync = async () => {
     let result = await WebBrowser.openBrowserAsync(
@@ -90,13 +116,10 @@ const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
             alignItems="center"
             justifyContent="center"
             padding="none"
-            paddingBottom="m"
-          >
+            paddingBottom="m">
             <ImagePickerConainer
-              loading={imageUploadInProgress}
               error={uploadError}
-              uploadImage={uploadProfilePhoto}
-            >
+              uploadImage={uploadProfilePhoto}>
               <Avatar
                 size="xl"
                 source={{
@@ -113,8 +136,7 @@ const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
             flexDirection="row"
             alignItems="center"
             paddingHorizontal="none"
-            paddingBottom="s"
-          >
+            paddingBottom="s">
             <Badge accessibilityLabel="role" color="interactive" text="Role" />
             <Text size="l" weight="bold" paddingLeft="m">
               {convertRoleToText(data.currUser.currRole)}
@@ -127,8 +149,7 @@ const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
               alignItems="center"
               paddingHorizontal="none"
               paddingTop="s"
-              paddingBottom="none"
-            >
+              paddingBottom="none">
               <Badge
                 accessibilityLabel="role"
                 color="information"
@@ -161,16 +182,14 @@ const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
                     type="button"
                     backgroundColor="lightMintGrey"
                     onPress={() => _updateCurrentGroup(item.id, navigation)}
-                    accessibilityLabel={item.troopNumber}
-                  >
+                    accessibilityLabel={item.troopNumber}>
                     <Text size="s">Switch to Troop</Text>
                     <Text preset="h2">{item.troopNumber}</Text>
                   </LineItem>
                 );
               }}
             />
-          }
-        >
+          }>
           <Text size="l" weight="bold">
             {data.currUser.currTroop.council}
           </Text>
@@ -184,7 +203,7 @@ const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
             icon={plusThin}
             text="Connect Additional Troop"
             alignSelf="flex-start"
-            onPress={() => navigation.navigate('JoinGroup')}
+            onPress={() => navigation.navigate(RouteNames.joinGroup.toString())}
           />
         </Container>
         <Button
@@ -202,13 +221,7 @@ const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
           textColor="darkGrey"
           backgroundColor="white"
           text="Logout"
-          onPress={async () => {
-            await AsyncStorage.removeItem('userToken');
-            await AsyncStorage.removeItem('currMembershipID');
-            setToken('');
-            client.stop();
-            await client.clearStore();
-          }}
+          onPress={logout}
         />
       </Container>
     </ScreenContainer>
