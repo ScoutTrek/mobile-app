@@ -3,12 +3,18 @@ import { ScoutTrekApolloClient } from 'data';
 import { IsNewUserQuery, IS_NEW_USER_QUERY } from 'data/getCurrUser';
 import {
   SignupInput,
-  SignUpQuery,
+  SignUpMutation,
   SIGN_UP,
-} from 'src/gqlClient/queries/signUp';
+} from '../gqlClient/mutations/signUp';
 import { AsyncStorageKeys } from '../constants/asyncStorageKeys';
 import { executeQuery } from '../gqlClient/executeQuery';
 import { StoreGet, StoreSet } from './useStore';
+import {
+  LoginInput,
+  LoginMutation,
+  LOG_IN,
+} from '../gqlClient/mutations/login';
+import { executeMutation } from '../gqlClient/executeMutation';
 
 export interface AuthStore {
   token: string | null;
@@ -17,6 +23,7 @@ export interface AuthStore {
   clearToken: () => Promise<void>;
   initUser: () => Promise<void>;
   signUp: (input: SignupInput) => Promise<void>;
+  login: (input: LoginInput) => Promise<void>;
 
   __signOutCompletely: () => Promise<void>;
 }
@@ -42,36 +49,35 @@ const authStore = (set: StoreSet, get: StoreGet): AuthStore => ({
   },
 
   signUp: async (input: SignupInput) => {
-    const ret = await executeQuery<SignUpQuery, SignupInput>(SIGN_UP, {
-      input,
-    });
+    const ret = await executeMutation<SignUpMutation, SignupInput>(
+      SIGN_UP,
+      input
+    );
 
     if (ret) {
       await AsyncStorage.setItem(AsyncStorageKeys.userToken, ret.token);
       set({ token: ret.token, isNewUser: ret.noGroups });
     }
+  },
 
-    // const [signUp] = useMutation(SIGN_UP, {
-    //   onCompleted: async ({ signup }) => {
-    //     try {
-    //       console.log('Signing up');
-    //       const token = await AsyncStorage.setItem('userToken', signup.token);
-    //       setNewUser(true);
-    //       setToken(signup.token);
-    //     } catch (e) {
-    //       console.log(e);
-    //     }
-    //   },
-    // });
+  login: async (input: LoginInput) => {
+    const ret = await executeMutation<LoginMutation, LoginInput>(LOG_IN, input);
+
+    if (ret) {
+      const { token, groupID } = ret.login;
+      await AsyncStorage.setItem('userToken', token);
+      await AsyncStorage.setItem('currMembershipID', groupID || 'undefined');
+      set({ token });
+    }
   },
 
   __signOutCompletely: async () => {
     const { clearToken } = get();
     clearToken();
-    AsyncStorage.removeItem('userToken');
-    AsyncStorage.removeItem('currMembershipID');
+    await AsyncStorage.removeItem('userToken');
+    await AsyncStorage.removeItem('currMembershipID');
     ScoutTrekApolloClient.stop();
-    ScoutTrekApolloClient.clearStore();
+    await ScoutTrekApolloClient.clearStore();
   },
 });
 

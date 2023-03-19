@@ -16,7 +16,7 @@ export interface SignupInput {
   passwordConfirm: string;
 }
 
-export interface SignUpQuery {
+export interface SignUpMutation {
   token: string;
   noGroups: boolean;
 }

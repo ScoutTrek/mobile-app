@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import {
   KeyboardAvoidingView,
   Dimensions,
@@ -7,13 +7,10 @@ import {
   ScrollView,
 } from 'react-native';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import { Text, Form, Image } from 'ScoutDesign/library';
 import { Ionicons } from '@expo/vector-icons';
 import Footer from './components/Footer';
 
-import { gql } from '@apollo/client';
 import useStore from '../../store';
 import { useNavigation } from '@react-navigation/native';
 import { SignUpNavigationProps } from '../navigation/navigation_props/auth';
@@ -84,24 +81,19 @@ const SignUp = () => {
   const navigation = useNavigation<SignUpNavigationProps>();
 
   const onSubmit = async (data: any) => {
-    if (data.password !== data.passwordConfirm) {
+    const { name, email, password, passwordConfirm } = data;
+    if (password !== passwordConfirm) {
       Alert.alert(
         'Whoops, the passwords you entered do not match.',
         'Please re-enter passwords to confirm they match.'
       );
     } else {
-      console.log('TODO: Sign up');
       await signUp({
-        // TODO: Populate with form values
+        name,
+        email,
+        password,
+        passwordConfirm,
       });
-
-      // await signUp({
-      //   variables: {
-      //     userInfo: {
-      //       ...data,
-      //     },
-      //   },
-      // });
     }
   };
 

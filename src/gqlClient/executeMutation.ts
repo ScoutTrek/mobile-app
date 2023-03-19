@@ -1,13 +1,13 @@
 import { ScoutTrekApolloClient } from 'data';
 
-export const executeMutation = async <ReturnType>(
+export const executeMutation = async <ReturnType, InputType>(
   mutation: any,
-  variables?: any
+  input?: InputType // should be an object with params
 ): Promise<ReturnType | undefined> => {
   try {
     const result = await ScoutTrekApolloClient.mutate({
       mutation,
-      variables,
+      variables: input,
     });
     console.log('executeMutation result', result.data);
     return result.data as ReturnType;

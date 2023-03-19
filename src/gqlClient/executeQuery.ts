@@ -7,12 +7,12 @@ import { ScoutTrekApolloClient } from 'data';
 
 export const executeQuery = async <ReturnType, InputType = any>(
   query: any,
-  variables?: { input: InputType }
+  input?: InputType
 ): Promise<ReturnType | undefined> => {
   try {
     const result = await ScoutTrekApolloClient.query({
       query,
-      variables,
+      variables: input,
     });
     console.log('executeQuery result', result.data);
     return result.data as ReturnType;
