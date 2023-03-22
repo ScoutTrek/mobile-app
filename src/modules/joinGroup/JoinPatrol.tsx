@@ -4,7 +4,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { gql, useMutation, useQuery } from '@apollo/client';
 import { plusBold } from 'ScoutDesign/icons';
 import { _updateCurrentGroup } from '../profile/ProfileScreen';
-import { AuthContext } from '../auth/SignUp';
 import {
   ScreenContainer,
   Container,
@@ -16,7 +15,8 @@ import {
 
 import { useJoinGroupForm } from './JoinGroupForm/JoinGroupFormStore';
 import { StackScreenProps } from '@react-navigation/stack';
-import { JoinGroupStackParamList } from '../navigation/JoinGroupNavigator';
+import JoinGroupParamList from '../navigation/param_list/joinGroup';
+import useStore from 'src/store';
 
 const ADD_GROUP = gql`
   mutation AddGroup($membershipInfo: AddMembershipInput!) {
@@ -46,13 +46,15 @@ const ADD_PATROL = gql`
 
 const JoinPatrol = ({
   navigation,
-}: StackScreenProps<JoinGroupStackParamList>) => {
+}: StackScreenProps<JoinGroupParamList>) => {
   const [joinGroupFormState] = useJoinGroupForm() || [null];
-  const { setNewUser } = useContext(AuthContext);
+  // const { setNewUser } = useContext(AuthContext);
+
+  const setIsNewUser = useStore((s) => s.setIsNewUser);
 
   const [addGroup] = useMutation(ADD_GROUP, {
     onCompleted: async (data) => {
-      setNewUser(false);
+      setIsNewUser(false);
       await AsyncStorage.setItem('currMembershipID', data.addGroup.groupID);
       _updateCurrentGroup(data?.addGroup?.groupID, navigation);
     },

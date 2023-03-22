@@ -21,6 +21,7 @@ export interface AuthStore {
   isNewUser: boolean;
 
   clearToken: () => Promise<void>;
+  setIsNewUser: (isNewUser: boolean) => Promise<void>;
   initUser: () => Promise<void>;
   signUp: (input: SignupInput) => Promise<void>;
   login: (input: LoginInput) => Promise<void>;
@@ -34,6 +35,10 @@ const authStore = (set: StoreSet, get: StoreGet): AuthStore => ({
   clearToken: async () => {
     await AsyncStorage.removeItem(AsyncStorageKeys.userToken);
     set({ token: null });
+  },
+
+  setIsNewUser: async (isNewUser: boolean) => {
+    set({ isNewUser: isNewUser});
   },
 
   initUser: async () => {

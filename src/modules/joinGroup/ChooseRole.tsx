@@ -7,11 +7,12 @@ import {
   ScreenContainer,
 } from 'ScoutDesign/library';
 import { convertRoleToText } from '../../data/utils/convertIDsToStrings';
-import { JoinGroupStackParamList } from '../navigation/JoinGroupNavigator';
+import JoinGroupParamList from '../navigation/param_list/joinGroup';
 import {
   chooseRole,
   useJoinGroupForm,
 } from './JoinGroupForm/JoinGroupFormStore';
+import RouteNames from '../navigation/route_names/joinGroup';
 
 const ROLES = [
   'SCOUTMASTER',
@@ -25,14 +26,14 @@ const ROLES = [
 
 const ChooseRole = ({
   navigation,
-}: StackScreenProps<JoinGroupStackParamList>) => {
+}: StackScreenProps<JoinGroupParamList>) => {
   const [_, dispatch] = useJoinGroupForm() || [null, null];
   const nextForm = (role: string) => {
     dispatch && dispatch(chooseRole(role));
     if (role === 'PARENT') {
-      navigation.navigate('AddChildren');
+      navigation.navigate(RouteNames.addChildren.toString());
     } else {
-      navigation.navigate('JoinPatrol');
+      navigation.navigate(RouteNames.joinPatrol.toString());
     }
   };
 
