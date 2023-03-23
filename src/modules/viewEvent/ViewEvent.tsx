@@ -1,4 +1,5 @@
-import { Text, Alert } from 'react-native';
+import { Alert } from 'react-native';
+import { Text } from 'ScoutDesign/library';
 
 import { useEventForm, populateEvent } from 'CreateEvent/CreateEventFormStore';
 
@@ -14,6 +15,38 @@ import { Button, CircleButton, ScreenContainer } from 'ScoutDesign/library';
 import { pencil } from 'ScoutDesign/icons';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../navigation/MainStackNavigator';
+
+import { View, useWindowDimensions } from 'react-native';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import { useState } from 'react';
+
+const AllAttendeesList = () => (
+  <View style={{ flex: 1, backgroundColor: '#ff4081' }} />
+);
+
+const YesAttendeesList = () => (
+  <View style={{ flex: 1, backgroundColor: '#ff4081' }} />
+);
+
+const NoAttendeesList = () => (
+  <View style={{ flex: 1, backgroundColor: '#ff4081' }} />
+);
+
+const MaybeAttendeesList = () => (
+  <View style={{ flex: 1, backgroundColor: '#ff4081' }} />
+);
+
+const NoResponseAttendeesList = () => (
+  <View style={{ flex: 1, backgroundColor: '#ff4081' }} />
+);
+
+const renderScene = SceneMap({
+  all: AllAttendeesList,
+  yes: YesAttendeesList,
+  no: NoAttendeesList,
+  maybe: MaybeAttendeesList,
+  noResponse: NoResponseAttendeesList,
+});
 
 export const DELETE_EVENT = gql`
   mutation DeleteEvent($id: ID!) {
@@ -57,6 +90,36 @@ const EventDetailsScreen = ({
     variables: { id: currItem },
   });
   const [deleteEvent] = useMutation(DELETE_EVENT, deleteEventConfig);
+
+  const layout = useWindowDimensions();
+
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    { key: 'all', title: 'All' },
+    { key: 'yes', title: 'Yes' },
+    { key: 'no', title: 'No' },
+    { key: 'maybe', title: 'Maybe' },
+    { key: 'noResponse', title: 'N/A' },
+  ]);
+
+  const renderAttendeesList = () => {
+    switch (index) {
+      case 0:
+        return <Text>Render all attendees</Text>;
+      case 1:
+        return <Text>yes attendess</Text>;
+      case 2:
+        return <Text>no attendess</Text>;
+      case 3:
+        return <Text>maybe attendess</Text>;
+      case 4:
+        return <Text>no response attendess</Text>;
+    }
+  };
+
+  const renderLabel = (scene) => {
+    return <Text>{scene.route.title}</Text>;
+  };
 
   const handleDeleteEvent = () => {
     Alert.alert(
@@ -125,6 +188,26 @@ const EventDetailsScreen = ({
       {data.event.checkoutTime ? (
         <Time time={data.event.checkoutTime} heading="Check out" />
       ) : null}
+
+      <Text preset="h2" paddingHorizontal="m" paddingTop="s">
+        Attendees
+      </Text>
+
+      <TabView
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        initialLayout={{ width: layout.width }}
+        renderTabBar={(props) => (
+          <TabBar
+            {...props}
+            renderLabel={renderLabel}
+            style={{ backgroundColor: '#f5f3f0' }}
+          />
+        )}
+      />
+
+      {renderAttendeesList()}
 
       <Description description={data.event.description} />
 
