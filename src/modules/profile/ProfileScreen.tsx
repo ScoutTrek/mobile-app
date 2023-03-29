@@ -34,11 +34,9 @@ import MainStackParamList from '../navigation/param_list/main';
 
 import { apiBaseUri } from '../../gqlClient/ScoutTrekClient';
 import { AsyncStorageKeys } from '../../constants/asyncStorageKeys';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
-export const _updateCurrentGroup = async (
-  groupID: string,
-  navigation: MainNavigationProps
-) => {
+export const _updateCurrentGroup = async (groupID: string, navigation: any) => {
   await AsyncStorage.setItem(AsyncStorageKeys.currMembershipID, groupID);
   navigation.dispatch(
     CommonActions.reset({

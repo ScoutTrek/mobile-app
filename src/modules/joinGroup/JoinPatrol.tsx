@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { gql, useMutation, useQuery } from '@apollo/client';
@@ -16,7 +16,9 @@ import {
 import { useJoinGroupForm } from './JoinGroupForm/JoinGroupFormStore';
 import { StackScreenProps } from '@react-navigation/stack';
 import JoinGroupParamList from '../navigation/param_list/joinGroup';
-import useStore from 'src/store';
+import useStore from '../../store';
+import { useNavigation } from '@react-navigation/native';
+import { JoinPatrolNavigationProps } from '../navigation/navigation_props/joinGroup';
 
 const ADD_GROUP = gql`
   mutation AddGroup($membershipInfo: AddMembershipInput!) {
@@ -44,11 +46,9 @@ const ADD_PATROL = gql`
   }
 `;
 
-const JoinPatrol = ({
-  navigation,
-}: StackScreenProps<JoinGroupParamList>) => {
+const JoinPatrol = () => {
+  const navigation = useNavigation<JoinPatrolNavigationProps>();
   const [joinGroupFormState] = useJoinGroupForm() || [null];
-  // const { setNewUser } = useContext(AuthContext);
 
   const setIsNewUser = useStore((s) => s.setIsNewUser);
 
