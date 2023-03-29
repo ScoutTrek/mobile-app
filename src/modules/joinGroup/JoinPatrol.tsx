@@ -14,8 +14,6 @@ import {
 } from 'ScoutDesign/library';
 
 import { useJoinGroupForm } from './JoinGroupForm/JoinGroupFormStore';
-import { StackScreenProps } from '@react-navigation/stack';
-import JoinGroupParamList from '../navigation/param_list/joinGroup';
 import useStore from '../../store';
 import { useNavigation } from '@react-navigation/native';
 import { JoinPatrolNavigationProps } from '../navigation/navigation_props/joinGroup';
@@ -53,6 +51,10 @@ const JoinPatrol = () => {
   const setIsNewUser = useStore((s) => s.setIsNewUser);
 
   const [addGroup] = useMutation(ADD_GROUP, {
+    onError: (error) => {
+      console.log({ joinGroupFormState });
+      console.log(error);
+    },
     onCompleted: async (data) => {
       setIsNewUser(false);
       await AsyncStorage.setItem('currMembershipID', data.addGroup.groupID);

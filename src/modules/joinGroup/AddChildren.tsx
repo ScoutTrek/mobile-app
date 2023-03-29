@@ -11,12 +11,12 @@ import {
   addChildren,
   useJoinGroupForm,
 } from './JoinGroupForm/JoinGroupFormStore';
-import { StackScreenProps } from '@react-navigation/stack';
-import { JoinGroupStackParamList } from '../navigation/JoinGroupNavigator';
+import { AddChildrenNavigationProps } from '../navigation/navigation_props/joinGroup';
+import RouteNames from '../navigation/route_names/joinGroup';
+import { useNavigation } from '@react-navigation/native';
 
-const AddChildren = ({
-  navigation,
-}: StackScreenProps<JoinGroupStackParamList>) => {
+const AddChildren = () => {
+  const navigation = useNavigation<AddChildrenNavigationProps>();
   const [_, dispatch] = useJoinGroupForm() || [null, null];
   const [childName, setChildName] = useState('');
   const [children, setChildren] = useState<string[]>([]);
@@ -24,7 +24,7 @@ const AddChildren = ({
 
   const next = () => {
     dispatch && dispatch(addChildren(children));
-    navigation.navigate('JoinPatrol');
+    navigation.navigate(RouteNames.joinPatrol.toString());
   };
 
   return (
@@ -66,8 +66,7 @@ const AddChildren = ({
                 key={child}
                 size="l"
                 paddingVertical="xs"
-                paddingHorizontal="s"
-              >
+                paddingHorizontal="s">
                 {child}
               </Text>
             ))}

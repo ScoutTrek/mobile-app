@@ -12,8 +12,9 @@ import {
   chooseGroup,
   useJoinGroupForm,
 } from './JoinGroupForm/JoinGroupFormStore';
-import { StackScreenProps } from '@react-navigation/stack';
-import { JoinGroupStackParamList } from '../navigation/JoinGroupNavigator';
+import { JoinTroopNavigationProps } from '../navigation/navigation_props/joinGroup';
+import { useNavigation } from '@react-navigation/native';
+import RouteNames from '../navigation/route_names/joinGroup';
 
 const GET_TROOPS = gql`
   query GetTroops {
@@ -26,9 +27,8 @@ const GET_TROOPS = gql`
   }
 `;
 
-const JoinTroop = ({
-  navigation,
-}: StackScreenProps<JoinGroupStackParamList>) => {
+const JoinTroop = () => {
+  const navigation = useNavigation<JoinTroopNavigationProps>();
   const [_, dispatch] = useJoinGroupForm() || [null, null];
   const { data, error, loading } = useQuery(GET_TROOPS, {
     fetchPolicy: 'network-only',
@@ -36,7 +36,7 @@ const JoinTroop = ({
 
   const nextForm = (troopID: string, troopNumber: string) => {
     dispatch && dispatch(chooseGroup(troopID, troopNumber));
-    navigation.navigate('ChooseRole');
+    navigation.navigate(RouteNames.chooseRole.toString());
   };
 
   if (loading) return null;
@@ -72,15 +72,14 @@ const JoinTroop = ({
         <View
           style={{
             marginTop: 20,
-          }}
-        >
+          }}>
           <Button
             accessibilityLabel="create-new-troop"
             text="Create Troop"
             backgroundColor="brandSecondary"
             icon={plusBold}
             onPress={() => {
-              navigation.navigate('CreateTroop');
+              navigation.navigate(RouteNames.createTroop.toString());
             }}
             fullWidth={true}
             tall={true}
