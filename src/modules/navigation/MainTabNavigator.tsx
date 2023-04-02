@@ -60,7 +60,8 @@ const HomeNav = ({
             />
           </Container>
         ),
-      })}>
+      })}
+    >
       <HomeStack.Screen name="Home" component={UpcomingEvents} />
     </HomeStack.Navigator>
   );
@@ -131,7 +132,8 @@ const MainBottomTabNavigator = () => {
               return null;
           }
         },
-      })}>
+      })}
+    >
       <MainBottomTab.Screen
         options={{ tabBarLabel: 'Home' }}
         name="UpcomingEvents"

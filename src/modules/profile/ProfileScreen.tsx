@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   CommonActions,
@@ -15,13 +15,13 @@ import {
   ScreenContainer,
   Badge,
   Avatar,
-  ImagePickerConainer,
+  ImagePickerContainer,
 } from 'ScoutDesign/library';
 import { ScoutTrekApolloClient, GET_CURR_USER } from 'data';
 import { convertRoleToText } from '../../data/utils/convertIDsToStrings';
 import * as WebBrowser from 'expo-web-browser';
 
-import { gql, useApolloClient, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { plusThin } from 'ScoutDesign/icons';
 import { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
 import { MainBottomParamList } from '../navigation/MainTabNavigator';
@@ -34,7 +34,6 @@ import MainStackParamList from '../navigation/param_list/main';
 
 import { apiBaseUri } from '../../gqlClient/ScoutTrekClient';
 import { AsyncStorageKeys } from '../../constants/asyncStorageKeys';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export const _updateCurrentGroup = async (groupID: string, navigation: any) => {
   await AsyncStorage.setItem(AsyncStorageKeys.currMembershipID, groupID);
@@ -104,7 +103,12 @@ const ProfileScreen = () => {
     console.error(error);
     return null;
   }
-  if (loading) return <ActivityIndicator />;
+  if (loading)
+    return (
+      <View style={{ justifyContent: 'center', flex: 1 }}>
+        <ActivityIndicator />
+      </View>
+    );
 
   return (
     <ScreenContainer justifyContent="space-between">
@@ -114,17 +118,19 @@ const ProfileScreen = () => {
             alignItems="center"
             justifyContent="center"
             padding="none"
-            paddingBottom="m">
-            <ImagePickerConainer
+            paddingBottom="m"
+          >
+            <ImagePickerContainer
               error={uploadError}
-              uploadImage={uploadProfilePhoto}>
+              uploadImage={uploadProfilePhoto}
+            >
               <Avatar
                 size="xl"
                 source={{
                   uri: data.currUser.userPhoto,
                 }}
               />
-            </ImagePickerConainer>
+            </ImagePickerContainer>
             <Text preset="h2" paddingTop="m">
               {data.currUser.name}
             </Text>
@@ -134,7 +140,8 @@ const ProfileScreen = () => {
             flexDirection="row"
             alignItems="center"
             paddingHorizontal="none"
-            paddingBottom="s">
+            paddingBottom="s"
+          >
             <Badge accessibilityLabel="role" color="interactive" text="Role" />
             <Text size="l" weight="bold" paddingLeft="m">
               {convertRoleToText(data.currUser.currRole)}
@@ -147,7 +154,8 @@ const ProfileScreen = () => {
               alignItems="center"
               paddingHorizontal="none"
               paddingTop="s"
-              paddingBottom="none">
+              paddingBottom="none"
+            >
               <Badge
                 accessibilityLabel="role"
                 color="information"
@@ -180,14 +188,16 @@ const ProfileScreen = () => {
                     type="button"
                     backgroundColor="lightMintGrey"
                     onPress={() => _updateCurrentGroup(item.id, navigation)}
-                    accessibilityLabel={item.troopNumber}>
+                    accessibilityLabel={item.troopNumber}
+                  >
                     <Text size="s">Switch to Troop</Text>
                     <Text preset="h2">{item.troopNumber}</Text>
                   </LineItem>
                 );
               }}
             />
-          }>
+          }
+        >
           <Text size="l" weight="bold">
             {data.currUser.currTroop.council}
           </Text>
