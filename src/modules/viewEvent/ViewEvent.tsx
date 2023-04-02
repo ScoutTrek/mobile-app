@@ -20,6 +20,8 @@ import { View, useWindowDimensions } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { useState } from 'react';
 
+import { FlatList } from 'react-native';
+
 const AllAttendeesList = () => (
   <View style={{ flex: 1, backgroundColor: '#ff4081' }} />
 );
@@ -60,6 +62,20 @@ export const GET_EVENT = gql`
   query GetEvent($id: ID!) {
     event(id: $id) {
       ...EventFragment
+      roster {
+        yes {
+          name
+          id
+        }
+        no {
+          name
+          id
+        }
+        maybe {
+          name
+          id
+        }
+      }
     }
   }
   ${EVENT_FIELDS}
@@ -95,25 +111,36 @@ const EventDetailsScreen = ({
 
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    { key: 'all', title: 'All' },
     { key: 'yes', title: 'Yes' },
     { key: 'no', title: 'No' },
     { key: 'maybe', title: 'Maybe' },
     { key: 'noResponse', title: 'N/A' },
   ]);
 
+  function renderAttendees(attendees: any) {
+    return (
+      <FlatList
+        data={attendees}
+        renderItem={({ item }) => {
+          return <Text>{item.name}</Text>;
+        }}
+      />
+    );
+  }
+
   const renderAttendeesList = () => {
     switch (index) {
       case 0:
-        return <Text>Render all attendees</Text>;
+        return renderAttendees(data.event.roster.yes);
       case 1:
-        return <Text>yes attendess</Text>;
+        return renderAttendees(data.event.roster.no);
       case 2:
-        return <Text>no attendess</Text>;
+        return renderAttendees(data.event.roster.maybe);
       case 3:
-        return <Text>maybe attendess</Text>;
-      case 4:
-        return <Text>no response attendess</Text>;
+        // const allAttendees: [{name: string, id: string}] = data.event.roster.yes.concat(data.event.roster.no).concat(data.event.roster.maybe)
+        // const allAttendeeIDs = allAttendees.map(attendee => attendee.id)
+        // c
+        return renderAttendees(data.event.roster.maybe); // placeholder. change this to n/a attendess
     }
   };
 
