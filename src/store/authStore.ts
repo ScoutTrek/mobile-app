@@ -38,7 +38,7 @@ const authStore = (set: StoreSet, get: StoreGet): AuthStore => ({
   },
 
   setIsNewUser: async (isNewUser: boolean) => {
-    set({ isNewUser: isNewUser});
+    set({ isNewUser: isNewUser });
   },
 
   initUser: async () => {

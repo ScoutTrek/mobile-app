@@ -1,15 +1,17 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StoreGet, StoreSet } from './useStore';
 
 export interface AppStore {
   isLoading: boolean;
 
-  setIsLoading: (isLoading: boolean) => void;
+  clearAsyncStorage: () => Promise<void>;
 }
 
 const appStore = (set: StoreSet, get: StoreGet): AppStore => ({
-  isLoading: true,
-  setIsLoading: (isLoading: boolean) => {
-    set({ isLoading });
+  isLoading: false,
+
+  clearAsyncStorage: async () => {
+    await AsyncStorage.clear();
   },
 });
 

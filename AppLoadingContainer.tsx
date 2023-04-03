@@ -1,6 +1,6 @@
 import 'react-native-reanimated';
 import 'react-native-gesture-handler';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 import { ActivityIndicator, View } from 'react-native';
 
@@ -42,7 +42,8 @@ const AppLoadingContainer = () => {
       <Stack.Navigator
         screenOptions={() => ({
           headerShown: false,
-        })}>
+        })}
+      >
         {token ? (
           <Stack.Screen name={RouteNames.home} component={MainStackNavigator} />
         ) : (
