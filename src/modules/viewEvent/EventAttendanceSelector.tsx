@@ -5,14 +5,29 @@ import theme from 'ScoutDesign/library/theme';
 import { gql, useMutation, useQuery } from '@apollo/client';
 
 
+export const ADD_TO_ATTENDEES = gql`
+    mutation RSVP($eventID: String, $response: Number) {
+        rsvp(eventID: $eventID, response: $response)    
+    }
+`;
+// TODO: adding backend mutation for add attendee 
+
+export const REMOVE_FROM_ATTENDEES = gql`
+`;
+// TODO: adding backend mutation to remove from attendees 
+
 type EventAttendanceSelectorProps = {
     addAttendee: () => void,
     removeAttendee: () => void,
 }
 
+
+
 // component for user to select if you are attending an event 
 const EventAttendanceSelector = () => {
-    const [selected, setSelected] = useState('');
+    const [ selected, setSelected ] = useState('');
+    const [ rsvp ] = useMutation(ADD_TO_ATTENDEES);
+
     return (
         // <View >
         //     <Text variant={"s-light"}>Hello</Text>
@@ -23,9 +38,36 @@ const EventAttendanceSelector = () => {
         <View style={styles.main_container}>
             <Text style={styles.question_text}>Are you going?</Text>
             <View style={styles.buttons_container}>
-                <AttendanceButton text="No" selected={selected} setSelected={setSelected}/>
-                <AttendanceButton text="Maybe" selected={selected} setSelected={setSelected}/>
-                <AttendanceButton text="Yes" selected={selected} setSelected={setSelected}/>
+                <AttendanceButton 
+                    text="No" 
+                    selected={selected} 
+                    setSelected={setSelected}
+                    onPress={() => {
+                        rsvp({
+                            variables:
+                                {event_id: 1, response: 0},
+                        })
+                    }} />
+                <AttendanceButton 
+                    text="Maybe" 
+                    selected={selected} 
+                    setSelected={setSelected}
+                    onPress={() => {
+                        rsvp({
+                            variables:
+                                {event_id: 1, response: 2},
+                        })
+                    }}/>
+                <AttendanceButton 
+                    text="Yes" 
+                    selected={selected} 
+                    setSelected={setSelected}
+                    onPress={() => {
+                        rsvp({
+                            variables:
+                                {event_id: 1, response: 1},
+                        })
+                    }}/>
             </View>
         </View>
     )
@@ -35,6 +77,7 @@ type AttendanceButtonProps = {
     text: string,
     selected: string,
     setSelected: (selection: string) => void,
+    onPress: () => void,
 }
 
 // button used to create one of the three attendance selectors: no, maybe, yes
