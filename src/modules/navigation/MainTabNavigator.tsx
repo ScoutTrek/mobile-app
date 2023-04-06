@@ -1,4 +1,4 @@
-import { ActivityIndicator, Image } from 'react-native';
+import {ActivityIndicator, Image, View} from 'react-native';
 
 import {
   BottomTabScreenProps,
@@ -33,7 +33,10 @@ const HomeNav = ({
     console.error(error);
     return null;
   }
-  if (loading) return <ActivityIndicator />;
+  if (loading) return(     
+    <View style={{justifyContent: 'center', flex: 1}}>
+      <ActivityIndicator />
+    </View>)
   return (
     <HomeStack.Navigator
       screenOptions={({ navigation }) => ({
@@ -80,7 +83,10 @@ const MainBottomTabNavigator = () => {
     console.error(error);
     return null;
   }
-  if (loading) return <ActivityIndicator />;
+  if (loading) return (
+    <View style={{justifyContent: 'center', flex: 1}}>
+      <ActivityIndicator />
+    </View>)
   return (
     <MainBottomTab.Navigator
       screenOptions={({ route }) => ({

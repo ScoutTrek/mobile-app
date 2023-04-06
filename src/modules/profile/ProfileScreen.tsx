@@ -1,5 +1,5 @@
-import { useContext, useState } from 'react';
-import { ActivityIndicator } from 'react-native';
+import {useContext} from 'react';
+import {ActivityIndicator, View} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { CommonActions, CompositeScreenProps } from '@react-navigation/native';
 import {
@@ -94,7 +94,11 @@ const ProfileScreen = ({ navigation }: ProfileScreenProps) => {
     console.error(error);
     return null;
   }
-  if (loading) return <ActivityIndicator />;
+  if (loading) return (
+    <View style={{justifyContent: 'center', flex: 1}}>
+      <ActivityIndicator />
+    </View>)
+  
 
   return (
     <ScreenContainer justifyContent="space-between">

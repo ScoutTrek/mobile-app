@@ -29,7 +29,10 @@ const ViewEventsList = ({ navigation }: Props) => {
   const { loading, data } = useQuery(GET_EVENT_SCHEMAS);
 
   if (loading) {
-    return <ActivityIndicator />;
+    return (
+      <View style={{justifyContent: 'center', flex: 1}}>
+        <ActivityIndicator />
+      </View>) 
   }
 
   const eventSchemasArr = Object.values(data['eventSchemas']);

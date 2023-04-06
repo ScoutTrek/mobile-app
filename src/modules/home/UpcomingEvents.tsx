@@ -1,5 +1,5 @@
-import { useRef, useEffect } from 'react';
-import { SectionList, Platform } from 'react-native';
+import {useRef, useEffect} from 'react';
+import {SectionList, Platform, View, ActivityIndicator} from 'react-native';
 import EventCard from './components/EventCard';
 import NoEvents from '../../components/NoEvents';
 import * as Device from 'expo-device';
@@ -129,13 +129,12 @@ export default function UpcomingEvents({ navigation }: UpcomingEventsProp) {
     }
   };
 
-  if (error)
-    return (
-      <Text>
-        <>Error: {error}</>
-      </Text>
-    );
-  if (loading) return <Text>Loading...</Text>;
+  if (error) return <Text>Error: {error}</Text>;
+  if (loading) return (
+  <View style={{justifyContent: 'center', flex: 1}}>
+    <ActivityIndicator />
+  </View>) 
+  
   const eventListData = [
     {
       title: 'Happening Now',
