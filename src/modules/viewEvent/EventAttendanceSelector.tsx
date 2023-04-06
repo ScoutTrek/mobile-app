@@ -17,14 +17,15 @@ export const REMOVE_FROM_ATTENDEES = gql`
 // TODO: adding backend mutation to remove from attendees 
 
 type EventAttendanceSelectorProps = {
-    addAttendee: () => void,
-    removeAttendee: () => void,
+    eventID: number
 }
 
 
 
+
 // component for user to select if you are attending an event 
-const EventAttendanceSelector = () => {
+// pass in the event id
+const EventAttendanceSelector = ({ eventID }: EventAttendanceSelectorProps) => {
     const [ selected, setSelected ] = useState('');
     const [ rsvp ] = useMutation(ADD_TO_ATTENDEES);
 
@@ -45,7 +46,7 @@ const EventAttendanceSelector = () => {
                     onPress={() => {
                         rsvp({
                             variables:
-                                {event_id: 1, response: 0},
+                                {event_id: eventID, response: 0},
                         })
                     }} />
                 <AttendanceButton 
@@ -55,7 +56,7 @@ const EventAttendanceSelector = () => {
                     onPress={() => {
                         rsvp({
                             variables:
-                                {event_id: 1, response: 2},
+                                {event_id: eventID, response: 2},
                         })
                     }}/>
                 <AttendanceButton 
@@ -65,7 +66,7 @@ const EventAttendanceSelector = () => {
                     onPress={() => {
                         rsvp({
                             variables:
-                                {event_id: 1, response: 1},
+                                {event_id: eventID, response: 1},
                         })
                     }}/>
             </View>
@@ -81,10 +82,11 @@ type AttendanceButtonProps = {
 }
 
 // button used to create one of the three attendance selectors: no, maybe, yes
-const AttendanceButton = ({text, selected, setSelected}: AttendanceButtonProps) => {
+const AttendanceButton = ({ text, selected, setSelected, onPress }: AttendanceButtonProps) => {
 
     const buttonHandler = () => {
         setSelected(text);
+        onPress();
     }
 
     return (
