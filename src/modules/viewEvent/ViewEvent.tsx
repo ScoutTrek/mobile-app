@@ -75,6 +75,10 @@ export const GET_EVENT = gql`
           name
           id
         }
+        noResponse {
+          name
+          id
+        }
       }
     }
   }
@@ -124,6 +128,14 @@ const EventDetailsScreen = ({
         renderItem={({ item }) => {
           return <Text>{item.name}</Text>;
         }}
+        contentContainerStyle={{
+          paddingTop: 20,
+          paddingBottom: 20,
+          paddingHorizontal: 20,
+        }}
+        ItemSeparatorComponent={() => {
+          return <View style={{ height: 1, backgroundColor: '#e5e5e5' }} />;
+        }}
       />
     );
   }
@@ -137,10 +149,7 @@ const EventDetailsScreen = ({
       case 2:
         return renderAttendees(data.event.roster.maybe);
       case 3:
-        // const allAttendees: [{name: string, id: string}] = data.event.roster.yes.concat(data.event.roster.no).concat(data.event.roster.maybe)
-        // const allAttendeeIDs = allAttendees.map(attendee => attendee.id)
-        // c
-        return renderAttendees(data.event.roster.maybe); // placeholder. change this to n/a attendess
+        return renderAttendees(data.event.roster.noResponse);
     }
   };
 
