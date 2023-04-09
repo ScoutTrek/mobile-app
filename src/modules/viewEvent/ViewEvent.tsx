@@ -22,6 +22,8 @@ import { useState } from 'react';
 
 import { FlatList } from 'react-native';
 
+import { StyleSheet } from 'react-native';
+
 const AllAttendeesList = () => (
   <View style={{ flex: 1, backgroundColor: '#ff4081' }} />
 );
@@ -134,7 +136,16 @@ const EventDetailsScreen = ({
           paddingHorizontal: 20,
         }}
         ItemSeparatorComponent={() => {
-          return <View style={{ height: 1, backgroundColor: '#e5e5e5' }} />;
+          return (
+            <View
+              style={{
+                height: 1,
+                backgroundColor: '#e5e5e5',
+                marginTop: 10,
+                marginBottom: 10,
+              }}
+            />
+          );
         }}
       />
     );
@@ -154,7 +165,16 @@ const EventDetailsScreen = ({
   };
 
   const renderLabel = (scene) => {
-    return <Text>{scene.route.title}</Text>;
+    return (
+      <Text
+        style={{
+          color: scene.focused ? 'green' : 'black',
+          textDecorationLine: scene.focused ? 'underline' : 'none',
+        }}
+      >
+        {scene.route.title}
+      </Text>
+    );
   };
 
   const handleDeleteEvent = () => {
@@ -234,11 +254,19 @@ const EventDetailsScreen = ({
         renderScene={renderScene}
         onIndexChange={setIndex}
         initialLayout={{ width: layout.width }}
+        style={StyleSheet.create({
+          tabBar: {
+            backgroundColor: '#FFFFFF',
+          },
+        })}
         renderTabBar={(props) => (
           <TabBar
             {...props}
             renderLabel={renderLabel}
-            style={{ backgroundColor: '#f5f3f0' }}
+            style={{ backgroundColor: '#FFFFFF' }}
+            // tabStyle={{
+            //   textColor: 'green',
+            // }}
           />
         )}
       />
