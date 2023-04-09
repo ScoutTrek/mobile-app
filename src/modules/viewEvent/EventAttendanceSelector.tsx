@@ -6,8 +6,8 @@ import { gql, useMutation, useQuery } from '@apollo/client';
 
 
 export const ADD_TO_ATTENDEES = gql`
-    mutation RSVP($eventID: ID!, $response: Float!) {
-        rsvp(event_id: $eventID, response: $response)    
+    mutation RSVP($event_id: ID!, $response: Float!) {
+        rsvp(event_id: $event_id, response: $response)    
     }
 `;
 
