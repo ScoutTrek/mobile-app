@@ -14,6 +14,7 @@ import { Button, CircleButton, ScreenContainer } from 'ScoutDesign/library';
 import { pencil } from 'ScoutDesign/icons';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../navigation/MainStackNavigator';
+import EventAttendanceSelector from './EventAttendanceSelector';
 
 export const DELETE_EVENT = gql`
   mutation DeleteEvent($id: ID!) {
@@ -154,6 +155,7 @@ const EventDetailsScreen = ({
         textColor="dangerDark"
         onPress={handleDeleteEvent}
       />
+      <EventAttendanceSelector eventID={data.event.id}/>
     </ScreenContainer>
   );
 };
