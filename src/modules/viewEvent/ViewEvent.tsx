@@ -254,19 +254,11 @@ const EventDetailsScreen = ({
         renderScene={renderScene}
         onIndexChange={setIndex}
         initialLayout={{ width: layout.width }}
-        style={StyleSheet.create({
-          tabBar: {
-            backgroundColor: '#FFFFFF',
-          },
-        })}
         renderTabBar={(props) => (
           <TabBar
             {...props}
             renderLabel={renderLabel}
             style={{ backgroundColor: '#FFFFFF' }}
-            // tabStyle={{
-            //   textColor: 'green',
-            // }}
           />
         )}
       />
