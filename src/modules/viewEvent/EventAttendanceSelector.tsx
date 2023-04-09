@@ -6,15 +6,11 @@ import { gql, useMutation, useQuery } from '@apollo/client';
 
 
 export const ADD_TO_ATTENDEES = gql`
-    mutation RSVP($eventID: String, $response: Number) {
-        rsvp(eventID: $eventID, response: $response)    
+    mutation RSVP($eventID: ID!, $response: Float!) {
+        rsvp(event_id: $eventID, response: $response)    
     }
 `;
-// TODO: adding backend mutation for add attendee 
 
-export const REMOVE_FROM_ATTENDEES = gql`
-`;
-// TODO: adding backend mutation to remove from attendees 
 
 type EventAttendanceSelectorProps = {
     eventID: number
