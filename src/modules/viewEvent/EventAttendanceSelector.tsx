@@ -33,7 +33,7 @@ const EventAttendanceSelector = ({ eventID }: EventAttendanceSelectorProps) => {
         // TODO: add different handlers based on button pressed and write backend mutations
         
         <View style={styles.main_container}>
-            <Text style={styles.question_text}>Are you going?</Text>
+            <Text preset="label">Are you going?</Text>
             <View style={styles.buttons_container}>
                 <AttendanceButton 
                     text="No" 
@@ -90,7 +90,7 @@ const AttendanceButton = ({ text, selected, setSelected, onPress }: AttendanceBu
             style={[styles.attendance_button, 
                     selected === text ? styles.button_pressed : styles.button_unpressed]}
             onPress={() => buttonHandler()}>
-            <Text style={[styles.attendance_button_text,
+            <Text preset="button" weight="bold" style={[styles.attendance_button_text,
                         selected === text ? styles.button_pressed_text : styles.button_unpressed_text]}>{text}</Text>
         </Pressable>   
     )
@@ -124,8 +124,6 @@ const styles = StyleSheet.create({
 
     },
     attendance_button_text: {
-        fontWeight: "600",
-        fontSize: 14,
         textAlign: "center"
     },
     button_pressed: {
