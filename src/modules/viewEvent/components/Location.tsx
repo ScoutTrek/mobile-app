@@ -16,7 +16,7 @@ const Location = ({
         <Icon
           size="m"
           icon={mapMarker}
-          color="interactiveDark"
+          color="brandPrimary"
           paddingHorizontal="micro"
         />
       }

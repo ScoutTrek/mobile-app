@@ -1,4 +1,5 @@
-import { Text, Alert } from 'react-native';
+import { Alert } from 'react-native';
+import { Text } from 'ScoutDesign/library';
 
 import { useEventForm, populateEvent } from 'CreateEvent/CreateEventFormStore';
 
@@ -15,6 +16,42 @@ import { pencil } from 'ScoutDesign/icons';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../navigation/MainStackNavigator';
 
+import { View, useWindowDimensions } from 'react-native';
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import { useState } from 'react';
+
+import { FlatList } from 'react-native';
+
+import { StyleSheet } from 'react-native';
+
+const AllAttendeesList = () => (
+  <View style={{ flex: 1, backgroundColor: '#ff4081' }} />
+);
+
+const YesAttendeesList = () => (
+  <View style={{ flex: 1, backgroundColor: '#ff4081' }} />
+);
+
+const NoAttendeesList = () => (
+  <View style={{ flex: 1, backgroundColor: '#ff4081' }} />
+);
+
+const MaybeAttendeesList = () => (
+  <View style={{ flex: 1, backgroundColor: '#ff4081' }} />
+);
+
+const NoResponseAttendeesList = () => (
+  <View style={{ flex: 1, backgroundColor: '#ff4081' }} />
+);
+
+const renderScene = SceneMap({
+  all: AllAttendeesList,
+  yes: YesAttendeesList,
+  no: NoAttendeesList,
+  maybe: MaybeAttendeesList,
+  noResponse: NoResponseAttendeesList,
+});
+
 export const DELETE_EVENT = gql`
   mutation DeleteEvent($id: ID!) {
     deleteEvent(id: $id) {
@@ -27,6 +64,24 @@ export const GET_EVENT = gql`
   query GetEvent($id: ID!) {
     event(id: $id) {
       ...EventFragment
+      roster {
+        yes {
+          name
+          id
+        }
+        no {
+          name
+          id
+        }
+        maybe {
+          name
+          id
+        }
+        noResponse {
+          name
+          id
+        }
+      }
     }
   }
   ${EVENT_FIELDS}
@@ -57,6 +112,70 @@ const EventDetailsScreen = ({
     variables: { id: currItem },
   });
   const [deleteEvent] = useMutation(DELETE_EVENT, deleteEventConfig);
+
+  const layout = useWindowDimensions();
+
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
+    { key: 'yes', title: 'Yes' },
+    { key: 'no', title: 'No' },
+    { key: 'maybe', title: 'Maybe' },
+    { key: 'noResponse', title: 'N/A' },
+  ]);
+
+  function renderAttendees(attendees: any) {
+    return (
+      <FlatList
+        data={attendees}
+        renderItem={({ item }) => {
+          return <Text>{item.name}</Text>;
+        }}
+        contentContainerStyle={{
+          paddingTop: 20,
+          paddingBottom: 20,
+          paddingHorizontal: 20,
+        }}
+        ItemSeparatorComponent={() => {
+          return (
+            <View
+              style={{
+                height: 1,
+                backgroundColor: '#e5e5e5',
+                marginTop: 10,
+                marginBottom: 10,
+              }}
+            />
+          );
+        }}
+      />
+    );
+  }
+
+  const renderAttendeesList = () => {
+    switch (index) {
+      case 0:
+        return renderAttendees(data.event.roster.yes);
+      case 1:
+        return renderAttendees(data.event.roster.no);
+      case 2:
+        return renderAttendees(data.event.roster.maybe);
+      case 3:
+        return renderAttendees(data.event.roster.noResponse);
+    }
+  };
+
+  const renderLabel = (scene) => {
+    return (
+      <Text
+        style={{
+          color: scene.focused ? 'green' : 'black',
+          textDecorationLine: scene.focused ? 'underline' : 'none',
+        }}
+      >
+        {scene.route.title}
+      </Text>
+    );
+  };
 
   const handleDeleteEvent = () => {
     Alert.alert(
@@ -125,6 +244,26 @@ const EventDetailsScreen = ({
       {data.event.checkoutTime ? (
         <Time time={data.event.checkoutTime} heading="Check out" />
       ) : null}
+
+      <Text preset="h2" paddingHorizontal="m" paddingTop="s">
+        Attendees
+      </Text>
+
+      <TabView
+        navigationState={{ index, routes }}
+        renderScene={renderScene}
+        onIndexChange={setIndex}
+        initialLayout={{ width: layout.width }}
+        renderTabBar={(props) => (
+          <TabBar
+            {...props}
+            renderLabel={renderLabel}
+            style={{ backgroundColor: '#FFFFFF' }}
+          />
+        )}
+      />
+
+      {renderAttendeesList()}
 
       <Description description={data.event.description} />
 
