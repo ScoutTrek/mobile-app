@@ -1,10 +1,9 @@
-import { Container, Text } from 'ScoutDesign/library';
-import { StyleSheet, View, Button, Pressable } from 'react-native';
+import { Text } from 'ScoutDesign/library';
+import { StyleSheet, View, Pressable } from 'react-native';
 import { useEffect, useState } from 'react';
 import theme from 'ScoutDesign/library/theme';
 import { gql, useMutation, useQuery } from '@apollo/client';
-import { GET_EVENT } from './ViewEvent';
-import { GET_CURR_USER } from 'data/getCurrUser';
+import { User } from 'data/types';
 
 
 export const ADD_TO_ATTENDEES = gql`
@@ -14,12 +13,18 @@ export const ADD_TO_ATTENDEES = gql`
 `;
 
 export const GET_EVENT_ATTENDANCE_IDS = gql`
-    query EventAttendance($eventId: ID!) {
-        event(id: $eventId) {
+    query Query($id: ID!) {
+        event(id: $id) {
             roster {
-                maybe {id}
-                yes {id}
-                no {id}
+                maybe {
+                    id
+                }
+                no {
+                    id
+                }
+                yes {
+                    id
+                }
             }
         }
     }
@@ -33,15 +38,9 @@ export const GET_CURR_USER_ID = gql`
     }
 `;
 
-
-
-
 type EventAttendanceSelectorProps = {
-    eventID: number
+    eventID: string
 }
-
-
-
 
 // component for user to select if you are attending an event 
 // pass in the event id
@@ -55,18 +54,18 @@ const EventAttendanceSelector = ({ eventID }: EventAttendanceSelectorProps) => {
 
     // checks which attendance the user has selected
     function checkAttendance(): void {
-        eventData.roster.no.forEach(function (attendeeID: string) {
-            if (attendeeID == currUserData.currUser.id) {
+        eventData.event.roster.no.forEach(function (attendee: User) {
+            if (attendee.id == currUserData.currUser.id) {
                 setSelected("No");
             }
         });
-        eventData.roster.maybe.forEach(function (attendeeID: string) {
-            if (attendeeID == currUserData.currUser.id) {
+        eventData.event.roster.maybe.forEach(function (attendee: User) {
+            if (attendee.id == currUserData.currUser.id) {
                 setSelected("Maybe");
             }
         });
-        eventData.roster.yes.forEach(function (attendeeID: string) {
-            if (attendeeID == currUserData.currUser.id) {
+        eventData.event.roster.yes.forEach(function (attendee: User) {
+            if (attendee.id == currUserData.currUser.id) {
                 setSelected("Yes");
             }
         });
@@ -74,14 +73,10 @@ const EventAttendanceSelector = ({ eventID }: EventAttendanceSelectorProps) => {
 
     // component did mount to see which the user has selected 
     useEffect(() => {
-        if (loadingUser) {
-            console.log("loading");
+        if (eventData) {
+            checkAttendance();
         }
-        if (eventData && currUserData) {
-            // console.log(eventData);
-            console.log("letsgooo");
-        }
-    }, [eventData])
+    }, [loadingEvent])
 
     return (
         <View style={styles.main_container}>
