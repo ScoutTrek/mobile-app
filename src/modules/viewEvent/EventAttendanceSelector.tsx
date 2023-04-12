@@ -1,8 +1,10 @@
 import { Container, Text } from 'ScoutDesign/library';
 import { StyleSheet, View, Button, Pressable } from 'react-native';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import theme from 'ScoutDesign/library/theme';
 import { gql, useMutation, useQuery } from '@apollo/client';
+import { GET_EVENT } from './ViewEvent';
+import { GET_CURR_USER } from 'data/getCurrUser';
 
 
 export const ADD_TO_ATTENDEES = gql`
@@ -10,6 +12,28 @@ export const ADD_TO_ATTENDEES = gql`
         rsvp(event_id: $event_id, response: $response)    
     }
 `;
+
+export const GET_EVENT_ATTENDANCE_IDS = gql`
+    query EventAttendance($eventId: ID!) {
+        event(id: $eventId) {
+            roster {
+                maybe {id}
+                yes {id}
+                no {id}
+            }
+        }
+    }
+`;
+
+export const GET_CURR_USER_ID = gql`
+    query Query {
+        currUser {
+            id
+        }
+    }
+`;
+
+
 
 
 type EventAttendanceSelectorProps = {
@@ -24,14 +48,42 @@ type EventAttendanceSelectorProps = {
 const EventAttendanceSelector = ({ eventID }: EventAttendanceSelectorProps) => {
     const [ selected, setSelected ] = useState('');
     const [ rsvp ] = useMutation(ADD_TO_ATTENDEES);
+    const { loading: loadingEvent, error: errorEvent, data: eventData } = useQuery(GET_EVENT_ATTENDANCE_IDS, {
+        variables: { id: eventID },
+    });
+    const { loading: loadingUser, error: errorUser, data: currUserData } = useQuery(GET_CURR_USER_ID);
+
+    // checks which attendance the user has selected
+    function checkAttendance(): void {
+        eventData.roster.no.forEach(function (attendeeID: string) {
+            if (attendeeID == currUserData.currUser.id) {
+                setSelected("No");
+            }
+        });
+        eventData.roster.maybe.forEach(function (attendeeID: string) {
+            if (attendeeID == currUserData.currUser.id) {
+                setSelected("Maybe");
+            }
+        });
+        eventData.roster.yes.forEach(function (attendeeID: string) {
+            if (attendeeID == currUserData.currUser.id) {
+                setSelected("Yes");
+            }
+        });
+    }
+
+    // component did mount to see which the user has selected 
+    useEffect(() => {
+        if (loadingUser) {
+            console.log("loading");
+        }
+        if (eventData && currUserData) {
+            // console.log(eventData);
+            console.log("letsgooo");
+        }
+    }, [eventData])
 
     return (
-        // <View >
-        //     <Text variant={"s-light"}>Hello</Text>
-        // </View>
-
-        // TODO: add different handlers based on button pressed and write backend mutations
-        
         <View style={styles.main_container}>
             <Text preset="label">Are you going?</Text>
             <View style={styles.buttons_container}>
