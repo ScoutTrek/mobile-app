@@ -13,7 +13,7 @@ const Time = ({
     <LineItem
       accessibilityLabel="event-time"
       type="static"
-      leftComponent={<Icon icon={clock} size="m" color="brandSecondaryDark" />}
+      leftComponent={<Icon icon={clock} size="m" color="brandPrimary" />}
     >
       <Text color="darkGrey" weight="bold" size="l" paddingBottom="micro">
         {moment(time).format('hh:mm A')}

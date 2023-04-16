@@ -8,6 +8,8 @@ List any dependencies that are required for this change.
 
 Include a link to the Figma design here if neccesary.
 
+- [ ] Approved by designer
+
 ## Screenshots/Video
 
 Include screenshots of added features/bugfixes if neccesary.
