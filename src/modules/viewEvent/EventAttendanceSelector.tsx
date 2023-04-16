@@ -39,17 +39,15 @@ export const GET_CURR_USER_ID = gql`
 `;
 
 type EventAttendanceSelectorProps = {
-    eventID: string
+    eventData: any,
+    refetch: any
 }
 
 // component for user to select if you are attending an event 
 // pass in the event id
-const EventAttendanceSelector = ({ eventID }: EventAttendanceSelectorProps) => {
+const EventAttendanceSelector = ({ eventData, refetch }: EventAttendanceSelectorProps) => {
     const [ selected, setSelected ] = useState('');
     const [ rsvp ] = useMutation(ADD_TO_ATTENDEES);
-    const { loading: loadingEvent, error: errorEvent, data: eventData } = useQuery(GET_EVENT_ATTENDANCE_IDS, {
-        variables: { id: eventID },
-    });
     const { loading: loadingUser, error: errorUser, data: currUserData } = useQuery(GET_CURR_USER_ID);
 
     // checks which attendance the user has selected
@@ -76,42 +74,30 @@ const EventAttendanceSelector = ({ eventID }: EventAttendanceSelectorProps) => {
         if (eventData) {
             checkAttendance();
         }
-    }, [loadingEvent])
+    }, []);
+
+    function attendanceButton(text: string, response: number) {
+        return (
+        <AttendanceButton 
+            text={text}
+            selected={selected} 
+            setSelected={setSelected}
+            onPress={() => {
+                rsvp({
+                    variables:
+                        {event_id: eventData.event.id, response: response},
+                }).then(refetch);
+            }} />
+        )
+    }
 
     return (
         <View style={styles.main_container}>
             <Text preset="label">Are you going?</Text>
             <View style={styles.buttons_container}>
-                <AttendanceButton 
-                    text="No" 
-                    selected={selected} 
-                    setSelected={setSelected}
-                    onPress={() => {
-                        rsvp({
-                            variables:
-                                {event_id: eventID, response: 0},
-                        })
-                    }} />
-                <AttendanceButton 
-                    text="Maybe" 
-                    selected={selected} 
-                    setSelected={setSelected}
-                    onPress={() => {
-                        rsvp({
-                            variables:
-                                {event_id: eventID, response: 2},
-                        })
-                    }}/>
-                <AttendanceButton 
-                    text="Yes" 
-                    selected={selected} 
-                    setSelected={setSelected}
-                    onPress={() => {
-                        rsvp({
-                            variables:
-                                {event_id: eventID, response: 1},
-                        })
-                    }}/>
+                {attendanceButton("No", 0)}
+                {attendanceButton("Maybe", 2)}
+                {attendanceButton("Yes", 1)}
             </View>
         </View>
     )
@@ -191,68 +177,5 @@ const styles = StyleSheet.create({
         color: theme.colors.brandPrimary
     },
 })
-
-// // component for user to select if they are attending an event
-// export const EventAttendanceSelector = ({addAttendee, removeAttendee}: EventAttendanceSelectorProps) => {
-//     return (
-//         <Container>
-//             <Text>Are you going?</Text>
-//             <View style={styles.buttons_container}>
-//                 <AttendanceButton text="No" onPress={() => {removeAttendee(); console.log("pressed no");}}/>
-//                 <AttendanceButton text="Maybe" onPress={() => {console.log("pressed maybe")}}/>
-//                 <AttendanceButton text="Yes" onPress={() => {addAttendee(); console.log("pressed yes");}}/>
-//             </View>
-//         </Container>
-//     )
-// }
-
-// // GraphQL mutation to add to roster 
-// export const ADD_TO_ATTENDEES = gql`
-// `;
-// // TODO: adding backend mutation for add attendee 
-
-// export const REMOVE_FROM_ATTENDEES = gql`
-// `;
-// // TODO: adding backend mutation to remove from attendees 
-
-// type AttendanceButtonProps = {
-//     text: string,
-//     onPress: () => void
-// }
-
-// // button used to create one of the three attendance selectors: no, maybe, yes
-// const AttendanceButton = ({text, onPress}: AttendanceButtonProps) => {
-//     const [pressed, setPressed] = useState(false);
-//     return (
-//         <Pressable 
-//             style={[styles.attendance_button, 
-//                     pressed ? styles.button_pressed : styles.button_unpressed]}
-//             onPress={() => {setPressed(!pressed); onPress();}}>
-//             <Text>{text}</Text>
-//         </Pressable>   
-//     )
-// }
-
-// const styles = StyleSheet.create({
-//     buttons_container: {
-//         flexDirection: "row",
-//         justifyContent: "space-between",
-//         paddingVertical: 5,
-//     },
-//     attendance_button: {
-//         fontWeight: "700",
-//         paddingHorizontal: 10,
-//         paddingVertical: 5,
-//         borderRadius: 10
-//     },
-//     button_pressed: {
-//         backgroundColor: theme.colors.brandPrimary,
-//         color :theme.colors.white
-//     }, 
-//     button_unpressed: {
-//         backgroundColor: theme.colors.white,
-//         color: theme.colors.brandPrimary
-//     },
-// })
 
 export default EventAttendanceSelector;

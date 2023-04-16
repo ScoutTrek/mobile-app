@@ -23,8 +23,6 @@ import { useState } from 'react';
 
 import { FlatList } from 'react-native';
 
-import { StyleSheet } from 'react-native';
-
 const AllAttendeesList = () => (
   <View style={{ flex: 1, backgroundColor: '#ff4081' }} />
 );
@@ -109,9 +107,9 @@ const EventDetailsScreen = ({
 }: StackScreenProps<MainStackParamList, 'ViewEvent'>) => {
   const [_, dispatch] = useEventForm() || [null, null];
   const { currItem } = route.params;
-  const { loading, error, data } = useQuery(GET_EVENT, {
+  const { loading, error, data, refetch } = useQuery(GET_EVENT, {
     variables: { id: currItem },
-  });
+  }); 
   const [deleteEvent] = useMutation(DELETE_EVENT, deleteEventConfig);
   const leadershipRoles = ["SCOUTMASTER", "ASST_SCOUTMASTER", "SENIOR_PATROL_LEADER", "PATROL_LEADER"];
   const {data: userData, error: userError, loading: userLoading} = useQuery(GET_CURR_USER);
@@ -267,7 +265,7 @@ const EventDetailsScreen = ({
       />
 
       {renderAttendeesList()}
-      <EventAttendanceSelector eventID={data.event.id}/>
+      <EventAttendanceSelector eventData={data} refetch={refetch}/>
 
       <Description description={data.event.description} />
 
