@@ -18,12 +18,15 @@ import Toast from 'react-native-root-toast';
 
 type AsyncStorageData = { [key: string]: string | null };
 
-export const apiBaseUri = ENV == 'local' ? `http://${LOCAL_IP_ADDRESS}:4000`
-: ENV == 'dev' ? DEV_URL
-: PROD_URL
+export const apiBaseUri =
+  ENV == 'local'
+    ? `http://${LOCAL_IP_ADDRESS}:4000`
+    : ENV == 'dev'
+    ? DEV_URL
+    : PROD_URL;
 
 const httpLink = new HttpLink({
-  uri: apiBaseUri + "/graphql",
+  uri: apiBaseUri + '/graphql',
 });
 
 const loadKeysFromAsyncStorage = async (

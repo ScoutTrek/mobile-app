@@ -6,37 +6,44 @@ import {
 } from '../joinGroup/JoinGroupForm/joinGroupFormReducer';
 
 import JoinTroop from '../joinGroup/JoinTroop';
-import AddChildren from '../joinGroup/AddChildren';
 import CreateTroop from '../joinGroup/components/CreateTroop';
+import AddChildren from '../joinGroup/AddChildren';
 import ChooseRole from '../joinGroup/ChooseRole';
 import JoinPatrol from '../joinGroup/JoinPatrol';
+import RouteNames from './route_names/joinGroup';
+import ParamList from './param_list/joinGroup';
 
-export type JoinGroupStackParamList = {
-  JoinTroop: undefined;
-  CreateTroop: undefined;
-  ChooseRole: undefined;
-  AddChildren: undefined;
-  JoinPatrol: undefined;
-};
-
-const JoinGroupStack = createStackNavigator<JoinGroupStackParamList>();
+const JoinGroupStack = createStackNavigator<ParamList>();
 
 const JoinGroupNavigator = () => {
   return (
     <JoinGroupFormProvider
       initialState={initialState}
-      reducer={joinGroupFormReducer}
-    >
+      reducer={joinGroupFormReducer}>
       <JoinGroupStack.Navigator
         screenOptions={() => ({
           headerShown: false,
-        })}
-      >
-        <JoinGroupStack.Screen name="JoinTroop" component={JoinTroop} />
-        <JoinGroupStack.Screen name="CreateTroop" component={CreateTroop} />
-        <JoinGroupStack.Screen name="ChooseRole" component={ChooseRole} />
-        <JoinGroupStack.Screen name="AddChildren" component={AddChildren} />
-        <JoinGroupStack.Screen name="JoinPatrol" component={JoinPatrol} />
+        })}>
+        <JoinGroupStack.Screen
+          name={RouteNames.joinTroop}
+          component={JoinTroop}
+        />
+        <JoinGroupStack.Screen
+          name={RouteNames.createTroop}
+          component={CreateTroop}
+        />
+        <JoinGroupStack.Screen
+          name={RouteNames.chooseRole}
+          component={ChooseRole}
+        />
+        <JoinGroupStack.Screen
+          name={RouteNames.addChildren}
+          component={AddChildren}
+        />
+        <JoinGroupStack.Screen
+          name={RouteNames.joinPatrol}
+          component={JoinPatrol}
+        />
       </JoinGroupStack.Navigator>
     </JoinGroupFormProvider>
   );

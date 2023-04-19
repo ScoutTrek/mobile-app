@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { DocumentNode, gql } from '@apollo/client';
 
 export const USER_FIELDS = gql`
   fragment UserFragment on User {
@@ -46,6 +46,20 @@ export const GET_INITIAL_USER_FIELDS = gql`
     }
   }
 `;
+
+export const IS_NEW_USER_QUERY = gql`
+  query {
+    currUser {
+      noGroups
+    }
+  }
+`;
+
+export interface IsNewUserQuery {
+  currUser: {
+    noGroups: boolean;
+  } | null;
+}
 
 export const GET_CURR_USER = gql`
   query GetCurrUser {

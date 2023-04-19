@@ -1,4 +1,4 @@
-import {ActivityIndicator, Image, View} from 'react-native';
+import { ActivityIndicator, Image, View } from 'react-native';
 
 import {
   BottomTabScreenProps,
@@ -16,7 +16,8 @@ import UpcomingEvents from '../home/UpcomingEvents';
 import { GET_CURR_USER } from 'data';
 import { useQuery } from '@apollo/client';
 import { NavigatorScreenParams } from '@react-navigation/native';
-import { MainStackParamList } from './MainStackNavigator';
+
+import MainStackParamList from './param_list/main';
 
 export type HomeStackParamList = {
   Home: undefined;
@@ -33,10 +34,12 @@ const HomeNav = ({
     console.error(error);
     return null;
   }
-  if (loading) return(     
-    <View style={{justifyContent: 'center', flex: 1}}>
-      <ActivityIndicator />
-    </View>)
+  if (loading)
+    return (
+      <View style={{ justifyContent: 'center', flex: 1 }}>
+        <ActivityIndicator />
+      </View>
+    );
   return (
     <HomeStack.Navigator
       screenOptions={({ navigation }) => ({
@@ -83,10 +86,12 @@ const MainBottomTabNavigator = () => {
     console.error(error);
     return null;
   }
-  if (loading) return (
-    <View style={{justifyContent: 'center', flex: 1}}>
-      <ActivityIndicator />
-    </View>)
+  if (loading)
+    return (
+      <View style={{ justifyContent: 'center', flex: 1 }}>
+        <ActivityIndicator />
+      </View>
+    );
   return (
     <MainBottomTab.Navigator
       screenOptions={({ route }) => ({

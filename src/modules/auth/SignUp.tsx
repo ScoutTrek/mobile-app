@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import {
   KeyboardAvoidingView,
   Dimensions,
@@ -7,38 +7,14 @@ import {
   ScrollView,
 } from 'react-native';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import { Text, Form, Image } from 'ScoutDesign/library';
 import { Ionicons } from '@expo/vector-icons';
 import Footer from './components/Footer';
 
-import { gql, useMutation } from '@apollo/client';
-import { StackScreenProps } from '@react-navigation/stack';
-import { AuthStackParamList } from '../navigation/AuthNavigator';
-
-const SIGN_UP = gql`
-  mutation SignUp($userInfo: SignupInput!) {
-    signup(input: $userInfo) {
-      token
-      noGroups
-    }
-  }
-`;
-
-type AuthContextType = {
-  token: string;
-  setToken: React.Dispatch<any>;
-  newUser: boolean;
-  setNewUser: React.Dispatch<any>;
-};
-
-export const AuthContext = React.createContext<AuthContextType>({
-  token: '',
-  setToken: () => {},
-  newUser: false,
-  setNewUser: () => {},
-});
+import useStore from '../../store';
+import { useNavigation } from '@react-navigation/native';
+import { SignUpNavigationProps } from '../navigation/navigation_props/auth';
+import RouteNames from '../navigation/route_names/auth';
 
 const SignUpFormFields = [
   {
@@ -99,36 +75,24 @@ const SignUpFormFields = [
   },
 ];
 
-const SignUp = ({
-  navigation,
-}: StackScreenProps<AuthStackParamList, 'SignUp'>) => {
-  const { setToken, setNewUser } = useContext(AuthContext);
+const SignUp = () => {
+  const signUp = useStore((s) => s.signUp);
 
-  const [signUp] = useMutation(SIGN_UP, {
-    onCompleted: async ({ signup }) => {
-      try {
-        const token = await AsyncStorage.setItem('userToken', signup.token);
-        setNewUser(true);
-        setToken(signup.token);
-      } catch (e) {
-        console.log(e);
-      }
-    },
-  });
+  const navigation = useNavigation<SignUpNavigationProps>();
 
   const onSubmit = async (data: any) => {
-    if (data.password !== data.passwordConfirm) {
+    const { name, email, password, passwordConfirm } = data;
+    if (password !== passwordConfirm) {
       Alert.alert(
         'Whoops, the passwords you entered do not match.',
         'Please re-enter passwords to confirm they match.'
       );
     } else {
       await signUp({
-        variables: {
-          userInfo: {
-            ...data,
-          },
-        },
+        name,
+        email,
+        password,
+        passwordConfirm,
       });
     }
   };
@@ -140,8 +104,7 @@ const SignUp = ({
         backgroundColor: '#fff',
         justifyContent: 'flex-end',
       }}
-      keyboardShouldPersistTaps="handled"
-    >
+      keyboardShouldPersistTaps="handled">
       <Image
         accessibilityLabel="sign-up-background"
         placement="background"
@@ -161,8 +124,7 @@ const SignUp = ({
           paddingHorizontal: 12,
           marginBottom: 12,
         }}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      >
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <Ionicons
           name="ios-compass"
           size={45}
@@ -175,8 +137,7 @@ const SignUp = ({
           textAlign="center"
           marginHorizontal="m"
           marginTop="xs"
-          marginBottom="m"
-        >
+          marginBottom="m">
           Spend less time planning and more time exploring.
         </Text>
 
@@ -192,7 +153,7 @@ const SignUp = ({
         <Footer
           footerText="Already have an account?"
           btnType="Sign In"
-          onPress={() => navigation.navigate('SignIn')}
+          onPress={() => navigation.navigate(RouteNames.signIn.toString())}
         />
       </KeyboardAvoidingView>
     </ScrollView>

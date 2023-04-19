@@ -1,10 +1,9 @@
-import {useState, useContext} from 'react';
-import {ActivityIndicator, View} from 'react-native';
+import { useState } from 'react';
+import { ActivityIndicator, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { gql, useMutation, useQuery } from '@apollo/client';
 import { plusBold } from 'ScoutDesign/icons';
 import { _updateCurrentGroup } from '../profile/ProfileScreen';
-import { AuthContext } from '../auth/SignUp';
 import {
   ScreenContainer,
   Container,
@@ -15,8 +14,9 @@ import {
 } from 'ScoutDesign/library';
 
 import { useJoinGroupForm } from './JoinGroupForm/JoinGroupFormStore';
-import { StackScreenProps } from '@react-navigation/stack';
-import { JoinGroupStackParamList } from '../navigation/JoinGroupNavigator';
+import useStore from '../../store';
+import { useNavigation } from '@react-navigation/native';
+import { JoinPatrolNavigationProps } from '../navigation/navigation_props/joinGroup';
 
 const ADD_GROUP = gql`
   mutation AddGroup($membershipInfo: AddMembershipInput!) {
@@ -44,15 +44,19 @@ const ADD_PATROL = gql`
   }
 `;
 
-const JoinPatrol = ({
-  navigation,
-}: StackScreenProps<JoinGroupStackParamList>) => {
+const JoinPatrol = () => {
+  const navigation = useNavigation<JoinPatrolNavigationProps>();
   const [joinGroupFormState] = useJoinGroupForm() || [null];
-  const { setNewUser } = useContext(AuthContext);
+
+  const setIsNewUser = useStore((s) => s.setIsNewUser);
 
   const [addGroup] = useMutation(ADD_GROUP, {
+    onError: (error) => {
+      console.log({ joinGroupFormState });
+      console.log(error);
+    },
     onCompleted: async (data) => {
-      setNewUser(false);
+      setIsNewUser(false);
       await AsyncStorage.setItem('currMembershipID', data.addGroup.groupID);
       _updateCurrentGroup(data?.addGroup?.groupID, navigation);
     },
@@ -80,12 +84,13 @@ const JoinPatrol = ({
     });
   };
 
-  if (loading) return (
-    <View style={{justifyContent: 'center', flex: 1}}>
-      <ActivityIndicator />
-    </View>
-  )
-  if (error) return <Text>`Error! ${error}`</Text>;
+  if (loading)
+    return (
+      <View style={{ justifyContent: 'center', flex: 1 }}>
+        <ActivityIndicator />
+      </View>
+    );
+  if (error) return <Text>`Error! ${error.message}`</Text>;
 
   return (
     <ScreenContainer>

@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import {
   KeyboardAvoidingView,
   Dimensions,
@@ -6,23 +5,12 @@ import {
   ScrollView,
 } from 'react-native';
 import { Text, Form, Image } from 'ScoutDesign/library';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { gql, useMutation } from '@apollo/client';
 import Footer from './components/Footer';
-import { AuthContext } from '../auth/SignUp';
-import { StackScreenProps } from '@react-navigation/stack';
-import { AuthStackParamList } from '../navigation/AuthNavigator';
-
-const LOG_IN = gql`
-  mutation Login($userInfo: LoginInput!) {
-    login(input: $userInfo) {
-      token
-      groupID
-      noGroups
-    }
-  }
-`;
+import { useNavigation } from '@react-navigation/native';
+import { SignInNavigationProps } from '../navigation/navigation_props/auth';
+import useStore from '../../store';
+import RouteNames from '../navigation/route_names/auth';
 
 const SignInFormFields = [
   {
@@ -56,36 +44,19 @@ const SignInFormFields = [
   },
 ];
 
-const SignIn = ({
-  navigation,
-}: StackScreenProps<AuthStackParamList, 'SignIn'>) => {
-  const { setToken } = useContext(AuthContext);
+const SignIn = () => {
+  const login = useStore((s) => s.login);
 
-  const [logIn] = useMutation(LOG_IN, {
-    onCompleted: async (data) => {
-      try {
-        const token = await AsyncStorage.setItem('userToken', data.login.token);
-        const groupID = await AsyncStorage.setItem(
-          'currMembershipID',
-          data.login.groupID || undefined
-        );
-        setToken(data.login.token);
-      } catch (e) {
-        console.log(e);
-      }
-    },
-  });
+  const navigation = useNavigation<SignInNavigationProps>();
 
   const handleSignIn = async (data: any) => {
-    await logIn({
-      variables: {
-        userInfo: {
-          email: data.email,
-          password: data.password,
-          expoNotificationToken: '',
-        },
+    await login({
+      userInfo: {
+        email: data.email,
+        password: data.password,
+        expoNotificationToken: '',
       },
-    }).catch((error) => console.log('An error', error));
+    });
   };
 
   return (
@@ -95,8 +66,7 @@ const SignIn = ({
         backgroundColor: '#fff',
         justifyContent: 'flex-end',
       }}
-      keyboardShouldPersistTaps="handled"
-    >
+      keyboardShouldPersistTaps="handled">
       <Image
         accessibilityLabel="sign-up-background"
         placement="background"
@@ -115,8 +85,7 @@ const SignIn = ({
           paddingHorizontal: 12,
           marginBottom: 12,
         }}
-        behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
-      >
+        behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
         <Text marginBottom="m" textAlign="center" preset="h2">
           Welcome back!
         </Text>
@@ -138,14 +107,15 @@ const SignIn = ({
             paddingTop: 6,
             textAlign: 'right',
           }}
-          onPress={() => navigation.navigate('ForgotPassword')}
-        >
+          onPress={() =>
+            navigation.navigate(RouteNames.forgotPassword.toString())
+          }>
           Forgot Password?
         </Text>
         <Footer
           footerText="Don&rsquo;t have an account?"
           btnType="Sign Up Now"
-          onPress={() => navigation.navigate('SignUp')}
+          onPress={() => navigation.navigate(RouteNames.signUp.toString())}
         />
       </KeyboardAvoidingView>
     </ScrollView>
