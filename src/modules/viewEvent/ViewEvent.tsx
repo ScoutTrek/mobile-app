@@ -260,12 +260,12 @@ const EventDetailsScreen = ({
             {...props}
             renderLabel={renderLabel}
             style={{ backgroundColor: '#FFFFFF' }}
+            indicatorStyle={{ backgroundColor: 'green' }}
           />
         )}
       />
 
       {renderAttendeesList()}
-      <EventAttendanceSelector eventData={data} refetch={refetch}/>
 
       <Description description={data.event.description} />
 
@@ -288,6 +288,7 @@ const EventDetailsScreen = ({
         corner="bottom-right"
         distanceFromCorner="l"
       />
+      <EventAttendanceSelector eventData={data} refetch={refetch}/>
       {(leadershipRoles.indexOf(userData.currUser.currRole) > -1) &&
         <Button
           accessibilityLabel="cancel-event"
@@ -297,6 +298,7 @@ const EventDetailsScreen = ({
           onPress={handleDeleteEvent}
         />
       }
+      
     </ScreenContainer>
   );
 };

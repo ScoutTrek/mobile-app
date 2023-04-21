@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         alignItems: "center",
         width: "100%",
-        marginBottom: 80,
+        marginBottom: 50,
     },
     question_text: {
         fontWeight: "400",
