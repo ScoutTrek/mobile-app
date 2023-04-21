@@ -23,10 +23,6 @@ import { useState } from 'react';
 
 import { FlatList } from 'react-native';
 
-const AllAttendeesList = () => (
-  <View style={{ flex: 1, backgroundColor: '#ff4081' }} />
-);
-
 const YesAttendeesList = () => (
   <View style={{ flex: 1, backgroundColor: '#ff4081' }} />
 );
@@ -44,7 +40,6 @@ const NoResponseAttendeesList = () => (
 );
 
 const renderScene = SceneMap({
-  all: AllAttendeesList,
   yes: YesAttendeesList,
   no: NoAttendeesList,
   maybe: MaybeAttendeesList,
