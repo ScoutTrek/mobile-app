@@ -15,18 +15,13 @@ import { Button, CircleButton, ScreenContainer } from 'ScoutDesign/library';
 import { pencil } from 'ScoutDesign/icons';
 import { StackScreenProps } from '@react-navigation/stack';
 import { MainStackParamList } from '../navigation/MainStackNavigator';
+import EventAttendanceSelector from './EventAttendanceSelector';
 
 import { View, useWindowDimensions } from 'react-native';
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { useState } from 'react';
 
 import { FlatList } from 'react-native';
-
-import { StyleSheet } from 'react-native';
-
-const AllAttendeesList = () => (
-  <View style={{ flex: 1, backgroundColor: '#ff4081' }} />
-);
 
 const YesAttendeesList = () => (
   <View style={{ flex: 1, backgroundColor: '#ff4081' }} />
@@ -45,7 +40,6 @@ const NoResponseAttendeesList = () => (
 );
 
 const renderScene = SceneMap({
-  all: AllAttendeesList,
   yes: YesAttendeesList,
   no: NoAttendeesList,
   maybe: MaybeAttendeesList,
@@ -108,9 +102,9 @@ const EventDetailsScreen = ({
 }: StackScreenProps<MainStackParamList, 'ViewEvent'>) => {
   const [_, dispatch] = useEventForm() || [null, null];
   const { currItem } = route.params;
-  const { loading, error, data } = useQuery(GET_EVENT, {
+  const { loading, error, data, refetch } = useQuery(GET_EVENT, {
     variables: { id: currItem },
-  });
+  }); 
   const [deleteEvent] = useMutation(DELETE_EVENT, deleteEventConfig);
   const leadershipRoles = ["SCOUTMASTER", "ASST_SCOUTMASTER", "SENIOR_PATROL_LEADER", "PATROL_LEADER"];
   const {data: userData, error: userError, loading: userLoading} = useQuery(GET_CURR_USER);
@@ -261,6 +255,7 @@ const EventDetailsScreen = ({
             {...props}
             renderLabel={renderLabel}
             style={{ backgroundColor: '#FFFFFF' }}
+            indicatorStyle={{ backgroundColor: 'green' }}
           />
         )}
       />
@@ -288,6 +283,7 @@ const EventDetailsScreen = ({
         corner="bottom-right"
         distanceFromCorner="l"
       />
+      <EventAttendanceSelector eventData={data} refetch={refetch}/>
       {(leadershipRoles.indexOf(userData.currUser.currRole) > -1) &&
         <Button
           accessibilityLabel="cancel-event"
@@ -297,6 +293,7 @@ const EventDetailsScreen = ({
           onPress={handleDeleteEvent}
         />
       }
+      
     </ScreenContainer>
   );
 };

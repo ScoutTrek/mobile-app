@@ -17,7 +17,7 @@ const Description = ({ description }: Props) => {
       borderColor="mintGrey"
       padding="s"
     >
-      <Text preset="h2" paddingHorizontal="m" paddingTop="s">
+      <Text preset="label" paddingHorizontal="m" paddingTop="s" weight="bold" size="l">
         Additional event info
       </Text>
       <WebView
@@ -30,7 +30,7 @@ const Description = ({ description }: Props) => {
                             <meta charset="UTF-8">
                             <meta name="viewport" content="width=device-width, initial-scale=0.99">
                         </head>
-                        <body style="background-color: ${'#F4F6F5'}; padding: 8px; font-size: 15px; font-family: "Open Sans", Metropolis, serif">
+                        <body style="background-color: ${'#F4F6F5'}; padding: 8px; font-size: 15px; font-family: "Open Sans", Metropolis, "serif">
                             ${description}
                         </body>
                     </html>`,
