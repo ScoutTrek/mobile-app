@@ -1,8 +1,8 @@
-import {StyleSheet} from 'react-native';
-import {LinearGradient} from 'expo-linear-gradient';
+import { StyleSheet } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import {
-  AssetSizePreset,
+  IconSizePresets,
   Color,
   mapRadius,
   Pressable,
@@ -12,7 +12,7 @@ import {
 } from '../../utility';
 import Icon from '../Assets/Icon/Icon';
 import Text from '../Text/Text';
-import {IconPayload} from '../../../../icons';
+import { IconPayload } from '../../../../icons';
 
 export interface ButtonProps extends PressableProps {
   accessibilityLabel: string;
@@ -29,7 +29,7 @@ type Props = ButtonProps & {
   radius?: Radius;
   textPadding?: Spacing;
   iconPadding: Spacing;
-  iconSize: AssetSizePreset;
+  iconSize: IconSizePresets;
   children?: any;
 };
 
@@ -67,12 +67,13 @@ const Button = ({
       overflow="hidden"
       borderRadius={mapRadius(radius)}
       disabled={disabled}
-      {...props}>
+      {...props}
+    >
       {gradient && (
         <LinearGradient
           colors={['rgba(23, 161, 101, 0.095)', 'rgba(104, 237, 180, 0.065)']}
-          start={{x: 0.5, y: 1}}
-          end={{x: 0.625, y: 0}}
+          start={{ x: 0.5, y: 1 }}
+          end={{ x: 0.625, y: 0 }}
           style={StyleSheet.absoluteFill}
         />
       )}
@@ -88,7 +89,8 @@ const Button = ({
           color={textColor}
           preset="button"
           padding={textPadding}
-          paddingLeft={icon ? iconPadding : undefined}>
+          paddingLeft={icon ? iconPadding : undefined}
+        >
           {text}
         </Text>
       )}

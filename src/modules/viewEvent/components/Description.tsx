@@ -1,13 +1,13 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
-import {WebView} from 'react-native-webview';
-import {Container, Text} from 'ScoutDesign/library';
+import { WebView } from 'react-native-webview';
+import { Container, Text } from 'ScoutDesign/library';
 
 type Props = {
   description: string;
 };
 
-const Description = ({description}: Props) => {
+const Description = ({ description }: Props) => {
   return (
     <Container
       radius="m"
@@ -15,8 +15,9 @@ const Description = ({description}: Props) => {
       margin="m"
       borderWidth={1}
       borderColor="mintGrey"
-      padding="s">
-      <Text preset="h2" paddingHorizontal="m" paddingTop="s">
+      padding="s"
+    >
+      <Text preset="label" paddingHorizontal="m" paddingTop="s" weight="bold" size="l">
         Additional event info
       </Text>
       <WebView
@@ -29,7 +30,7 @@ const Description = ({description}: Props) => {
                             <meta charset="UTF-8">
                             <meta name="viewport" content="width=device-width, initial-scale=0.99">
                         </head>
-                        <body style="background-color: ${'#F4F6F5'}; padding: 8px; font-size: 15px; font-family: "Open Sans", Metropolis, serif">
+                        <body style="background-color: ${'#F4F6F5'}; padding: 8px; font-size: 15px; font-family: "Open Sans", Metropolis, "serif">
                             ${description}
                         </body>
                     </html>`,

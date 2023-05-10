@@ -42,15 +42,44 @@ This project uses [Expo](https://docs.expo.dev/get-started/installation/)
 To download this project
 
 ```bash
-  git clone git@github.com:TheEarlyNerd/ScoutTrek.git
+  git clone git@github.com:sandboxnu/ScoutTrek-Frontend.git
 ```
 
-then to run on an Expo simulator
+then to run on an Expo simulator: 
 
 ```bash
   yarn install
-  yarn start
 ```
+
+You will need an Android SDK installed to run the front end. A good option is [Android Studio](https://developer.android.com/studio)
+
+Make a copy of the file `.env_ex` and name it as `.env`. Then, start the app using:
+
+```bash
+  yarn local --clear
+```
+
+Note that the `--clear` might not be necessary (especially if you've been developing on the same wifi network), but will help if you have some React Native caching issues.
+
+If you are on public wifi, you may need to run 
+
+```bash
+  yarn local --tunnel --clear
+```
+
+### Use Prod Server
+
+To run the app using the backend hosted on the GC App Engine, use one of the following to connect to the prod or dev environments:
+
+```bash
+  yarn start:prod --clear
+  yarn start:dev --clear
+```
+The `--clear` flag is necessary here when switching between `yarn start` and `yarn local`, as the environment variables can sometimes be cached.
+
+You may also need to run the following commands if you get errors related to them:
+
+If you are having issues related to Android SDK path, you may also need to install Android Studio / have some Android development files set up. (Doing so will also let you use Android emulators.)
 
 To run on an iOS device
 

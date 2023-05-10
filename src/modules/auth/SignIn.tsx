@@ -1,26 +1,16 @@
-import {useContext} from 'react';
 import {
   KeyboardAvoidingView,
   Dimensions,
   Platform,
   ScrollView,
 } from 'react-native';
-import {Text, Form, Image} from 'ScoutDesign/library';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Text, Form, Image } from 'ScoutDesign/library';
 
-import {gql, useMutation} from '@apollo/client';
 import Footer from './components/Footer';
-import {AuthContext} from '../auth/SignUp';
-
-const LOG_IN = gql`
-  mutation Login($userInfo: LoginInput!) {
-    login(input: $userInfo) {
-      token
-      groupID
-      noGroups
-    }
-  }
-`;
+import { useNavigation } from '@react-navigation/native';
+import { SignInNavigationProps } from '../navigation/navigation_props/auth';
+import useStore from '../../store';
+import RouteNames from '../navigation/route_names/auth';
 
 const SignInFormFields = [
   {
@@ -54,34 +44,19 @@ const SignInFormFields = [
   },
 ];
 
-const SignIn = ({navigation}) => {
-  const {setToken} = useContext(AuthContext);
+const SignIn = () => {
+  const login = useStore((s) => s.login);
 
-  const [logIn] = useMutation(LOG_IN, {
-    onCompleted: async (data) => {
-      try {
-        const token = await AsyncStorage.setItem('userToken', data.login.token);
-        const groupID = await AsyncStorage.setItem(
-          'currMembershipID',
-          data.login.groupID || undefined
-        );
-        setToken(data.login.token);
-      } catch (e) {
-        console.log(e);
-      }
-    },
-  });
+  const navigation = useNavigation<SignInNavigationProps>();
 
-  const handleSignIn = async (data) => {
-    await logIn({
-      variables: {
-        userInfo: {
-          email: data.email,
-          password: data.password,
-          expoNotificationToken: '',
-        },
+  const handleSignIn = async (data: any) => {
+    await login({
+      userInfo: {
+        email: data.email,
+        password: data.password,
+        expoNotificationToken: '',
       },
-    }).catch((error) => console.log('An error', error));
+    });
   };
 
   return (
@@ -123,10 +98,24 @@ const SignIn = ({navigation}) => {
           onSubmit={handleSignIn}
           submitBtnText="Sign In"
         />
+        <Text
+          color="darkGrey"
+          size="s"
+          style={{
+            width: '100%',
+            paddingHorizontal: 12,
+            paddingTop: 6,
+            textAlign: 'right',
+          }}
+          onPress={() =>
+            navigation.navigate(RouteNames.forgotPassword.toString())
+          }>
+          Forgot Password?
+        </Text>
         <Footer
           footerText="Don&rsquo;t have an account?"
           btnType="Sign Up Now"
-          onPress={() => navigation.navigate('SignUp')}
+          onPress={() => navigation.navigate(RouteNames.signUp.toString())}
         />
       </KeyboardAvoidingView>
     </ScrollView>

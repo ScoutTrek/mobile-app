@@ -1,10 +1,9 @@
-import {useState, useContext} from 'react';
-import {ActivityIndicator} from 'react-native';
+import { useState } from 'react';
+import { ActivityIndicator, View } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {gql, useMutation, useQuery} from '@apollo/client';
-import {plusBold} from 'ScoutDesign/icons';
-import {_updateCurrentGroup} from '../profile/ProfileScreen';
-import {AuthContext} from '../auth/SignUp';
+import { gql, useMutation, useQuery } from '@apollo/client';
+import { plusBold } from 'ScoutDesign/icons';
+import { _updateCurrentGroup } from '../profile/ProfileScreen';
 import {
   ScreenContainer,
   Container,
@@ -14,7 +13,10 @@ import {
   TextInputWithButton,
 } from 'ScoutDesign/library';
 
-import {useJoinGroupForm} from './JoinGroupForm/JoinGroupFormStore';
+import { useJoinGroupForm } from './JoinGroupForm/JoinGroupFormStore';
+import useStore from '../../store';
+import { useNavigation } from '@react-navigation/native';
+import { JoinPatrolNavigationProps } from '../navigation/navigation_props/joinGroup';
 
 const ADD_GROUP = gql`
   mutation AddGroup($membershipInfo: AddMembershipInput!) {
@@ -42,13 +44,19 @@ const ADD_PATROL = gql`
   }
 `;
 
-const JoinPatrol = ({navigation}) => {
-  const [joinGroupFormState] = useJoinGroupForm();
-  const {setNewUser} = useContext(AuthContext);
+const JoinPatrol = () => {
+  const navigation = useNavigation<JoinPatrolNavigationProps>();
+  const [joinGroupFormState] = useJoinGroupForm() || [null];
+
+  const setIsNewUser = useStore((s) => s.setIsNewUser);
 
   const [addGroup] = useMutation(ADD_GROUP, {
+    onError: (error) => {
+      console.log({ joinGroupFormState });
+      console.log(error);
+    },
     onCompleted: async (data) => {
-      setNewUser(false);
+      setIsNewUser(false);
       await AsyncStorage.setItem('currMembershipID', data.addGroup.groupID);
       _updateCurrentGroup(data?.addGroup?.groupID, navigation);
     },
@@ -58,10 +66,10 @@ const JoinPatrol = ({navigation}) => {
   const [patrolName, setPatrolName] = useState('');
   const [patrolIsValid, setPatrolIsValid] = useState(false);
 
-  const {data, error, loading} = useQuery(GET_PATROLS, {
+  const { data, error, loading } = useQuery(GET_PATROLS, {
     pollInterval: 500,
     variables: {
-      troopId: joinGroupFormState.troopID,
+      troopId: joinGroupFormState?.troopID,
     },
   });
 
@@ -76,11 +84,16 @@ const JoinPatrol = ({navigation}) => {
     });
   };
 
-  if (loading) return <ActivityIndicator />;
-  if (error) return <Text>`Error! ${error}`</Text>;
+  if (loading)
+    return (
+      <View style={{ justifyContent: 'center', flex: 1 }}>
+        <ActivityIndicator />
+      </View>
+    );
+  if (error) return <Text>`Error! ${error.message}`</Text>;
 
   return (
-    <ScreenContainer icon="back" back={navigation.goBack}>
+    <ScreenContainer>
       <Container>
         <Text preset="h2" textAlign="center" padding="m">
           Choose your patrol.
@@ -93,7 +106,7 @@ const JoinPatrol = ({navigation}) => {
             fullWidth: true,
             paddingVertical: 'm',
           }}
-          RenderItem={({item, ...rest}) => {
+          RenderItem={({ item, ...rest }) => {
             return (
               <Button
                 accessibilityLabel={item.id}
@@ -113,7 +126,7 @@ const JoinPatrol = ({navigation}) => {
           <TextInputWithButton
             placeholder="patrol name..."
             onValueChange={(value) => {
-              setPatrolName(value);
+              setPatrolName(value.toString());
               if (value.toString().length > 2) {
                 setPatrolIsValid(true);
               } else {
@@ -128,7 +141,7 @@ const JoinPatrol = ({navigation}) => {
             onPress={async () => {
               await addPatrol({
                 variables: {
-                  troopId: joinGroupFormState.troopID,
+                  troopId: joinGroupFormState?.troopID,
                   patrolInfo: {
                     name: patrolName,
                   },

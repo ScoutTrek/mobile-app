@@ -1,4 +1,4 @@
-import {gql, useQuery} from '@apollo/client';
+import { gql, useQuery } from '@apollo/client';
 import {
   Container,
   Text,
@@ -6,11 +6,15 @@ import {
   Stack,
   ScreenContainer,
 } from 'ScoutDesign/library';
-import {plusBold} from 'ScoutDesign/icons';
+import { View } from 'react-native';
+import { plusBold } from 'ScoutDesign/icons';
 import {
   chooseGroup,
   useJoinGroupForm,
 } from './JoinGroupForm/JoinGroupFormStore';
+import { JoinTroopNavigationProps } from '../navigation/navigation_props/joinGroup';
+import { useNavigation } from '@react-navigation/native';
+import RouteNames from '../navigation/route_names/joinGroup';
 
 const GET_TROOPS = gql`
   query GetTroops {
@@ -23,22 +27,23 @@ const GET_TROOPS = gql`
   }
 `;
 
-const JoinTroop = ({navigation}) => {
-  const [_, dispatch] = useJoinGroupForm();
-  const {data, error, loading} = useQuery(GET_TROOPS, {
+const JoinTroop = () => {
+  const navigation = useNavigation<JoinTroopNavigationProps>();
+  const [_, dispatch] = useJoinGroupForm() || [null, null];
+  const { data, error, loading } = useQuery(GET_TROOPS, {
     fetchPolicy: 'network-only',
   });
 
   const nextForm = (troopID: string, troopNumber: string) => {
-    dispatch(chooseGroup(troopID, troopNumber));
-    navigation.navigate('ChooseRole');
+    dispatch && dispatch(chooseGroup(troopID, troopNumber));
+    navigation.navigate(RouteNames.chooseRole.toString());
   };
 
   if (loading) return null;
   if (error) return <Text>`Error! ${error.message}`</Text>;
 
   return (
-    <ScreenContainer icon="back" back={navigation.goBack}>
+    <ScreenContainer>
       <Container>
         <Text preset="h2" textAlign="center" padding="m">
           What Troop are you in?
@@ -52,7 +57,7 @@ const JoinTroop = ({navigation}) => {
             justifyContent: 'flex-start',
             paddingVertical: 'm',
           }}
-          RenderItem={({item, ...rest}) => {
+          RenderItem={({ item, ...rest }) => {
             return (
               <Button
                 accessibilityLabel={item.id}
@@ -64,18 +69,22 @@ const JoinTroop = ({navigation}) => {
           }}
         />
 
-        <Text paddingTop="xl" paddingBottom="s" paddingHorizontal="xs">
-          Please select a Troop or add one below
-        </Text>
-        <Button
-          accessibilityLabel="create-new-troop"
-          text="Create Troop"
-          backgroundColor="brandSecondary"
-          icon={plusBold}
-          onPress={() => {
-            navigation.navigate('CreateTroop');
-          }}
-        />
+        <View
+          style={{
+            marginTop: 20,
+          }}>
+          <Button
+            accessibilityLabel="create-new-troop"
+            text="Create Troop"
+            backgroundColor="brandSecondary"
+            icon={plusBold}
+            onPress={() => {
+              navigation.navigate(RouteNames.createTroop.toString());
+            }}
+            fullWidth={true}
+            tall={true}
+          />
+        </View>
       </Container>
     </ScreenContainer>
   );
