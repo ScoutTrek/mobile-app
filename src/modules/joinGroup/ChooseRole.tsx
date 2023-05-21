@@ -1,3 +1,4 @@
+import { StackScreenProps } from '@react-navigation/stack';
 import {
   Button,
   Stack,
@@ -5,8 +6,13 @@ import {
   Container,
   ScreenContainer,
 } from 'ScoutDesign/library';
-import {convertRoleToText} from '../../data/utils/convertIDsToStrings';
-import {chooseRole, useJoinGroupForm} from './JoinGroupForm/JoinGroupFormStore';
+import { convertRoleToText } from '../../data/utils/convertIDsToStrings';
+import JoinGroupParamList from '../navigation/param_list/joinGroup';
+import {
+  chooseRole,
+  useJoinGroupForm,
+} from './JoinGroupForm/JoinGroupFormStore';
+import RouteNames from '../navigation/route_names/joinGroup';
 
 const ROLES = [
   'SCOUTMASTER',
@@ -18,19 +24,21 @@ const ROLES = [
   'ADULT_VOLUNTEER',
 ];
 
-const ChooseRole = ({navigation, route}) => {
-  const [_, dispatch] = useJoinGroupForm();
+const ChooseRole = ({
+  navigation,
+}: StackScreenProps<JoinGroupParamList>) => {
+  const [_, dispatch] = useJoinGroupForm() || [null, null];
   const nextForm = (role: string) => {
-    dispatch(chooseRole(role));
+    dispatch && dispatch(chooseRole(role));
     if (role === 'PARENT') {
-      navigation.navigate('AddChildren');
+      navigation.navigate(RouteNames.addChildren.toString());
     } else {
-      navigation.navigate('JoinPatrol');
+      navigation.navigate(RouteNames.joinPatrol.toString());
     }
   };
 
   return (
-    <ScreenContainer icon="back" back={navigation.goBack}>
+    <ScreenContainer>
       <Container>
         <Text preset="h2" textAlign="center" padding="m">
           What is your role within the Troop?
@@ -46,7 +54,7 @@ const ChooseRole = ({navigation, route}) => {
             fullWidth: true,
             paddingVertical: 'm',
           }}
-          RenderItem={({item, ...rest}) => {
+          RenderItem={({ item, ...rest }) => {
             return (
               <Button
                 accessibilityLabel={item.id}

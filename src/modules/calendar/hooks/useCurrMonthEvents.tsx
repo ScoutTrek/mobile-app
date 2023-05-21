@@ -1,15 +1,15 @@
 import moment from 'moment';
-import {useState} from 'react';
+import { useState } from 'react';
 
-function daysInMonth(date) {
+function daysInMonth(date: Date) {
   return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
 }
 
 function getMonthObject(datestring: string) {
   const absDate = new Date(datestring);
   const offset = absDate.getTimezoneOffset() * 60 * 1000;
-  const date = new Date(absDate.getTime() - offset);
-  let monthObject: {[key: string]: any} = {};
+  const date = new Date(absDate.getTime() + offset);
+  let monthObject: { [key: string]: any } = {};
   for (let i = 1; i <= daysInMonth(date); i++) {
     const dateKeyString: string = `${date.getFullYear()}-${(
       '0' +
@@ -34,13 +34,13 @@ const useCurrMonthEvents = () => {
   const loadItemsForMonth = (allEvents: any, calData: CalData) => {
     if (calData) {
       const eventsInCurrMonth = allEvents.filter(
-        ({date}) => new Date(+date).getMonth() + 1 === calData.month
+        ({ date }) => new Date(date).getMonth() + 1 === calData.month
       );
       const items = getMonthObject(calData.dateString);
       if (!eventsInCurrMonth.length) {
-        setCurrMonthEvents((prevItems) => ({...items, ...prevItems}));
+        setCurrMonthEvents((prevItems) => ({ ...prevItems, ...items }));
       } else {
-        eventsInCurrMonth.forEach(({id, title, creator, date, type}) => {
+        eventsInCurrMonth.forEach(({ id, title, creator, date, type }) => {
           const name = creator.name.split(' ');
           if (type === 'TroopMeeting') {
             type = 'Meeting';
@@ -51,25 +51,25 @@ const useCurrMonthEvents = () => {
           if (type === 'SummerCamp') {
             type = 'Camp';
           }
-          const strDate = moment(+date).format('YYYY-MM-DD');
+          const strDate = moment(date).format('YYYY-MM-DD');
           items[strDate].push({
             title,
             type,
             id,
-            date,
+            date: new Date(date),
             labels: [
               `${name[0]} ${name[1] ? name[1].substring(0, 1) : ''}`,
               type,
             ],
           });
 
-          setCurrMonthEvents((prevItems) => ({...items, ...prevItems}));
+          setCurrMonthEvents((prevItems) => ({ ...prevItems, ...items }));
         });
       }
     }
   };
 
-  return {currMonthEvents, loadItemsForMonth};
+  return { currMonthEvents, loadItemsForMonth };
 };
 
 export default useCurrMonthEvents;

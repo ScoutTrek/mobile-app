@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import {
   ScreenContainer,
   Button,
@@ -6,25 +6,29 @@ import {
   Text,
   TextInputWithButton,
 } from 'ScoutDesign/library';
-import {plusBold} from 'ScoutDesign/icons';
+import { plusBold } from 'ScoutDesign/icons';
 import {
   addChildren,
   useJoinGroupForm,
 } from './JoinGroupForm/JoinGroupFormStore';
+import { AddChildrenNavigationProps } from '../navigation/navigation_props/joinGroup';
+import RouteNames from '../navigation/route_names/joinGroup';
+import { useNavigation } from '@react-navigation/native';
 
-const AddChildren = ({navigation}) => {
-  const [_, dispatch] = useJoinGroupForm();
+const AddChildren = () => {
+  const navigation = useNavigation<AddChildrenNavigationProps>();
+  const [_, dispatch] = useJoinGroupForm() || [null, null];
   const [childName, setChildName] = useState('');
-  const [children, setChildren] = useState([]);
+  const [children, setChildren] = useState<string[]>([]);
   const [childNameIsValid, setChildNameIsValid] = useState(false);
 
   const next = () => {
-    dispatch(addChildren(children));
-    navigation.navigate('JoinPatrol');
+    dispatch && dispatch(addChildren(children));
+    navigation.navigate(RouteNames.joinPatrol.toString());
   };
 
   return (
-    <ScreenContainer icon="back" back={navigation.goBack}>
+    <ScreenContainer>
       <Container>
         <Text preset="h2" paddingHorizontal="s">
           What are the names of the Scouts who belong to you?
@@ -33,7 +37,7 @@ const AddChildren = ({navigation}) => {
         <TextInputWithButton
           placeholder="First & Last Name"
           onValueChange={(value) => {
-            setChildName(value);
+            setChildName(value.toString());
             if (value.toString().length > 2) {
               setChildNameIsValid(true);
             } else {

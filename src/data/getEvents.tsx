@@ -1,4 +1,4 @@
-import {gql} from '@apollo/client';
+import { gql } from '@apollo/client';
 
 export const EVENT_FIELDS = gql`
   fragment EventFragment on Event {
@@ -13,7 +13,6 @@ export const EVENT_FIELDS = gql`
     meetTime
     leaveTime
     pickupTime
-    checkoutTime
     endTime
     endDate
     location {

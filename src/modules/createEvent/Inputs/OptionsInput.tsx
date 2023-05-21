@@ -4,16 +4,17 @@ import {
 } from 'CreateEvent/CreateEventFormStore';
 import RadioChoice from '../../../components/formfields/RadioChoice';
 
-const OptionsInput = ({initial, questionText, option1, option2, id}) => {
-  const [_, dispatch] = useEventForm();
+// TODO: gql form schema rewrite: probably update the types here using the new form too
+const OptionsInput = ({ initial, questionText, option1, option2, id }) => {
+  const [_, dispatch] = useEventForm() || [null, null];
   return (
     <RadioChoice
       initial={initial}
       text={questionText}
-      a={{label: option1, value: option1}}
-      b={{label: option2, value: option2}}
+      a={{ label: option1, value: option1 }}
+      b={{ label: option2, value: option2 }}
       onPress={(choice) => {
-        dispatch(addEventFieldOfType(id, choice));
+        dispatch && dispatch(addEventFieldOfType(id, choice));
       }}
     />
   );
@@ -21,4 +22,6 @@ const OptionsInput = ({initial, questionText, option1, option2, id}) => {
 
 export default {
   InitialButton: OptionsInput,
+  EditingComponent: null,
+  CompletedComponent: null,
 };
