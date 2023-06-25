@@ -6,7 +6,10 @@
     "name": "ScoutTrek",
     "slug": "scout-trek-native",
     "privacy": "unlisted",
-    "platforms": ["ios", "android"],
+    "platforms": [
+      "ios",
+      "android"
+    ],
     "plugins": [
       [
         "expo-image-picker",
@@ -21,7 +24,9 @@
     "updates": {
       "enabled": true
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.scouttrek.kalebdavenport",
@@ -46,8 +51,7 @@
           "apiKey": "AIzaSyCy38WoJFJEn3gr7EEc1OAWcO-Xsslilbs"
         }
       },
-      "package": "com.wowyourclient.scouttrek",
-      "googleServicesFile": "./google-services.json"
+      "package": "com.wowyourclient.scouttrek"
     },
     "splash": {
       "backgroundColor": "#34A86C"
